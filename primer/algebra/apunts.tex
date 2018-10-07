@@ -8,6 +8,8 @@
 \usepackage[margin=1.25in]{geometry}
 \usepackage{color}
 \newcommand{\fieldk}{\mathbb{K}}
+\newcommand{\propietats}{\underline{{\scshape Propietats:}}}
+\newcommand{\definicio}{\underline{\textbf{Definició:}}}
 
 \title{Àlgebra Lineal}
 \author{Àlex Batlle Casellas}
@@ -76,7 +78,7 @@ $$c(u+v)=cu+cv \quad (c+d)u=cu+du \quad c(du)=(cd)u \quad 1u=u \quad \forall u,v
 \begin{itemize}
 	\item $\mathbb{K}^n=\{(x_1,x_2,\ldots,x_n)|x_i\in\mathbb{K}\}$ és un $\mathbb{K}$-e.v. amb la suma i el producte naturals heretats de $\mathbb{K}$.
 	\item $\mathcal{M}_{m\times n}(\mathbb{K})$ és un $\fieldk$-e.v. format per matrius de dimensions $m\times n$ amb entrades a $\fieldk$ i les operacions naturals de la suma de matrius i el producte per un escalar.
-	\item El conjunt de polinomis de grau $\leq d$, $\mathbb{R}_d[x]=\{p(x)=a_0+a_1x+a_2x^2+\ldots+a_nx^n|a_i\in\mathbb{R}\}$ és un espai vectorial amb la suma de polinomis i el producte per un escalar.
+	\item El conjunt de polinomis de grau $\leq d$, $\mathbb{R}_d[x]=\{p(x)=a_0+a_1x+a_2x^2+\ldots+a_dx^d|a_i\in\mathbb{R}\}$ és un espai vectorial amb la suma de polinomis i el producte per un escalar.
 	\item $\mathbb{R}[x]=\{\textrm{polinomis en una variable }x\textrm{ i coeficients en els reals}\}$ és un $\mathbb{R}$-e.v.
 	\item El conjunt $\mathcal{F}(\mathbb{R},\mathbb{R})$ de funcions $f: \ \mathbb{R}\mapsto\mathbb{R}$ és un $\mathbb{R}$-e.v.
 \end{itemize}
@@ -94,5 +96,47 @@ $$c(u+v)=cu+cv \quad (c+d)u=cu+du \quad c(du)=(cd)u \quad 1u=u \quad \forall u,v
 	$$u+v=u+(-1)u=(u_1,\ldots,u_n)+(-u_1,\ldots,-u_n)=(u_1-u_1,\ldots,u_n-u_n)=(0,\ldots,0)=\textbf{0}\square$$
 	\item \textcolor{red}{\textbf{PENDENT D'ACABAR.}}
 \end{enumerate}
+
+\newpage
+
+\definicio Un vector $u$ és \underline{combinació lineal} dels vectors $u_1,u_2,\ldots,u_k$ si existeixen escalars $c_1,c_2,\ldots,c_k$ tals que $u=c_1u_1+c_2u_2+\ldots+c_ku_k$. Els escalars $c_i$ són els coeficients de la combinció lineal.\\
+Esbrinar si un vector a $\fieldk^n$ és combinació lineal d'una colecció de vectors donada és equivalent a resoldre un sistema lineal d'equacions:
+$$\exists c_1,c_2,\ldots,c_k\in\fieldk : u=c_1u_1+c_2u_2+\ldots+c_ku_k?$$
+$$
+c_1\left( \begin{array}{c}
+x_{11} \\
+x_{21} \\
+\vdots \\
+x_{n1} \end{array} \right)
++ c_2\left( \begin{array}{c}
+x_{12} \\
+x_{22} \\
+\vdots \\
+x_{n2} \end{array} \right)
++\ldots
++c_k \left( \begin{array}{c}
+x_{1k} \\
+x_{2k} \\
+\vdots \\
+x_{nk} \end{array} \right)
+$$
+$$
+\left( \begin{array}{cccc}
+x_{11} & x_{12} & \ldots & x_{1k} \\
+x_{21} & x_{22} & \ldots & x_{2k} \\
+\vdots & \vdots & \vdots & \vdots\\
+x_{n1} & x_{n2} & \ldots & x_{nk} \end{array} \right)
+\left( \begin{array}{c}
+c_1 \\
+c_2 \\
+\vdots \\
+c_k \end{array} \right)
+=
+\left( \begin{array}{c}
+u_1 \\
+u_2 \\
+\vdots \\
+u_k \end{array} \right)
+$$
 
 \end{document}
