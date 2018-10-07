@@ -61,7 +61,7 @@ $$\mathbb{R}^n=\{(x_1,x_2,\ldots,x_n)|x_i\in\mathbb{R}\}.$$
 	\item $c(du)=(cd)u.$
 	\item $1u=u.$
 \end{itemize}
-\subsection{Espai vectorial sobre un cos $\mathbb{K}$:}
+\subsection{Espai vectorial sobre un cos $\mathbb{K}$.}
 Sigui $\mathbb{K}$ un cos commutatiu (per exemple $\mathbb{Q},\mathbb{R},\mathbb{C}$). Un espai vectorial sobre $\mathbb{K}$ ($\mathbb{K}$-e.v.) és un conjunt de vectors $E$ amb dues operacions $+$ i $\cdot$.
 \begin{itemize}
 	\item $\textbf{+}$: Donats $u,v\in E$ dóna un element $u+v$ també d'$E$.\\ És una operació commutativa, associativa, té element neutre (\textbf{0} o $\vec{0}$) i tot $u\in E$ té invers respecte \textbf{+} ($-u$).
@@ -80,5 +80,19 @@ $$c(u+v)=cu+cv \quad (c+d)u=cu+du \quad c(du)=(cd)u \quad 1u=u \quad \forall u,v
 	\item $\mathbb{R}[x]=\{\textrm{polinomis en una variable }x\textrm{ i coeficients en els reals}\}$ és un $\mathbb{R}$-e.v.
 	\item El conjunt $\mathcal{F}(\mathbb{R},\mathbb{R})$ de funcions $f: \ \mathbb{R}\mapsto\mathbb{R}$ és un $\mathbb{R}$-e.v.
 \end{itemize}
+\underline{{\scshape Propietats:}}
+\begin{enumerate}
+	\item $0u=\textbf{0}=c\textbf{0}.$
+	\item $(-1)u=-u.$
+	\item $(-c)u=c(-u)=-(cu)=-cu.$
+	\item $cu=\textbf{0}\iff c=0\vee u=\textbf{0}.$
+\end{enumerate}
+\underline{Demostracions:}
+\begin{enumerate}
+	\item Sigui $v=0u=(0+0)u=0u+0u=v+v$. Aleshores $v=v+v\iff v+(-v)=v+v+(-v)\iff v=\textbf{0}\square$
+	\item Sigui $v=(-1)u$. Aleshores si $u+v=\textbf{0}$, $v=-u$.
+	$$u+v=u+(-1)u=(u_1,\ldots,u_n)+(-u_1,\ldots,-u_n)=(u_1-u_1,\ldots,u_n-u_n)=(0,\ldots,0)=\textbf{0}\square$$
+	\item \textcolor{red}{\textbf{PENDENT D'ACABAR.}}
+\end{enumerate}
 
 \end{document}
