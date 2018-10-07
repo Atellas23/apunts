@@ -1,0 +1,4 @@
+\contentsline {section}{\numberline {1}Matrius, determinants i sistemes lineals.}{2}
+\contentsline {section}{\numberline {2}Espais vectorials.}{2}
+\contentsline {subsection}{\numberline {2.1}Operacions a $\mathbb {R}^n$.}{2}
+\contentsline {subsection}{\numberline {2.2}Espai vectorial sobre un cos $\mathbb {K}$:}{2}

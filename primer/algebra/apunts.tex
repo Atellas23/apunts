@@ -1,0 +1,84 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{color}
+\newcommand{\fieldk}{\mathbb{K}}
+
+\title{Àlgebra Lineal}
+\author{Àlex Batlle Casellas}
+\renewcommand*\contentsname{Índex}
+
+\begin{document}
+
+\begin{titlepage}
+	\centering
+	{\scshape\LARGE Facultat de Matemàtiques i Estadística \par}
+	\vspace{1cm}
+	{\scshape\Large Universitat Politècnica de Catalunya - BarcelonaTech\par}
+	\vspace{1.5cm}
+	{\huge\bfseries Apunts d'Àlgebra Lineal (Primer curs del Grau de Matemàtiques)
+	\par}
+	\vspace{2cm}
+	{\Large\itshape Àlex Batlle Casellas\par}
+
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
+%\section*{Resumen}
+
+\vfill
+\newpage
+
+\tableofcontents
+\newpage
+\section{Matrius, determinants i sistemes lineals.}
+\section{Espais vectorials.}
+Considerem el conjunt d'$n$-tuples de nombres reals:
+$$\mathbb{R}^n=\{(x_1,x_2,\ldots,x_n)|x_i\in\mathbb{R}\}.$$
+\subsection{Operacions a $\mathbb{R}^n$.}
+\begin{enumerate}
+	\item \textbf{Suma:} Sigui $u=(x_1,x_2,\ldots,x_n),v=(y_1,y_2,\ldots,y_n)\in\mathbb{R}^n$. Aleshores:
+	$$u+v=(x_1+y_1,x_2+y_2,\ldots,x_n+y_n)\in\mathbb{R}^n.$$
+	\item \textbf{Multiplicació per un escalar:} Sigui $u=(x_1,x_2,\ldots,x_n)\in\mathbb{R}^n,c\in\mathbb{R}$. Aleshores:
+	$$cu=(cx_1,cx_2,\ldots,cx_n)\in\mathbb{R}^n.$$
+\end{enumerate}
+\underline{{\scshape Propietats:}}
+\begin{itemize}
+	\item $u+v=v+u.$ (commutativitat)
+	\item $(u+v)+w=u+(v+w).$ (associativitat)
+	\item $\exists\textbf{0}\in\mathbb{R}^n: \ u+\textbf{0}=u.$ (vector zero; notació alternativa, $\vec{0}$ \ )
+	\item $\forall u\in\mathbb{R}^n\exists -u\in\mathbb{R}^n: \ u + (-u) = \textbf{0}.$
+	\item $c(u+v)=cu+cv.$ (distributivitat)
+	\item $(c+d)u=cu+du.$ (distributivitat)
+	\item $c(du)=(cd)u.$
+	\item $1u=u.$
+\end{itemize}
+\subsection{Espai vectorial sobre un cos $\mathbb{K}$:}
+Sigui $\mathbb{K}$ un cos commutatiu (per exemple $\mathbb{Q},\mathbb{R},\mathbb{C}$). Un espai vectorial sobre $\mathbb{K}$ ($\mathbb{K}$-e.v.) és un conjunt de vectors $E$ amb dues operacions $+$ i $\cdot$.
+\begin{itemize}
+	\item $\textbf{+}$: Donats $u,v\in E$ dóna un element $u+v$ també d'$E$.\\ És una operació commutativa, associativa, té element neutre (\textbf{0} o $\vec{0}$) i tot $u\in E$ té invers respecte \textbf{+} ($-u$).
+	\item $\textbf{·}$: Donats $u\in E$ i $c\in\mathbb{K}$ dóna un element $cu$ d'$E$.
+\end{itemize}
+La suma i el producte compleixen
+$$c(u+v)=cu+cv \quad (c+d)u=cu+du \quad c(du)=(cd)u \quad 1u=u \quad \forall u,v\in E, c,d\in\mathbb{K}.$$
+
+\newpage
+
+\underline{Exemples d'espais vectorials:}
+\begin{itemize}
+	\item $\mathbb{K}^n=\{(x_1,x_2,\ldots,x_n)|x_i\in\mathbb{K}\}$ és un $\mathbb{K}$-e.v. amb la suma i el producte naturals heretats de $\mathbb{K}$.
+	\item $\mathcal{M}_{m\times n}(\mathbb{K})$ és un $\fieldk$-e.v. format per matrius de dimensions $m\times n$ amb entrades a $\fieldk$ i les operacions naturals de la suma de matrius i el producte per un escalar.
+	\item El conjunt de polinomis de grau $\leq d$, $\mathbb{R}_d[x]=\{p(x)=a_0+a_1x+a_2x^2+\ldots+a_nx^n|a_i\in\mathbb{R}\}$ és un espai vectorial amb la suma de polinomis i el producte per un escalar.
+	\item $\mathbb{R}[x]=\{\textrm{polinomis en una variable }x\textrm{ i coeficients en els reals}\}$ és un $\mathbb{R}$-e.v.
+	\item El conjunt $\mathcal{F}(\mathbb{R},\mathbb{R})$ de funcions $f: \ \mathbb{R}\mapsto\mathbb{R}$ és un $\mathbb{R}$-e.v.
+\end{itemize}
+
+\end{document}
