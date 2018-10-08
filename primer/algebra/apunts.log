@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.9.25)  8 OCT 2018 08:17
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.9.25)  8 OCT 2018 11:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -474,18 +474,18 @@ File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
 (./apunts.aux)
 \openout1 = `apunts.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -551,27 +551,27 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \openout3 = `apunts.toc'.
 
  [1]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 60.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 61.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 60.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 61.
 LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 73.
+(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 74.
  [2]
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/sc' undefined
-(Font)              using `OT1/cmr/bx/n' instead on input line 95.
+(Font)              using `OT1/cmr/bx/n' instead on input line 96.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 95--96
+Underfull \hbox (badness 10000) in paragraph at lines 96--97
 
  []
 
 
-Overfull \hbox (25.36713pt too wide) detected at line 99
+Overfull \hbox (25.36713pt too wide) detected at line 100
 \OML/cmm/m/it/10.95 u \OT1/cmr/m/n/10.95 + \OML/cmm/m/it/10.95 v \OT1/cmr/m/n/1
 0.95 = \OML/cmm/m/it/10.95 u \OT1/cmr/m/n/10.95 + (\OMS/cmsy/m/n/10.95 ^^@\OT1/
 cmr/m/n/10.95 1)\OML/cmm/m/it/10.95 u \OT1/cmr/m/n/10.95 = (\OML/cmm/m/it/10.95
@@ -589,10 +589,10 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 2649 strings out of 494880
- 31854 string characters out of 6179601
- 97301 words of memory out of 5000000
- 5941 multiletter control sequences out of 15000+600000
+ 2650 strings out of 494880
+ 31861 string characters out of 6179601
+ 97331 words of memory out of 5000000
+ 5942 multiletter control sequences out of 15000+600000
  14298 words of font info for 53 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  27i,8n,32p,278b,154s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -610,7 +610,7 @@ fonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
 .pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb><
 /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></
 usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on apunts.pdf (5 pages, 159421 bytes).
+Output written on apunts.pdf (5 pages, 159511 bytes).
 PDF statistics:
  80 PDF objects out of 1000 (max. 8388607)
  57 compressed objects within 1 object stream
