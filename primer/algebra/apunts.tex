@@ -9,7 +9,10 @@
 \usepackage{color}
 \newcommand{\fieldk}{\mathbb{K}}
 \newcommand{\propietats}{\underline{{\scshape Propietats:}}}
-\newcommand{\definicio}{\underline{\textbf{Definició:}}}
+\newcommand{\definicio}{\underline{\textbf{Definició:}}\\}
+\newcommand{\proposicio}{\underline{\textbf{Proposició:}}\\}
+\newcommand{\demostracio}{\textbf{{\scshape Demostració:}}\\}
+\newcommand{\ex}{\underline{Exemple:}}
 
 \title{Àlgebra Lineal}
 \author{Àlex Batlle Casellas}
@@ -89,11 +92,11 @@ $$c(u+v)=cu+cv \quad (c+d)u=cu+du \quad c(du)=(cd)u \quad 1u=u \quad \forall u,v
 	\item $(-c)u=c(-u)=-(cu)=-cu.$
 	\item $cu=\textbf{0}\iff c=0\vee u=\textbf{0}.$
 \end{enumerate}
-\underline{Demostracions:}
+\demostracio
 \begin{enumerate}
-	\item Sigui $v=0u=(0+0)u=0u+0u=v+v$. Aleshores $v=v+v\iff v+(-v)=v+v+(-v)\iff v=\textbf{0}\square$
+	\item Sigui $v=0u=(0+0)u=0u+0u=v+v$. Aleshores $v=v+v\iff v+(-v)=v+v+(-v)\iff v=\textbf{0}.\square$
 	\item Sigui $v=(-1)u$. Aleshores si $u+v=\textbf{0}$, $v=-u$.
-	$$u+v=u+(-1)u=(u_1,\ldots,u_n)+(-u_1,\ldots,-u_n)=(u_1-u_1,\ldots,u_n-u_n)=(0,\ldots,0)=\textbf{0}\square$$
+	$$u+v=u+(-1)u=(u_1,\ldots,u_n)+(-u_1,\ldots,-u_n)=(u_1-u_1,\ldots,u_n-u_n)=(0,\ldots,0)=\textbf{0}.\square$$
 	\item \textcolor{red}{\textbf{PENDENT D'ACABAR.}}
 \end{enumerate}
 
@@ -138,5 +141,30 @@ u_2 \\
 \vdots \\
 u_k \end{array} \right)
 $$
+\proposicio Un sistema $Ax=b$ és compatible si i només si $b$ és una combinació lineal de les columnes d'$A$.\\
+\demostracio $Ax=b$ és compatible $\iff\exists c_1,\ldots,c_n$ solució de:
+$$
+\left( \begin{array}{ccc}
+a^1 & \ldots & a^n \end{array} \right)
+\left( \begin{array}{c}
+c_1 \\
+\vdots \\
+c_n \end{array} \right)
+=
+\left( \begin{array}{c}
+b \end{array} \right)
+\iff c_1(a^1)+\ldots+c_n(a^n)=(b)
+\iff b \textrm{ és una combinació}
+$$
+$$\textrm{ lineal dels vectors columna d'}A\textrm{ amb coeficients }c_1,\ldots,c_n.\square$$
+\subsection{Subespais vectorials.}
+Sigui $E$ un $\fieldk$-e.v. Aleshores un subconjunt $V\neq\emptyset$ d'$E$ és un subespai vectorial si $V$ és un espai vectorial en si mateix (amb la suma i el producte d'$E$). Això és equivalent a:
+$$\forall u,v\in V \ \forall c,d\in\fieldk \quad cu+dv\in V.$$
+\ex \begin{itemize}
+	\item $V=\fieldk^n$ és un subespai vectorial de $\fieldk^n$.
+	\item $V=\{\textbf{0}\}$ és un subespai vectorial de qualsevol $E$.
+	\item $V=\{(x,y,z)\in\mathbb{R}^3|x-y=0,3z=0\}$ és un subespai vectorial d'$\mathbb{R}^3$.
+	\item $F=\{(a+2b,0,b)\in\mathbb{R}^3|a,b\in\mathbb{R}\}$ és un subespai vectorial d'$\mathbb{R}^3$.
+\end{itemize}
 
 \end{document}
