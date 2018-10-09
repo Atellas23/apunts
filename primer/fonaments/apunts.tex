@@ -1,0 +1,60 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{color}
+\newcommand{\propietats}{\underline{{\scshape Propietats:}}}
+\newcommand{\definicio}{\underline{\textbf{Definició:}}\\}
+\newcommand{\proposicio}{\underline{\textbf{Proposició:}}\\}
+\newcommand{\demostracio}{\textbf{{\scshape Demostració:}}\\}
+\newcommand{\ex}{\underline{Exemple:}}
+\newcommand{\pendent}{\textcolor{red}{\textbf{PENDENT D'ACABAR.}}}
+
+\title{Fonaments de les Matemàtiques}
+\author{Àlex Batlle Casellas}
+\renewcommand*\contentsname{Índex}
+
+\begin{document}
+
+\begin{titlepage}
+	\centering
+	{\scshape\LARGE Facultat de Matemàtiques i Estadística \par}
+	\vspace{1cm}
+	{\scshape\Large Universitat Politècnica de Catalunya - BarcelonaTech\par}
+	\vspace{1.5cm}
+	{\huge\bfseries Apunts de Fonaments de les Matemàtiques (Primer curs del Grau de Matemàtiques)
+	\par}
+	\vspace{2cm}
+	{\Large\itshape Àlex Batlle Casellas\par}
+
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
+%\section*{Resumen}
+
+\vfill
+\newpage
+
+\tableofcontents
+\newpage
+\section{}
+\section{Conjunts i aplicacions.}
+\section{Relacions, operacions i estructures.}
+\definicio $R$ és una \textit{relació binària} en un conjunt $A$ si $R\subseteq A\times A$.
+\propietats \begin{itemize}
+	\item \textbf{Reflexiva:} $\forall x\in A (xRx)$.
+	\item \textbf{Simètrica:} $\forall x,y\in A (xRy \rightarrow yRx)$.
+	\item \textbf{Antisimètrica:} $\forall x,y\in A (xRy\wedge yRx\rightarrow x=y)$.
+	\item \textbf{Transitiva:} $\forall x,y,z\in A (xRy\wedge yRz\rightarrow xRz)$.
+	\item \textbf{Connexa:} $\forall x,y\in A (xRy\vee yRx)$.
+\end{itemize}
+\subsection{Relacions d'equivalència.}
+\definicio Una relació $R$ en un conjunt $A\neq\emptyset$ s'anomena \textit{d'equivalència} si compleix les propietats reflexiva, simètrica i transitiva.
+\end{document}
