@@ -1,3 +1,4 @@
 \contentsline {section}{\numberline {1}}{2}
 \contentsline {section}{\numberline {2}Conjunts i aplicacions.}{2}
 \contentsline {section}{\numberline {3}Relacions, operacions i estructures.}{2}
+\contentsline {subsection}{\numberline {3.1}Relacions d'equival\IeC {\`e}ncia.}{2}
