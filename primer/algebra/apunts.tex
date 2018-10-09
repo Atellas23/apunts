@@ -11,9 +11,10 @@
 \newcommand{\propietats}{\underline{{\scshape Propietats:}}}
 \newcommand{\definicio}{\underline{\textbf{Definició:}}\\}
 \newcommand{\proposicio}{\underline{\textbf{Proposició:}}\\}
-\newcommand{\demostracio}{\textbf{{\scshape Demostració:}}\\}
+\newcommand{\demostracio}{\textbf{{\scshape Demostració: }}}
 \newcommand{\ex}{\underline{Exemple:}}
 \newcommand{\pendent}{\textcolor{red}{\textbf{PENDENT D'ACABAR.}}}
+\newcommand{\important}{\textbf{IMPORTANT! }}
 
 \title{Àlgebra Lineal}
 \author{Àlex Batlle Casellas}
@@ -78,7 +79,7 @@ $$c(u+v)=cu+cv \quad (c+d)u=cu+du \quad c(du)=(cd)u \quad 1u=u \quad \forall u,v
 
 \newpage
 
-\underline{Exemples d'espais vectorials:}
+\noindent \ex
 \begin{itemize}
 	\item $\mathbb{K}^n=\{(x_1,x_2,\ldots,x_n)|x_i\in\mathbb{K}\}$ és un $\mathbb{K}$-e.v. amb la suma i el producte naturals heretats de $\mathbb{K}$.
 	\item $\mathcal{M}_{m\times n}(\mathbb{K})$ és un $\fieldk$-e.v. format per matrius de dimensions $m\times n$ amb entrades a $\fieldk$ i les operacions naturals de la suma de matrius i el producte per un escalar.
@@ -104,7 +105,7 @@ $$c(u+v)=cu+cv \quad (c+d)u=cu+du \quad c(du)=(cd)u \quad 1u=u \quad \forall u,v
 
 \newpage
 
-\definicio Un vector $u$ és \underline{combinació lineal} dels vectors $u_1,u_2,\ldots,u_k$ si existeixen escalars $c_1,c_2,\ldots,c_k$ tals que $u=c_1u_1+c_2u_2+\ldots+c_ku_k$. Els escalars $c_i$ són els coeficients de la combinció lineal.\\
+\noindent \definicio Un vector $u$ és \underline{combinació lineal} dels vectors $u_1,u_2,\ldots,u_k$ si existeixen escalars $c_1,c_2,\ldots,c_k$ tals que $u=c_1u_1+c_2u_2+\ldots+c_ku_k$. Els escalars $c_i$ són els coeficients de la combinció lineal.\\
 Esbrinar si un vector a $\fieldk^n$ és combinació lineal d'una colecció de vectors donada és equivalent a resoldre un sistema lineal d'equacions:
 $$\exists c_1,c_2,\ldots,c_k\in\fieldk : u=c_1u_1+c_2u_2+\ldots+c_ku_k?$$
 $$
@@ -168,5 +169,16 @@ $$\forall u,v\in V \ \forall c,d\in\fieldk \quad cu+dv\in V.$$
 	\item $V=\{(x,y,z)\in\mathbb{R}^3|x-y=0,3z=0\}$ és un subespai vectorial d'$\mathbb{R}^3$.
 	\item $F=\{(a+2b,0,b)\in\mathbb{R}^3|a,b\in\mathbb{R}\}$ és un subespai vectorial d'$\mathbb{R}^3$.
 \end{itemize}
+\newpage
+\noindent \important Els subespais vectorials són \textbf{tancats respecte combinacions lineals}.\\
+\proposicio Sigui $Ax=\textbf{0}$ un sistema lineal (homogeni), on $A\in\mathcal{M}_{m\times n}(\fieldk)$. Aleshores, el conjunt de solucions $V=\{v\in\fieldk^n|Av=\textbf{0}\}$ és un subespai vectorial de $\fieldk$.\\
+\demostracio Si $u\in V$ i $v\in V$, $Au=\textbf{0}$ i $Av=\textbf{0}$. Aleshores, $u+v\in V$ i $A(u+v)=Au+Av=\textbf{0}+\textbf{0}=\textbf{0}$.$\square$\\
+\definicio Siguin $v_1,\ldots,v_k$ vectors d'$E$. El conjunt de \underline{totes} les combinacions lineals de $v_1,\ldots,v_k$,
+$$\{c_1v_1+\ldots+c_kv_k|c_1,\ldots,c_k\in\fieldk\}$$
+s'anomena el \textbf{conjunt generat} per $v_1,\ldots,v_k$ i s'escriu $[v_1,\ldots,v_k]$.\\
+\proposicio $V=[v_1,\ldots,v_k]$ és un subespai vectorial i és el subespai més petit que conté a $\{v_1,\ldots,v_k\}$.\\
+\demostracio Siguin $u,v\in V$. Aleshores, $u=x_1v_1+\ldots+x_kv_k$ i $v=y_1v_1+\ldots+y_kv_k$, $x_i,y_i\in\fieldk$.
+$$\implies cu+dv=(cx_1+dy_1)v_1+\ldots+(cx_k+dy_k)v_k\textrm{ és}$$
+$$\textrm{combinació lineal de }v_1,\ldots,v_k\implies cu+dv\in V.\square$$
 
 \end{document}
