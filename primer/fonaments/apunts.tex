@@ -56,5 +56,21 @@
 	\item \textbf{Connexa:} $\forall x,y\in A (xRy\vee yRx)$.
 \end{itemize}
 \subsection{Relacions d'equivalència.}
-\definicio Una relació $R$ en un conjunt $A\neq\emptyset$ s'anomena \textit{d'equivalència} si compleix les propietats reflexiva, simètrica i transitiva.
+\definicio Una relació $R$ en un conjunt $A\neq\emptyset$ s'anomena \textit{d'equivalència} si compleix les propietats reflexiva, simètrica i transitiva.\\
+\definicio Definim la \textit{classe d'equivalència} d'un element $x\in A$ com:$$[x]_R=\{y\in A|yRx\}.$$També escrivim $[x]$ o $\bar{x}$ quan no hi ha risc de confusió.\\
+\propietats \begin{enumerate}
+	\item $\forall x\in A(x\in [x]).$
+	\item $\forall x,y\in A (xRy\iff [x]=[y]).$
+	\item $A=\bigcup_{x\in A}[x].$
+\end{enumerate}
+\definicio Anomenem una \textit{partició d'un conjunt} a una família $\Pi$ de subconjunts d'$A$ i diferents del buit, disjunts dos a dos, tals que la seva unió és tot $A$. És a dir, $\Pi\subseteq\mathcal{P}(A):$
+\begin{enumerate}
+	\item $X\neq\emptyset\forall X\in\Pi.$
+	\item $X\cap Y = \emptyset$ si $X,Y\in\Pi,X\neq Y.$
+	\item $A=\bigcup_{X\in\Pi}X.$
+\end{enumerate}
+Els subconjunts $X\in\Pi$ s'anomenen les \textit{parts} o \textit{blocs de la partició}.\\
+\definicio Anomenem el \textit{conjunt quocient} d'un altre conjunt $A$ respecte la relació $R$ al conjunt format per totes les classes d'equivalència definides a partir d'$R$.$$A/R=\{\alpha|\exists x\in A([x]=\alpha)\}.$$
+\proposicio El conjunt quocient és una partició d'$A$.\\
+\demostracio 
 \end{document}
