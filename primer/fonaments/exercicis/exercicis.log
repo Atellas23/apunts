@@ -1,0 +1,342 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6840 64-bit) (preloaded format=pdflatex 2018.10.7)  11 OCT 2018 22:54
+entering extended mode
+**./exercicis.tex
+(exercicis.tex
+LaTeX2e <2018-04-01> patch level 5
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\article.cls
+"
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\size11.clo"
+File: size11.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\inputenc.st
+y"
+Package: inputenc 2018/04/06 v1.3b Input encoding file
+\inpenc@prehook=\toks14
+\inpenc@posthook=\toks15
+)
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\amsfont
+s.sty"
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\@emptytoks=\toks16
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+)
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsmath\amsmath.
+sty"
+Package: amsmath 2017/09/02 v2.17a AMS math features
+\@mathmargin=\skip43
+
+For additional information on amsmath, use the `?' option.
+
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsmath\amstext.
+sty"
+Package: amstext 2000/06/29 v2.01 AMS text
+
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsmath\amsgen.s
+ty"
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks17
+\ex@=\dimen103
+))
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsmath\amsbsy.s
+ty"
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen104
+)
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsmath\amsopn.s
+ty"
+Package: amsopn 2016/03/08 v2.02 operator names
+)
+\inf@bad=\count88
+LaTeX Info: Redefining \frac on input line 213.
+\uproot@=\count89
+\leftroot@=\count90
+LaTeX Info: Redefining \overline on input line 375.
+\classnum@=\count91
+\DOTSCASE@=\count92
+LaTeX Info: Redefining \ldots on input line 472.
+LaTeX Info: Redefining \dots on input line 475.
+LaTeX Info: Redefining \cdots on input line 596.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen105
+LaTeX Font Info:    Redeclaring font encoding OML on input line 712.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 713.
+\macc@depth=\count93
+\c@MaxMatrixCols=\count94
+\dotsspace@=\muskip10
+\c@parentequation=\count95
+\dspbrk@lvl=\count96
+\tag@help=\toks18
+\row@=\count97
+\column@=\count98
+\maxfields@=\count99
+\andhelp@=\toks19
+\eqnshift@=\dimen106
+\alignsep@=\dimen107
+\tagshift@=\dimen108
+\tagwidth@=\dimen109
+\totwidth@=\dimen110
+\lineht@=\dimen111
+\@envbody=\toks20
+\multlinegap=\skip44
+\multlinetaggap=\skip45
+\mathdisplay@stack=\toks21
+LaTeX Info: Redefining \[ on input line 2817.
+LaTeX Info: Redefining \] on input line 2818.
+)
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amscls\amsthm.st
+y"
+Package: amsthm 2017/10/31 v2.20.4
+\thm@style=\toks22
+\thm@bodyfont=\toks23
+\thm@headfont=\toks24
+\thm@notefont=\toks25
+\thm@headpunct=\toks26
+\thm@preskip=\skip46
+\thm@postskip=\skip47
+\thm@headsep=\skip48
+\dth@everypar=\toks27
+)
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\amssymb
+.sty"
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+)
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\float\float.sty"
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count100
+\float@exts=\toks28
+\float@box=\box28
+\@float@everytoks=\toks29
+\@floatcapt=\box29
+)
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\geometry\geometr
+y.sty"
+Package: geometry 2018/04/16 v5.8 Page Geometry
+
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics\keyval.
+sty"
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks30
+)
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ifpdf
+.sty"
+Package: ifpdf 2018/09/07 v3.3 Provides the ifpdf switch
+)
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ifvte
+x.sty"
+Package: ifvtex 2016/05/16 v1.6 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+)
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\generic\ifxetex\ifxete
+x.sty"
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+\Gm@cnth=\count101
+\Gm@cntv=\count102
+\c@Gm@tempcnt=\count103
+\Gm@bindingoffset=\dimen112
+\Gm@wd@mp=\dimen113
+\Gm@odd@mp=\dimen114
+\Gm@even@mp=\dimen115
+\Gm@layoutwidth=\dimen116
+\Gm@layoutheight=\dimen117
+\Gm@layouthoffset=\dimen118
+\Gm@layoutvoffset=\dimen119
+\Gm@dimlist=\toks31
+
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\geometry\geometr
+y.cfg"))
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics\color.s
+ty"
+Package: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
+
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics-cfg\col
+or.cfg"
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: pdftex.def on input line 147.
+
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics-def\pdf
+tex.def"
+File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
+))
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\enumitem\enumite
+m.sty"
+Package: enumitem 2011/09/28 v3.5.2 Customized lists
+\labelindent=\skip49
+\enit@outerparindent=\dimen120
+\enit@toks=\toks32
+\enit@inbox=\box30
+\enitdp@description=\count104
+)
+\c@legali=\count105
+\c@legalii=\count106
+\c@legaliii=\count107
+\c@legaliv=\count108
+\c@legalv=\count109
+\c@legalvi=\count110
+\c@legalvii=\count111
+\c@legalviii=\count112
+\c@legalix=\count113
+\c@legalx=\count114
+\enitdp@legal=\count115
+ (exercicis.aux)
+\openout1 = `exercicis.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(90.3375pt, 433.62001pt, 90.3375pt)
+* v-part:(T,H,B)=(90.3375pt, 614.295pt, 90.3375pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=433.62001pt
+* \textheight=614.295pt
+* \oddsidemargin=18.0675pt
+* \evensidemargin=18.0675pt
+* \topmargin=-18.9325pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=11.0pt
+* \footskip=30.0pt
+* \marginparwidth=59.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\context\base\supp-pdf.
+mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count116
+\scratchdimen=\dimen121
+\scratchbox=\box31
+\nofMPsegments=\count117
+\nofMParguments=\count118
+\everyMPshowfont=\toks33
+\MPscratchCnt=\count119
+\MPscratchDim=\dimen122
+\MPnumerator=\count120
+\makeMPintoPDFobject=\count121
+\everyMPtoPDFconversion=\toks34
+) [1
+
+{C:/Users/USUARIO/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
+(exercicis.toc)
+\tf@toc=\write3
+\openout3 = `exercicis.toc'.
+
+ [1]
+LaTeX Font Info:    Try loading font information for U+msa on input line 46.
+
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd
+"
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 46.
+
+("C:\Users\USUARIO\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd
+"
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+Overfull \hbox (11.01335pt too wide) detected at line 49
+[]\OML/cmm/m/it/10.95 y \OMS/cmsy/m/n/10.95 2 \OT1/cmr/m/n/10.95 (\OML/cmm/m/it
+/10.95 A[] \OMS/cmsy/m/n/10.95 [ \OML/cmm/m/it/10.95 A[]\OT1/cmr/m/n/10.95 ) \O
+MS/cmsy/m/n/10.95  \OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 B[] \OMS/cmsy/m/n/1
+0.95 [ \OML/cmm/m/it/10.95 B[]\OT1/cmr/m/n/10.95 )\OML/cmm/m/it/10.95 :[]\OMS/c
+msy/m/n/10.95 9\OML/cmm/m/it/10.95 y[] \OMS/cmsy/m/n/10.95 2 \OML/cmm/m/it/10.9
+5 A[] \OMS/cmsy/m/n/10.95 [ \OML/cmm/m/it/10.95 A[];  y[] \OMS/cmsy/m/n/10.95 2
+ \OML/cmm/m/it/10.95 B[] \OMS/cmsy/m/n/10.95 [ \OML/cmm/m/it/10.95 B[] \OT1/cmr
+/m/n/10.95 :  \OML/cmm/m/it/10.95 y \OT1/cmr/m/n/10.95 = (\OML/cmm/m/it/10.95 y
+[]; y[]\OT1/cmr/m/n/10.95 )\OML/cmm/m/it/10.95 :
+ []
+
+
+Overfull \hbox (2.94496pt too wide) detected at line 60
+[]\OML/cmm/m/it/10.95 A[] \OMS/cmsy/m/n/10.95  \OML/cmm/m/it/10.95 A[]:[]f\OT1
+/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 A[]\OT1/cmr/m/n/10.95 ) \OMS/cmsy/m/n/10.95
+  \OML/cmm/m/it/10.95 f\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 A[]\OT1/cmr/m/n
+/10.95 )  \OMS/cmsy/m/n/10.95 ([])  \OML/cmm/m/it/10.95 A[] \OMS/cmsy/m/n/10.95
+  \OML/cmm/m/it/10.95 A[][]  \OMS/cmsy/m/n/10.95 ([]) 
+ []
+
+
+Overfull \hbox (28.25175pt too wide) detected at line 61
+\OML/cmm/m/it/10.95 A[] \OT1/cmr/m/n/10.95 = \OML/cmm/m/it/10.95 A[][]A[] \OMS/
+cmsy/m/n/10.95  \OML/cmm/m/it/10.95 A[][]  \OMS/cmsy/m/n/10.95 ([])  []\OML/cm
+m/m/it/10.95 f\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 A[]\OT1/cmr/m/n/10.95 ) \
+OMS/cmsy/m/n/10.95  \OML/cmm/m/it/10.95 f\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.
+95 A[]\OT1/cmr/m/n/10.95 )[]\OML/cmm/m/it/10.95 f[]\U/msa/m/n/10.95 
+ []
+
+[2] (exercicis.aux) ) 
+Here is how much of TeX's memory you used:
+ 2657 strings out of 492970
+ 36171 string characters out of 3125706
+ 108527 words of memory out of 3000000
+ 6514 multiletter control sequences out of 15000+200000
+ 11355 words of font info for 42 fonts, out of 3000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 27i,5n,32p,226b,278s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Users/USUARIO/AppData/Local/Programs/MiKTeX 2.9/fonts/
+type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/USUARIO/AppData/Local/Programs/Mi
+KTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/USUARIO/AppData/Lo
+cal/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Users/US
+UARIO/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.p
+fb><C:/Users/USUARIO/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfo
+nts/cm/cmr10.pfb><C:/Users/USUARIO/AppData/Local/Programs/MiKTeX 2.9/fonts/type
+1/public/amsfonts/cm/cmr12.pfb><C:/Users/USUARIO/AppData/Local/Programs/MiKTeX 
+2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/USUARIO/AppData/Local/Pro
+grams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/USUARIO/Ap
+pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Us
+ers/USUARIO/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cm
+ti12.pfb><C:/Users/USUARIO/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public
+/amsfonts/symbols/msam10.pfb>
+Output written on exercicis.pdf (3 pages, 123661 bytes).
+PDF statistics:
+ 56 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+

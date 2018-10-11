@@ -1,0 +1,68 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{color}
+\usepackage{enumitem}
+\title{Exercicis: Fonaments de les Matemàtiques}
+\author{Àlex Batlle Casellas}
+\renewcommand*\contentsname{Índex}
+\newlist{legal}{enumerate}{10}
+\setlist[legal]{label*=\arabic*.}
+
+\begin{document}
+
+\begin{titlepage}
+	\centering
+	{\scshape\LARGE Facultat de Matemàtiques i Estadística \par}
+	\vspace{1cm}
+	{\scshape\Large Universitat Politècnica de Catalunya - BarcelonaTech\par}
+	\vspace{1.5cm}
+	{\huge\bfseries Exercicis resolts de Fonaments de les Matemàtiques (Primer curs del Grau de Matemàtiques)
+	\par}
+	\vspace{2cm}
+	{\Large\itshape Àlex Batlle Casellas\par}
+
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
+%\section*{Resumen}
+
+\vfill
+\newpage
+
+\tableofcontents
+\newpage
+\section{}
+\section{Conjunts i aplicacions.}
+\begin{legal}[start=21]
+	\item Siguin $A_1,A_2,B_1,B_2\neq\emptyset$. Demostreu:
+	\begin{legal}[start=3]
+		\item $(A_1\cup A_2)\times (B_1\cup B_2)=(A_1\times B_1)\cup (A_1\times B_2)\cup (A_2\times B_1)\cup (A_2\times B_2)$:
+		$$\textrm{Sigui }y\in (A_1\cup A_2)\times (B_1\cup B_2).\textrm{ Aleshores, }\exists y_1\in A_1\cup A_2, \ y_2\in B_1\cup B_2: \ y=(y_1,y_2).$$
+		$$\iff (y_1\in A_1 \vee y_1\in A_2)\wedge (y_2\in B_1 \vee y_2\in B_2)\iff (y_1\in A_1\wedge y_2\in B_1)$$
+		$$\vee (y_1\in A_2 \wedge y_2\in B_1)\wedge (y_1\in A_1\wedge y_2\in B_2)\vee (y_1\in A_2\wedge y_2\in B_2)$$
+		$$\iff y\in (A_1\times B_1)\cup (A_2\times B_2)\cup (A_1\times B_2)\cup (A_2\times B_1).\square$$
+	\end{legal}
+	\item[30.] Considerem una aplicació $f: \ A\mapsto B$ i subconjunts $A',A''\subseteq A$ i $B',B''\subseteq B$. Demostreu:
+	\begin{legal}
+		\item[30.1.] Si $A'\subseteq A''$, aleshores $f(A')\subseteq f(A'')$. Demostreu que la igualtat és certa si $f$ és injectiva.
+		$$\textrm{Sigui }A'\subseteq A''.\textrm{ Aleshores }f(A')=\{y\in B:(\exists x\in A':\ f(x)=y)\}$$
+		$$\subseteq \{y\in B:(\exists x\in A'':f(x)=y)\}=f(A'')\implies f(A')\subseteq f(A'').\square$$
+		Si $f$ és injectiva, volem veure que $f(A'')\subseteq f(A')$ (ja que la primera inclusió per la igualtat ja l'hem demostrada a l'apartat anterior).
+		$$\textrm{Sigui }A'\subseteq A''.\textrm{ Aleshores }f(A'')\subseteq f(A') \iff A''\subseteq A'\textrm{ (resultat anterior) }\iff$$
+		$$A''=A'\textrm{ (perquè sabem }A'\subseteq A''\textrm{) }\iff\textrm{ (sabent que }f(A')\subseteq f(A'')\textrm{) }f\textrm{ és injectiva.}\square$$
+		\item[30.2.] Si $B'\subseteq B''$, aleshores $f^{-1}(B')\subseteq f^{-1}(B'')$. Demostreu que la igualtat és certa si $f$ és exhaustiva.
+		$$\textrm{Sigui }B'\subseteq B''.\textrm{ Aleshores, }f^{-1}(B')=\{x\in A:(\exists y\in B':f^{-1}(\{y\})=\{x\})\}$$
+		$$\subseteq\{x\in A:(\exists y\in B'':f^{-1}(\{y\})=\{x\})\}=f^{-1}(B'').$$
+	\end{legal}
+\end{legal}
+\section{Relacions, operacions i estructures.}
+\end{document}
