@@ -55,32 +55,24 @@
 		$$\vee (y_1\in A_2 \wedge y_2\in B_1)\wedge (y_1\in A_1\wedge y_2\in B_2)\vee (y_1\in A_2\wedge y_2\in B_2)$$
 		$$\iff y\in (A_1\times B_1)\cup (A_2\times B_2)\cup (A_1\times B_2)\cup (A_2\times B_1).\square$$
 	\end{legal}
-	\item[30.] \textbf{Considerem una aplicació $f: \ A\mapsto B$ i subconjunts $A',A''\subseteq A$ i $B',B''\subseteq B$. Demostreu:}
+	\item[30.] \textbf{Considerem una aplicació $f: \ A\mapsto B$ i subconjunts $A',A''\subseteq A$ i $B',B''\subseteq B$.}
 	\begin{legal}
-		\item[30.1.] \textbf{Si $A'\subseteq A''$, aleshores $f(A')\subseteq f(A'')$. Demostreu que la igualtat és certa si $f$ és injectiva.}
+		\item[30.1.] \textbf{Demostreu que si $A'\subseteq A''$, aleshores $f(A')\subseteq f(A'')$.}
 		$$\textrm{Sigui }A'\subseteq A''.\textrm{ Aleshores }f(A')=\{y\in B:(\exists x\in A':\ f(x)=y)\}$$
 		$$\subseteq \{y\in B:(\exists x\in A'':f(x)=y)\}=f(A'')\implies f(A')\subseteq f(A'').\square$$
-		Si $f$ és injectiva, volem veure que $f(A'')\subseteq f(A')$ (ja que la primera inclusió per la igualtat ja l'hem demostrada a l'apartat anterior).
-		$$\textrm{Sigui }A'\subseteq A''.\textrm{ Aleshores }f(A'')\subseteq f(A') \iff A''\subseteq A'\textrm{ (resultat anterior) }\iff$$
-		$$A''=A'\textrm{ (perquè sabem }A'\subseteq A''\textrm{) }\iff\textrm{ (sabent que }f(A')\subseteq f(A'')\textrm{) }f\textrm{ és injectiva.}\square$$
-		\item[30.2.] \textbf{Si $B'\subseteq B''$, aleshores $f^{-1}(B')\subseteq f^{-1}(B'')$. Demostreu que la igualtat és certa si $f$ és exhaustiva.}
+		%Si $f$ és injectiva, volem veure que $f(A'')\subseteq f(A')$ (ja que la primera inclusió per la igualtat ja l'hem demostrada a l'apartat anterior).
+		%$$\textrm{Sigui }A'\subseteq A''.\textrm{ Aleshores }f(A'')\subseteq f(A') \iff A''\subseteq A'\textrm{ (resultat anterior) }\iff$$
+		%$$A''=A'\textrm{ (perquè sabem }A'\subseteq A''\textrm{) }\iff\textrm{ (sabent que }f(A')\subseteq f(A'')\textrm{) }f\textrm{ és injectiva.}\square$$
+		\item[30.3.] \textbf{Demostreu que si $B'\subseteq B''$, aleshores $f^{-1}(B')\subseteq f^{-1}(B'')$.}
 		$$\textrm{Sigui }B'\subseteq B''.\textrm{ Aleshores, }f^{-1}(B')=\{x\in A:(\exists y\in B':f^{-1}(\{y\})=\{x\})\}\subseteq$$
-		$$\{x\in A:(\exists y\in B'':f^{-1}(\{y\})=\{x\})\}=f^{-1}(B'')\implies f^{-1}(B')\subseteq f^{-1}(B'').\square$$
-		Si $f^{-1}$ és exhaustiva, volem veure que $f^{-1}(B'')\subseteq f^{-1}(B')$ (ja que la primera inclusió per la igualtat ja l'hem demostrada a l'apartat anterior) quan la igualtat dels dos conjunts $B'$ i $B''$ es dóna, és a dir, quan $B'\subseteq B''$ i $B''\subseteq B'$. Quan passa això, per l'anterior demostració:
-		\begin{itemize}
-			\item $f^{-1}(B')\subseteq f^{-1}(B''),$
-			\item $f^{-1}(B'')\subseteq f^{-1}(B').$
-		\end{itemize}
-		Per tant, tenim que $f^{-1}(B')=f^{-1}(B'')$.
-		\pendent
-		
-%		Això (l'exhaustivitat) vol dir que ambdós conjunts $B'$ i $B''$ tenen un conjunt antiimatge que els cobreix sencers. De fet, significa que (sabent $B'\subseteq B''$) el conjunt antiimatge $f^{-1}(B'')$.
-		
-		
-		
-%		La igualtat d'antiimatges es donarà quan $B'=B''$.
-		%\subseteq f^{-1}(B') \iff B''\subseteq B'\textrm{ (resultat anterior) }\iff$$
-		%$$B''=B'\textrm{ (perquè sabem }B'\subseteq B''\textrm{) }\iff\textrm{ (sabent }f^{-1}(B')\subseteq f^{-1}(B'')\textrm{) }f\textrm{ és exhaustiva.}\square$$
+		$$\{x\in A:(\exists y\in B'':f^{-1}(\{y\})=\{x\})\}=f^{-1}(B'')\implies f^{-1}(B')\subseteq f^{-1}(B'').\square$$		
+		\item[30.2.] \textbf{Demostreu que $f(A')\subseteq f(A'')$ implica que $A'\subseteq A''$, per a tot $A',A''\subseteq A$, si, i només si, $f$ és
+injectiva.}\\
+		Si fem el conjunt antiimatge dels dos costats de la hipòtesi ($f(A')\subseteq f(A'')$):
+		$$f^{-1}(f(A'))\subseteq f^{-1}(f(A''))\implies (f^{-1}\circ f)(A')\subseteq (f^{-1}\circ f)(A'')\implies$$
+		$$Id_A(A')\subseteq Id_A(A'')\implies A'\subseteq A''.$$
+		Això només passarà quan $f$ és injectiva, doncs en tal cas $A'$ i $A''$ no podrien ser disjunts.$\square$\\Si $f$ no fos injectiva, en canvi, $A'$ i $A''$ podrien ser disjunts però donar el mateix conjunt imatge sense inconvenient.
+		\item[30.4.] \textbf{Demostreu que $f^{-1}(B')\subseteq f^{-1}(B'')$ implica que $B'\subseteq B''$, per a tot $B',B''\subseteq B$, si, i només si, $f$ és exhaustiva.}
 	\end{legal}
 	\item[31.] \textbf{Considerem una aplicació $f: \ A\mapsto B$. Demostreu:}
 	\begin{legal}
@@ -91,7 +83,7 @@
 		$$\implies A'\subseteq f^{-1}(f(A')).\square$$
 		\item[31.2.] \textbf{$f$ és injectiva si i només si $A'=f^{-1}(f(A')) \ \forall A'\subseteq A$.}\\
 		Agafant la igualtat que volem demostrar, si apliquem $f$ als dos costats, ens ha de quedar una identitat per poder afirmar que $f$ és injectiva. Com podem efectivament comprovar,
-		$$f(A')=f(f^{-1}(f(A')))=Id_B(f(A'))=f(A')$$i $A'=A'$, per tant, queda demostrat l'enunciat.
+		$$f(A')=f(f^{-1}(f(A')))=Id_B(f(A'))=f(A')$$i $A'=A'$, per tant, queda demostrat l'enunciat.$\square$
 	\end{legal}
 \end{legal}
 
