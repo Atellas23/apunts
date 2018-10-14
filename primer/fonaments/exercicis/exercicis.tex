@@ -41,6 +41,9 @@
 \tableofcontents
 \newpage
 \section{}
+
+\newpage
+
 \section{Conjunts i aplicacions.}
 \begin{legal}[start=21]
 	\item Siguin $A_1,A_2,B_1,B_2\neq\emptyset$. Demostreu:
@@ -60,9 +63,31 @@
 		$$\textrm{Sigui }A'\subseteq A''.\textrm{ Aleshores }f(A'')\subseteq f(A') \iff A''\subseteq A'\textrm{ (resultat anterior) }\iff$$
 		$$A''=A'\textrm{ (perquè sabem }A'\subseteq A''\textrm{) }\iff\textrm{ (sabent que }f(A')\subseteq f(A'')\textrm{) }f\textrm{ és injectiva.}\square$$
 		\item[30.2.] Si $B'\subseteq B''$, aleshores $f^{-1}(B')\subseteq f^{-1}(B'')$. Demostreu que la igualtat és certa si $f$ és exhaustiva.
-		$$\textrm{Sigui }B'\subseteq B''.\textrm{ Aleshores, }f^{-1}(B')=\{x\in A:(\exists y\in B':f^{-1}(\{y\})=\{x\})\}$$
-		$$\subseteq\{x\in A:(\exists y\in B'':f^{-1}(\{y\})=\{x\})\}=f^{-1}(B'').$$
+		$$\textrm{Sigui }B'\subseteq B''.\textrm{ Aleshores, }f^{-1}(B')=\{x\in A:(\exists y\in B':f^{-1}(\{y\})=\{x\})\}\subseteq$$
+		$$\{x\in A:(\exists y\in B'':f^{-1}(\{y\})=\{x\})\}=f^{-1}(B'')\implies f^{-1}(B')\subseteq f^{-1}(B'').\square$$
+		Si $f^{-1}$ és exhaustiva, volem veure que $f^{-1}(B'')\subseteq f^{-1}(B')$ (ja que la primera inclusió per la igualtat ja l'hem demostrada a l'apartat anterior) quan la igualtat dels dos conjunts $B'$ i $B''$ es dóna, és a dir, quan $B'\subseteq B''$ i $B''\subseteq B'$. Quan passa això, per l'anterior demostració:
+		\begin{itemize}
+			\item $f^{-1}(B')\subseteq f^{-1}(B''),$
+			\item $f^{-1}(B'')\subseteq f^{-1}(B').$
+		\end{itemize}
+		Per tant, tenim que $f^{-1}(B')=f^{-1}(B'')$.
+		
+%		Això (l'exhaustivitat) vol dir que ambdós conjunts $B'$ i $B''$ tenen un conjunt antiimatge que els cobreix sencers. De fet, significa que (sabent $B'\subseteq B''$) el conjunt antiimatge $f^{-1}(B'')$.
+		
+		
+		
+%		La igualtat d'antiimatges es donarà quan $B'=B''$.
+		%\subseteq f^{-1}(B') \iff B''\subseteq B'\textrm{ (resultat anterior) }\iff$$
+		%$$B''=B'\textrm{ (perquè sabem }B'\subseteq B''\textrm{) }\iff\textrm{ (sabent }f^{-1}(B')\subseteq f^{-1}(B'')\textrm{) }f\textrm{ és exhaustiva.}\square$$
+	\end{legal}
+	\item[31.] Considerem una aplicació $f: \ A\mapsto B$. Demostreu:
+	\begin{legal}
+		\item[31.1.] Si $A'\subseteq A$, aleshores $A'\subseteq f^{-1}(f(A'))$.
+		\item[31.2.] $f$ és injectiva si i només si $A'=f^{-1}(f(A')) \ \forall A'\subseteq A$.
 	\end{legal}
 \end{legal}
+
+\newpage
+
 \section{Relacions, operacions i estructures.}
 \end{document}
