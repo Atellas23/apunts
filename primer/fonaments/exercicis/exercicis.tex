@@ -13,6 +13,7 @@
 \renewcommand*\contentsname{Índex}
 \newlist{legal}{enumerate}{10}
 \setlist[legal]{label*=\arabic*.}
+\newcommand{\pendent}{\textbf{\textcolor{red}{PENDENT D'ACABAR.}}\\}
 
 \begin{document}
 
@@ -40,29 +41,29 @@
 
 \tableofcontents
 \newpage
-\section{}
+\section{Formalisme matemàtic: enunciats i demostracions.}
 
 \newpage
 
 \section{Conjunts i aplicacions.}
 \begin{legal}[start=21]
-	\item Siguin $A_1,A_2,B_1,B_2\neq\emptyset$. Demostreu:
+	\item \textbf{Siguin $A_1,A_2,B_1,B_2\neq\emptyset$. Demostreu:}
 	\begin{legal}[start=3]
-		\item $(A_1\cup A_2)\times (B_1\cup B_2)=(A_1\times B_1)\cup (A_1\times B_2)\cup (A_2\times B_1)\cup (A_2\times B_2)$:
+		\item \textbf{$(A_1\cup A_2)\times (B_1\cup B_2)=(A_1\times B_1)\cup (A_1\times B_2)\cup (A_2\times B_1)\cup (A_2\times B_2)$.}
 		$$\textrm{Sigui }y\in (A_1\cup A_2)\times (B_1\cup B_2).\textrm{ Aleshores, }\exists y_1\in A_1\cup A_2, \ y_2\in B_1\cup B_2: \ y=(y_1,y_2).$$
 		$$\iff (y_1\in A_1 \vee y_1\in A_2)\wedge (y_2\in B_1 \vee y_2\in B_2)\iff (y_1\in A_1\wedge y_2\in B_1)$$
 		$$\vee (y_1\in A_2 \wedge y_2\in B_1)\wedge (y_1\in A_1\wedge y_2\in B_2)\vee (y_1\in A_2\wedge y_2\in B_2)$$
 		$$\iff y\in (A_1\times B_1)\cup (A_2\times B_2)\cup (A_1\times B_2)\cup (A_2\times B_1).\square$$
 	\end{legal}
-	\item[30.] Considerem una aplicació $f: \ A\mapsto B$ i subconjunts $A',A''\subseteq A$ i $B',B''\subseteq B$. Demostreu:
+	\item[30.] \textbf{Considerem una aplicació $f: \ A\mapsto B$ i subconjunts $A',A''\subseteq A$ i $B',B''\subseteq B$. Demostreu:}
 	\begin{legal}
-		\item[30.1.] Si $A'\subseteq A''$, aleshores $f(A')\subseteq f(A'')$. Demostreu que la igualtat és certa si $f$ és injectiva.
+		\item[30.1.] \textbf{Si $A'\subseteq A''$, aleshores $f(A')\subseteq f(A'')$. Demostreu que la igualtat és certa si $f$ és injectiva.}
 		$$\textrm{Sigui }A'\subseteq A''.\textrm{ Aleshores }f(A')=\{y\in B:(\exists x\in A':\ f(x)=y)\}$$
 		$$\subseteq \{y\in B:(\exists x\in A'':f(x)=y)\}=f(A'')\implies f(A')\subseteq f(A'').\square$$
 		Si $f$ és injectiva, volem veure que $f(A'')\subseteq f(A')$ (ja que la primera inclusió per la igualtat ja l'hem demostrada a l'apartat anterior).
 		$$\textrm{Sigui }A'\subseteq A''.\textrm{ Aleshores }f(A'')\subseteq f(A') \iff A''\subseteq A'\textrm{ (resultat anterior) }\iff$$
 		$$A''=A'\textrm{ (perquè sabem }A'\subseteq A''\textrm{) }\iff\textrm{ (sabent que }f(A')\subseteq f(A'')\textrm{) }f\textrm{ és injectiva.}\square$$
-		\item[30.2.] Si $B'\subseteq B''$, aleshores $f^{-1}(B')\subseteq f^{-1}(B'')$. Demostreu que la igualtat és certa si $f$ és exhaustiva.
+		\item[30.2.] \textbf{Si $B'\subseteq B''$, aleshores $f^{-1}(B')\subseteq f^{-1}(B'')$. Demostreu que la igualtat és certa si $f$ és exhaustiva.}
 		$$\textrm{Sigui }B'\subseteq B''.\textrm{ Aleshores, }f^{-1}(B')=\{x\in A:(\exists y\in B':f^{-1}(\{y\})=\{x\})\}\subseteq$$
 		$$\{x\in A:(\exists y\in B'':f^{-1}(\{y\})=\{x\})\}=f^{-1}(B'')\implies f^{-1}(B')\subseteq f^{-1}(B'').\square$$
 		Si $f^{-1}$ és exhaustiva, volem veure que $f^{-1}(B'')\subseteq f^{-1}(B')$ (ja que la primera inclusió per la igualtat ja l'hem demostrada a l'apartat anterior) quan la igualtat dels dos conjunts $B'$ i $B''$ es dóna, és a dir, quan $B'\subseteq B''$ i $B''\subseteq B'$. Quan passa això, per l'anterior demostració:
@@ -71,6 +72,7 @@
 			\item $f^{-1}(B'')\subseteq f^{-1}(B').$
 		\end{itemize}
 		Per tant, tenim que $f^{-1}(B')=f^{-1}(B'')$.
+		\pendent
 		
 %		Això (l'exhaustivitat) vol dir que ambdós conjunts $B'$ i $B''$ tenen un conjunt antiimatge que els cobreix sencers. De fet, significa que (sabent $B'\subseteq B''$) el conjunt antiimatge $f^{-1}(B'')$.
 		
@@ -80,14 +82,36 @@
 		%\subseteq f^{-1}(B') \iff B''\subseteq B'\textrm{ (resultat anterior) }\iff$$
 		%$$B''=B'\textrm{ (perquè sabem }B'\subseteq B''\textrm{) }\iff\textrm{ (sabent }f^{-1}(B')\subseteq f^{-1}(B'')\textrm{) }f\textrm{ és exhaustiva.}\square$$
 	\end{legal}
-	\item[31.] Considerem una aplicació $f: \ A\mapsto B$. Demostreu:
+	\item[31.] \textbf{Considerem una aplicació $f: \ A\mapsto B$. Demostreu:}
 	\begin{legal}
-		\item[31.1.] Si $A'\subseteq A$, aleshores $A'\subseteq f^{-1}(f(A'))$.
-		\item[31.2.] $f$ és injectiva si i només si $A'=f^{-1}(f(A')) \ \forall A'\subseteq A$.
+		\item[31.1.] \textbf{Si $A'\subseteq A$, aleshores $A'\subseteq f^{-1}(f(A'))$.}
+		$$f(A')=\{y\in B:(\exists x\in A':f(x)=y)\}.$$
+		$$f^{-1}(f(A'))=\{x\in A:f(x)\in f(A')\}.$$
+		Tenint en compte que podrien existir elements d'A que corresponguessin amb l'aplicació a elements d'$f(A')$, el conjunt antiimatge $f^{-1}(f(A'))$ és un superconjunt d'$A'$.
+		$$\implies A'\subseteq f^{-1}(f(A')).\square$$
+		\item[31.2.] \textbf{$f$ és injectiva si i només si $A'=f^{-1}(f(A')) \ \forall A'\subseteq A$.}\\
+		Agafant la igualtat que volem demostrar, si apliquem $f$ als dos costats, ens ha de quedar una identitat per poder afirmar que $f$ és injectiva. Com podem efectivament comprovar,
+		$$f(A')=f(f^{-1}(f(A')))=Id_B(f(A'))=f(A')$$i $A'=A'$, per tant, queda demostrat l'enunciat.
 	\end{legal}
 \end{legal}
 
 \newpage
 
 \section{Relacions, operacions i estructures.}
+
+\newpage
+
+\section{Conjunts de nombres. Numerabilitat.}
+
+\newpage
+
+\section{El cos dels nombres complexos.}
+
+\newpage
+
+\section{Aritmètica}
+
+\newpage
+
+\section{Polinomis.}
 \end{document}
