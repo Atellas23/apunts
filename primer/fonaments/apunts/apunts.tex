@@ -8,11 +8,13 @@
 \usepackage[margin=1.25in]{geometry}
 \usepackage{color}
 \newcommand{\propietats}{\underline{{\scshape Propietats:}}}
-\newcommand{\definicio}{\underline{\textbf{Definició:}}\\}
-\newcommand{\proposicio}{\underline{\textbf{Proposició:}}\\}
+\newtheorem{defi}{Definició}[section]
+\newtheorem{prop}{Proposició}[section]
+\newtheorem{thm}{Teorema}[section]
 \newcommand{\demostracio}{\textbf{{\scshape Demostració:}}\\}
 \newcommand{\ex}{\underline{Exemple:}}
 \newcommand{\pendent}{\textcolor{red}{\textbf{PENDENT D'ACABAR.}}}
+
 
 \title{Fonaments de les Matemàtiques}
 \author{Àlex Batlle Casellas}
@@ -47,8 +49,11 @@
 \newpage
 \section{}
 \section{Conjunts i aplicacions.}
+
 \section{Relacions, operacions i estructures.}
-\definicio $R$ és una \textit{relació binària} en un conjunt $A$ si $R\subseteq A\times A$. \\
+\begin{defi}
+	$R$ és una \textit{relació binària} en un conjunt $A$ si $R\subseteq A\times A$. \\
+\end{defi}
 \propietats \begin{itemize}
 	\item \textbf{Reflexiva:} $\forall x\in A (xRx)$.
 	\item \textbf{Simètrica:} $\forall x,y\in A (xRy \rightarrow yRx)$.
@@ -57,14 +62,14 @@
 	\item \textbf{Connexa:} $\forall x,y\in A (xRy\vee yRx)$.
 \end{itemize}
 \subsection{Relacions d'equivalència.}
-\definicio Una relació $R$ en un conjunt $A\neq\emptyset$ s'anomena \textit{d'equivalència} si compleix les propietats reflexiva, simètrica i transitiva.\\
-\definicio Definim la \textit{classe d'equivalència} d'un element $x\in A$ com:$$[x]_R=\{y\in A|yRx\}.$$També escrivim $[x]$ o $\bar{x}$ quan no hi ha risc de confusió.\\
+\begin{defi} Una relació $R$ en un conjunt $A\neq\emptyset$ s'anomena \textit{d'equivalència} si compleix les propietats reflexiva, simètrica i transitiva.\end{defi}
+\begin{defi} Definim la \textit{classe d'equivalència} d'un element $x\in A$ com:$$[x]_R=\{y\in A|yRx\}.$$També escrivim $[x]$ o $\bar{x}$ quan no hi ha risc de confusió.\end{defi}
 \propietats \begin{enumerate}
 	\item $\forall x\in A(x\in [x]).$
 	\item $\forall x,y\in A (xRy\iff [x]=[y]).$
 	\item $A=\bigcup_{x\in A}[x].$
 \end{enumerate}
-\definicio Anomenem una \textit{partició d'un conjunt} a una família $\Pi$ de subconjunts d'$A$ i diferents del buit, disjunts dos a dos, tals que la seva unió és tot $A$. És a dir, $\Pi\subseteq\mathcal{P}(A)$.\\
+\begin{defi} Anomenem una \textit{partició d'un conjunt} a una família $\Pi$ de subconjunts d'$A$ i diferents del buit, disjunts dos a dos, tals que la seva unió és tot $A$. És a dir, $\Pi\subseteq\mathcal{P}(A)$.\end{defi}
 \propietats
 \begin{enumerate}
 	\item $X\neq\emptyset$ $\forall X\in\Pi.$
@@ -72,7 +77,7 @@
 	\item $A=\bigcup_{X\in\Pi}X.$
 \end{enumerate}
 Els subconjunts $X\in\Pi$ s'anomenen les \textit{parts} o \textit{blocs de la partició}.\\
-\definicio Anomenem el \textit{conjunt quocient} d'un altre conjunt $A$ respecte la relació $R$ al conjunt format per totes les classes d'equivalència definides a partir d'$R$.$$A/R=\{\alpha|\exists x\in A([x]=\alpha)\}.$$
-\proposicio El conjunt quocient és una partició d'$A$.\\
+\begin{defi} Anomenem el \textit{conjunt quocient} d'un altre conjunt $A$ respecte la relació $R$ al conjunt format per totes les classes d'equivalència definides a partir d'$R$.$$A/R=\{\alpha|\exists x\in A([x]=\alpha)\}.$$\end{defi}
+\begin{prop} El conjunt quocient és una partició d'$A$.\end{prop}
 \demostracio 
 \end{document}
