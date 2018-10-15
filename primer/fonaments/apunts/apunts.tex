@@ -8,9 +8,11 @@
 \usepackage[margin=1.25in]{geometry}
 \usepackage{color}
 \newcommand{\propietats}{\underline{{\scshape Propietats:}}}
+\newcommand{\obs}{\underline{Observació:} }
 \newtheorem{defi}{Definició}[section]
 \newtheorem{prop}{Proposició}[section]
 \newtheorem{thm}{Teorema}[section]
+\newtheorem{ax}{Axioma}[section]
 \newcommand{\demostracio}{\textbf{{\scshape Demostració:}}\\}
 \newcommand{\ex}{\underline{Exemple:}}
 \newcommand{\pendent}{\textcolor{red}{\textbf{PENDENT D'ACABAR.}}}
@@ -47,23 +49,212 @@
 \tableofcontents
 
 \newpage
+
 \section{}
+
+\newpage
+
 \section{Conjunts i aplicacions.}
+\begin{ax}
+Axioma d'extensionalitat. $$A=B\iff\forall x(x\in A \leftrightarrow x\in B).$$
+\end{ax}
+\begin{defi}
+Relació d'inclusió.
+$$B\subseteq A\iff \forall x(x\in B\rightarrow x\in A).$$
+\end{defi}
+\noindent\propietats
+\begin{enumerate}
+	\item $A\subseteq A;$
+	\item $A\subseteq B\wedge B\subseteq C\implies A\subseteq C;$
+	\item $A\subseteq B\wedge B\subseteq A \iff A=B;$
+	\item $\forall A, \ \emptyset\subseteq A.$
+\end{enumerate}
+\underline{Inclusió estricta:}
+\begin{enumerate}
+	\item $A\not\subset A;$
+	\item $B\subset A\implies A\not\subset B;$
+	\item $A\subset B\wedge B\subset C\implies A\subset C;$
+	\item $A\neq\emptyset\iff\emptyset\subset A.$
+\end{enumerate}
+\subsection{Operacions amb conjunts.}
+\begin{defi}
+Unió d'$A$ i $B$ ($A\cup B$).
+$$A\cup B=\{x:x\in A\vee x\in B\}.$$
+\end{defi}
+\noindent\propietats
+\begin{enumerate}
+	\item $A\cup A=A;$
+	\item $A\cup B=B\cup A;$
+	\item $(A\cup B)\cup C=A\cup (B\cup C)=A\cup B\cup C;$
+	\item $A\cup\emptyset=A;$
+	\item $A\subseteq A\cup B, \ B\subseteq A\cup B;$
+	\item $A\subseteq B\iff A\cup B=B;$
+	\item $A\cup B\subset C\iff A\subseteq C\wedge B\subseteq C.$
+\end{enumerate}
+\begin{defi}
+Intersecció d'$A$ i $B$ ($A\cap B$).
+$$A\cap B=\{x:x\in A\wedge x\in B\}.$$
+\end{defi}
+\noindent\propietats
+\begin{enumerate}
+	\item $A\cap A=A;$
+	\item $A\cap B=B\cap A;$
+	\item $(A\cap B)\cap C=A\cap (B\cap C)=A\cap B\cap C;$
+	\item $A\cap\emptyset=\emptyset;$
+	\item $A\cap B\subseteq A, \ A\cap B\subseteq B;$
+	\item $A\subseteq B\iff A\cap B=A;$
+	\item $C\subset A\cap B\iff C\subseteq A\wedge C\subseteq B.$
+\end{enumerate}
+\begin{defi}
+Diferència d'$A$ i $B$ ($A-B$ o $A\backslash B$).
+$$A\backslash B=\{x:x\in A\wedge x\not\in B\}.$$
+\end{defi}
+\noindent\propietats
+\begin{enumerate}
+	\item $A-\emptyset=A,\emptyset-A=\emptyset,A-A=\emptyset;$
+	\item $A-B\subseteq A;$
+	\item $(A-B)\cap B=\emptyset;$
+	\item $A\subseteq B\iff A-B=\emptyset;$
+	\item $C\subseteq A-B\iff (C\subseteq A)\wedge(C\cap B=\emptyset).$
+\end{enumerate}
+\underline{{\scshape Propietats de la unió i la intersecció:}}
+\begin{enumerate}
+	\item $A\cap(B\cup C)=(A\cap B)\cup(A\cap C);$
+	\item $A\cup(B\cap C)=(A\cup B)\cap(A\cup C);$
+	\item $A\cap(A\cup B)=A;$
+	\item $A\cup(A\cap B)=A.$
+\end{enumerate}
+\begin{defi}
+Conjunt complementari:\\
+Fixem un conjunt $\Omega$ i considerem només subconjunts d'$\Omega$. El complementari d'un subconjunt $A$ d'$\Omega$ és el conjunt de tots els elements d'$\Omega$ que no pertanyen a $A$. (Notació: $A^c$ o $\bar{A}$):
+$$A^c=\{x\in\Omega:x\not\in A\}=\Omega-A.$$
+\end{defi}
+\propietats
+\begin{enumerate}
+	\item $\emptyset^c=\Omega,\ \Omega^c=\emptyset;$
+	\item $(A^c)^c=A;$
+	\item $A\cap A^c=\emptyset;$\\
+	$A\cup A^c=\Omega;$
+	\item $A\subseteq B\iff B^c\subseteq A^c;$
+	\item $A\cap B=\emptyset\iff A\subseteq B^c\iff B\subseteq A^c;$
+	\item $A\cup B=\Omega\iff A^c\subseteq B\iff B^c\subseteq A;$
+	\item $A-B=A\cap B^c;$
+	\item $(A\cup B)^c=A^c\cap B^c.$
+\end{enumerate}
+\begin{defi}
+Parell ordenat. El parell ordenat de $x$ i $y$ és un objecte que denotem per $(x,y)$ que compleix:
+$$(x,y)=(z,t)\iff x=z \wedge y=t.$$
+Definició de Kuratowski:
+$$(x,y)=\{\{x\},\{x,y\}\}.$$
+\end{defi}
+\begin{defi}
+Producte cartesià. El producte cartesià de dos conjunts $A,B$ és el conjunt format per tots els parells ordenats $(x,y)$ tals que $x\in A$ i $y\in B$. (Notació: $A\times B$)
+$$A\times B=\{(x,y):x\in A\wedge y\in B\};$$
+anàlogament,
+$$A_1\times A_2\times\cdots\times A_n=\{(x_1,x_2,\ldots,x_n):x_i\in A_i\forall i\}.$$
+\end{defi}
+\propietats
+\begin{enumerate}
+	\item $A\times\emptyset=\emptyset=\emptyset\times A;$
+	\item $A\times B=B\times A\iff A=B\vee A=\emptyset\vee B=\emptyset.$
+\end{enumerate}
+\subsection{Conjunt de les parts.}
+\begin{defi}
+Conjunt de les parts. Anomenem el conjunt de les parts d'$A$ el conjunt que té per elements tots els subconjunts d'$A$. Notació: $\mathcal{P}(A)$.
+$$\mathcal{P}(A)=\{X:X\subseteq A\}$$
+\end{defi}
+\noindent\propietats
+\begin{enumerate}
+\item $X\in\mathcal{P}(A)\iff X\subseteq A;$
+\item $\emptyset\in\mathcal{P}(A),\ A\in\mathcal{P}(A).$
+\end{enumerate}
+\subsection{Aplicacions.}
+\begin{defi}
+Correspondència. Una correspondència és una terna $(A,B,G)$ on $A$ i $B$ són conjunts i $G\subseteq A\times B$.
+\end{defi}
+\begin{defi}
+Aplicació. Una aplicació és una correspondència $(A,B,f)$ on $f\subseteq A\times B$:
+$$\forall x\in A \ \exists!y\in B:(x,y)\in f.$$
+Anomenem a $f(x)=y$ la imatge d'$x$ per $f$.
+\end{defi}
+\noindent Notació:
+$$f: \ A\mapsto B.$$
+$$A\xrightarrow{f}B.$$
+\noindent Al conjunt $A$ l'anomenem domini, i al conjunt $B$ codomini.\\
+\begin{defi}
+Restricció. Donada una aplicació $f: \ A\mapsto B$ i un subconjunt $A'\subseteq A$, anomenem la restricció d'$f$ per $A'$ a l'aplicació $f_{|A'}: \ A'\mapsto B$.
+\end{defi}
+\begin{defi}
+Conjunt imatge. Si $f: \ A\mapsto B$ i $A'\subseteq A$, aleshores
+$$f(A')=\{y\in B:\exists a\in A'(y=f(a))\}=\{f(a):a\in A'\}$$
+és el conjunt imatge d'$A'$ per $f$.
+\end{defi}
+\begin{defi}
+Conjunt antiimatge. Si $f: \ A\mapsto B$ i $B'\subseteq B$, aleshores
+$$f^{-1}(B')=\{x\in A:f(x)\in B'\}\subseteq A$$
+és el conjunt antiimatge de $B'$ per $f$.
+\end{defi}
+\noindent\textbf{Una qüestió de notació:} notem per $f^{-1}$ tant \textit{el conjunt antiimatge} com \textit{la funció inversa}. És important saber distingir entre aquests dos significats:
+\begin{itemize}
+\item $f^{-1}(\{b\})$ és el \textit{conjunt antiimatge} del conjunt $\{b\}$ per $f$.
+\item $f^{-1}(b)$ pot ser (fent un abús de notació) el conjunt antiimatge del conjunt que té per únic element a $b$, com s'indica a 1., però també pot ser l'aplicació inversa (definida més endavant), que no sempre existeix.
+\end{itemize}
+\subsubsection{Injectivitat, exhaustivitat i bijectivitat.}
+\begin{defi}
+Injectivitat. $f: \ A\mapsto B$ és injectiva si i només si
+$$\forall a_1,a_2\in A(a_1\neq a_2\implies f(a_1)\neq f(a_2)).$$
+Se sol utilitzar el recíproc,
+$$\forall a_1,a_2\in A(f(a_1)=f(a_2)\implies a_1=a_2).$$
+\end{defi}
+\begin{defi}
+Exhaustivitat. $f: \ A\mapsto B$ és exhaustiva si i només si
+$$\forall b\in B\exists a\in A:f(a)=b.$$
+\end{defi}
+\noindent\obs
+\begin{enumerate}
+\item $|A|>|B|:$ no hi ha aplicacions injectives $A\mapsto B$. Si n'hi hagués, $|A|\leq|B|$.
+\item $|B|>|A|:$ no hi ha aplicacions exhaustives $A\mapsto B$. Si n'hi hagués, $|A|\geq|B|$.
+\end{enumerate}
+\begin{defi}
+Bijectivitat.  $f: \ A\mapsto B$ és exhaustiva si i només si $f$ és injectiva i exhaustiva.
+\end{defi}
+\noindent\obs $A,B$ finits i existeix una bijecció.
+$$A\mapsto B\implies (|A|\leq|B|)\wedge (|A|\geq|B|)\implies |A|=|B|.$$
+Aleshores, $f$ és bijectiva si i només si $|A|=|B|$. Donat un $y\in B$,
+\begin{itemize}
+\item $f$ és injectiva $\implies\exists x\in A:f(x)=y.$
+\item $f$ és exhaustiva $\implies\exists!x\in A:f(x)=y.$
+\end{itemize}
+\begin{defi}
+Aplicació inversa. L'aplicació inversa d'una bijecció $f$ és aquella aplicació que a cada membre del codomini li assigna l'antiimatge per $f$.
+$$\forall y\in B\exists!x\in A:f(x)=y$$
+Es nota $f^{-1}: \ B\mapsto A$. Si $f$ bijectiva, aleshores
+$$f(x)=y\iff f^{-1}(y)=x$$
+\end{defi}
+\subsubsection{Composició d'aplicacions.}
+$$A\xrightarrow{f}B\xrightarrow{g}C$$
+$$a\rightarrow f(a)\rightarrow g(f(a))$$
+
+\newpage
 
 \section{Relacions, operacions i estructures.}
 \begin{defi}
 	$R$ és una \textit{relació binària} en un conjunt $A$ si $R\subseteq A\times A$. \\
 \end{defi}
-\propietats \begin{itemize}
+\noindent\propietats \begin{itemize}
 	\item \textbf{Reflexiva:} $\forall x\in A (xRx)$.
 	\item \textbf{Simètrica:} $\forall x,y\in A (xRy \rightarrow yRx)$.
 	\item \textbf{Antisimètrica:} $\forall x,y\in A (xRy\wedge yRx\rightarrow x=y)$.
 	\item \textbf{Transitiva:} $\forall x,y,z\in A (xRy\wedge yRz\rightarrow xRz)$.
 	\item \textbf{Connexa:} $\forall x,y\in A (xRy\vee yRx)$.
 \end{itemize}
+
+
 \subsection{Relacions d'equivalència.}
 \begin{defi} Una relació $R$ en un conjunt $A\neq\emptyset$ s'anomena \textit{d'equivalència} si compleix les propietats reflexiva, simètrica i transitiva.\end{defi}
-\begin{defi} Definim la \textit{classe d'equivalència} d'un element $x\in A$ com:$$[x]_R=\{y\in A|yRx\}.$$També escrivim $[x]$ o $\bar{x}$ quan no hi ha risc de confusió.\end{defi}
+\begin{defi} Definim la \textit{classe d'equivalència} d'un element $x\in A$ com:
+$$[x]_R=\{y\in A|yRx\}.$$
+També escrivim $[x]$ o $\bar{x}$ quan no hi ha risc de confusió.\end{defi}
 \propietats \begin{enumerate}
 	\item $\forall x\in A(x\in [x]).$
 	\item $\forall x,y\in A (xRy\iff [x]=[y]).$
@@ -79,5 +270,5 @@
 Els subconjunts $X\in\Pi$ s'anomenen les \textit{parts} o \textit{blocs de la partició}.\\
 \begin{defi} Anomenem el \textit{conjunt quocient} d'un altre conjunt $A$ respecte la relació $R$ al conjunt format per totes les classes d'equivalència definides a partir d'$R$.$$A/R=\{\alpha|\exists x\in A([x]=\alpha)\}.$$\end{defi}
 \begin{prop} El conjunt quocient és una partició d'$A$.\end{prop}
-\demostracio 
+\noindent\demostracio 
 \end{document}
