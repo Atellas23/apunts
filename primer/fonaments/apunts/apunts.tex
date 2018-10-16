@@ -125,8 +125,7 @@ $$A\backslash B=\{x:x\in A\wedge x\not\in B\}.$$
 	\item $A\cup(A\cap B)=A.$
 \end{enumerate}
 \begin{defi}
-Conjunt complementari:\\
-Fixem un conjunt $\Omega$ i considerem només subconjunts d'$\Omega$. El complementari d'un subconjunt $A$ d'$\Omega$ és el conjunt de tots els elements d'$\Omega$ que no pertanyen a $A$. (Notació: $A^c$ o $\bar{A}$):
+Conjunt complementari. Fixem un conjunt $\Omega$ i considerem només subconjunts d'$\Omega$. El complementari d'un subconjunt $A$ d'$\Omega$ és el conjunt de tots els elements d'$\Omega$ que no pertanyen a $A$. (Notació: $A^c$ o $\bar{A}$):
 $$A^c=\{x\in\Omega:x\not\in A\}=\Omega-A.$$
 \end{defi}
 \propietats
@@ -185,6 +184,10 @@ $$A\xrightarrow{f}B.$$
 Restricció. Donada una aplicació $f: \ A\mapsto B$ i un subconjunt $A'\subseteq A$, anomenem la restricció d'$f$ per $A'$ a l'aplicació $f_{|A'}: \ A'\mapsto B$.
 \end{defi}
 \begin{defi}
+Aplicació identitat. L'aplicació identitat en un conjunt $A$ està definida per
+$$I_A:\ A\mapsto A \quad I_A(x)=x\ \forall x\in A.$$
+\end{defi}
+\begin{defi}
 Conjunt imatge. Si $f: \ A\mapsto B$ i $A'\subseteq A$, aleshores
 $$f(A')=\{y\in B:\exists a\in A'(y=f(a))\}=\{f(a):a\in A'\}$$
 és el conjunt imatge d'$A'$ per $f$.
@@ -232,8 +235,29 @@ Es nota $f^{-1}: \ B\mapsto A$. Si $f$ bijectiva, aleshores
 $$f(x)=y\iff f^{-1}(y)=x$$
 \end{defi}
 \subsubsection{Composició d'aplicacions.}
-$$A\xrightarrow{f}B\xrightarrow{g}C$$
-$$a\rightarrow f(a)\rightarrow g(f(a))$$
+\begin{defi}Composició d'aplicacions. Si $f:\ A\mapsto B$ i $g:\ B\mapsto C$ són aplicacions, la composició de $f$ i $g$ és l’aplicació $g\circ f:\ A \mapsto C$ tal que $(g\circ f)(a)=g(f(a))$, per a tot $a\in A$.$$A\xrightarrow{f}B\xrightarrow{g}C$$ $$a\rightarrow f(a)\rightarrow g(f(a))$$\end{defi}
+\noindent\propietats
+\begin{enumerate}
+	\item Associativitat. Si $f:\ A\mapsto B$, $g:\ B\mapsto C$ i $f:\ C\mapsto D$, aleshores
+	$$h\circ(g\circ f)=(h\circ g)\circ f;$$
+	\item No commutativitat. En general, la composició d'aplicacions no és commutativa. Si $f:\ A\mapsto A$ i $g:\ A\mapsto A$, no sempre és cert que
+	$$f\circ g=g\circ f;$$
+	\item Si $f:\ A\mapsto B$, aleshores $I_B\circ f=f=f\circ I_A.$
+\end{enumerate}
+\underline{{\scshape Propietats de la composició d'aplicacions: relació amb la injectivitat i l'exhaustivitat.}}
+\begin{enumerate}
+	\item $f$ i $g$ injectives $\implies g\circ f$ injectiva;
+	\item $g\circ f$ injectiva $\implies f$ injectiva;
+	\item $g\circ f$ injectiva i $f$ exhaustiva $\implies g$ injectiva;
+	\item $f$ i $g$ exhaustives $\implies g\circ f$ exhaustiva;
+	\item $g\circ f$ exhaustiva $\implies g$ exhaustiva;
+	\item $g\circ f$ exhaustiva i $g$ injectiva $\implies f$ exhaustiva;
+	\item $f$ i $g$ bijectives $\implies g\circ f$ bijectiva;
+	\item $g\circ f$ bijectiva $\implies g$ exhaustiva i $f$ injectiva.
+\end{enumerate}
+\begin{defi}
+	
+\end{defi}
 
 \newpage
 
