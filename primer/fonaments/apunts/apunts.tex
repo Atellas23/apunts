@@ -234,6 +234,14 @@ $$\forall y\in B\exists!x\in A:f(x)=y$$
 Es nota $f^{-1}: \ B\mapsto A$. Si $f$ bijectiva, aleshores
 $$f(x)=y\iff f^{-1}(y)=x$$
 \end{defi}
+\noindent\propietats
+\begin{enumerate}
+	\item L'aplicació inversa és única;
+	\item $f$ bijectiva $\iff f^{-1}$ bijectiva $\wedge (f^{-1})^{-1}=f;$
+	\item Si $f:\ A\mapsto B$ i $g:\ B\mapsto C$ són bijectives, aleshores $g\circ f$ és bijectiva i $(g\circ f)^{-1}=f^{-1}\circ g^{-1};$
+	\item $f$ bijectiva, aleshores $f\circ f^{-1}=I_B,\ f^{-1}\circ f=I_A;$
+	\item $f:\ A\mapsto B$ és bijectiva $\iff\exists!\ g:\ B\mapsto A$ tal que $g\circ f=I_A$ i $f\circ g=I_B$. En tal cas, $f$ i $g$ són inverses mútuament.
+\end{enumerate}
 \subsubsection{Composició d'aplicacions.}
 \begin{defi}Composició d'aplicacions. Si $f:\ A\mapsto B$ i $g:\ B\mapsto C$ són aplicacions, la composició de $f$ i $g$ és l’aplicació $g\circ f:\ A \mapsto C$ tal que $(g\circ f)(a)=g(f(a))$, per a tot $a\in A$.$$A\xrightarrow{f}B\xrightarrow{g}C$$ $$a\rightarrow f(a)\rightarrow g(f(a))$$\end{defi}
 \noindent\propietats
@@ -293,6 +301,49 @@ També escrivim $[x]$ o $\bar{x}$ quan no hi ha risc de confusió.\end{defi}
 \end{enumerate}
 Els subconjunts $X\in\Pi$ s'anomenen les \textit{parts} o \textit{blocs de la partició}.\\
 \begin{defi} Anomenem el \textit{conjunt quocient} d'un altre conjunt $A$ respecte la relació $R$ al conjunt format per totes les classes d'equivalència definides a partir d'$R$.$$A/R=\{\alpha|\exists x\in A([x]=\alpha)\}.$$\end{defi}
-\begin{prop} El conjunt quocient és una partició d'$A$.\end{prop}
-\noindent\demostracio 
+\begin{prop} El conjunt quocient $A/R$ és una partició d'$A$.\end{prop}
+\noindent\demostracio\pendent\\
+\noindent\propietats
+\begin{enumerate}
+	\item Tota relació d'equivalència definida en un conjunt $A$ indueix una partició d'$A$: el conjunt quocient $A/R$;
+	\item Recíprocament, associada a tota partició $\Pi$ d'$A$ definim una relació $R_\Pi$ en $A$:
+	$$xR_\Pi y\iff\exists B\in\Pi:x\in B\wedge y\in B;$$
+	\item La relació $R_\Pi$ és d'equivalència.
+\end{enumerate}
+\begin{prop} Relacions i particions.
+\begin{enumerate}
+	\item Si $R$ és una relació d'equivalència en $A$, llavors $R_{A/R}=R$;
+	\item Si $\Pi$ és una partició d'$A$, llavors $A/R_\Pi=\Pi.$
+\end{enumerate}
+\end{prop}
+\subsubsection{Descomposició canònica d'una aplicació.}
+Sigui $f:\ A\mapsto B$ una aplicació. Definim a $A$ la relació:
+$$xR_fy\iff f(x)=f(y).$$
+\begin{prop}
+$R_f$ és una relació d'equivalència a $A$.
+\end{prop}
+\noindent Definim les aplicacions:
+\begin{equation}
+\pi:\ A\mapsto A/R_f,\quad\pi(x)=[x]_{R_f}.
+\end{equation}
+\begin{equation}
+\bar{f}:\ A/R_f\mapsto f(A),\quad\bar{f}([x]_{R_f})=f(x).
+\end{equation}
+\begin{equation}
+i:\ f(A)\mapsto B,\quad i(y)=y.
+\end{equation}
+$$\implies f=i\circ\bar{f}\circ\pi.$$
+\subsection{Relacions d'ordre.}
+Sigui $\leq$ una relació binària en un conjunt $A$.
+\begin{itemize}
+	\item La relació $\leq$ és un \textit{preordre} si és reflexiva i transitiva. Es diu que $(A,\leq)$ és un \textit{conjunt preordenat}.
+	\item La relació $\leq$ és un \textit{ordre parcial} si és un preordre amb la propietat antisimètrica. Es diu que $(A,\leq)$ és un \textit{conjunt parcialment ordenat}.
+	\item La relació $\leq$ és un \textit{ordre total} si és un ordre parcial amb la propietat connexa. Es diu que $(A,\leq)$ és un \textit{conjunt totalment ordenat}.
+\end{itemize}
+\pendent Falten definicions de mínim, màxim, minimal i maximal.
+\noindent
+\begin{defi}
+Un conjunt parcialment ordenat $(A,\leq)$ està \textbf{ben ordenat} si tot subconjunt $X\subseteq A,X\neq\emptyset$ té un mínim.
+\end{defi}
+
 \end{document}
