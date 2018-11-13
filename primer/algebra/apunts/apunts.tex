@@ -1,0 +1,184 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{color}
+\newcommand{\fieldk}{\mathbb{K}}
+\newcommand{\propietats}{\underline{{\scshape Propietats:}}}
+\newcommand{\definicio}{\underline{\textbf{Definició:}}\\}
+\newcommand{\proposicio}{\underline{\textbf{Proposició:}}\\}
+\newcommand{\demostracio}{\textbf{{\scshape Demostració: }}}
+\newcommand{\ex}{\underline{Exemple:}}
+\newcommand{\pendent}{\textcolor{red}{\textbf{PENDENT D'ACABAR.}}}
+\newcommand{\important}{\textbf{IMPORTANT! }}
+
+\title{Àlgebra Lineal}
+\author{Àlex Batlle Casellas}
+\renewcommand*\contentsname{Índex}
+
+\begin{document}
+
+\begin{titlepage}
+	\centering
+	{\scshape\LARGE Facultat de Matemàtiques i Estadística \par}
+	\vspace{1cm}
+	{\scshape\Large Universitat Politècnica de Catalunya - BarcelonaTech\par}
+	\vspace{1.5cm}
+	{\huge\bfseries Apunts d'Àlgebra Lineal (Primer curs del Grau de Matemàtiques)
+	\par}
+	\vspace{2cm}
+	{\Large\itshape Àlex Batlle Casellas\par}
+
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
+%\section*{Resumen}
+
+\vfill
+\newpage
+
+\tableofcontents
+\newpage
+\section{Matrius, determinants i sistemes lineals.}
+\section{Espais vectorials.}
+Considerem el conjunt d'$n$-tuples de nombres reals:
+$$\mathbb{R}^n=\{(x_1,x_2,\ldots,x_n)|x_i\in\mathbb{R}\}.$$
+\subsection{Operacions a $\mathbb{R}^n$.}
+\begin{enumerate}
+	\item \textbf{Suma:} Sigui $u=(x_1,x_2,\ldots,x_n),v=(y_1,y_2,\ldots,y_n)\in\mathbb{R}^n$. Aleshores:
+	$$u+v=(x_1+y_1,x_2+y_2,\ldots,x_n+y_n)\in\mathbb{R}^n.$$
+	\item \textbf{Multiplicació per un escalar:} Sigui $u=(x_1,x_2,\ldots,x_n)\in\mathbb{R}^n,c\in\mathbb{R}$. Aleshores:
+	$$cu=(cx_1,cx_2,\ldots,cx_n)\in\mathbb{R}^n.$$
+\end{enumerate}
+\underline{{\scshape Propietats:}}
+\begin{itemize}
+	\item $u+v=v+u.$ (commutativitat)
+	\item $(u+v)+w=u+(v+w).$ (associativitat)
+	\item $\exists\textbf{0}\in\mathbb{R}^n: \ u+\textbf{0}=u.$ (vector zero; notació alternativa, $\vec{0}$ \ )
+	\item $\forall u\in\mathbb{R}^n\exists -u\in\mathbb{R}^n: \ u + (-u) = \textbf{0}.$
+	\item $c(u+v)=cu+cv.$ (distributivitat)
+	\item $(c+d)u=cu+du.$ (distributivitat)
+	\item $c(du)=(cd)u.$
+	\item $1u=u.$
+\end{itemize}
+\subsection{Espai vectorial sobre un cos $\mathbb{K}$.}
+Sigui $\mathbb{K}$ un cos commutatiu (per exemple $\mathbb{Q},\mathbb{R},\mathbb{C}$). Un espai vectorial sobre $\mathbb{K}$ ($\mathbb{K}$-e.v.) és un conjunt de vectors $E$ amb dues operacions $+$ i $\cdot$.
+\begin{itemize}
+	\item $\textbf{+}$: Donats $u,v\in E$ dóna un element $u+v$ també d'$E$.\\ És una operació commutativa, associativa, té element neutre (\textbf{0} o $\vec{0}$) i tot $u\in E$ té invers respecte \textbf{+} ($-u$).
+	\item $\textbf{·}$: Donats $u\in E$ i $c\in\mathbb{K}$ dóna un element $cu$ d'$E$.
+\end{itemize}
+La suma i el producte compleixen
+$$c(u+v)=cu+cv \quad (c+d)u=cu+du \quad c(du)=(cd)u \quad 1u=u \quad \forall u,v\in E, c,d\in\mathbb{K}.$$
+
+\newpage
+
+\noindent \ex
+\begin{itemize}
+	\item $\mathbb{K}^n=\{(x_1,x_2,\ldots,x_n)|x_i\in\mathbb{K}\}$ és un $\mathbb{K}$-e.v. amb la suma i el producte naturals heretats de $\mathbb{K}$.
+	\item $\mathcal{M}_{m\times n}(\mathbb{K})$ és un $\fieldk$-e.v. format per matrius de dimensions $m\times n$ amb entrades a $\fieldk$ i les operacions naturals de la suma de matrius i el producte per un escalar.
+	\item El conjunt de polinomis de grau $\leq d$, $\mathbb{R}_d[x]=\{p(x)=a_0+a_1x+a_2x^2+\ldots+a_dx^d|a_i\in\mathbb{R}\}$ és un espai vectorial amb la suma de polinomis i el producte per un escalar.
+	\item $\mathbb{R}[x]=\{\textrm{polinomis en una variable }x\textrm{ i coeficients en els reals}\}$ és un $\mathbb{R}$-e.v.
+	\item El conjunt $\mathcal{F}(\mathbb{R},\mathbb{R})$ de funcions $f: \ \mathbb{R}\mapsto\mathbb{R}$ és un $\mathbb{R}$-e.v.
+\end{itemize}
+\underline{{\scshape Propietats:}}
+\begin{enumerate}
+	\item $0u=\textbf{0}=c\textbf{0}.$
+	\item $(-1)u=-u.$
+	\item $(-c)u=c(-u)=-(cu)=-cu.$
+	\item $cu=\textbf{0}\iff c=0\vee u=\textbf{0}.$
+\end{enumerate}
+\demostracio
+\begin{enumerate}
+	\item Sigui $v=0u=(0+0)u=0u+0u=v+v$. Aleshores $v=v+v\iff v+(-v)=v+v+(-v)\iff v=\textbf{0}.\square$
+	\item Sigui $v=(-1)u$. Aleshores si $u+v=\textbf{0}$, $v=-u$.
+	$$u+v=u+(-1)u=(u_1,\ldots,u_n)+(-u_1,\ldots,-u_n)=(u_1-u_1,\ldots,u_n-u_n)=(0,\ldots,0)=\textbf{0}.\square$$
+	\item $-c=(-1)c \implies (-c)u=(-1)cu=c(-1)u=c(-u)=(-1)cu=-(cu)=-cu.\square$
+	\item $\implies: cu=\textbf{0} \wedge c\neq = \implies$ \pendent
+\end{enumerate}
+
+\newpage
+
+\noindent \definicio Un vector $u$ és \underline{combinació lineal} dels vectors $u_1,u_2,\ldots,u_k$ si existeixen escalars $c_1,c_2,\ldots,c_k$ tals que $u=c_1u_1+c_2u_2+\ldots+c_ku_k$. Els escalars $c_i$ són els coeficients de la combinció lineal.\\
+Esbrinar si un vector a $\fieldk^n$ és combinació lineal d'una colecció de vectors donada és equivalent a resoldre un sistema lineal d'equacions:
+$$\exists c_1,c_2,\ldots,c_k\in\fieldk : u=c_1u_1+c_2u_2+\ldots+c_ku_k?$$
+$$
+c_1\left( \begin{array}{c}
+x_{11} \\
+x_{21} \\
+\vdots \\
+x_{n1} \end{array} \right)
++ c_2\left( \begin{array}{c}
+x_{12} \\
+x_{22} \\
+\vdots \\
+x_{n2} \end{array} \right)
++\ldots
++c_k \left( \begin{array}{c}
+x_{1k} \\
+x_{2k} \\
+\vdots \\
+x_{nk} \end{array} \right)
+$$
+$$
+\left( \begin{array}{cccc}
+x_{11} & x_{12} & \ldots & x_{1k} \\
+x_{21} & x_{22} & \ldots & x_{2k} \\
+\vdots & \vdots & \vdots & \vdots\\
+x_{n1} & x_{n2} & \ldots & x_{nk} \end{array} \right)
+\left( \begin{array}{c}
+c_1 \\
+c_2 \\
+\vdots \\
+c_k \end{array} \right)
+=
+\left( \begin{array}{c}
+u_1 \\
+u_2 \\
+\vdots \\
+u_k \end{array} \right)
+$$
+\proposicio Un sistema $Ax=b$ és compatible si i només si $b$ és una combinació lineal de les columnes d'$A$.\\
+\demostracio $Ax=b$ és compatible $\iff\exists c_1,\ldots,c_n$ solució de:
+$$
+\left( \begin{array}{ccc}
+a^1 & \ldots & a^n \end{array} \right)
+\left( \begin{array}{c}
+c_1 \\
+\vdots \\
+c_n \end{array} \right)
+=
+\left( \begin{array}{c}
+b \end{array} \right)
+\iff c_1(a^1)+\ldots+c_n(a^n)=(b)
+\iff b \textrm{ és una combinació}
+$$
+$$\textrm{ lineal dels vectors columna d'}A\textrm{ amb coeficients }c_1,\ldots,c_n.\square$$
+\subsection{Subespais vectorials.}
+Sigui $E$ un $\fieldk$-e.v. Aleshores un subconjunt $V\neq\emptyset$ d'$E$ és un subespai vectorial si $V$ és un espai vectorial en si mateix (amb la suma i el producte d'$E$). Això és equivalent a:
+$$\forall u,v\in V \ \forall c,d\in\fieldk \quad cu+dv\in V.$$
+\ex \begin{itemize}
+	\item $V=\fieldk^n$ és un subespai vectorial de $\fieldk^n$.
+	\item $V=\{\textbf{0}\}$ és un subespai vectorial de qualsevol $E$.
+	\item $V=\{(x,y,z)\in\mathbb{R}^3|x-y=0,3z=0\}$ és un subespai vectorial d'$\mathbb{R}^3$.
+	\item $F=\{(a+2b,0,b)\in\mathbb{R}^3|a,b\in\mathbb{R}\}$ és un subespai vectorial d'$\mathbb{R}^3$.
+\end{itemize}
+\newpage
+\noindent \important Els subespais vectorials són \textbf{tancats respecte combinacions lineals}.\\
+\proposicio Sigui $Ax=\textbf{0}$ un sistema lineal (homogeni), on $A\in\mathcal{M}_{m\times n}(\fieldk)$. Aleshores, el conjunt de solucions $V=\{v\in\fieldk^n|Av=\textbf{0}\}$ és un subespai vectorial de $\fieldk$.\\
+\demostracio Si $u\in V$ i $v\in V$, $Au=\textbf{0}$ i $Av=\textbf{0}$. Aleshores, $u+v\in V$ i $A(u+v)=Au+Av=\textbf{0}+\textbf{0}=\textbf{0}$.$\square$\\
+\definicio Siguin $v_1,\ldots,v_k$ vectors d'$E$. El conjunt de \underline{totes} les combinacions lineals de $v_1,\ldots,v_k$,
+$$\{c_1v_1+\ldots+c_kv_k|c_1,\ldots,c_k\in\fieldk\}$$
+s'anomena el \textbf{conjunt generat} per $v_1,\ldots,v_k$ i s'escriu $[v_1,\ldots,v_k]$.\\
+\proposicio $V=[v_1,\ldots,v_k]$ és un subespai vectorial i és el subespai més petit que conté a $\{v_1,\ldots,v_k\}$.\\
+\demostracio Siguin $u,v\in V$. Aleshores, $u=x_1v_1+\ldots+x_kv_k$ i $v=y_1v_1+\ldots+y_kv_k$, $x_i,y_i\in\fieldk$.
+$$\implies cu+dv=(cx_1+dy_1)v_1+\ldots+(cx_k+dy_k)v_k\textrm{ és}$$
+$$\textrm{combinació lineal de }v_1,\ldots,v_k\implies cu+dv\in V.\square$$
+
+\end{document}
