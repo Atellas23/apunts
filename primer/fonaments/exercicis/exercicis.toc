@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 \contentsline {section}{\numberline {1}Formalisme matem\IeC {\`a}tic: enunciats i demostracions.}{2}
 \contentsline {section}{\numberline {2}Conjunts i aplicacions.}{3}
 \contentsline {section}{\numberline {3}Relacions, operacions i estructures.}{5}
@@ -5,3 +6,12 @@
 \contentsline {section}{\numberline {5}El cos dels nombres complexos.}{7}
 \contentsline {section}{\numberline {6}Aritm\IeC {\`e}tica}{8}
 \contentsline {section}{\numberline {7}Polinomis.}{9}
+=======
+\contentsline {section}{\numberline {1}Formalisme matem\IeC {\`a}tic: enunciats i demostracions.}{2}
+\contentsline {section}{\numberline {2}Conjunts i aplicacions.}{3}
+\contentsline {section}{\numberline {3}Relacions, operacions i estructures.}{5}
+\contentsline {section}{\numberline {4}Conjunts de nombres. Numerabilitat.}{7}
+\contentsline {section}{\numberline {5}El cos dels nombres complexos.}{8}
+\contentsline {section}{\numberline {6}Aritm\IeC {\`e}tica}{9}
+\contentsline {section}{\numberline {7}Polinomis.}{10}
+>>>>>>> 3741fde8a6c8847a7a754f505d5c6ff640242fa3

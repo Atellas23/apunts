@@ -90,6 +90,76 @@ injectiva.}\\
 \newpage
 
 \section{Relacions, operacions i estructures.}
+\begin{legal}
+	\item[28.] Considerem a $\mathbb{Z}$ les operacions
+	$$a\oplus b=a+b-6;$$
+	$$a\odot b=ab+\alpha(a+b)+42,$$
+	on $\alpha\in\mathbb{Z}$.
+	\begin{legal}
+		\item[1)] \textbf{Comproveu que $(\mathbb{Z},\oplus)$ és un grup commutatiu.}\\
+		Per ser un grup commutatiu, l'operació $\oplus$ ha de complir les propietats associativa i commutativa i ha de tenir element neutre i invers per tots els elements de $\mathbb{Z}$. Comprovem-ho:
+		\begin{itemize}
+			\item Associativa: comprovem que $\forall a,b\in\mathbb{Z},\ a\oplus(b\oplus c)=(a\oplus b)\oplus c=a\oplus b\oplus c$.
+			$$a\oplus(b\oplus c)=a+(b\oplus c)-6=a+(b+c-6)-6=$$
+			$$(a+b-6)+c-6=(a\oplus b)+c-6=(a\oplus b)\oplus c.\square$$
+			\item Commutativa: comprovem que $\forall a,b\in\mathbb{Z},\ a\oplus b=b\oplus a$.\\
+			$$a\oplus b=a+b-6=b+a-6=b\oplus a.\square$$
+			\item Existència del neutre: suposem que $\exists e\in\mathbb{Z}:\ a\oplus e=a$ i el trobem.
+			$$a\oplus e=a\iff a+e-6=a\iff e-6=0\iff e=6.$$
+			En ser $\oplus$ commutativa, ens podem estalviar comprovar per l'altre costat.
+			\item Existència de l'invers: suposem que $\exists a'\in\mathbb{Z}:\ a\oplus a'=e$ i el trobem.
+			$$a\oplus a'=e\iff a+a'-6=6\iff a'=12-a.$$
+		\end{itemize}
+		\item[2)] \textbf{Demostreu que l'operació $\odot$ és associativa si, i només si, $\alpha=-6$ o $\alpha=7$.}\\
+		L'operació $\odot$ serà associativa quan $a\odot(b\odot c)=(a\odot b)\odot c=a\odot b\odot c$. Veiem què passa quan igualem les expressions per cada un dels costats de la tesi:
+		\begin{itemize}
+			\item $a\odot(b\odot c)=a(b\odot c)+\alpha(a+b\odot c)+42=a(bc+\alpha(b+c)+42)+\alpha(a+bc+\alpha(b+c)+42)+42$
+			\item $(a\odot b)\odot c=(a\odot b)c+\alpha(a\odot b+c)+42=(ab+\alpha(a+b)+42)c+\alpha(ab+\alpha(a+b)+42+c)+42$
+		\end{itemize}
+		En igualar,
+		$$
+		a(bc+\alpha(b+c)+42)+\alpha(a+bc+\alpha(b+c)+42)+42
+		$$
+		$$
+		=(ab+\alpha(a+b)+42)c+\alpha(ab+\alpha(a+b)+42+c)+42.
+		$$
+		Treiem els $42$ d'ambdós costats i desenvolupem els productes amb la distributivitat del producte sobre la suma usual:
+		$$
+		abc+a\alpha b+a\alpha c+42a+a\alpha+bc\alpha+\alpha^2b+\alpha^2c+42\alpha=
+		$$
+		$$
+		abc+c\alpha a+c\alpha b+42c+ab\alpha+\alpha^2a+\alpha^2b+42\alpha+c\alpha.
+		$$
+		Cancel·lant els termes iguals,
+		$$
+		42a+a\alpha +c\alpha^2=42c+a\alpha^2+c\alpha,
+		$$
+		i ara reescrivint com una equació de segon grau en $\alpha$ queda:
+		$$
+		(c-a)\alpha^2+(a-c)\alpha+42(a-c)=0.
+		$$
+		Aquesta equació la dividim entre $(c-a)$, que és diferent de zero ja que si $a=c$, $(a\odot b)\odot a=a\odot(b\odot a)$ si $\odot$ és commutativa. Ho podem veure ràpid:
+		$$a\odot b=ab+\alpha(a+b)+42=ba+\alpha(b+a)+42=b\odot a.$$
+		Per tant, com que $a\neq c$, dividim;
+		$$
+		\alpha^2-\alpha-42=0,
+		$$
+		i calculem les solucions amb la fórmula pel càlcul de les arrels dels polinomis de segon grau:
+		$$
+		\alpha=\dfrac{1\pm\sqrt{1-4(-42)}}{2}
+		$$
+		$$
+		\alpha_1=-6\qquad\alpha_2=7.
+		$$
+		Per tant, seguint el curs de les implicacions i tal com volíem demostrar, $\odot$ només és associativa quan $\alpha=-6$ o $\alpha=7$.$\square$
+		\item[3)] \textbf{Demostreu que l'operació $\odot$ té element neutre si, i només si, $\alpha=-6$ o $\alpha=7$.}\\
+		Si existeix un element neutre, $\exists e\in\mathbb{Z}:a\odot e=a$. Per tant, ho escrivim:
+		$$a\odot e=ae+\alpha(a+e)+42=a.$$
+		Si el trobem, haurem demostrat que existeix. Per fer-ho, intentem resoldre l'equació:
+		$$a-42-a\alpha=ae+e\alpha\iff a(1-\alpha-e)=e\alpha$$
+		\item[4)] \textbf{Per a quins valors de $\alpha$ és $(\mathbb{Z},\oplus,\odot)$ un anell?}
+	\end{legal}
+\end{legal}
 
 \newpage
 
