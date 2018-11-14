@@ -5,7 +5,7 @@
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{float}
-\usepackage[margin=1.25in]{geometry}
+\usepackage[margin=3cm]{geometry}
 \usepackage{color}
 \usepackage{enumitem}
 \title{Exercicis: Fonaments de les Matemàtiques}
@@ -156,8 +156,30 @@ injectiva.}\\
 		Si existeix un element neutre, $\exists e\in\mathbb{Z}:a\odot e=a$. Per tant, ho escrivim:
 		$$a\odot e=ae+\alpha(a+e)+42=a.$$
 		Si el trobem, haurem demostrat que existeix. Per fer-ho, intentem resoldre l'equació:
-		$$a-42-a\alpha=ae+e\alpha\iff e=\dfrac{a-42-a\alpha}{a+\alpha}$$
-		\item[4)] \textbf{Per a quins valors de $\alpha$ és $(\mathbb{Z},\oplus,\odot)$ un anell?}
+		$$a(e+\alpha)+e\alpha+42=a.$$
+		Com que estem utilitzant la suma i el producte usuals, la única solució possible es troba solucionant el sistema:
+		\[		
+		\begin{array}{rcl}
+			e+\alpha=1\\
+			e\alpha+42=0
+		\end{array}
+		\]
+		D'aquí tenim $e=1-\alpha$ i $(1-\alpha)\alpha+42=0$. Aquesta equació ja la tenim solucionada (apartat 2) i per tant, veiem que $e$ existeix només quan $\alpha=-6$ o $\alpha=7$.$\square$
+		\item[4)] \textbf{Per a quins valors de $\alpha$ és $(\mathbb{Z},\oplus,\odot)$ un anell?}\\
+		Per a que $(\mathbb{Z},\oplus,\odot)$ sigui un anell necessitem que $(\mathbb{Z},\oplus$ sigui grup abelià i que $\odot$ sigui associativa, tingui element neutre i sigui distributiva respecte $\oplus$. Com ja hem vist, $\oplus$ només és associativa i té neutre quan $\alpha=-6$ o $\alpha=7$. Per ser distributiva, volem que $(a\oplus b)\odot c=(a\odot c)\oplus(b\odot c)$. Ho desenvolupem per ambdós costats:
+		\[
+		\begin{array}{lcl}
+			(1)\quad (a\oplus b)\odot c=(a+b-6)\odot c=(a+b-6)c+\alpha(a+b+c-6)+42,\\
+			(2)\quad (a\odot c)\oplus(b\odot c)=(ab+\alpha(a+b)+42)\oplus(bc+\alpha(b+c)+42)=\\
+			ab+\alpha(a+b)+42+bc+\alpha(b+c)+42-6.
+		\end{array}
+		\]
+		Ara igualem ambdós resultats i veiem què li ha de passar a $\alpha$:
+		$$(a+b-6)c+\alpha(a+b+c-6)+42=ab+\alpha(a+b)+42+bc+\alpha(b+c)+42-6$$
+		$$ac+bc-6c+a\alpha+b\alpha-6\alpha=ab+a\alpha+b\alpha+bc+b\alpha+c\alpha+36$$
+		$$ac-6c-6\alpha=ab+b\alpha+c\alpha+36$$
+		$$ac-ab-6c-36=(b+c+6)\alpha$$
+		$$a(c-b)-6(c+6)=(b\oplus c)\alpha$$
 	\end{legal}
 \end{legal}
 
