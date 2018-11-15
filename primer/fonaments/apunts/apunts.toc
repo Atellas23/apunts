@@ -1,11 +1,10 @@
-\contentsline {section}{\numberline {1}}{2}
-\contentsline {section}{\numberline {2}Conjunts i aplicacions.}{3}
-\contentsline {subsection}{\numberline {2.1}Operacions amb conjunts.}{3}
-\contentsline {subsection}{\numberline {2.2}Conjunt de les parts.}{5}
-\contentsline {subsection}{\numberline {2.3}Aplicacions.}{6}
-\contentsline {subsubsection}{\numberline {2.3.1}Injectivitat, exhaustivitat i bijectivitat.}{7}
-\contentsline {subsubsection}{\numberline {2.3.2}Composici\IeC {\'o} d'aplicacions.}{8}
-\contentsline {section}{\numberline {3}Relacions, operacions i estructures.}{9}
-\contentsline {subsection}{\numberline {3.1}Relacions d'equival\IeC {\`e}ncia.}{9}
-\contentsline {subsubsection}{\numberline {3.1.1}Descomposici\IeC {\'o} can\IeC {\`o}nica d'una aplicaci\IeC {\'o}.}{10}
-\contentsline {subsection}{\numberline {3.2}Relacions d'ordre.}{10}
+\contentsline {section}{\numberline {2}Conjunts i aplicacions.}{2}
+\contentsline {subsection}{\numberline {2.1}Operacions amb conjunts.}{2}
+\contentsline {subsection}{\numberline {2.2}Conjunt de les parts.}{4}
+\contentsline {subsection}{\numberline {2.3}Aplicacions.}{5}
+\contentsline {subsubsection}{\numberline {2.3.1}Injectivitat, exhaustivitat i bijectivitat.}{6}
+\contentsline {subsubsection}{\numberline {2.3.2}Composici\IeC {\'o} d'aplicacions.}{7}
+\contentsline {section}{\numberline {3}Relacions, operacions i estructures.}{8}
+\contentsline {subsection}{\numberline {3.1}Relacions d'equival\IeC {\`e}ncia.}{8}
+\contentsline {subsubsection}{\numberline {3.1.1}Descomposici\IeC {\'o} can\IeC {\`o}nica d'una aplicaci\IeC {\'o}.}{9}
+\contentsline {subsection}{\numberline {3.2}Relacions d'ordre.}{9}

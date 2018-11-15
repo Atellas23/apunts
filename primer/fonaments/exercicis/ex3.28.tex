@@ -17,81 +17,8 @@
 
 \begin{document}
 
-\begin{titlepage}
-	\centering
-	{\scshape\LARGE Facultat de Matemàtiques i Estadística \par}
-	\vspace{1cm}
-	{\scshape\Large Universitat Politècnica de Catalunya - BarcelonaTech\par}
-	\vspace{1.5cm}
-	{\huge\bfseries Exercicis resolts de Fonaments de les Matemàtiques (Primer curs del Grau de Matemàtiques)
-	\par}
-	\vspace{2cm}
-	{\Large\itshape Àlex Batlle Casellas\par}
-
-	\vfill
-
-% Bottom of the page
-	{\large \today\par}
-\end{titlepage}
-
-%\section*{Resumen}
-
-\vfill
-\newpage
-
-\tableofcontents
-\newpage
-\section{Formalisme matemàtic: enunciats i demostracions.}
-
-\newpage
-
-\section{Conjunts i aplicacions.}
-\begin{legal}[start=21]
-	\item \textbf{Siguin $A_1,A_2,B_1,B_2\neq\emptyset$. Demostreu:}
-	\begin{legal}[start=3]
-		\item \textbf{$(A_1\cup A_2)\times (B_1\cup B_2)=(A_1\times B_1)\cup (A_1\times B_2)\cup (A_2\times B_1)\cup (A_2\times B_2)$.}
-		$$\textrm{Sigui }y\in (A_1\cup A_2)\times (B_1\cup B_2).\textrm{ Aleshores, }\exists y_1\in A_1\cup A_2, \ y_2\in B_1\cup B_2: \ y=(y_1,y_2).$$
-		$$\iff (y_1\in A_1 \vee y_1\in A_2)\wedge (y_2\in B_1 \vee y_2\in B_2)\iff (y_1\in A_1\wedge y_2\in B_1)$$
-		$$\vee (y_1\in A_2 \wedge y_2\in B_1)\wedge (y_1\in A_1\wedge y_2\in B_2)\vee (y_1\in A_2\wedge y_2\in B_2)$$
-		$$\iff y\in (A_1\times B_1)\cup (A_2\times B_2)\cup (A_1\times B_2)\cup (A_2\times B_1).\square$$
-	\end{legal}
-	\item[30.] \textbf{Considerem una aplicació $f: \ A\mapsto B$ i subconjunts $A',A''\subseteq A$ i $B',B''\subseteq B$.}
-	\begin{legal}
-		\item[30.1.] \textbf{Demostreu que si $A'\subseteq A''$, aleshores $f(A')\subseteq f(A'')$.}
-		$$\textrm{Sigui }A'\subseteq A''.\textrm{ Aleshores }f(A')=\{y\in B:(\exists x\in A':\ f(x)=y)\}$$
-		$$\subseteq \{y\in B:(\exists x\in A'':f(x)=y)\}=f(A'')\implies f(A')\subseteq f(A'').\square$$
-		%Si $f$ és injectiva, volem veure que $f(A'')\subseteq f(A')$ (ja que la primera inclusió per la igualtat ja l'hem demostrada a l'apartat anterior).
-		%$$\textrm{Sigui }A'\subseteq A''.\textrm{ Aleshores }f(A'')\subseteq f(A') \iff A''\subseteq A'\textrm{ (resultat anterior) }\iff$$
-		%$$A''=A'\textrm{ (perquè sabem }A'\subseteq A''\textrm{) }\iff\textrm{ (sabent que }f(A')\subseteq f(A'')\textrm{) }f\textrm{ és injectiva.}\square$$
-		\item[30.3.] \textbf{Demostreu que si $B'\subseteq B''$, aleshores $f^{-1}(B')\subseteq f^{-1}(B'')$.}
-		$$\textrm{Sigui }B'\subseteq B''.\textrm{ Aleshores, }f^{-1}(B')=\{x\in A:(\exists y\in B':f^{-1}(\{y\})=\{x\})\}\subseteq$$
-		$$\{x\in A:(\exists y\in B'':f^{-1}(\{y\})=\{x\})\}=f^{-1}(B'')\implies f^{-1}(B')\subseteq f^{-1}(B'').\square$$		
-		\item[30.2.] \textbf{Demostreu que $f(A')\subseteq f(A'')$ implica que $A'\subseteq A''$, per a tot $A',A''\subseteq A$, si, i només si, $f$ és
-injectiva.}\\
-		Si fem el conjunt antiimatge dels dos costats de la hipòtesi ($f(A')\subseteq f(A'')$):
-		$$f^{-1}(f(A'))\subseteq f^{-1}(f(A''))\implies (f^{-1}\circ f)(A')\subseteq (f^{-1}\circ f)(A'')\implies$$
-		$$Id_A(A')\subseteq Id_A(A'')\implies A'\subseteq A''.$$
-		Això només passarà quan $f$ és injectiva, doncs en tal cas $A'$ i $A''$ no podrien ser disjunts.$\square$\\Si $f$ no fos injectiva, en canvi, $A'$ i $A''$ podrien ser disjunts però donar el mateix conjunt imatge sense inconvenient.
-		\item[30.4.] \textbf{Demostreu que $f^{-1}(B')\subseteq f^{-1}(B'')$ implica que $B'\subseteq B''$, per a tot $B',B''\subseteq B$, si, i només si, $f$ és exhaustiva.}
-	\end{legal}
-	\item[31.] \textbf{Considerem una aplicació $f: \ A\mapsto B$. Demostreu:}
-	\begin{legal}
-		\item[31.1.] \textbf{Si $A'\subseteq A$, aleshores $A'\subseteq f^{-1}(f(A'))$.}
-		$$f(A')=\{y\in B:(\exists x\in A':f(x)=y)\}.$$
-		$$f^{-1}(f(A'))=\{x\in A:f(x)\in f(A')\}.$$
-		Tenint en compte que podrien existir elements d'A que corresponguessin amb l'aplicació a elements d'$f(A')$, el conjunt antiimatge $f^{-1}(f(A'))$ és un superconjunt d'$A'$.
-		$$\implies A'\subseteq f^{-1}(f(A')).\square$$
-		\item[31.2.] \textbf{$f$ és injectiva si i només si $A'=f^{-1}(f(A')) \ \forall A'\subseteq A$.}\\
-		Agafant la igualtat que volem demostrar, si apliquem $f$ als dos costats, ens ha de quedar una identitat per poder afirmar que $f$ és injectiva. Com podem efectivament comprovar,
-		$$f(A')=f(f^{-1}(f(A')))=Id_B(f(A'))=f(A')$$i $A'=A'$, per tant, queda demostrat l'enunciat.$\square$
-	\end{legal}
-\end{legal}
-
-\newpage
-
-\section{Relacions, operacions i estructures.}
 \begin{legal}
-	\item[28.] Considerem a $\mathbb{Z}$ les operacions
+	\item[3.28.] Considerem a $\mathbb{Z}$ les operacions
 	$$a\oplus b=a+b-6;$$
 	$$a\odot b=ab+\alpha(a+b)+42,$$
 	on $\alpha\in\mathbb{Z}$.
@@ -190,20 +117,4 @@ injectiva.}\\
 		Per tant, $(\mathbb{Z},\oplus,\odot)$ és un anell per $\alpha=-6$.
 	\end{legal}
 \end{legal}
-
-\newpage
-
-\section{Conjunts de nombres. Numerabilitat.}
-
-\newpage
-
-\section{El cos dels nombres complexos.}
-
-\newpage
-
-\section{Aritmètica}
-
-\newpage
-
-\section{Polinomis.}
 \end{document}
