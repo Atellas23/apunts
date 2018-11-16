@@ -14,10 +14,40 @@
 \newlist{legal}{enumerate}{10}
 \setlist[legal]{label*=\arabic*.}
 \newcommand{\pendent}{\textbf{\textcolor{red}{PENDENT D'ACABAR.}}\\}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\mcm}{mcm}
 
 \begin{document}
 
 \begin{legal}
-	\item[3.39.] \textbf{Demostra que si $\tau_1$ i $\tau_2$ són dues transposicions diferents, aleshores $\tau_1\tau_2$ és d'ordre 2 o 3.}
+	\item[3.39.] \textbf{Demostra que si $\tau_1$ i $\tau_2$ són dues transposicions diferents, aleshores $\tau_1\tau_2$ és d'ordre 2 o 3.}\\
+	Si són dues transposicions diferents, això vol dir que $\tau_1=(i,j)\neq\tau_2=(k,l)$. Aleshores,
+	$$
+	\tau_1\cap\tau_2=\begin{cases}
+	\emptyset,\quad\textrm{si }\tau_1\textrm{ i }\tau_2\textrm{ no comparteixen cap element igual,}\\
+	\{j\},\quad\textrm{ja que sense pèrdua de generalitat podem suposar que si }\\
+	\qquad\quad\tau_1\textrm{ i }\tau_2\textrm{ comparteixen un element aquest pot ser }j.
+	\end{cases}
+	$$
+	Si no comparteixen cap element, la composició de $\tau_1$ i $\tau_2$ és la següent:
+	$$
+	\tau_1\tau_2=(i,j)(k,l)=\begin{pmatrix}
+	i & j & k & l\\
+	j & i & l & k
+	\end{pmatrix},
+	$$
+	que per definició té ordre igual al mínim comú múltiple dels ordres de ls transposicions composades (que són cicles disjunts). En aquest cas,
+	$$
+	\ord(\tau_1\tau_2)=\mcm(\ord{\tau_1},\ord{\tau_2})=\mcm(2,2)=2.
+	$$
+	En el cas que tinguin un element comú, suposem (sense pèrdua de generalitat) $j=k$ i en composar:
+	$$
+	\tau_1\tau_2=(i,j)(j,l)=\begin{pmatrix}
+	i & j & l\\
+	j & l & i
+	\end{pmatrix}
+	$$
+	veiem que $\ord(\tau_1\tau_2)=3$.\\
+	$\square$
 \end{legal}
 \end{document}
