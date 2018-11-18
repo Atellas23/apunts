@@ -1,0 +1,37 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage[margin=3cm]{geometry}
+\usepackage{color}
+\usepackage{enumitem}
+\usepackage{calrsfs}
+\title{Exercicis: Càlcul en una variable}
+\author{Àlex Batlle Casellas}
+\renewcommand*\contentsname{Índex}
+\newlist{legal}{enumerate}{10}
+\setlist[legal]{label*=\arabic*.}
+\newcommand{\pendent}{\textbf{\textcolor{red}{PENDENT D'ACABAR.}}\\}
+
+\begin{document}
+\begin{small}
+Àlex Batlle Casellas
+\end{small}\\
+\begin{enumerate}
+	\item Proveu que $f(x)=\sqrt{x}$ és uniformement contínua a $[0,\infty)$.\\
+	\textit{Indicació:} Separeu el cas $[0,1]$ de l'interval $[1,\infty)$. En aquest darrer cas, proveu que $f$ satisfà una condició de Lipschitz.\\
+	Per a que una funció sigui uniformement contínua, ha de complir la següent condició:
+	$$\forall\epsilon>0\ \exists\delta>0:\ |x-y|<\delta\implies|f(x)-f(y)|<\epsilon.$$
+	Si partim l'interval en els intervals $[0,1]$ i $[1,\infty)$, podem raonar-ho pels dos casos. Per l'interval $[0,1]$, tenim que $\sqrt{x}\geq x\ \forall x\in[0,1]$. Aleshores, $|x-y|\leq|\sqrt{x}-\sqrt{y}|$\\
+	Recordem l'enunciat de la condició de $K$-Lipschitz:
+	$$\forall x,y\quad |f(x)-f(y)|\leq K|x-y|$$
+	\item Proveu que $f(x)=x^2$ no és uniformement contínua a $[0,\infty)$, veient explícitament que existeix $\epsilon>0$, i successions $(x_n)_n$ i $(y_n)_n$ no fitades amb $(x_n-y_n)_n$ convergent a zero i tal que $|f(x_n)-f(y_n)|\geq\epsilon$.\\
+	\item Proveu que $f(x)=\sin x$ és uniformement contínua a tot $\mathbb{R}$ veient que satisfà una condició 1-Lipschitz a tota la recta real.\\
+	\textit{Indicació:} Useu que, per tot $a,b\in\mathbb{R}$,
+	$$\sin{a}-\sin{b}=2\sin{\left(\dfrac{a-b}{2}\right)}\cos{\left(\dfrac{a+b}{2}\right)}.$$
+	(\textit{Observació:} $f(x)=\sin{x}$ és, doncs, una funció vàlida com l'exemple que es demana a l'exercici 16 del Tema 3).
+\end{enumerate}
+\end{document}
