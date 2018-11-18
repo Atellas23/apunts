@@ -16,6 +16,7 @@
 \newcommand{\pendent}{\textbf{\textcolor{red}{PENDENT D'ACABAR.}}\\}
 \DeclareMathOperator{\nuc}{Nuc}
 \DeclareMathOperator{\img}{Im}
+\DeclareMathOperator{\End}{End}
 
 \begin{document}
 
@@ -26,6 +27,37 @@
 \begin{legal}
 \item[3.19.] Sigui $f$ un endomorfisme d'un espai vectorial $E$.
 	\item[(a) ]\textbf{Proveu que $\img{f^{n+1}}\subset\img{f^n}$ i $\nuc{f^n}\subset\nuc{f^{n+1}}$ per a tot nombre natural $n$.}\\
+	Com que $f\in\End{f}$, $E$ és $f$-invariant, és a dir, que $f(E)\subseteq E$. També tenim que, per ser endomorfisme, $f(f(E))\subseteq f(E)$, o el que és el mateix, que $\img{f^2}\subseteq\img{f}$. Fem un procés inductiu sobre $n$ per veure que 
+	\begin{equation}
+		\img{f^{n+1}}\subset\img{f^n}
+	\end{equation}
+	és compleix:
+	\begin{enumerate}
+		\item \underline{Cas base:} $n=0$\\
+		En aquest cas, veiem que $\img{f^{0+1}\subseteq\img{f^0}}=E$ Com ja hem vist, $f(E)\subseteq E$, i per tant és cert per $n=0$.
+		\item \underline{Hipòtesi d'inducció:}
+		\begin{equation}
+			\forall n\leq n_0\in\mathbb{N}\ \img{f^{n+1}}\subseteq\img{f^n}.
+		\end{equation}
+		\item \underline{Pas inductiu:} volem veure que (2) és compleix per tota $n>n_0$. Per veure-ho, construïm l'aplicació lineal $f^{n_0+1}$:
+		$$
+		\begin{array}{lrr}
+			f^{n_0+1}:\ \img{f^{n_0}}\longrightarrow E\\
+			\qquad\qquad\qquad v\longmapsto f^{n_0+1}(v):=f(v)
+		\end{array}
+		$$
+		Ara sabem que la imatge d'aquesta aplicació compleix
+%		\begin{equation}
+%			\img{f^{n_0+1}}=f^{n_0+1}(\img{f^{n_0}}),
+%		\end{equation}
+%		i sabem també la relació 
+		\begin{equation}
+			f(V)\subseteq E\ \forall V\subseteq E.
+		\end{equation}
+		Com que
+		$$\img{f^{n_0}}\subseteq\img{f^{n_0-1}}\subseteq\cdots\subseteq\img{f^{2}}\subseteq\img{f}\subseteq E$$
+		$f^{n_0+1}(\img{f^{n_0}})\subseteq\img{f^{n_0}}$
+	\end{enumerate}
 	\item[(b) ]\textbf{Demostreu que, si $E$ té dimensió finita, existeix un natural $m$ tal que $\img{f^n}=\img{f^m}$ i $\nuc{f^n}=\nuc{f^m}$ per a tot $n\geq m$.}\\
 	\item[(c) ]\textbf{Proveu, donant un contraexemple a l’espai de polinomis $\mathbb{R}[x]$, que l’apartat (b) no és cert si $E$ no té dimensió finita.}\\
 \end{legal}
