@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.11.13)  17 NOV 2018 19:29
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.11.13)  19 NOV 2018 23:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -573,34 +573,40 @@ LaTeX Font Info:    Try loading font information for OMS+rsfs on input line 24.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/calrsfs/OMSrsfs.fd)
-Underfull \hbox (badness 10000) in paragraph at lines 31--32
-
+Overfull \hbox (10.24097pt too wide) in paragraph at lines 44--46
+[]\OT1/cmr/bx/n/10.95 Proveu que $\OML/cmm/m/it/10.95 f\OT1/cmr/m/n/10.95 (\OML
+/cmm/m/it/10.95 x\OT1/cmr/m/n/10.95 ) = \OML/cmm/m/it/10.95 x[]$ \OT1/cmr/bx/n/
+10.95 no ^^Ses uni-forme-ment cont^^S^^Pnua a $\OT1/cmr/m/n/10.95 [0\OML/cmm/m/
+it/10.95 ; \OMS/cmsy/m/n/10.95 1\OT1/cmr/m/n/10.95 )$\OT1/cmr/bx/n/10.95 , veie
+nt expl^^S^^Pcitament
  []
 
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./exercicis.aux) ) 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] (./exercicis.aux) ) 
 Here is how much of TeX's memory you used:
- 2939 strings out of 494880
- 36794 string characters out of 6179600
- 98541 words of memory out of 5000000
- 6234 multiletter control sequences out of 15000+600000
- 9130 words of font info for 36 fonts, out of 8000000 for 9000
+ 2944 strings out of 494880
+ 36843 string characters out of 6179600
+ 103541 words of memory out of 5000000
+ 6238 multiletter control sequences out of 15000+600000
+ 9438 words of font info for 37 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 27i,5n,32p,275b,188s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/t
-exlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
-fonts/symbols/msbm10.pfb>
-Output written on exercicis.pdf (1 page, 74734 bytes).
+ 27i,7n,32p,293b,245s stack positions out of 5000i,500n,10000p,200000b,80000s
+</u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/font
+s/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
+ts/symbols/msbm10.pfb>
+Output written on exercicis.pdf (2 pages, 103513 bytes).
 PDF statistics:
- 40 PDF objects out of 1000 (max. 8388607)
- 28 compressed objects within 1 object stream
+ 51 PDF objects out of 1000 (max. 8388607)
+ 36 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

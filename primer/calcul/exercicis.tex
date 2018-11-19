@@ -21,17 +21,62 @@
 Àlex Batlle Casellas
 \end{small}\\
 \begin{enumerate}
-	\item Proveu que $f(x)=\sqrt{x}$ és uniformement contínua a $[0,\infty)$.\\
+	\item \textbf{Proveu que $f(x)=\sqrt{x}$ és uniformement contínua a $[0,\infty)$.}\\
 	\textit{Indicació:} Separeu el cas $[0,1]$ de l'interval $[1,\infty)$. En aquest darrer cas, proveu que $f$ satisfà una condició de Lipschitz.\\
-	Per a que una funció sigui uniformement contínua, ha de complir la següent condició:
-	$$\forall\epsilon>0\ \exists\delta>0:\ |x-y|<\delta\implies|f(x)-f(y)|<\epsilon.$$
-	Si partim l'interval en els intervals $[0,1]$ i $[1,\infty)$, podem raonar-ho pels dos casos. Per l'interval $[0,1]$, tenim que $\sqrt{x}\geq x\ \forall x\in[0,1]$. Aleshores, $|x-y|\leq|\sqrt{x}-\sqrt{y}|$\\
-	Recordem l'enunciat de la condició de $K$-Lipschitz:
-	$$\forall x,y\quad |f(x)-f(y)|\leq K|x-y|$$
-	\item Proveu que $f(x)=x^2$ no és uniformement contínua a $[0,\infty)$, veient explícitament que existeix $\epsilon>0$, i successions $(x_n)_n$ i $(y_n)_n$ no fitades amb $(x_n-y_n)_n$ convergent a zero i tal que $|f(x_n)-f(y_n)|\geq\epsilon$.\\
-	\item Proveu que $f(x)=\sin x$ és uniformement contínua a tot $\mathbb{R}$ veient que satisfà una condició 1-Lipschitz a tota la recta real.\\
+	Per a que la funció $\sqrt{x}$ sigui uniformement contínua, ha de complir la següent condició:
+	$$\forall\epsilon>0\ \exists\delta>0:\ |x-y|<\delta\implies|\sqrt{x}-\sqrt{y}|<\epsilon.$$
+	Si partim l'interval en els intervals $I_1=[0,1]$ i $I_2=[1,\infty)$, podem raonar-ho pels dos casos. Per l'interval $I_1$, tenim que $\sqrt{x}\leq x$ per qualsevol valor dins d'$I_1$. Si prenem $\delta=\epsilon^2$, veiem el següent: (podem suposar que $y\leq x$)
+	$$
+	x-y<\epsilon^2\iff\sqrt{x-y}<\epsilon.
+	$$
+	També es pot demostrar que $\sqrt{x-y}\leq\sqrt{x}-\sqrt{y}$:
+	$$
+	\sqrt{x-y}\leq\sqrt{x}-\sqrt{y}\iff x-y\leq x+y-2\sqrt{x}\sqrt{y}\iff-2y\leq-2\sqrt{xy}\iff y\leq\sqrt{y}\sqrt{x}.
+	$$
+	Com que $\sqrt{x}\leq 1\ \forall x\in I_1$, la primera condició és compleix. Per tant, tenim $\sqrt{x-y}<\sqrt{x}-\sqrt{y}<\epsilon$ i per tant, $x-y<\epsilon^2$. Hem trobat la $\delta$ per l'interval $I_1$.\\
+	Per demostrar la continuïtat uniforme a l'interval $I_2$, recordem l'enunciat de la condició de $K$-Lipschitz per la funció arrel quadrada:
+	$$\forall x,y\quad |\sqrt{x}-\sqrt{y}|\leq K|x-y|.$$
+	Veiem, doncs, que aquesta condició es dóna per tota $x,y$ de l'interval $I_2$:
+	$$
+	\sqrt{x}-\sqrt{y}\leq K(x-y)\iff x-y\leq K(x-y)(\sqrt{x}+\sqrt{y})\iff1\leq K(\sqrt{x}+\sqrt{y}).
+	$$
+	Aquesta última condició es verifica sempre, ja que dins d'$I_2$, $\sqrt{x}+\sqrt{y}\geq2\ \forall x,y$. Per tant, la mínima $K$ que podem agafar és $K=\dfrac{1}{2}$. Aleshores, $f$ és $\dfrac{1}{2}$-Lipschitziana i per tant, és uniformement contínua.$\square$
+	\item \textbf{Proveu que $f(x)=x^2$ no és uniformement contínua a $[0,\infty)$, veient explícitament que existeix $\epsilon>0$, i successions $(x_n)_n$ i $(y_n)_n$ no fitades amb $(x_n-y_n)_n$ convergent a zero i tal que $|f(x_n)-f(y_n)|\geq\epsilon$.}\\
+	Si fos uniformement contínua, $f$ compliria l'enunciat:
+	$$
+	\forall\epsilon>0\exists\delta>0:\ |x-y|<\delta\implies|f(x)-f(y)|<\epsilon.
+	$$
+	Per tant, podem fer servir la indicació per demostrar que $f(x)=x^2$ no és uniformement contínua. Com a exemples podem agafar les successions:
+	$$\begin{array}{lll}
+	x_n=\dfrac{n^2}{n+1}\\
+	y_n=\dfrac{n^2-1}{n+1}
+	\end{array}.
+	$$
+	Com es pot observar cap de les dues està fitada superiorment. Si en fem la resta, en canvi,
+	$$
+	\left\{x_n-y_n\right\}_n=\left\{\dfrac{n^2}{n+1}-\dfrac{n^2-1}{n+1}\right\}_n=\left\{\dfrac{1}{n+1}\right\}_n,
+	$$
+	que convergeix a 0, i per tant compleixen que $|x-y|<\delta$. Si fem ara la diferència dels seus quadrats (el que equivaldria a $f(x_n)-f(y_n)$), observem el següent:
+	$$
+	\left(\dfrac{n^2}{n+1}\right)^2-\left(\dfrac{n^2-1}{n+1}\right)^2=\dfrac{n^4-(n^4+1-2n^2)}{(n+1)^2}=\dfrac{2n^2-1}{(n+1)^2}.
+	$$
+	Aquesta expressió convergeix a 2, i per tant existeix una $\epsilon>0$ tal que $|f(x_n)-f(y_n)|\geq\epsilon$, concretament $\epsilon=2$. Per tant, $f(x)=x^2$ no és uniformement contínua.
+	\item \textbf{Proveu que $f(x)=\sin x$ és uniformement contínua a tot $\mathbb{R}$ veient que satisfà una condició 1-Lipschitz a tota la recta real.}\\
 	\textit{Indicació:} Useu que, per tot $a,b\in\mathbb{R}$,
 	$$\sin{a}-\sin{b}=2\sin{\left(\dfrac{a-b}{2}\right)}\cos{\left(\dfrac{a+b}{2}\right)}.$$
-	(\textit{Observació:} $f(x)=\sin{x}$ és, doncs, una funció vàlida com l'exemple que es demana a l'exercici 16 del Tema 3).
+	(\textit{Observació:} $f(x)=\sin{x}$ és, doncs, una funció vàlida com l'exemple que es demana a l'exercici 16 del Tema 3).\\
+	Tenim que $|\cos{x}|\leq 1\ \forall x\in\mathbb{R}$ i que $|\sin{x}|\leq 1\ \forall x\in\mathbb{R}$. També,
+	$$
+	|x-y|>\left|\dfrac{x-y}{2}\right|>\left|\sin\left(\dfrac{x-y}{2}\right)\right|\iff |x-y|>\left|2\sin\left(\dfrac{x-y}{2}\right)\right|.
+	$$
+	Com que sabem que $|\cos{x}|\leq 1$,
+	$$
+	|x-y|>\left|(x-y)\cos{\left(\dfrac{x+y}{2}\right)}\right|>\left|2\sin{\left(\dfrac{x-y}{2}\right)}\cos{\left(\dfrac{x+y}{2}\right)}\right|.
+	$$
+	Del que podem concloure que
+	$$
+	\left|2\sin{\left(\dfrac{x-y}{2}\right)}\cos{\left(\dfrac{x+y}{2}\right)}\right|=|\sin{x}-\sin{y}|=|f(x)-f(y)|<1|x-y|
+	$$
+	i per tant, que $f(x)=\sin{x}$ és 1-Lipschitz.
 \end{enumerate}
 \end{document}
