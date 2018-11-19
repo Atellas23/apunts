@@ -39,24 +39,36 @@
 		\begin{equation}
 			\forall n\leq n_0\in\mathbb{N}\ \img{f^{n+1}}\subseteq\img{f^n}.
 		\end{equation}
-		\item \underline{Pas inductiu:} volem veure que (2) és compleix per tota $n>n_0$. Per veure-ho, construïm l'aplicació lineal $f^{n_0+1}$:
+		\item \underline{Pas inductiu:} volem veure que (2) és compleix per tota $n>n_0$. Per veure-ho, construïm l'aplicació lineal $f^{n+1}$:
 		$$
 		\begin{array}{lrr}
-			f^{n_0+1}:\ \img{f^{n_0}}\longrightarrow E\\
-			\qquad\qquad\qquad v\longmapsto f^{n_0+1}(v):=f(v)
-		\end{array}
+			f^{n+1}:\ \img{f^{n}}\longrightarrow E\\
+			\qquad\qquad\qquad v\longmapsto f^{n+1}(v):=f(v)
+		\end{array}.
 		$$
-		Ara sabem que la imatge d'aquesta aplicació compleix
-%		\begin{equation}
-%			\img{f^{n_0+1}}=f^{n_0+1}(\img{f^{n_0}}),
-%		\end{equation}
-%		i sabem també la relació 
+		Com que $f$ és un endomorfisme, necessàriament $f(V)\subseteq V\ \forall V\subseteq E$ i $f^{n+1}(V)\subseteq\img{f^n}\ \forall n>n_0,V\subseteq\img{f^n}$. Per tant, $f^{n+1}(\img{f^n})\subseteq\img{f^n}\ \forall n\in\mathbb{N}$.$\square$\\
+		%nucli n subconjunt de nucli n+1
+		Pel cas del nucli, tenim:
+$$		\begin{array}{lll}
+		\nuc{f}\subseteq E \\
+		\nuc{f^2}\subseteq\img{f}\\
+		\ldots\\
+		\nuc{f^n}\subseteq\img{f^{n-1}}
+		\end{array}
+$$
+%de fet
+		Utilitzant el resultat anterior:
+		$$
+		\img{f^{n+1}}\subseteq\img{f^n}\subseteq\img{f^{n-1}}
+		$$
+		Ja que $\img{f^{k-1}}$ és l'espai de sortida de l'aplicació $f^k$ per tota $k$ natural. Ara volem veure:
 		\begin{equation}
-			f(V)\subseteq E\ \forall V\subseteq E.
+		\nuc{f^n}\subseteq\nuc{f^{n+1}}\ \forall n\in\mathbb{N}.
 		\end{equation}
-		Com que
-		$$\img{f^{n_0}}\subseteq\img{f^{n_0-1}}\subseteq\cdots\subseteq\img{f^{2}}\subseteq\img{f}\subseteq E$$
-		$f^{n_0+1}(\img{f^{n_0}})\subseteq\img{f^{n_0}}$
+		Farem també un procés inductiu sobre $n$ per veure aquest resultat:
+		\begin{enumerate}
+		\item \underline{Cas base:} $n=0$
+		\end{enumerate}
 	\end{enumerate}
 	\item[(b) ]\textbf{Demostreu que, si $E$ té dimensió finita, existeix un natural $m$ tal que $\img{f^n}=\img{f^m}$ i $\nuc{f^n}=\nuc{f^m}$ per a tot $n\geq m$.}\\
 	\item[(c) ]\textbf{Proveu, donant un contraexemple a l’espai de polinomis $\mathbb{R}[x]$, que l’apartat (b) no és cert si $E$ no té dimensió finita.}\\
