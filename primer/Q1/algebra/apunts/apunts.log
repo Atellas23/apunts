@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.9.25)  26 NOV 2018 10:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.11.13)  29 JAN 2019 19:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -585,7 +585,7 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
  ) 
 Here is how much of TeX's memory you used:
  2653 strings out of 494880
- 31894 string characters out of 6179601
+ 31894 string characters out of 6179600
  97347 words of memory out of 5000000
  5944 multiletter control sequences out of 15000+600000
  14644 words of font info for 54 fonts, out of 8000000 for 9000
@@ -606,7 +606,7 @@ fonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
 /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/sh
 are/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on apunts.pdf (9 pages, 177244 bytes).
+Output written on apunts.pdf (9 pages, 176827 bytes).
 PDF statistics:
  98 PDF objects out of 1000 (max. 8388607)
  70 compressed objects within 1 object stream

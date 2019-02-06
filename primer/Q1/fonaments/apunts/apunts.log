@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.9.25)  15 NOV 2018 12:16
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.11.13)  29 JAN 2019 19:38
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -586,7 +586,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 300--301
 [8] [9] (./apunts.aux) ) 
 Here is how much of TeX's memory you used:
  2656 strings out of 494880
- 31758 string characters out of 6179601
+ 31758 string characters out of 6179600
  95494 words of memory out of 5000000
  5952 multiletter control sequences out of 15000+600000
  12367 words of font info for 45 fonts, out of 8000000 for 9000
@@ -608,7 +608,7 @@ msfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmt
 i10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pf
 b>
-Output written on apunts.pdf (10 pages, 201850 bytes).
+Output written on apunts.pdf (10 pages, 201394 bytes).
 PDF statistics:
  101 PDF objects out of 1000 (max. 8388607)
  72 compressed objects within 1 object stream
