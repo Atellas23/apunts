@@ -1,0 +1,205 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{float}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{color}
+\usepackage{breqn}
+\newcommand{\kev}{$\mathbb{K}$-e.v. }
+\newcommand{\af}{\mathbb{A}}
+\newcommand{\props}{\underline{\textbf{Propiedades}}:\\}
+\newcommand{\defi}{\underline{\textbf{Definición}}:\\}
+\newcommand{\prop}{\underline{\textbf{Proposición}}:\\}
+\newcommand{\dem}{\underline{\textbf{Demostración}}:\\}
+\newcommand{\ej}{\underline{Ejemplos}:\\}
+\newcommand{\obs}{\underline{\textbf{Observación}}: }
+
+\title{Geometría Afín y Euclídea}
+\author{Àlex Batlle Casellas}
+\renewcommand*\contentsname{Índex}
+
+\begin{document}
+
+\begin{titlepage}
+	\centering
+	{\scshape\LARGE Facultat de Matemàtiques i Estadística \par}
+	\vspace{1cm}
+	{\scshape\Large Universitat Politècnica de Catalunya - BarcelonaTech\par}
+	\vspace{1.5cm}
+	{\huge\bfseries Geometría Afín y Euclídea (Q2)
+	\par}
+	\vspace{2cm}
+	{\Large\itshape Àlex Batlle Casellas\par}
+
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
+%\section*{Resumen}
+
+\vfill
+\newpage\tableofcontents
+\newpage
+\section{Espacio Afín.}
+\subsection{Definiciones.}
+\defi Sea $E$ un \kev Un \textbf{espacio afín} asociado a $E$ es una triple $\af=(A,E,\delta)$ donde $A$ es un conjunto y $\delta$ es una aplicación
+\begin{align*}
+  \delta \colon A\times A &\to E\\
+  (p,q) &\mapsto \delta(p,q).
+\end{align*}
+que cumple con las siguientes propiedades:
+\begin{enumerate}
+	\item $\forall p_1,p_2,p_3\in A,\ \delta(p_1,p_2)+\delta(p_2,p_3)=\delta(p_1,p_3).$
+	\item $\forall p\in A$, la siguiente aplicación es biyectiva:
+	\begin{align*}
+		\delta_p \colon A &\to E\\
+		q &\mapsto \delta_p(q):=\delta(p,q).
+	\end{align*}
+\end{enumerate}
+A los elementos de $A$ les llamaremos \textbf{puntos}. Usaremos la siguiente notación:
+\begin{enumerate}
+	\item $\dim A:=\dim E.$
+	\item Si $\vec{u}=\delta(p,q)$, $p$ es el \textbf{origen} de $\vec{u}$ y $q$ es su \textbf{extremo}.
+	\item $\delta(p,q):=\vec{pq}=q-p.$
+	\item Usando la anterior notación, la propiedad (1): $(p_2-p_1)+(p_3-p_2)=(p_3-p_1).$
+	\item Si $\vec{u}=\vec{pq}=q-p \implies q=p+\vec{u}.$
+\end{enumerate}
+\ej \begin{enumerate}
+	\item $\af=((0,\infty),\mathbb{R},\delta):$
+	\begin{align*}
+		\delta \colon A\times A &\to E\\
+		(p,q) &\mapsto \delta(p,q):=\ln q-\ln p.
+	\end{align*}
+	Comprobemos las propiedades:
+	\begin{itemize}
+		\item Propiedad 1: $\delta(p_1,p_2)+\delta(p_2,p_3)=(\ln p_2-\ln p_1)+(\ln p_2-\ln p_3)=\ln p_3-\ln p_1=\delta(p_1,p_3).$
+		\item Propiedad 2: Si fijamos $p$,
+		\begin{align*}
+			\delta_p \colon A &\to E\\
+			q &\mapsto \delta_p(q):=\ln q-\ln p
+		\end{align*}
+		es biyectiva.$\square$
+	\end{itemize}
+	\item $\af=(\mathbb{R}^2,\mathbb{R}^2,\delta)$, y $\delta$ es la aplicación tal que si $p=(x_1,y_1),q=(x_2,y_2)$, entonces
+	\begin{align*}
+		\delta \colon A\times A &\to E\\
+		(p,q) &\mapsto \delta(p,q):=(x_2-x_1,y_2-y_1).
+	\end{align*}
+\end{enumerate}
+\defi $\af^n_{\mathbb{K}}$ es el espacio afín definido como $\af=(\mathbb{K}^n,\mathbb{K}^n,\delta)$, y $\delta$ es la aplicación de \textbf{resta de coordenadas}.\\
+\props Sea $\af$ un espacio afín:
+\begin{enumerate}
+	\item $\delta(p,q)=\vec{0}\iff q=p.$
+	\item $\delta(p,q)=-\delta(q,p).$
+	\item $\delta(p_1,p_2)=\delta(p_3,p_4)\iff \delta(p_1,p_3)=\delta(p_2,p_4).$ (regla del paralelogramo)
+\end{enumerate}
+\dem
+\begin{enumerate}
+	\item \begin{enumerate}
+		\item $\Leftarrow$) Cojamos $\vec{u}\in E$. Recordemos que $\delta_p$ es biyectiva para todo $p\in A$ fijado. Entonces, $\exists q\in A$ tal que $\vec{u}=\delta(p,q)$. Entonces, $\delta(p,p)+\vec{u}=\delta(p,p)+\delta(p,q)=\delta(p,q)=\vec{u}\implies\delta(p,p)=\vec{0}.$
+		\item $\Rightarrow$) Por hipótesis, $\delta(p,q)=\vec{0}$, y como ya hemos visto, $\delta(p,p)=\vec{0}$. Como $\delta_p$ es biyectiva, $p=q.\square$
+	\end{enumerate}
+	\item $\delta(p,q)+\delta(q,p)=\delta(p,p)=\vec{0}\implies \delta(p,q)=-\delta(q,p).\square$
+	\item Por simetría, solo hace falta demostrar una dirección. Por tanto, demostremos $\Rightarrow$, con hipótesis $\delta(p_1,p_2)=\delta(p_3,p_4)$:
+	$$\delta(p_1,p_3)=\delta(p_1,p_2)+\delta(p_2,p_3)=\delta(p_3,p_4)+\delta(p_2,p_3)=\delta(p_2,p_4).\square$$
+\end{enumerate}
+\subsection{Combinaciones afines de puntos.}
+\obs Hasta ahora, las "operaciones" definidas son:
+\begin{enumerate}
+	\item Combinaciones lineales de vectores en $E$.
+	\item $p,q\in A\implies \delta(p,q)=q-p\in E.$
+	\item $p\in A,\vec{u}\in E\implies p+\vec{u}\in A.$
+\end{enumerate}
+En general, hacer "combinaciones lineales" de una colección de puntos $p_1,\ldots,p_r\in A$, $\alpha_1,\ldots,\alpha_r\in\mathbb{K}$,
+$$\alpha_1p_1+\ldots+\alpha_rp_r=\sum_{i=1}^r\alpha_ip_i$$
+no tiene sentido, pero hay \textbf{dos casos} en los que sí lo tiene:
+\begin{enumerate}
+	\item $\sum\alpha_i=1$.\\
+	\defi Sean $p_1,\ldots,p_r\in A$, $\alpha_1,\ldots,\alpha_r\in\mathbb{K}$ tales que $\sum_{i=1}^r\alpha_i=1$. Entonces, por definición,
+	$$
+	\sum_{i=1}^r\alpha_ip_i:=\bar{p}+\sum_{i=1}^r\alpha_i(p_i-\bar{p})\in A,\textrm{ cogiendo }\bar{p}\in A\textrm{ como punto auxiliar.}
+	$$
+	\prop El proceso anterior no depende del punto auxiliar $\bar{p}$ que escojamos.\\
+	\dem Sean $\bar{p},\bar{\bar{p}}\in A$ puntos cualesquiera de $A$. Entonces,
+	\begin{dmath}
+	\bar{p}+\sum\alpha_i(p_i-\bar{p})=\bar{\bar{p}}+\sum\alpha_i(p_i-\bar{\bar{p}})\iff (\bar{p}-\bar{\bar{p}})+\sum\alpha_i(p_i-\bar{p})=(\bar{\bar{p}}-\bar{\bar{p}})+\sum\alpha_i(p_i-\bar{\bar{p}})\iff (\bar{p}-\bar{\bar{p}})+\sum\alpha_i[(p_i-\bar{p})-(p_i-\bar{\bar{p}})]=\vec{0}\iff (\bar{p}-\bar{\bar{p}})+\sum\alpha_i[(p_i-\bar{p})+(\bar{\bar{p}}-p_i)]=\vec{0}\iff (\bar{p}-\bar{\bar{p}})+\sum\alpha_i[(\bar{\bar{p}}-\bar{p})]=\vec{0}\iff (\bar{p}-\bar{\bar{p}})+(\bar{\bar{p}}-\bar{p})=\vec{0}\iff\delta(\bar{p},\bar{p})=\vec{0}.\square
+	\end{dmath}
+	\defi Dada una colección de puntos $p_1,\ldots,p_m\in A$, el \textbf{baricentro} de todos ellos es el punto $b$ resultante de la combinación afín siguiente:
+	$$
+	b=\dfrac{1}{m}p_1+\dfrac{1}{m}p_2+\ldots+\dfrac{1}{m}p_m=\sum_{i=1}^m\dfrac{1}{m}p_i\in A.
+	$$
+	\item $\sum\alpha_i=0$.\\
+	\defi Sean $p_1,\ldots,p_r\in A$, $\alpha_1,\ldots,\alpha_r\in\mathbb{K}$ tales que $\sum_{i=1}^r\alpha_i=0$. Entonces, por definición,
+	$$
+	\sum_{i=1}^r\alpha_ip_i:=\sum_{i=1}^r\alpha_i(p_i-\bar{p})\in E,\textrm{ cogiendo }\bar{p}\in A\textrm{ como punto auxiliar.}
+	$$
+	\prop El proceso anterior no depende del punto auxiliar $\bar{p}$ que escojamos.\\
+	\dem Sean $\bar{p},\bar{\bar{p}}\in A$ puntos cualesquiera de $A$. Entonces,
+	\begin{dmath}
+	\sum\alpha_i(p_i-\bar{p})=\sum\alpha_i(p_i-\bar{\bar{p}})\iff 
+	\end{dmath}
+\end{enumerate}
+\obs Combinaciones de puntos.
+\begin{enumerate}
+	\item $\af^n_{\mathbb{K}}$. En esta situación, sean $p_1=(a_1,\ldots,a_n)$, $p_2=(b_1,\ldots,b_n)$. Entonces, $\alpha_1p_1+\alpha_2p_2=(\alpha_1a_1+\alpha_2b_1,\ldots,\alpha_1a_n+\alpha_2b_n)$ (si $\alpha_1+\alpha_2=0$ o $\alpha_1+\alpha_2=1$).
+	\item Ejemplo: $p_1-\dfrac{3}{2}p_2+\dfrac{1}{2}p_3=(p_1-p_2)+\dfrac{1}{2}(p_3-p_2)$.
+\end{enumerate}
+\subsection{Coordenadas.}
+\defi Sea $\af$ un espacio afín de $\dim A=n<\infty$ asociado a un \kev $E$.
+\begin{enumerate}
+	\item Llamaremos \textbf{sistema de referencia en $\af$} a
+	$$
+	\mathcal{R}=\{p;\ v_1,\ldots,v_n\},\textrm{ donde }p\in A,\ \mathcal{B}=\{v_1,\ldots,v_n\}\textrm{ base de E}.
+	$$
+	\item Dado $q\in A$, llamaremos \textbf{coordenadas de} $q$ \textbf{en} $\mathcal{R}$ a $q_{\mathcal{R}}=(\vec{pq})_{\mathcal{B}}.$
+\end{enumerate}
+\obs
+\begin{enumerate}
+	\item Como $\delta_p$ es biyectiva y \begin{align*}
+		E &\to \mathbb{K}^n\\
+		v &\mapsto v_B
+	\end{align*}
+	también lo es, la asignación de coordenadas a un punto es biyectiva.
+	\item $q_R=\begin{pmatrix}
+	x_1\\
+	\vdots\\
+	x_n
+	\end{pmatrix}\iff q-p=\sum_{i=1}^nx_iv_i.$
+\end{enumerate}
+\ej
+\begin{enumerate}
+	\item $\af^2_{\mathbb{R}}$.\\
+	$\mathcal{R}=\{p=(1,3);\ v_1=(1,1),v_2=(2,1)\}$, $q=(4,5)$. Entonces, $q-p=(4,5)-(1,3)=(3,2)=v_1+v_2\implies q_{\mathcal{R}}=\begin{pmatrix}
+	1\\
+	1
+	\end{pmatrix}.$
+	\item $\mathcal{R}=\{(0,0);\ e_1=(1,0),e_2=(0,1)\}.\ q=(4,5)\implies q_{\mathcal{R}}=\begin{pmatrix}
+	4\\
+	5
+	\end{pmatrix}$.
+\end{enumerate}
+\defi En $\af^n_{\mathbb{K}}$ llamaremos \textbf{referencia ordinaria} a
+$$
+\mathcal{R}_{\textrm{ord}}:=\{0;\ \mathcal{B}_{\textrm{canónica}}\}.
+$$
+\obs $q=(q_1,\ldots,q_n)\in\mathbb{K}^n,\ q_{\textrm{ord}}=\begin{pmatrix}
+q_1\\
+\vdots\\
+q_n
+\end{pmatrix}.$\\
+\prop Sea $\af$ un espacio afín de dimensión finita, y sea la referencia $\mathcal{R}=\{p;\ B\}$, con $B$ una base de $E$. Entonces,
+\begin{enumerate}
+	\item $p_1,\ldots,p_r\in A,\ \alpha_1,\ldots,\alpha_r\in\mathbb{K}:\ \sum\alpha_i=1.$ Entonces, 
+	$(\alpha_1p_1+\ldots+\alpha_rp_r)_{\mathcal{R}}=\alpha_1(p_1)_{\mathcal{R}}+\ldots+\alpha_r(p_r)_{\mathcal{R}}.$
+	\item $p_1,\ldots,p_r\in A,\ \alpha_1,\ldots,\alpha_r\in\mathbb{K}:\ \sum\alpha_i=0.$ Entonces, 
+	$(\alpha_1p_1+\ldots+\alpha_rp_r)_B=\alpha_1(p_1)_{\mathcal{R}}+\ldots+\alpha_r(p_r)_{\mathcal{R}}.$
+	\item Caso particular. $(p_2-p_1)_B=(p_2)_{\mathcal{R}}-(p_1)_{\mathcal{R}}.$
+\end{enumerate}
+\newpage
+
+\newpage
+\end{document}
