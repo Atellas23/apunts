@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.11.13)  10 FEB 2019 23:29
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.11.13)  11 FEB 2019 23:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -839,11 +839,29 @@ Underfull \hbox (badness 10000) in paragraph at lines 173--174
 
  []
 
-[5] [6] (./apunts.aux) ) 
+[5]
+Underfull \hbox (badness 10000) in paragraph at lines 202--220
+
+ []
+
+
+Overfull \hbox (29.89406pt too wide) detected at line 254
+\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 q \OMS/cmsy/m/n/10.95 ^^@ \OML/cmm/m/it
+/10.95 p[]\OT1/cmr/m/n/10.95 )[] = (\OML/cmm/m/it/10.95 q \OMS/cmsy/m/n/10.95 ^
+^@ \OML/cmm/m/it/10.95 p[]\OT1/cmr/m/n/10.95 )[] + (\OML/cmm/m/it/10.95 p[] \OM
+S/cmsy/m/n/10.95 ^^@ \OML/cmm/m/it/10.95 p[]\OT1/cmr/m/n/10.95 )[]  []  [] = \O
+ML/cmm/m/it/10.95 q[] \OT1/cmr/m/n/10.95 = \OML/cmm/m/it/10.95 S\OT1/cmr/m/n/10
+.95 (\OML/cmm/m/it/10.95 q \OMS/cmsy/m/n/10.95 ^^@ \OML/cmm/m/it/10.95 p[]\OT1/
+cmr/m/n/10.95 )[] + (\OML/cmm/m/it/10.95 p[]\OT1/cmr/m/n/10.95 )[] = \OML/cmm/m
+/it/10.95 S [] \OT1/cmr/m/n/10.95 + [] \OML/cmm/m/it/10.95 :\U/msa/m/n/10.95 ^^
+C
+ []
+
+[6] [7] (./apunts.aux) ) 
 Here is how much of TeX's memory you used:
  11294 strings out of 494880
  203586 string characters out of 6179600
- 243159 words of memory out of 5000000
+ 244159 words of memory out of 5000000
  14561 multiletter control sequences out of 15000+600000
  538294 words of font info for 51 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
@@ -856,16 +874,17 @@ nts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
 /share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/
 texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
-fonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
-onts/symbols/msbm10.pfb>
-Output written on apunts.pdf (7 pages, 155912 bytes).
+dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/sy
+mbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/sym
+bols/msbm10.pfb>
+Output written on apunts.pdf (8 pages, 170028 bytes).
 PDF statistics:
- 84 PDF objects out of 1000 (max. 8388607)
- 60 compressed objects within 1 object stream
+ 91 PDF objects out of 1000 (max. 8388607)
+ 65 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

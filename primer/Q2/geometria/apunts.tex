@@ -199,6 +199,115 @@ q_n
 	$(\alpha_1p_1+\ldots+\alpha_rp_r)_B=\alpha_1(p_1)_{\mathcal{R}}+\ldots+\alpha_r(p_r)_{\mathcal{R}}.$
 	\item Caso particular. $(p_2-p_1)_B=(p_2)_{\mathcal{R}}-(p_1)_{\mathcal{R}}.$
 \end{enumerate}
+\dem \\
+\prop \textbf{Cambio de sistema de referencia.} Sea $\af$ un espacio afín de dimensión finita $n$. Sean $\mathcal{R}_1=\{p_1;\ v_1,\ldots,v_n\},\mathcal{R}_2=\{p_2;\ w_1,\ldots,w_n\}$ dos sistemas de referencia. Sean $(p_2)_{\mathcal{R}_1}=\begin{pmatrix}
+a_1\\
+\vdots\\
+a_n
+\end{pmatrix}$, y $S=M_{B_2\rightarrow B_1}=\begin{pmatrix}
+\vert &  & \vert\\
+(w_1)_{B_1} & \cdots & (w_n)_{B_1}\\
+\vert &  & \vert
+\end{pmatrix}$. Sea $q\in A$ tal que $q_{\mathcal{R}_1}=\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix},q_{\mathcal{R}_2}=\begin{pmatrix}
+\bar{x_1}\\
+\vdots\\
+\bar{x_n}
+\end{pmatrix}$. Entonces,
+$$
+\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix}=S\begin{pmatrix}
+\bar{x_1}\\
+\vdots\\
+\bar{x_n}
+\end{pmatrix}+\begin{pmatrix}
+a_1\\
+\vdots\\
+a_n
+\end{pmatrix},\quad q_{\mathcal{R}_1}=Sq_{\mathcal{R}_2}+(p_2)_{\mathcal{R}_2}.
+$$
+\dem $q_{\mathcal{R}_1}=\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix}.\ q-p_1=(q-p_2)+(p_2-p_1).$ Entonces,
+$$
+(q-p_1)_{B_1}=(q-p_2)_{B_1}+(p_2-p_1)_{B_1}\implies \begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix}=q_{\mathcal{R}_1}=S(q-p_2)_{B_2}+(p_2)_{\mathcal{R}_1}=S\begin{pmatrix}
+\bar{x_1}\\
+\vdots\\
+\bar{x_n}
+\end{pmatrix}+\begin{pmatrix}
+a_1\\
+\vdots\\
+a_n
+\end{pmatrix}.\square
+$$
+\obs \textbf{Fórmula matricial de cambio de referencia.}
+$$
+\begin{pmatrix}
+q_{\mathcal{R}_1}\\
+1
+\end{pmatrix}=\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n\\
+1
+\end{pmatrix}=\left(
+\begin{array}{c|c}
+S & (p_2)_{\mathcal{R}_1} \\ \hline
+0 & 1
+\end{array}\right)\begin{pmatrix}
+\bar{x_1}\\
+\vdots\\
+\bar{x_n}\\
+1
+\end{pmatrix},\quad \tilde{S}=\left(
+\begin{array}{c|c}
+S & (p_2)_{\mathcal{R}_1} \\ \hline
+0 & 1
+\end{array}\right)\in\mathcal{M}_{n+1}(\mathbb{K}).
+$$
+También definiremos $\tilde{S}:=M_{\mathcal{R}_2\rightarrow\mathcal{R}_1}$.\\
+\defi \textbf{Coordenadas ampliadas.} $\mathcal{R}=\{p;B\},q\in A,v\in B$,
+$$
+\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix}=q_{\mathcal{R}}\longmapsto q_{\mathcal{R}}=\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n\\
+1
+\end{pmatrix}
+$$
+$$
+\begin{pmatrix}
+\alpha1\\
+\vdots\\
+\alpha_n
+\end{pmatrix}=v_B\longmapsto v_B=\begin{pmatrix}
+\alpha1\\
+\vdots\\
+\alpha_n\\
+0
+\end{pmatrix}.
+$$
+Llamaremos a los elementos de la derecha las \textbf{coordenadas ampliadas} de un punto y un vector.\\
+\obs
+\begin{enumerate}
+	\item $\mathcal{R}_1\xleftarrow{\tilde{S}}\mathcal{R}_2\xleftarrow{\tilde{T}}\mathcal{R}_3$, entonces $M_{\mathcal{R}_3\rightarrow\mathcal{R}_1}=\tilde{S}\tilde{T}.$
+\end{enumerate}
 \newpage
 
 \newpage
