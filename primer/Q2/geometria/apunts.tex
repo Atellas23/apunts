@@ -277,7 +277,8 @@ S & (p_2)_{\mathcal{R}_1} \\ \hline
 0 & 1
 \end{array}\right)\in\mathcal{M}_{n+1}(\mathbb{K}).
 $$
-También definiremos $\tilde{S}:=M_{\mathcal{R}_2\rightarrow\mathcal{R}_1}$.\\
+También definiremos $\tilde{S}:=M_{\mathcal{R}_2\rightarrow\mathcal{R}_1}$. Esta matriz cumple $\det\tilde{S}=\det
+S$.\\
 \defi \textbf{Coordenadas ampliadas.} $\mathcal{R}=\{p;B\},q\in A,v\in B$,
 $$
 \begin{pmatrix}
@@ -307,6 +308,48 @@ Llamaremos a los elementos de la derecha las \textbf{coordenadas ampliadas} de u
 \obs
 \begin{enumerate}
 	\item $\mathcal{R}_1\xleftarrow{\tilde{S}}\mathcal{R}_2\xleftarrow{\tilde{T}}\mathcal{R}_3$, entonces $M_{\mathcal{R}_3\rightarrow\mathcal{R}_1}=\tilde{S}\tilde{T}.$
+	\item Otras ventajas de las coordenadas ampliadas: ecuaciones de variedades lineales, afinidades, cuádricas.
+	\item Las coordenadas ampliadas son coherentes con las combinaciones afines de puntos. Si $p_1,\ldots,p_m\in A,\alpha_1,\ldots,\alpha_m\in\mathbb{K}$, entonces
+	$$
+	(\alpha_1p_1+\ldots+\alpha_mp_m)_{\mathcal{R}}=\alpha_1(p_1)_{\mathcal{R}}+\ldots+\alpha_m(p_m)_{\mathcal{R}}=\alpha_1\begin{pmatrix}
+	\vert\\
+	\vert\\
+	1
+	\end{pmatrix}+\ldots+\alpha_m\begin{pmatrix}
+	\vert\\
+	\vert\\
+	1
+	\end{pmatrix}=\begin{pmatrix}
+	\vert\\
+	\vert\\
+	\sum\alpha_i
+	\end{pmatrix}=\begin{pmatrix}
+	\vert\\
+	\vert\\
+	1
+	\end{pmatrix}.
+	$$
+\end{enumerate}
+\subsection{Variedades lineales.}
+\defi Sea $\af$ un espacio afín asociado a un \kev $E$. Entonces, una \textbf{variedad lineal} de $\af$ es un subconjunto:
+$$
+V:=p+F=\{p+\vec{u}\vert\vec{u}\in F\},\ p\in A,\ F\subseteq E\textrm{subespacio vectorial.}
+$$
+Definimos $\dim V:=\dim F$.\\
+\ej
+\begin{enumerate}
+	\item Variedades lineales de dimensión 0: \textbf{puntos}, $\{p\}$.
+	\item Variedades lineales de dimensión 1: \textbf{rectas}, $\{p\}+[\vec{u}]$.
+	\item Variedades lineales de dimensión 2: \textbf{planos}, $\{p\}+[\vec{u},\vec{v}]$.
+	\item Variedades lineales de dimensión $n-1$: \textbf{hiperplanos}.
+	\item $A=p+E$.
+\end{enumerate}
+\defi Sea $\af$ un espacio afín. Sean $V$ y $W$ variedades lineales, $V=p+F,W=q+G$. Entonces, definimos las siguientes \textbf{posiciones relativas} de dos variedades lineales:
+\begin{enumerate}
+	\item $V$ y $W$ son \textbf{paralelas} $\iff F\subseteq G$ o $G\subseteq F$.
+	\item $V\subseteq W$: $V$ está \textbf{incluída} en $W$.
+	\item $V\cap W\neq\emptyset\implies V$ y $W$ se \textbf{cortan}.
+	\item $V$ y $W$ se \textbf{cruzan}$\iff V$ y $W$ no son paralelas $\wedge V\cap W=\emptyset$.
 \end{enumerate}
 \newpage
 
