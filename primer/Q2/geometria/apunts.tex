@@ -15,7 +15,7 @@
 \newcommand{\dem}{\underline{\textbf{Demostración}}:\\}
 \newcommand{\ej}{\underline{Ejemplos}:\\}
 \newcommand{\obs}{\underline{\textbf{Observación}}: }
-
+\newcommand{\cor}{\underline{\textbf{Corolario}}:\\}
 \title{Geometría Afín y Euclídea}
 \author{Àlex Batlle Casellas}
 \renewcommand*\contentsname{Índex}
@@ -333,7 +333,7 @@ Llamaremos a los elementos de la derecha las \textbf{coordenadas ampliadas} de u
 \subsection{Variedades lineales.}
 \defi Sea $\af$ un espacio afín asociado a un \kev $E$. Entonces, una \textbf{variedad lineal} de $\af$ es un subconjunto:
 $$
-V:=p+F=\{p+\vec{u}\vert\vec{u}\in F\},\ p\in A,\ F\subseteq E\textrm{subespacio vectorial.}
+V:=p+F=\{p+\vec{u}\vert\vec{u}\in F\},\ p\in A,\ F\subseteq E\textrm{ subespacio vectorial.}
 $$
 Definimos $\dim V:=\dim F$.\\
 \ej
@@ -361,7 +361,21 @@ Definimos $\dim V:=\dim F$.\\
 \prop Sean $V=p+F,W=q+G$ variedades lineales. Entonces, $V\cap W\neq\emptyset\iff p-q\in F+G$.\\
 \dem \\
 \subsubsection{Variedades lineales y combinaciones de puntos.}
-\prop Sea $V=p+F$ una variedad lineal de $\af$. Sean $p_1,\ldots,p_m\in V$.
+\prop Sea $V=p+F$ una variedad lineal de $\af$. Sean $p_1,\ldots,p_m\in V$. Entonces $\forall\alpha_1,\ldots,\alpha_m\in\mathbb{K}:\sum\alpha_i=1,\ \alpha_1p_1+\ldots+\alpha_mp_m\in V$.\\
+\dem \\
+\defi Sea $\af$ un espacio afín. Sea $S\subseteq A$ un subconjunto de puntos no vacío. Entonces, \textbf{la variedad lineal más pequeña que contiene a $S$} se denota $\left< S\right>$.\\
+\prop Sea $S=\{p_1,\ldots,p_m\}$. Entonces,
+$$
+\left< S\right>=\{\textrm{combinaciones lineales de }S\}=p_1+[p_2-p_1,\ldots,p_m-p_1]
+$$
+\dem \\
+\defi $\{p_1,\ldots,p_m\},m\geq 2$ son \textbf{linealmente independientes}$\iff\{p_2-p_1,\ldots,p_m-p_1\}$ son vectores l.i.\\
+\obs \textit{No depèn de l'anterior.}\\
+\cor Si $p_1,\ldots,p_m$ son l.i., $\dim <p_1,\ldots,p_m>=m-1$.\\
+\ej \\
+\subsubsection{Ecuaciones de variedades lineales.}
+Sea $\af$ un espacio afín de $\dim\af=n$. Sea $\mathcal{R}=\{p;B=\{u_1,\ldots,u_n\}\}$ un sistema de referencia en $\af$. Sea $V=q+F=q+[v_1,\ldots,v_r],$ $\dim V=r,$ $\{v_1,\ldots,v_r\}$ base de F.
+
 \newpage
 
 \newpage
