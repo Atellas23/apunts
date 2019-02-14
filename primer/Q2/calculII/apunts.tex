@@ -1,0 +1,152 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{float}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{color}
+\usepackage{breqn}
+\newcommand{\rev}{$\mathbb{R}$-e.v. }
+\newcommand{\props}{\underline{\textbf{Propietats}}:\\}
+\newcommand{\defi}{\underline{\textbf{Definició}}:\\}
+\newcommand{\prop}{\underline{\textbf{Proposició}}:\\}
+\newcommand{\dem}{\underline{\textbf{Demostració}}:\\}
+\newcommand{\ej}{\underline{Exemples}:\\}
+\newcommand{\obs}{\underline{\textbf{Observació}}: }
+\newcommand{\cor}{\underline{\textbf{Corol·lari}}:\\}
+\newcommand{\scalarproduct}{\left<\cdot,\cdot\right>}
+\title{Càlcul Diferencial}
+\author{Àlex Batlle Casellas}
+\renewcommand*\contentsname{Índex}
+
+\begin{document}
+
+\begin{titlepage}
+	\centering
+	{\scshape\LARGE Facultat de Matemàtiques i Estadística \par}
+	\vspace{1cm}
+	{\scshape\Large Universitat Politècnica de Catalunya - BarcelonaTech\par}
+	\vspace{1.5cm}
+	{\huge\bfseries Càlcul Diferencial (Q2)
+	\par}
+	\vspace{2cm}
+	{\Large\itshape Àlex Batlle Casellas\par}
+
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
+%\section*{Resumen}
+
+\vfill
+\newpage\tableofcontents
+\newpage
+\section{Topologia d'$\mathbb{R}^n$.}
+\subsection*{Preliminars.}
+\paragraph{Estructura afí de $\mathbb{R}^n$.}
+$\mathbb{A}=(A,E,\phi)$ és un espai afí, amb
+\begin{align*}
+		\phi \colon A\times A &\to E\\
+		q &\mapsto \phi(p,q)
+\end{align*}
+com a funció d'assignació de vectors entre dos punts. Es té que, per $p\in A$ fixat,
+\begin{align*}
+		\phi_p \colon A &\to E\\
+		q &\mapsto \phi(p,q)
+\end{align*}
+és bijectiva. En aquest curs, prendrem $A=\mathbb{R}^n$.
+\newpage
+\subsection{Nocions de topologia.}
+\subsubsection{Espais mètrics i normats.}
+\defi Sigui $M$ un conjunt. Una \textbf{distància en $M$} és una aplicació
+\begin{align*}
+		d \colon M\times M &\to \mathbb{R}\\
+		(x,y) &\mapsto d(x,y).
+\end{align*}
+tal que compleix, $\forall x,y,z\in M$:
+\begin{enumerate}
+	\item Definida positiva: $d(x,y)\geq0$.
+	\item No degeneració: $d(x,y)=0\iff x=y$.
+	\item Simetria: $d(x,y)=d(y,x)$.
+	\item Desigualtat triangular: $d(x,y)\leq d(x,z)+d(y,z)$.
+\end{enumerate}
+Un \textbf{espai mètric} és un parell $(M,d)$.\\
+\defi Sigui $E$ un \rev de dimensió arbitrària. Una \textbf{norma en $E$} és una aplicació
+\begin{align*}
+		||\cdot|| \colon E &\to \mathbb{R}\\
+		v &\mapsto ||v||
+\end{align*}
+tal que compleix, $\forall u,v\in E$:
+\begin{enumerate}
+	\item Definida positiva: $||u||\geq0$.
+	\item No degeneració: $||u||=0\iff u=\vec{0}$.
+	\item Multiplicació per escalar: $||\lambda u||=|\lambda|\ ||u||\forall\lambda\in\mathbb{R}$.
+	\item Desigualtat triangular: $||u+v||\leq ||u||+||v||$.
+\end{enumerate}
+Un \textbf{espai normat} és un parell $(E,||\cdot||)$.\\
+\prop Si $(E,||\cdot||)$ és un espai normat, aleshores $(E,d)$ és un espai mètric, amb $d$ la distància associada a la norma $||\cdot||$, $d(u,v):=||u-v||$.\\
+\dem Les propietats (1),(2), i (4) d'espai mètric són immediates (s'hereten de les propietats de la norma). Comprovem la propietat (3) d'espai mètric: siguin $u,v\in E$, aleshores
+$$
+d(u,v):=||u-v||=||-(v-u)||=|-1|\ ||v-u||=||v-u||=:d(v,u).\square
+$$
+\defi Sigui $E$ un \rev Un \textbf{producte escalar euclidià} en $E$ és una aplicació
+\begin{align*}
+		\left<\cdot,\cdot\right> \colon E\times E &\to \mathbb{R}\\
+		(u,v) &\mapsto \left< u,v\right>
+\end{align*}
+tal que compleix, $\forall u,v,w\in E,\alpha,\beta\in\mathbb{R}$:
+\begin{enumerate}
+	\item Linealitat: $\left<\alpha u+\beta v,w\right>=\alpha\left<u,w\right>+\beta\left<v,w\right>$.
+	\item Simetria: $\left<u,v\right>=\left<v,u\right>$.
+	\item Definida positiva: $\left<v,v\right>\geq0$.
+	\item No degeneració: $\left<v,v\right>=0\iff v=\vec{0}$.
+\end{enumerate}
+Un \textbf{espai euclidià} és un parell $(E,\left<\cdot,\cdot\right>)$.\\
+\prop Si $(E,\left<\cdot,\cdot\right>)$ és un espai euclidià, aleshores $(E,||\cdot||)$ és un espai normat, amb $||\cdot||$ la norma inuïda per el producte escalar $\left<\cdot,\cdot\right>$, $||u||:=+\sqrt{\left<u,u\right>}$.\\
+\dem \\
+\prop El producte escalar i la seva norma associada tenen les següents propietats, $\forall u,v\in E$:
+\begin{enumerate}
+	\item $|\left<\cdot,\cdot\right>|\leq||u||\ ||v||$. (Desigualtat de Cauchy-Schwarz)
+	\item $||u-v||\geq||u||-||v||$.
+	\item $||u+v||^2+||u-v||^2=2||u||^2+2||v||^2$. (Identitat del paral·lelogram)
+	\item $||u+v||^2-||u-v||^2=4\left<u,v\right>$. (Identitat de polarització)
+	\item Si $u=(u_i)$, aleshores $|u_i|\leq||u||\leq\sum_{i=1}^n|u_i|$.
+\end{enumerate}
+\dem \\
+\prop A $\mathbb{R}^n$ es defineix:
+\begin{enumerate}
+	\item $\left<u,v\right>_2:=\sum_{i=1}^nu_iv_i$, on $u=(u_i),v=(v_i)$.
+	\item $||u||_2:=\sqrt{\left<u,u\right>_2}=\sqrt{\sum_{i=1}^nu_iv_i}$.
+	\item $d(u,v)_2:=||u-v||_2=\sqrt{\left<u-v,u-v\right>_2}=\sqrt{\sum_{i=1}^n(u_i-v_i})^2$.
+\end{enumerate}
+\dem \\
+\subsubsection{Boles i entorns.}
+$(M,d)$ espai mètric.\\
+\defi $p\in M,r\in\mathbb{R}^+$.
+\begin{enumerate}
+	\item \textbf{Esfera} amb centre a $p$ i radi $r$:
+	$$
+	S_r(p)\equiv S(p,r)=\{q\in M\ \vert\ d(p,q)=r\}.
+	$$
+	\item \textbf{Bola oberta} amb centre a $p$ i radi $r$:
+	$$
+	B_r(p)\equiv B(p,r)=\{q\in M\ \vert\ d(p,q)<r\}.
+	$$
+	\item \textbf{Bola tancada} amb centre a $p$ i radi $r$:
+	$$
+	\bar{B}_r(p)\equiv\bar{B}(p,r)=\{q\in M\ \vert\ d(p,q)\leq r\}.
+	$$
+	\item \textbf{Bola perforada} amb centre a $p$ i radi $r$ (pot ser oberta o tancada):
+	$$
+	B^*_r(p)\equiv B^*(p,r)=\{q\in M\ \vert\ d(p,q)\leq r\}-\{p\}.
+	$$
+\end{enumerate}
+\defi $A\subseteq M$. $A$ és un \textbf{conjunt fitat} si $\exists B_r(p),p\in A:\ A\subseteq B_r(p)$.\\
+\defi $p\in M$. Un \textbf{entorn de $p$} és un conjunt $E(p)\subseteq M$ fitat tal que $\exists B_r(p)\subseteq E(p)$.
+\newpage
+
+\newpage
+\end{document}
