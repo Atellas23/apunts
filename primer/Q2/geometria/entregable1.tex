@@ -1,0 +1,90 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{float}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{color}
+\usepackage{breqn}
+\newcommand{\af}{\mathbb{A}}
+\newcommand{\obs}{\underline{\textbf{Observació}}: }
+\DeclareMathOperator{\nuc}{Nuc}
+\author{Àlex Batlle Casellas}
+
+\begin{document}
+\paragraph{1.}	Discutiu en funció del paràmetre $a\in\mathbb{R}$ la posició relativa dels plans $\pi_1$ i $\pi_2$ de $\af^4_{\mathbb{R}}$ que tenen per equacions en la referència natural:
+\begin{align*}
+	\pi_1:\ \begin{cases} x=1+\lambda+\mu \\ y=-2\lambda+\mu \\ z=2+\mu \\ u=2 \end{cases}\qquad (\lambda,\mu\in\mathbb{R}) \\
+	\pi_2:\ \begin{cases} x-2u=0 \\ x+2y-az=1 \end{cases}
+\end{align*}
+\textbf{Resolució}\\
+Comencem expressant $\pi_1$ i $\pi_2$ en coordenades cartesianes. En el cas de $\pi_1$ tenim:
+\begin{equation}
+\pi_1:\ \begin{pmatrix}
+1\\ 0\\ 2\\ 2
+\end{pmatrix}+\lambda\begin{pmatrix}
+1\\ -2\\ 0\\ 0
+\end{pmatrix}+\mu\begin{pmatrix}
+1\\ 1\\ 1\\ 0
+\end{pmatrix},
+\end{equation}
+és a dir, que tenim $\pi_1$ expressat en forma de punt de pas més subespai vectorial en equacions paramètriques. Si ho volem en forma cartesiana, passem d'unes equacions a les altres:
+\begin{equation}
+\begin{cases}\mu=z-2\\ \mu=y+2\lambda\\ \mu=x-1-\lambda\end{cases}\implies z-2=y+2\lambda=x-1-\lambda;
+\end{equation}
+solucionant convenientment les equacions $z-2=y+2\lambda$ i $x-1-\lambda=z-2$, obtenim dues equacions:
+\begin{equation}
+\begin{cases}y+2\lambda-z+2=0\\ x-z+1-\lambda=0\end{cases};
+\end{equation}
+i sumant dues vegades la segona equació a la primera obtenim $2x+y-3z+4=0$, que juntament amb $u=2$ defineix el pla $\pi_1$. Aleshores, acabem d'obtenir un sistema
+\begin{equation}
+\pi_1:\ \begin{cases} 2x+y-3z=-4\\ u=2\end{cases}\iff\begin{pmatrix}
+2 & 1 & -3 & 0\\
+0 & 0 & 0 & 1
+\end{pmatrix}\begin{pmatrix}x\\ y\\ z\\ u\end{pmatrix}=\begin{pmatrix}-4\\ 2\end{pmatrix}.
+\end{equation}
+En el cas de $\pi_2$, expressar-lo d'aquesta manera no requereix de manipulacions, doncs ja el tenim en forma de sistema lineal d'equacions:
+\begin{equation}
+\pi_2:\ \begin{cases} x-2u=0\\ x+2y-az=1\end{cases}\iff\begin{pmatrix}
+1 & 0 & 0 & -2\\
+1 & 2 & -a & 0
+\end{pmatrix}\begin{pmatrix}x\\ y\\ z\\ u\end{pmatrix}=\begin{pmatrix}0\\ 1\end{pmatrix}.
+\end{equation}
+Ara volem saber quina és la posició relativa dels dos plans. Començarem veient que no poden ser paral·lels ni estar inclosos l'un dins de l'altre.\\
+Si $\pi_1:\ Ap=b$,$\pi_2:\ Cq=d$, definim $\pi_1=p+\nuc A$, $\pi_2=q+\nuc C$. Com que $\dim\pi_1=\dim\pi_2$, $\pi_1\parallel\pi_2\iff \nuc A=\nuc C$. Com que coneixem els vectors que generen el nucli d'$A$, veiem què els passa quan els apliquem $C$; si $v_1=\begin{pmatrix}
+1\\ -2\\ 0\\ 0
+\end{pmatrix},v_2=\begin{pmatrix}
+1\\ 1\\ 1\\ 0
+\end{pmatrix}$, aleshores
+$$
+Cv_1=\begin{pmatrix}
+1\\ -3
+\end{pmatrix}\quad Cv_2=\begin{pmatrix}
+1\\
+3-a
+\end{pmatrix},
+$$
+que són diferents al vector zero, i per tant els nuclis són diferents. Això vol dir, per tant, que $\pi_1\nparallel\pi_2\wedge\pi_1\not\subseteq\pi_2\wedge\pi_2\not\subseteq\pi_1$. Per tant, ara només queden dues posicions relatives per comprovar.
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+
+
+
+
+
+\paragraph{2.}	A $\af^3_{\mathbb{R}}$ considerem el pla $\Pi:\ x + 2y + z = -6$ i les projeccions $P$ i $r$ sobre $\Pi$ de l'origen i l'eix ${x = z = 0}$, respectivament, en la direcció $(0, 0, 1)$. Trobeu un sistema de referència afí on l'equació del
+pla $\Pi$ sigui $\bar{z}=\sqrt{6}$, $P$ pertanyi a l'eix ${\bar{x} = \bar{y} = 0}$ i $r$ estigui sobre el pla $y = 0$. Quants sistemes de referència afins hi ha que compleixin aquestes condicions?
+
+\end{document}

@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.11.13)  15 FEB 2019 19:44
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.11.13)  15 FEB 2019 19:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**apunts.tex
-(./apunts.tex
+**entregable1.tex
+(./entregable1.tex
 LaTeX2e <2017-04-15>
 Babel <3.18> and hyphenation patterns for 5 language(s) loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
@@ -739,21 +739,21 @@ LaTeX Info: Redefining \addtolength on input line 81.
 \cur@row=\count269
 \cur@col=\count270
 \conditionsep=\skip65
-) (./apunts.aux)
-\openout1 = `apunts.aux'.
+) (./entregable1.aux)
+\openout1 = `entregable1.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -802,146 +802,46 @@ LaTeX Font Info:    ... okay on input line 23.
 \MPnumerator=\count275
 \makeMPintoPDFobject=\count276
 \everyMPtoPDFconversion=\toks36
-) [1
-
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./apunts.toc
-LaTeX Font Info:    Try loading font information for U+msa on input line 2.
-
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
+)
+LaTeX Font Info:    Try loading font information for U+msa on input line 16.
+ (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 2.
+LaTeX Font Info:    Try loading font information for U+msb on input line 16.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-))
-\tf@toc=\write3
-\openout3 = `apunts.toc'.
+)
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 54.
 
- [1]
-Underfull \hbox (badness 10000) in paragraph at lines 71--71
-
- []
-
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 79.
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 79.
- [2]
-Underfull \hbox (badness 10000) in paragraph at lines 100--101
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 54.
+ [1
 
- []
-
-[3] [4]
-Underfull \hbox (badness 10000) in paragraph at lines 173--174
-
- []
-
-[5]
-Underfull \hbox (badness 10000) in paragraph at lines 202--220
-
- []
-
-
-Overfull \hbox (29.89406pt too wide) detected at line 254
-\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 q \OMS/cmsy/m/n/10.95 ^^@ \OML/cmm/m/it
-/10.95 p[]\OT1/cmr/m/n/10.95 )[] = (\OML/cmm/m/it/10.95 q \OMS/cmsy/m/n/10.95 ^
-^@ \OML/cmm/m/it/10.95 p[]\OT1/cmr/m/n/10.95 )[] + (\OML/cmm/m/it/10.95 p[] \OM
-S/cmsy/m/n/10.95 ^^@ \OML/cmm/m/it/10.95 p[]\OT1/cmr/m/n/10.95 )[]  []  [] = \O
-ML/cmm/m/it/10.95 q[] \OT1/cmr/m/n/10.95 = \OML/cmm/m/it/10.95 S\OT1/cmr/m/n/10
-.95 (\OML/cmm/m/it/10.95 q \OMS/cmsy/m/n/10.95 ^^@ \OML/cmm/m/it/10.95 p[]\OT1/
-cmr/m/n/10.95 )[] + (\OML/cmm/m/it/10.95 p[]\OT1/cmr/m/n/10.95 )[] = \OML/cmm/m
-/it/10.95 S [] \OT1/cmr/m/n/10.95 + [] \OML/cmm/m/it/10.95 :\U/msa/m/n/10.95 ^^
-C
- []
-
-[6]
-Overfull \hbox (19.25429pt too wide) in paragraph at lines 311--312
-[]\OT1/cmr/m/n/10.95 Otras ven-ta-jas de las co-or-de-nadas am-pli-adas: ecua-c
-iones de var-iedades lin-eales, afinidades,
- []
-
-
-Overfull \hbox (43.6775pt too wide) detected at line 331
-\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 []p[] \OT1/cmr/m/n/10.95 + [] + \OML/c
-mm/m/it/10.95 []p[]\OT1/cmr/m/n/10.95 )[] = \OML/cmm/m/it/10.95 []\OT1/cmr/m/
-n/10.95 (\OML/cmm/m/it/10.95 p[]\OT1/cmr/m/n/10.95 )[] + [] + \OML/cmm/m/it/10.
-95 []\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 p[]\OT1/cmr/m/n/10.95 )[] = \OML/
-cmm/m/it/10.95 [] [] \OT1/cmr/m/n/10.95 + [] + \OML/cmm/m/it/10.95 [] [] \OT1
-/cmr/m/n/10.95 = [] = [] \OML/cmm/m/it/10.95 :
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 337--340
-
- []
-
-[7]
-Underfull \hbox (badness 10000) in paragraph at lines 360--363
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 360--363
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 360--363
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 364--368
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 370--376
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 370--376
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 370--376
-
- []
-
-[8] [9] (./apunts.aux) ) 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] (./entregable1.aux
+) ) 
 Here is how much of TeX's memory you used:
- 11298 strings out of 494880
- 203621 string characters out of 6179600
- 244178 words of memory out of 5000000
- 14564 multiletter control sequences out of 15000+600000
- 538640 words of font info for 52 fonts, out of 8000000 for 9000
+ 11270 strings out of 494880
+ 203393 string characters out of 6179600
+ 242047 words of memory out of 5000000
+ 14545 multiletter control sequences out of 15000+600000
+ 535228 words of font info for 41 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 36i,10n,35p,10394b,375s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc
-10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr
-/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1
-/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/
-msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/m
-sbm10.pfb>
-Output written on apunts.pdf (10 pages, 191722 bytes).
+ 36i,14n,35p,10390b,275s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts
+/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on entregable1.pdf (3 pages, 74901 bytes).
 PDF statistics:
- 101 PDF objects out of 1000 (max. 8388607)
- 72 compressed objects within 1 object stream
+ 42 PDF objects out of 1000 (max. 8388607)
+ 29 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
