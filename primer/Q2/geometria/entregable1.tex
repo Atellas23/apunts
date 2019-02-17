@@ -13,6 +13,9 @@
 \author{Àlex Batlle Casellas}
 
 \begin{document}
+\begin{small}
+Àlex Batlle Casellas
+\end{small}\\
 \paragraph{1.}	Discutiu en funció del paràmetre $a\in\mathbb{R}$ la posició relativa dels plans $\pi_1$ i $\pi_2$ de $\af^4_{\mathbb{R}}$ que tenen per equacions en la referència natural:
 \begin{align*}
 	\pi_1:\ \begin{cases} x=1+\lambda+\mu \\ y=-2\lambda+\mu \\ z=2+\mu \\ u=2 \end{cases}\qquad (\lambda,\mu\in\mathbb{R}) \\
@@ -52,7 +55,7 @@ En el cas de $\pi_2$, expressar-lo d'aquesta manera no requereix de manipulacion
 \end{pmatrix}\begin{pmatrix}x\\ y\\ z\\ u\end{pmatrix}=\begin{pmatrix}0\\ 1\end{pmatrix}.
 \end{equation}
 Ara volem saber quina és la posició relativa dels dos plans. Començarem veient que no poden ser paral·lels ni estar inclosos l'un dins de l'altre.\\
-Si $\pi_1:\ Ap=b$,$\pi_2:\ Cq=d$, definim $\pi_1=p+\nuc A$, $\pi_2=q+\nuc C$. Com que $\dim\pi_1=\dim\pi_2$, $\pi_1\parallel\pi_2\iff \nuc A=\nuc C$. Com que coneixem els vectors que generen el nucli d'$A$, veiem què els passa quan els apliquem $C$; si $v_1=\begin{pmatrix}
+Si $\pi_1:Ap=b$, $\pi_2:Cq=d$, definim $\pi_1=p+\nuc A$, $\pi_2=q+\nuc C$. Com que $\dim\pi_1=\dim\pi_2$, $\pi_1\parallel\pi_2\iff \nuc A=\nuc C$. Com que coneixem els vectors que generen el nucli d'$A$, veiem què els passa quan els apliquem $C$; si $v_1=\begin{pmatrix}
 1\\ -2\\ 0\\ 0
 \end{pmatrix},v_2=\begin{pmatrix}
 1\\ 1\\ 1\\ 0
@@ -65,26 +68,73 @@ Cv_1=\begin{pmatrix}
 3-a
 \end{pmatrix},
 $$
-que són diferents al vector zero, i per tant els nuclis són diferents. Això vol dir, per tant, que $\pi_1\nparallel\pi_2\wedge\pi_1\not\subseteq\pi_2\wedge\pi_2\not\subseteq\pi_1$. Per tant, ara només queden dues posicions relatives per comprovar.
-
-
-
-
-
-
-
-
-
-
-
-
+que són diferents al vector zero, i per tant els nuclis són diferents. Això vol dir, per tant, que $\pi_1\nparallel\pi_2\wedge\pi_1\not\subseteq\pi_2\wedge\pi_2\not\subseteq\pi_1$. Per tant, ara només queden dues posicions relatives per comprovar. Veiem primer la intersecció:\\ Si existeix algun punt a la intersecció, aquest verifica els dos sistemes d'equacions a la vegada. Per tant, escrivim el sistema
+\begin{equation}
+\pi_1:\ \begin{pmatrix}
+A\\ \hline
+C
+\end{pmatrix}\begin{pmatrix}
+x\\ y\\ z\\ u
+\end{pmatrix}=\begin{pmatrix}
+b\\ \hline
+d
+\end{pmatrix}\iff\pi_1:\ \begin{pmatrix}
+2 & 1 & -3 & 0\\
+0 & 0 & 0 & 1\\
+1 & 0 & 0 & -2\\
+1 & 2 & -a & 0\end{pmatrix}\begin{pmatrix}
+x\\ y\\ z\\ u
+\end{pmatrix}=\begin{pmatrix}
+-4\\ 2\\ 0\\ 1
+\end{pmatrix}.
+\end{equation}
+Per veure si la intersecció no es buida, esglaonem la matriu amb l'algoritme de Gauss:
+\begin{equation}
+\begin{pmatrix}
+2 & 1 & -3 & 0 & \vert & -4\\
+0 & 0 & 0 & 1 & \vert & 2\\
+1 & 0 & 0 & -2  &\vert & 0\\
+1 & 2 & -a & 0 & \vert & 1\end{pmatrix}\sim\cdots\sim
+\begin{pmatrix}
+1 & 2 & -a & 0 & \vert & 1\\
+0 & -3 & 2a-3 & 0 & \vert & -6\\
+0 & 0 & 6-a & -6  &\vert & 9\\
+0 & 0 & 0 & 1 & \vert & 2\end{pmatrix};
+\end{equation}
+aplicant la substitució enrere, ens surten les següents solucions:
+\begin{equation}
+\begin{cases}
+x = 4\\
+y = 2+7\dfrac{2a-3}{6-a}\\
+z = \dfrac{21}{6-a}\\
+u = 2.
+\end{cases}
+\end{equation}
+Per tant, podem concloure que els plans tindran intersecció quan $a\neq 6$. És a dir, en resum, els plans $\pi_1$ i $\pi_2$
+\begin{itemize}
+	\item mai seran paral·lels;
+	\item mai estaran continguts l'un dins de l'altre;
+	\item es tallaran en un punt, $(4,2+7\dfrac{2a-3}{6-a},\dfrac{21}{6-a},2)$, quan $a\neq 6$;
+	\item es creuaran quan $a=6$.
+\end{itemize}
 \newpage
 
-
-
-
-
 \paragraph{2.}	A $\af^3_{\mathbb{R}}$ considerem el pla $\Pi:\ x + 2y + z = -6$ i les projeccions $P$ i $r$ sobre $\Pi$ de l'origen i l'eix ${x = z = 0}$, respectivament, en la direcció $(0, 0, 1)$. Trobeu un sistema de referència afí on l'equació del
-pla $\Pi$ sigui $\bar{z}=\sqrt{6}$, $P$ pertanyi a l'eix ${\bar{x} = \bar{y} = 0}$ i $r$ estigui sobre el pla $y = 0$. Quants sistemes de referència afins hi ha que compleixin aquestes condicions?
-
+pla $\Pi$ sigui $\bar{z}=\sqrt{6}$, $P$ pertanyi a l'eix $\{\bar{x} = \bar{y} = 0\}$ i $r$ estigui sobre el pla $\bar{y} = 0$. Quants sistemes de referència afins hi ha que compleixin aquestes condicions?
+\textbf{Resolució}\\
+Primer de tot, trobem les projeccions demanades:
+\begin{itemize}
+	\item $P$ és el punt que cau en el pla que es troba més a prop de l'origen en la direcció $(0,0,1)$; per tant, trobant una $\alpha$ tal que $(0,0,0)+\alpha(0,0,1)\in\pi$ ja tindrem la projecció. Aquesta $\alpha$ val $-6$ i el punt $P$, per tant, és $P=(0,0,-6)$.
+	\item $r$ és la recta que cau en el pla que es troba més a prop de l'eix $y$ en la direcció $(0,0,1)$:
+	$$
+	r:(0,\lambda,0)+\mu(0,0,1)\in\pi\iff2\lambda+\mu=-6\iff\mu=-6-2\lambda.
+	$$
+	Aleshores, tenim $r:(0,0,0)+\lambda(0,1,0)+(-6-2\lambda)(0,0,1)$ i per tant, la recta $r$ és $r:(0,0,-6)+\lambda(0,1,-2)$.
+\end{itemize}
+El nostre sistema de referència serà $\mathcal{R}=\{\bar{O};v_1,v_2,v_3\}$. Primer trobem l'origen $\bar{O}$: per les restriccions de l'enunciat, sabem que el pla $\pi$ s'ha de trobar a distància $\sqrt{6}$ de l'origen que busquem en l'eiz $\bar{z}$ i que el punt $P$ es troba en aquest mateix eix. Per tant, sabem que l'origen de coordenades es trobarà a la recta definida pel punt $P$ i el vector perpendicular al pla $\pi$, a la que anomenarem $O:(0,0,-6)+\lambda(1,2,1)$. Si calculem el vector unitari de la direcció d'$O$, veiem que dóna $u_1=\left(\dfrac{1}{\sqrt{6}},\dfrac{2}{\sqrt{6}},\dfrac{1}{\sqrt{6}}\right)$. Redefinint la recta $O:(0,0,-6)+\lambda' u_1$, veiem que els dos punts a distància $\sqrt{6}$ de $P$ que cauen en aquesta recta són $P_1=(1,2,-5)$ i $P_2=(-1,-2,-7)$. Aquests són els dos candidats a origen de coordenades. Pel que fa als vectors base de $\mathbb{R}^3$, les restriccions ens forcen a que el tercer vector de la base sigui un dels vectors perpendiculars a $\pi$ (dels quals només n'hi ha dos, amb signe diferent) o un múltiple d'ells, i a que el primer vector de la base sigui el director de la recta $r$ o un múltiple. Pel que fa al segon vector de la base, no hi ha cap restricció al respecte, així que amb que n'agafem un que sigui l.i. amb els altres dos n'hi ha prou. Jo he decidit agafar el resultat del producte vectorial entre els altres dos. Per tant, com a exemple, podríem agafar el següent sistema de referència:
+%podem agafar el següent sistema (o múltiples per escalars diferents de zero):
+\begin{equation}
+\mathcal{R}=\{\bar{O}=(1,2,-5);v_1=(0,1,-2),v_2=(-5,2,1),v_3=(1,2,1)\}.
+\end{equation}
+Finalment, podem concloure que existeixen infinits sistemes de referència que compleixin aquestes condicions, tenint en compte múltiples dels vectors que venen determinats, més totes les possibilitats pel segon vector, més el fet de tenir dues possibilitats pel punt d'origen.
 \end{document}
