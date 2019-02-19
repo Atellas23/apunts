@@ -19,6 +19,7 @@
 \title{Geometría Afín y Euclídea}
 \author{Àlex Batlle Casellas}
 \renewcommand*\contentsname{Índex}
+\DeclareMathOperator{\rg}{rg}
 
 \begin{document}
 
@@ -335,7 +336,7 @@ Llamaremos a los elementos de la derecha las \textbf{coordenadas ampliadas} de u
 $$
 V:=p+F=\{p+\vec{u}\vert\vec{u}\in F\},\ p\in A,\ F\subseteq E\textrm{ subespacio vectorial.}
 $$
-Definimos $\dim V:=\dim F$.\\
+Definimos $\dim V:=\dim F$.\newpage
 \ej
 \begin{enumerate}
 	\item Variedades lineales de dimensión 0: \textbf{puntos}, $\{p\}$.
@@ -357,24 +358,74 @@ Definimos $\dim V:=\dim F$.\\
 	\item $V\subseteq W\implies\dim V\leq\dim W.$
 	\item $V\subseteq W\wedge\dim V=\dim W\implies V=W.$
 \end{enumerate}
-\dem \\
+\dem \begin{enumerate}
+	\item \begin{enumerate}
+		\item[$\Rightarrow$)] Si $V\subseteq W$, $p+F\subseteq q+G$. Veamos que $p-q\in G$:
+		$$p\in V\subseteq W=q+G\implies\exists\vec{v}\in G:p=q+\vec{v}\implies p-q=\vec{v}\in G.$$
+		Veamos ahora que $F\subseteq G$: sea $\vec{u}\in F\implies(p+\vec{u})\in V\subseteq W\implies\exists\vec{w}\in G:(p+\vec{u})=(q+\vec{w})\implies\vec{u}=(q-p)+\vec{w}=-(p-q)(\in G)+\vec{w}(\in G)\implies\vec{u}\in G\implies F\subseteq G.$
+		\item[$\Leftarrow$)] Sea $\bar{p}\in V=p+F\implies(\vec{u}\in F) \bar{p}=p+\vec{u}=q+(p-q)(\in G)+\vec{u}(\in F\subseteq G)\in q+G=W.\square$
+	\end{enumerate}
+	\item $V\subseteq W\implies F\subseteq G\implies\dim F\leq\dim G\implies\dim V\leq\dim W.\square$
+	\item $V\subseteq W\wedge\dim V=\dim W\implies F\subseteq G\wedge\dim F=\dim G\implies F=G.$ Como $V\subseteq W\implies p-q\in F\implies V=W.\square$.
+\end{enumerate}
 \prop Sean $V=p+F,W=q+G$ variedades lineales. Entonces, $V\cap W\neq\emptyset\iff p-q\in F+G$.\\
-\dem \\
+\dem \begin{itemize}
+	\item[$\Rightarrow$)] Sea $a\in V\cap W\implies\begin{cases} a\in V\implies V=a+F\implies a=p+\vec{u}(\in F)\\ a\in W\implies W=a+G\implies a=q+\vec{v}(\in G)\end{cases}$. Entonces, $p-q=a-\vec{u}-(a-\vec{v})=\vec{v}-\vec{u}\in F+G.\square$
+	\item[$\Leftarrow$)] Si $p-q=\vec{w_1}(\in F)+\vec{w_2}(\in G)\implies (V=p+F\ni)p-\vec{w_1}=q+\vec{w_2}(\in q+G=W)\implies\exists p\in A:p\in W\wedge p\in V\implies V\cap W\neq\emptyset.\square$
+\end{itemize}
 \subsubsection{Variedades lineales y combinaciones de puntos.}
 \prop Sea $V=p+F$ una variedad lineal de $\af$. Sean $p_1,\ldots,p_m\in V$. Entonces $\forall\alpha_1,\ldots,\alpha_m\in\mathbb{K}:\sum\alpha_i=1,\ \alpha_1p_1+\ldots+\alpha_mp_m\in V$.\\
-\dem \\
+\dem $\forall i\ p_i\in V=p+F\implies\forall i\exists\vec{u_i}\in F:p_i=p+\vec{u_i}.$ Entonces, $\alpha_1p_1+\ldots+\alpha_mp_m=p+\sum\alpha_i(p_i-p)=p+\sum\alpha_i\vec{u_i}(\in F)\in V.\square$\\
 \defi Sea $\af$ un espacio afín. Sea $S\subseteq A$ un subconjunto de puntos no vacío. Entonces, \textbf{la variedad lineal más pequeña que contiene a $S$} se denota $\left< S\right>$.\\
 \prop Sea $S=\{p_1,\ldots,p_m\}$. Entonces,
 $$
 \left< S\right>=\{\textrm{combinaciones lineales de }S\}=p_1+[p_2-p_1,\ldots,p_m-p_1]
 $$
-\dem \\
-\defi $\{p_1,\ldots,p_m\},m\geq 2$ son \textbf{linealmente independientes}$\iff\{p_2-p_1,\ldots,p_m-p_1\}$ son vectores l.i.\\
-\obs \textit{No depèn de l'anterior.}\\
+\dem $W=\{\textrm{c.l. de }\{p_1,\ldots,p_m\}\}=\{\sum\alpha_ip_i\vert\sum\alpha_i=1\}=\{p_1+\alpha_2(p_2-p_1)+\ldots+\alpha_m(p_m-p_1)\vert\sum\alpha_i=1\}=p_1+[p_2-p_1,p_3-p_1,\ldots,p_m-p_1].$ Por tanto, $W$ es una variedad lineal.\\
+Por construcción, $S=\{p_1,\ldots,p_m\}\subseteq W.$ Sea $V$ una variedad lineal tal que $S\subseteq V$. Por la proposición anterior, $W=\{\textrm{c.l. de S}\}\subseteq V\implies W\subseteq V\implies W=\left<S\right>.\square$\\
+\defi $\{p_1,\ldots,p_m\},m\geq 2$ son \textbf{linealmente independientes}$\iff\{p_2-p_1,\ldots,p_m-p_1\}$ son vectores l.i. Si $m<2$, el conjunto siempre es l.i.\\
+\obs $\{p_1,\ldots,p_m\}\textrm{ l.i.}\iff(\textrm{Fijado }i_0)\{p_1-p_{i_0},\ldots,p_{i_0-1}-p_{i_0},p_{i_0+1}-p_{i_0},\ldots,p_m-p_{i_0}\}$ es un conjunto de vectores l.i.\\
 \cor Si $p_1,\ldots,p_m$ son l.i., $\dim <p_1,\ldots,p_m>=m-1$.\\
-\ej \\
+\ej $\af^n_{\mathbb{K}}$:
+\begin{enumerate}
+	\item $\left<p_1\right>=\{p_1\}$, variedad lineal de dimensión 0.
+	\item 2 puntos $p_1,p_2$ son l.i.$\iff p_1\neq p_2$. $\left<p_1,p_2\right>$, variedad lineal de dimensión 1.
+	\item 3 puntos $p_1,p_2,p_3$ l.i.$\implies\left<p_1,p_2,p_3\right>$ plano, variedad lineal de dimensión 2.
+\end{enumerate}
 \subsubsection{Ecuaciones de variedades lineales.}
 Sea $\af$ un espacio afín de $\dim\af=n$. Sea $\mathcal{R}=\{p;B=\{u_1,\ldots,u_n\}\}$ un sistema de referencia en $\af$. Sea $V=q+F=q+[v_1,\ldots,v_r],$ $\dim V=r,$ $\{v_1,\ldots,v_r\}$ base de F.
+\paragraph{(A) Ecuaciones paramétricas de $V$.}
+$\bar{q}\in V\iff \bar{q}=q+\alpha_1v_1+\ldots+\alpha_rv_r,\alpha_i\in\mathbb{K}\iff$
+\begin{equation}
+\bar{q_{\mathcal{R}}}=q_{\mathcal{R}}+\alpha_1(v_1)_B+\ldots+\alpha_r(v_r)_B=\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix}\quad\textrm{ (ecuaciones paramétricas de }V\textrm{)}
+\end{equation}
+\ej $\af^3_{\mathbb{K}}:\ V=\begin{pmatrix}1\\ 2\\ 3\end{pmatrix}+\left[\begin{pmatrix}1\\ 1\\ 1\end{pmatrix},\begin{pmatrix}1\\ 2\\ 0\end{pmatrix}\right].\ \mathcal{R}=\mathcal{R}_{\textrm{ord}}.$ Entonces, $\begin{pmatrix}x_1\\ x_2\\ x_3\end{pmatrix}=\begin{pmatrix}1\\ 2\\ 3\end{pmatrix}+\alpha_1\begin{pmatrix}1\\ 1\\ 1\end{pmatrix}+\alpha_2\begin{pmatrix}1\\ 2\\ 0\end{pmatrix}.$ Haciendo el proceso anterior,
+$$
+\bar{q}_{\mathcal{R}}=\begin{pmatrix}x_1\\ x_2\\ x_3\end{pmatrix}\in V\iff\exists\alpha_1,\alpha_2:\begin{pmatrix}x_1\\ x_2\\ x_3\end{pmatrix}=\begin{pmatrix}1\\ 2\\ 3\end{pmatrix}+\alpha_1\begin{pmatrix}1\\ 1\\ 1\end{pmatrix}+\alpha_2\begin{pmatrix}1\\ 2\\ 0\end{pmatrix}\iff
+$$
+
+$$
+\begin{pmatrix}x_1-1\\ x_2-2\\ x_3-3\end{pmatrix}\textrm{ es c.l. de }\begin{pmatrix}1\\ 1\\ 1\end{pmatrix},\begin{pmatrix}1\\ 2\\ 0\end{pmatrix}\iff\rg\begin{pmatrix}
+x_1-1 & 1 & 1\\
+x_2-2 & 1 & 2\\
+x_3-3 & 1 & 0
+\end{pmatrix}=2\iff
+$$
+
+$$
+\begin{vmatrix}
+x_1-1 & 1 & 1\\
+x_2-2 & 1 & 2\\
+x_3-3 & 1 & 0
+\end{vmatrix}=0\iff Ax_1+Bx_2+Cx_3+D=0.
+$$
+
+\paragraph{(B) Ecuaciones cartesianas/implícitas de $V$.}
+
 
 \newpage
 

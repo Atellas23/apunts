@@ -3,5 +3,7 @@
 \contentsline {subsection}{\numberline {1.2}Combinaciones afines de puntos.}{3}
 \contentsline {subsection}{\numberline {1.3}Coordenadas.}{5}
 \contentsline {subsection}{\numberline {1.4}Variedades lineales.}{7}
-\contentsline {subsubsection}{\numberline {1.4.1}Variedades lineales y combinaciones de puntos.}{8}
-\contentsline {subsubsection}{\numberline {1.4.2}Ecuaciones de variedades lineales.}{9}
+\contentsline {subsubsection}{\numberline {1.4.1}Variedades lineales y combinaciones de puntos.}{9}
+\contentsline {subsubsection}{\numberline {1.4.2}Ecuaciones de variedades lineales.}{10}
+\contentsline {paragraph}{(A) Ecuaciones param\IeC {\'e}tricas de $V$.}{10}
+\contentsline {paragraph}{(B) Ecuaciones cartesianas/impl\IeC {\'\i }citas de $V$.}{10}
