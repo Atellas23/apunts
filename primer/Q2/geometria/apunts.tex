@@ -20,6 +20,7 @@
 \author{Àlex Batlle Casellas}
 \renewcommand*\contentsname{Índex}
 \DeclareMathOperator{\rg}{rg}
+\DeclareMathOperator{\nuc}{Nuc}
 
 \begin{document}
 
@@ -424,9 +425,82 @@ x_3-3 & 1 & 0
 \end{vmatrix}=0\iff Ax_1+Bx_2+Cx_3+D=0.
 $$
 
-\paragraph{(B) Ecuaciones cartesianas/implícitas de $V$.}
-
-
+\paragraph{(B) Ecuaciones cartesianas/implícitas de $V$.} $V=q+[v_1,\ldots,v_r].$ $\bar{q}\in A,\bar{q}=\begin{pmatrix}
+x_1\\ \vdots\\ x_n
+\end{pmatrix}\in V\iff\begin{pmatrix}
+x_1\\ \vdots\\ x_n
+\end{pmatrix}=q_{\mathcal{R}}+\alpha_1(v_1)_B+\ldots+\alpha_r(v_r)_B$ para algunas $\alpha_i\in\mathbb{K}\iff\begin{pmatrix}
+x_1-a_1\\ \vdots\\ x_n-a_n
+\end{pmatrix}\in[(v_1)_B,\ldots,(v_r)_B]\iff\rg\begin{pmatrix}
+x_1-a_1 & \vert & \vert & \vert\\
+\vdots & (v_1)_B & \cdots & (v_r)_B\\
+x_n-a_n & \vert & \vert & \vert
+\end{pmatrix}=r\iff\textrm{Sus menores de orden }r+1\textrm{ son cero}:
+$
+$$
+\begin{cases}
+\ldots\ldots\ldots=0\\
+\ldots\ldots\ldots=0\\
+\vdots\\
+\ldots\ldots\ldots=0
+\end{cases}\textrm{ sistema lineal.}
+$$
+\obs \textbf{Método de "orlar" un menor.} $A\in\mathcal{M}_{m,n}(\mathbb{K}),\Delta_r=\det\begin{pmatrix}
+\cdots\\
+\cdots\\
+\cdots
+\end{pmatrix}\neq0.\ \rg A=r\iff\textrm{ todos los menores que contienen a }\Delta_r\textrm{ de orden }r+1\textrm{ son cero.}$
+$V=p+F=p+[v_1,\ldots,v_r],\ r=\dim F=\dim V.\ q\in V\iff q_{\mathcal{R}}=\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix};\ p_{\mathcal{R}}=\begin{pmatrix}
+a_1\\
+\vdots\\
+a_n
+\end{pmatrix}. \rg\begin{pmatrix}
+x_1-a_1 & \vert & \vert & \vert\\
+\vdots & (v_1)_B & \cdots & (v_r)_B\\
+x_n-a_n & \vert & \vert & \vert
+\end{pmatrix}=r.$\\
+$\implies$ Los menores $(r+1)\times(r+1)$ que contienen a uno de orden $r$ no nulo fijado deben ser cero $\implies$ En total, $n-r$ ecuaciones.\\
+\prop Sea $\af$ un espacio afín de dimensión $n$. Sea $\mathcal{R}$ un sistema de referencia. Sea $V\subseteq A$. Entonces, $V$ es una variedad lineal de dimensión $r\iff$ Los puntos $q\in V$ (sus coordenadas $q_{\mathcal{R}}$) verifican un sistema de ecuaciones lineales compatible, $A\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix}=\begin{pmatrix}
+b_1\\
+\vdots\\
+b_r
+\end{pmatrix}
+$, con $\rg A=n-r$.
+\dem \begin{itemize}
+	\item[$\Leftarrow$)] $A\begin{pmatrix}
+	x_1\\ \vdots\\ x_n
+	\end{pmatrix}=\begin{pmatrix}
+	b_1\\ \vdots\\ b_k
+	\end{pmatrix}$ s.l. compatible, $k=\rg A\implies$ sus soluciones se escriben $\begin{pmatrix}
+	x_1\\ \vdots\\ x_n
+	\end{pmatrix}=\begin{pmatrix}
+	a_1\\ \vdots\\ a_n
+	\end{pmatrix}+\nuc A=p+F
+	$ variedad lineal. $\dim(p+F)=\dim F=\dim\nuc A=n-\rg A=n-k.$
+	\item[$\Rightarrow$)] \underline{Visto.} $V=p+F,\dim F=r\implies\{\textrm{SEL compatible}\}\rightarrow n-r\textrm{ ecuaciones.}\square$
+\end{itemize}
+\defi $A\begin{pmatrix}
+x_1\\ \vdots\\ x_n
+\end{pmatrix}=\begin{pmatrix}
+b_1\\ \vdots\\ b_m
+\end{pmatrix}\rightarrow\textrm{ecuaciones implícitas (o cartesianas) de }V.$\\
+\ej \\
+\obs \begin{enumerate}
+	\item
+	\item
+	\item
+	\item
+	\item
+\end{enumerate}
+\subsubsection{Suma, intersección y fórmula de Grassmann.}
 \newpage
 
 \newpage

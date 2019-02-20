@@ -7,3 +7,4 @@
 \contentsline {subsubsection}{\numberline {1.4.2}Ecuaciones de variedades lineales.}{10}
 \contentsline {paragraph}{(A) Ecuaciones param\IeC {\'e}tricas de $V$.}{10}
 \contentsline {paragraph}{(B) Ecuaciones cartesianas/impl\IeC {\'\i }citas de $V$.}{10}
+\contentsline {subsubsection}{\numberline {1.4.3}Suma, intersecci\IeC {\'o}n y f\IeC {\'o}rmula de Grassmann.}{12}
