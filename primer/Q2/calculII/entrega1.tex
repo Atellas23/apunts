@@ -1,0 +1,42 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{float}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{color}
+\usepackage{breqn}
+\title{Càlcul Diferencial}
+\author{Àlex Batlle Casellas}
+\newcommand{\Rm}{\mathbb{R}^m}
+
+\begin{document}
+\begin{small}
+Àlex Batlle Casellas
+\end{small}
+\paragraph{12.} Si $A\subset\Rm$, demostreu que:
+\begin{itemize}
+	\item[a)] $\mathring A$ és el conjunt obert més gran contingut en $A$. És a dir, si $B$ és un obert dins $A$, aleshores $B\subset\mathring A$.
+	\item[b)] $\bar{A}$ és el conjunt tancat més petit que conté $A$. És a dir, si $C$ és un tancat que conté $A$, aleshores $
+\bar{A}\subset C$.
+\end{itemize}
+\paragraph{Resolució}
+\begin{itemize}
+	\item[a)] $B$ és obert$\iff\mathring B=B\iff\forall p\in B\ \exists B_r(p)\subset B\implies\forall p\in B\subset A\ \exists B_r(p)\subset B\subset A\implies\mathring B\subset\mathring A\implies B\subset\mathring A.\square$
+	\item[b)] $\forall p\in\bar{A}\ (\forall B_r(p)\ A\cap B_r(p)\neq\emptyset)\implies\forall p\in\bar{A}\ (\forall B_r(p)\ C\cap B_r(p)\neq\emptyset)\implies\forall p\in\bar{A},p\in\bar{C}=C\implies\bar{A}\subset C.\square$
+\end{itemize}
+\paragraph{13.} Donats dos conjunts $A,B$, es defineix $A+B=\{x+y\vert x\in A, y\in B\}$. Suposeu $A$ obert.
+\begin{itemize}
+	\item[a)] Demostreu que si $y\in B$, el conjunt $A+\{y\}$ és obert.
+	\item[b)] Demostreu que el conjunt $A+B$ és obert.
+\end{itemize}
+\paragraph{Resolució}
+\begin{itemize}
+	\item[a)]
+	\item[b)]
+\end{itemize}
+
+
+\end{document}
+
