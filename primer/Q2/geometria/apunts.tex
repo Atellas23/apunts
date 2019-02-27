@@ -21,6 +21,7 @@
 \renewcommand*\contentsname{Índex}
 \DeclareMathOperator{\rg}{rg}
 \DeclareMathOperator{\nuc}{Nuc}
+\DeclareMathOperator{\cuerpo}{\mathbb{K}}
 
 \begin{document}
 
@@ -473,7 +474,7 @@ b_1\\
 \vdots\\
 b_r
 \end{pmatrix}
-$, con $\rg A=n-r$.
+$, con $\rg A=n-r$.\\
 \dem \begin{itemize}
 	\item[$\Leftarrow$)] $A\begin{pmatrix}
 	x_1\\ \vdots\\ x_n
@@ -502,6 +503,45 @@ b_1\\ \vdots\\ b_m
 \end{enumerate}
 \subsubsection{Suma, intersección y fórmula de Grassmann.}
 \newpage
-
+\section{Afinidades.}
+\subsection{Definición y propiedades.}
+\defi Sean $\af,\af'$ espacios afines con espacios vectoriales asociados $E,E'$ (sobre el mismo cuerpo $\cuerpo$). Sea $f:\ \af\rightarrow\af'$ una función. Entonces, $f$ es una \textbf{afinidad}$\iff\exists p\in\af:\ \tilde{f}_p(\vec{u}):=f(p+\vec{u})-f(p)\ (\vec{u}\in E)$ es una aplicación lineal de $E$ en $E'$.\\
+\obs \begin{enumerate}
+	\item $A\xrightarrow{f}A'$. Entonces, $E\xrightarrow{\delta_p^{-1}}A\xrightarrow{f}A'\xrightarrow{\delta'_{f(p)}}E'$, y en total, $E\xrightarrow{\tilde{f}_p}E'$.
+	\item Si $\tilde{f}_p$ es lineal $\implies\ \forall q\in\af\ \tilde{f}_q=\tilde{f}_p.$ Veámoslo: sea $\vec{u}\in E$,\\
+	$\tilde{f}_q(u)=f(q+u)-f(q)=f(p+(q-p+u))-f(p+(q-p))=(f(p+(q-p+u))-f(p))-(f(p+(q-p))-f(p))=\tilde{f}_p((q-p)+u)-\tilde{f}_p(q-p)=\tilde{f}_p(u)+\tilde{f}_p(q-p)-\tilde{f}_p(q-p)=\tilde{f}_p(u).\square$
+	\item Entonces,\\
+	$f(p+u)-f(p)=\tilde{f}(u)$(def)$\leftrightarrow f(p+u)=f(p)+\tilde{f}(u)\leftrightarrow f(q)=f(p)+\tilde{f}(q-p).$
+\end{enumerate}
+\prop \begin{enumerate}
+	\item $f,g$ afinidades$\implies g\circ f$ es una afinidad y $\tilde{g\circ f}=\tilde{g}\circ\tilde{f}$.
+	\item Sea $f:\ \af\rightarrow\af'$ una afinidad. Entonces,
+	\begin{itemize}
+		\item $f$ inyectiva$\iff\tilde{f}$ inyectiva (y entonces $\dim\af\leq\dim\af'$).
+		\item $f$ exhaustiva$\iff\tilde{f}$ exhaustiva (y entonces $\dim\af\geq\dim\af'$).
+		\item $f$ biyectiva$\iff\tilde{f}$ biyectiva (y entonces $\dim\af=\dim\af'$).
+	\end{itemize}
+	\item Si $\dim\af=\dim\af'<\infty\implies$($f$ inyectiva$\iff f$ exhaustiva$\iff f$ biyectiva).
+	\item Si $f$ biyectiva$\implies f^{-1}$ es una afinidad y $\tilde{f^{-1}}=\tilde{f}^{-1}$.
+\end{enumerate}
+\dem \begin{enumerate}
+	\item 
+	\item 
+	\item 
+	\item 
+\end{enumerate}
+\prop
+\begin{enumerate}
+	\item Sean $f,g:\ \af\rightarrow\af'$ afinidades. Entonces,
+	$$f=g\iff\exists p\in\af:\ f(p)=g(p)\textrm{ y }\tilde{f}=\tilde{g}.$$
+	\item Sean $p\in\af,q\in\af$ y $\varphi:\ E\rightarrow E'$ una aplicación lineal. Entonces, existe una única afinidad tal que $f(p)=q,\tilde{f}=\varphi.$
+	\item Sea $\af$ tal que $\dim\af=n$. Si $p_0,p_1,\ldots,p_n$ son puntos independientes de $\af$, entonces dados $q_0,q_1,\ldots,q_n$ puntos cualesquiera de $\af'$ existe una única afinidad $f:\ \af\rightarrow\af'$ tal que $f(p_i)=q_i$.
+\end{enumerate}
+\dem \\
+\defi Sean $\af,\af'$ espacios afines. Entonces,
+$$\af\cong\af'\iff\exists f:\ \af\rightarrow\af'\textrm{ afinidad biyectiva.}$$
+\cor Sean $\af,\af'$ espacios afines de dimensión finita. Entonces,
+$$\af\cong\af'\iff\dim\af=\dim\af'.$$
+En particular, si $n=\dim\af$, $\af\cong\af^n_{\cuerpo}$.
 \newpage
 \end{document}
