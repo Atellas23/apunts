@@ -11,6 +11,9 @@
 \author{Àlex Batlle Casellas}
 \DeclareMathOperator{\Rn}{\mathbb{R}^n}
 \DeclareMathOperator{\Rm}{\mathbb{R}^m}
+\DeclareMathOperator{\fr}{Fr}
+\DeclareMathOperator{\intr}{Int}
+\DeclareMathOperator{\ext}{Ext}
 
 \begin{document}
 \begin{small}
@@ -34,8 +37,12 @@
 \end{itemize}
 \paragraph{Resolució}
 \begin{itemize}
-	\item[a)]
-	\item[b)]
+	\item[a)] $A+\{y\}=\{a+y\ \vert\ a\in A\}$. Com que la suma ha d'estar ben definida, sumar $y$ al conjunt és anàleg a fer un desplaçament fixat de tot el conjunt $A$. Aquesta operació no modifica l'estructura d'$A$, doncs només el desplaça a una altra localització dins del conjunt ambient $M$, i els elements de la frontera d'$A$ segueixen sense pertànyer a $A+\{y\}$. Per tant, sabent que $\intr A,\fr A,\ext A$ formen una partició del conjunt ambient per qualsevol conjunt $A$, segueix que $A+\{y\}=\intr(A+\{y\})$, i per tant, $A+\{y\}$ és un obert.$\square$
+	\item[b)] Això ho podem veure utilitzant l'apartat anterior; $A+B=\{a+b\ \vert\ a\in A,b\in B\}$ és el mateix que la unió següent:
+	$$
+	\bigcup_{y\in B}(A+\{y\}).
+	$$
+	Com que $A+\{y\}$ és obert i és sabut que la unió arbitrària d'oberts és oberta, es dedueix que $A+B$ és un obert.
 \end{itemize}
 \paragraph{15.} Demostreu que:
 \begin{itemize}
@@ -45,12 +52,16 @@
 \end{itemize}
 \paragraph{Resolució}
 \begin{itemize}
-	\item[a)] Com que ens trobem a $\Rn$, n'hi ha prou amb demostrar que la intersecció arbitrària de tancats és tancada i que la intersecció arbitrària de fitats és fitada.
+	\item[a)] Com que ens trobem a $\Rn$, n'hi ha prou amb veure que la intersecció arbitrària de tancats és tancada (vist a teoria) i que la intersecció arbitrària de fitats és fitada.
 	\begin{itemize}
-		\item[Tancada.]
-		\item[Fitada.]
+		\item[Tancada.] Vist a teoria.
+		\item[Fitada.] Tenim un nombre arbitrari de conjunts fitats $\{A_{\alpha}\},A_{\alpha}\subseteq M$. Sabem, com a propietat elemental de conjunts, que $\bigcap_{\alpha}A_{\alpha}\subseteq A_i\ \forall i.$ Com que els $A_i$ són fitats, existeix una bola $B_{r_i}(p_i)$, per algun $p_i\in A_i$ tal que $A_i\subseteq B_{r_i}(p_i)$. Per tant, sigui $B_{r_0}(p_0)$ la bola més gran que fita els conjunts $A_i$; aleshores tenim $\bigcap_{\alpha}A_{\alpha}\subseteq A_i\subseteq B_{r_0}(p_0)\ \forall i$ i, per tant, $\bigcap_{\alpha}A_{\alpha}$ està fitat.$\square$
 	\end{itemize}
-	\item[b)]
+	\item[b)] Com que ens trobem a $\Rn$, n'hi ha prou amb veure que la unió finita de tancats és tancada (vist a teoria) i que la unió finita de fitats és fitada.
+	\begin{itemize}
+		\item[Tancada.] Vist a teoria.
+		\item[Fitada.] 
+	\end{itemize}
 	\item[c)]
 \end{itemize}
 
