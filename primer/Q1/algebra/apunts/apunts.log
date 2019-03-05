@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.11.13)  15 FEB 2019 19:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.11.13)  5 MAR 2019 18:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -474,18 +474,18 @@ File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
 (./apunts.aux)
 \openout1 = `apunts.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 26.
+LaTeX Font Info:    ... okay on input line 26.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -550,23 +550,31 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \tf@toc=\write3
 \openout3 = `apunts.toc'.
 
- [1] [2]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 64.
+ [1]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 53.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 64.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 53.
+
+Overfull \hbox (0.74034pt too wide) in paragraph at lines 80--81
+[]\OT1/cmr/m/n/10.95 Producte per un es-calar $\OML/cmm/m/it/10.95 ^^U \OMS/cms
+y/m/n/10.95 2 \U/msb/m/n/10.95 K$\OT1/cmr/m/n/10.95 . $\OML/cmm/m/it/10.95 ^^UA
+ \OT1/cmr/m/n/10.95 := (\OML/cmm/m/it/10.95 ^^Ua[]\OT1/cmr/m/n/10.95 )$. $0\OML
+/cmm/m/it/10.95 A \OT1/cmr/m/n/10.95 = 0\OML/cmm/m/it/10.95 ; ^^U\OT1/cmr/m/n/1
+0.95 (\OML/cmm/m/it/10.95 A \OT1/cmr/m/n/10.95 + \OML/cmm/m/it/10.95 B\OT1/cmr/
+m/n/10.95 ) = \OML/cmm/m/it/10.95 ^^UA \OT1/cmr/m/n/10.95 + \OML/cmm/m/it/10.95
+ ^^UB; \OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 ^^UA\OT1/cmr/m/n/10.95 )[]?\OML/
+cmm/m/it/10.95 ^^UA[]:$ 
+ []
+
+[2] [3]
 LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 77.
- [3]
-
-LaTeX Font Warning: Font shape `OT1/cmr/bx/sc' undefined
-(Font)              using `OT1/cmr/bx/n' instead on input line 99.
-
-
-Overfull \hbox (25.36713pt too wide) detected at line 103
+(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 159.
+ [4]
+Overfull \hbox (25.36713pt too wide) detected at line 185
 \OML/cmm/m/it/10.95 u \OT1/cmr/m/n/10.95 + \OML/cmm/m/it/10.95 v \OT1/cmr/m/n/1
 0.95 = \OML/cmm/m/it/10.95 u \OT1/cmr/m/n/10.95 + (\OMS/cmsy/m/n/10.95 ^^@\OT1/
 cmr/m/n/10.95 1)\OML/cmm/m/it/10.95 u \OT1/cmr/m/n/10.95 = (\OML/cmm/m/it/10.95
@@ -578,38 +586,35 @@ OML/cmm/m/it/10.95 ; [] ; \OT1/cmr/m/n/10.95 0) = []\OML/cmm/m/it/10.95 :\U/msa
 /m/n/10.95 ^^C
  []
 
-[4] [5] [6] [7] [8] (./apunts.aux)
-
-LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
- ) 
+[5] [6] [7] [8] [9] (./apunts.aux) ) 
 Here is how much of TeX's memory you used:
- 2653 strings out of 494880
- 31894 string characters out of 6179600
- 97347 words of memory out of 5000000
- 5944 multiletter control sequences out of 15000+600000
+ 2660 strings out of 494880
+ 31905 string characters out of 6179600
+ 97388 words of memory out of 5000000
+ 5951 multiletter control sequences out of 15000+600000
  14644 words of font info for 54 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 27i,8n,32p,288b,154s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/sha
-re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texlive/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8
-.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb><
-/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/sh
-are/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on apunts.pdf (9 pages, 177143 bytes).
+ 27i,8n,32p,301b,181s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmbsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmcsc10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cme
+x10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pf
+b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr
+/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-d
+ist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/symbols/msbm10.pfb>
+Output written on apunts.pdf (10 pages, 187566 bytes).
 PDF statistics:
- 98 PDF objects out of 1000 (max. 8388607)
- 70 compressed objects within 1 object stream
+ 101 PDF objects out of 1000 (max. 8388607)
+ 72 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

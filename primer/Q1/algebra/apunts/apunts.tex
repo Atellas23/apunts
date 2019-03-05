@@ -8,13 +8,16 @@
 \usepackage[margin=1.25in]{geometry}
 \usepackage{color}
 \newcommand{\fieldk}{\mathbb{K}}
-\newcommand{\propietats}{\underline{{\scshape Propietats:}}}
-\newcommand{\definicio}{\underline{\textbf{Definició:}}\\}
-\newcommand{\proposicio}{\underline{\textbf{Proposició:}}\\}
-\newcommand{\demostracio}{\textbf{{\scshape Demostració: }}}
-\newcommand{\ex}{\underline{Exemple:}}
+\newcommand{\propietats}{\underline{Propietats}: }
+\newcommand{\definicio}{\underline{\textbf{Definició:}} \\}
+\newcommand{\proposicio}{\underline{\textbf{Proposició:}} \\}
+\newcommand{\demostracio}{\textbf{Demostració:} }
+\newcommand{\ex}{\underline{Exemple:} }
 \newcommand{\pendent}{\textcolor{red}{\textbf{PENDENT D'ACABAR.}}}
 \newcommand{\important}{\textbf{IMPORTANT! }}
+\DeclareMathOperator{\idn}{Id_n}
+\DeclareMathOperator{\idm}{Id_m}
+\DeclareMathOperator{\tr}{tr}
 
 \title{Àlgebra Lineal}
 \author{Àlex Batlle Casellas}
@@ -47,6 +50,85 @@
 \tableofcontents
 \newpage
 \section{Matrius, determinants i sistemes lineals.}
+\definicio Una \textbf{matriu} és una col·lecció de $m\times n$ nombres (d'un cos $\fieldk$) organitzats de manera rectangular. Denotarem $a_{ij}$ com l'element a la fila $i$, columna $j$. Notació: $A=(a_{ij})$.
+\begin{itemize}
+	\item $m=n\rightarrow$matriu quadrada.
+	\item Vector columna: $\begin{pmatrix}
+	a\\ b
+	\end{pmatrix}$.
+	\item Vector fila: $\begin{pmatrix}
+	a & b
+	\end{pmatrix}$.
+	\item La \textbf{matriu zero} és la matriu (de qualssevol dimensions) tots els elements de la qual són 0.
+	\item Una \textbf{matriu diagonal} és una matriu quadrada tal que $a_{ij}=0\ \forall i\neq j$.
+	\item La \textbf{matriu identitat d'ordre $n$} és una matriu diagonal $n\times n$, $\idn$ tal que $a_{ij}=1\ \forall i=j$.
+	\item Una matriu triangular:
+	\begin{itemize}
+		\item Superior: $a_{ij}=0\ \forall i>j$ (zeros per sota la diagonal).
+		\item Inferior: $a_{ij}=0\ \forall i<j$ (zeros per sobre la diagonal).
+	\end{itemize}
+\end{itemize}
+El conjunt de matrius $m\times n$ sobre el cos $\fieldk$ és $\mathcal{M}_{m\times n}(\fieldk)$.\\
+\definicio La \textbf{matriu transposada} d'$A\in\mathcal{M}_{m\times n}$ és $A^t\in\mathcal{M}_{n\times m}$ tal que $a^t_{ij}=a_{ji}$.
+\begin{itemize}
+	\item Una \textbf{matriu simètrica} és una matriu quadrada tal que $A^t=A$.
+	\item Una \textbf{matriu antisimètrica} és una matriu quadrada tal que $A^t=-A$ (en particular, els elements de la diagonal són tots zero).
+\end{itemize}
+\definicio Operacions amb matrius:
+\begin{itemize}
+	\item Suma. $C:=A+B\implies c_{ij}=a_{ij}+b_{ij}$. Associativa, commutativa, amb element neutre (la matriu zero), amb element oposat ($-A:=(-a_{ij})$). Es té $(A+B)^t=A^t+B^t$.
+	\item Producte per un escalar $\lambda\in\fieldk$. $\lambda A:=(\lambda a_{ij})$. $0A=0,\lambda(A+B)=\lambda A+\lambda B,(\lambda A)^t?\lambda A^t.$
+	\item Producte entre matrius. Siguin $A\in\mathcal{M}_{m\times n},B\in\mathcal{M}_{n\times p}$. Aleshores, $AB:=C\in\mathcal{M}_{m\times p}$ tal que $c_{ij}=\sum_{k=1}^na_{ik}b_{kj}.$ Cada columna de la matriu producte és una combinació lineal de les columnes d'$A$.
+\end{itemize}
+\definicio La \textbf{traça d'una matriu} $A=(a_{ij})$ és $\tr A:=\sum_{i=1}^na_{ii}$.
+\begin{itemize}
+	\item $\tr(A+B)=\tr A+\tr B.$
+	\item $\tr(\lambda A)=\lambda\tr A\ \forall\lambda\in\fieldk.$
+	\item $\tr(A^t)=\tr A.$
+	\item $\tr(AB)=\tr(BA).$
+\end{itemize}
+\propietats Producte de matrius.
+\begin{itemize}
+	\item $\idm A=A\idn=A$ (element neutre).
+	\item $A(BC)=(AB)C.$
+	\item $A(B+C)=AB+AC.$
+	\item $(A+B)C=AC+BC.$
+	\item En general, $AB\neq BA$.
+	\item $(AB)^t=B^tA^t.$
+	\item En general, $\nexists A^{-1}.$
+\end{itemize}
+\definicio La \textbf{matriu inversa} d'$A\in\mathcal{M}_n$ és una matriu $A^{-1}\in\mathcal{M}_n$ tal que $AA^{-1}=A^{-1}A=\idn$.
+\propietats
+\begin{itemize}
+	\item La inversa, si existeix, és única.
+	\item $(A^{-1})^{-1}=A$.
+	\item $(A^{-1})^t=(A^t)^{-1}.$
+	\item $(AB)^{-1}=B^{-1}A^{-1}.$
+	\item $(A^{-1})^k=(A^k)^{-1}.$
+\end{itemize}
+\definicio Eliminació Gaussiana.\\
+\textbf{Transformacions elementals}: donada una matriu $m\times n$, les transformacions elementals són les següents:
+\begin{itemize}
+	\item[$E_1$: ]$r_i\leftrightarrow r_j$ (canviar dues files).
+	\item[$E_2$: ]$r_i\leftarrow cr_j$ (multiplicar per un escalar no nul).
+	\item[$E_3$: ]$r_i\leftarrow r_i+cr_j$ (sumar un múltiple d'una fila a una altra).
+\end{itemize}
+\textbf{Eliminació Gaussiana}: 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \newpage
 \section{Espais vectorials.}
@@ -70,7 +152,7 @@ $$\mathbb{R}^n=\{(x_1,x_2,\ldots,x_n)|x_i\in\mathbb{R}\}.$$
 	\item $c(du)=(cd)u.$
 	\item $1u=u.$
 \end{itemize}
-\subsection{Espai vectorial sobre un cos $\mathbb{K}$.}
+\subsection{Espai vectorial sobre un cos $\fieldk$.}
 Sigui $\mathbb{K}$ un cos commutatiu (per exemple $\mathbb{Q},\mathbb{R},\mathbb{C}$). Un espai vectorial sobre $\mathbb{K}$ ($\mathbb{K}$-e.v.) és un conjunt de vectors $E$ amb dues operacions $+$ i $\cdot$.
 \begin{itemize}
 	\item $\textbf{+}$: Donats $u,v\in E$ dóna un element $u+v$ també d'$E$.\\ És una operació commutativa, associativa, té element neutre (\textbf{0} o $\vec{0}$) i tot $u\in E$ té invers respecte \textbf{+} ($-u$).
