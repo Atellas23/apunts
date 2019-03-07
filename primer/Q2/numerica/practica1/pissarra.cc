@@ -14,8 +14,8 @@ int main(int argc, char *argv[]) {
     fitxerDades >> n >> m;
     cout << n << ' ' << m << endl;
 	double **a;
-	a = malloc(sizeof(int*)*n);
-	for (int i = 0; i < n; ++i) a[i] = malloc(sizeof(int)*n);
+	a = (double**)malloc(sizeof(double*)*n);
+	for (int i = 0; i < n; ++i) a[i] = (double*)malloc(sizeof(double)*n);
     for (int i = 0; i < m; ++i) {
         fitxerDades >> j >> k >> x;
 		a[j][j] = x;
