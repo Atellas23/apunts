@@ -14,31 +14,32 @@ int main(int argc,char *argv[]) {
 	ifstream infile;
 	infile.open(argv[1],ifstream::in);
 	if (infile.fail()) {
-		cerr << "Fatal error: file doesn't exist in directory" << endl;
+		cerr << "Error: file doesn't exist in directory" << endl;
 		exit(-1);
 	}
-	int n,k,i,j;
+	int n,m,i,j;
 	double x;
-	infile >> n >> k;
-	double **a;
-	a = matriu(n);
-	for (int h = 0; h < k; ++h) {
-		infile >> i >> j >> x;
-		a[i][j] = x;
+	infile >> n >> m;
+	double **a = matriu(n,n);
+	for (int k = 0; k < m; ++k) infile >> i >> j >> a[i][j];
+	infile >> m;
+	double *b = vector(n);
+	for (int k = 0; k < m; ++k){
+		infile >> i >> b[i];
 	}
-	int q,s;
-	infile >> q >> s;
-	if (q != n) {
-		cerr << "Data error: vector dimension can not be different from matrix dimension." << endl;
-		exit(-1);
-	}
-	double *b = vector(q);
-	for (int o = 0; o < s; ++o){
-		cin >> i >> x;
-		b[i] = x;
-	}
-		
+	infile.close();
+	double *c = vector(n);
+	pr(a,b,c,n);
 	ofstream outfile;
-	outfile.open("result.dat");
+	outfile.open("result.dat",ofstream::out);
+	if (outfile.fail()) {
+		cerr << "Error: output file could not be opened." << endl;
+		exit (-1);
+	}
 	for (int e = 0; e < n; ++e) outfile << e+1 << ' ' << c[e] << endl;
+	esborraMatriu(a,n);
+	esborraVector(b);
+	esborraVector(c);
+	outfile.close();
+	return 0;
 }
