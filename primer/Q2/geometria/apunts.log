@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.11.13)  26 FEB 2019 18:55
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.11.13)  12 MAR 2019 19:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -910,28 +910,34 @@ Underfull \hbox (badness 10000) in paragraph at lines 448--478
 
  []
 
-[10]
-Underfull \hbox (badness 10000) in paragraph at lines 491--497
-
- []
-
-[11] [12]
-Underfull \hbox (badness 10000) in paragraph at lines 516--516
+[10] [11]
+Underfull \hbox (badness 10000) in paragraph at lines 497--498
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 527--527
+Overfull \hbox (22.66083pt too wide) in paragraph at lines 499--522
+\OML/cmm/m/it/10.95 V \OT1/cmr/m/n/10.95 = [] + []$ (plano). $[] [] = 2  []  []
+$ 
+ []
+
+[12]
+Underfull \hbox (badness 10000) in paragraph at lines 560--560
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 533--534
+Underfull \hbox (badness 10000) in paragraph at lines 571--571
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 577--578
 
  []
 
 [13]
-Underfull \hbox (badness 10000) in paragraph at lines 540--542
+Underfull \hbox (badness 10000) in paragraph at lines 584--586
 
  []
 
@@ -943,7 +949,7 @@ Here is how much of TeX's memory you used:
  14570 multiletter control sequences out of 15000+600000
  538294 words of font info for 51 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 36i,10n,35p,10394b,375s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,14n,35p,10394b,375s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
 bx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.
@@ -960,7 +966,7 @@ sfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
 y8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb
 ></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb>
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on apunts.pdf (15 pages, 216111 bytes).
+Output written on apunts.pdf (15 pages, 216812 bytes).
 PDF statistics:
  121 PDF objects out of 1000 (max. 8388607)
  86 compressed objects within 1 object stream
