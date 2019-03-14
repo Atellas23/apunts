@@ -492,8 +492,50 @@ $, con $\rg A=n-r$.\\
 x_1\\ \vdots\\ x_n
 \end{pmatrix}=\begin{pmatrix}
 b_1\\ \vdots\\ b_m
-\end{pmatrix}\rightarrow\textrm{ecuaciones implícitas (o cartesianas) de }V.$\\
-\ej \\
+\end{pmatrix}\rightarrow\textrm{ecuaciones implícitas (o cartesianas) de }V.$
+\newpage
+\ej
+\begin{enumerate}
+	\item $\af^3_{\mathbb{K}},\mathcal{R}_{\textrm{ord}}.$\\
+	$V=\begin{pmatrix}
+	1\\ 2\\ 1\\ 3
+	\end{pmatrix}+\left[\begin{pmatrix}
+	1\\ 2\\ 3\\ 4
+	\end{pmatrix},\begin{pmatrix}
+	1\\ 2\\ 1\\ 1
+	\end{pmatrix}\right]$ (plano). $\rg\begin{pmatrix}
+	x_1-1 & 1 & 1\\
+	x_2-2 & 2 & 2\\
+	x_3-1 & 3 & 1\\
+	x_4-3 & 4 & 1
+	\end{pmatrix}=2\iff\begin{cases}\begin{vmatrix}
+	x_1-1 & 1 & 1\\
+	x_3-1 & 3 & 1\\
+	x_4-3 & 4 & 1
+	\end{vmatrix}=0.\\
+	\begin{vmatrix}
+	x_2-2 & 2 & 2\\
+	x_3-1 & 3 & 1\\
+	x_4-3 & 4 & 1
+	\end{vmatrix}=0.
+	\end{cases}$
+	\item $\af^2_{\mathbb{K}}.$\\
+	$\begin{cases}
+	x_1+x_2+x_3+x_4=5.\\
+	2x_1+3x_2-x_3+x_4=1.
+	\end{cases}$. Esto se puede escribir:
+	$\begin{pmatrix}
+	1 & 1 & 1 & 1\\
+	2 & 3 & -1 & 1
+	\end{pmatrix}\begin{pmatrix}
+	x_1\\ x_2\\ x_3\\ x_4
+	\end{pmatrix}=\begin{pmatrix}
+	5\\ 1
+	\end{pmatrix}.$ Reduciendo la matriz con el algoritmo de Gauss, $\begin{pmatrix}
+	1 & 1 & 1 & 1\\
+	2 & 3 & -1 & 1
+	\end{pmatrix}$
+\end{enumerate}
 \obs \begin{enumerate}
 	\item
 	\item
@@ -503,6 +545,11 @@ b_1\\ \vdots\\ b_m
 \end{enumerate}
 \subsubsection{Suma, intersección y fórmula de Grassmann.}
 \newpage
+
+
+
+
+
 \section{Afinidades.}
 \subsection{Definición y propiedades.}
 \defi Sean $\af,\af'$ espacios afines con espacios vectoriales asociados $E,E'$ (sobre el mismo cuerpo $\cuerpo$). Sea $f:\ \af\rightarrow\af'$ una función. Entonces, $f$ es una \textbf{afinidad}$\iff\exists p\in\af:\ \tilde{f}_p(\vec{u}):=f(p+\vec{u})-f(p)\ (\vec{u}\in E)$ es una aplicación lineal de $E$ en $E'$.\\
