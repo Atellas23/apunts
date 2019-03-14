@@ -10,6 +10,10 @@ ll parti(ll n,ll k) {
 
 int main() {
 	ll n,k;
-	cin >> n >> k;
+    cout << "particions d'n elements en k parts" << endl
+    << "n:";
+	cin >> n;
+    cout << "k:";
+    cin >> k;
 	cout << parti(n,k) << endl;
 }
