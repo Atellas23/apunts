@@ -50,8 +50,8 @@ de les que surten les solucions $a=\dfrac{5\pm\sqrt{5}}{2},b=0,\dfrac{5\pm\sqrt{
 \begin{aligned}
 r_1:\ -x+\dfrac{-5+\sqrt{5}}{2}y=0,\\
 r_2:\ -x+\dfrac{-5-\sqrt{5}}{2}y=0,\\
-r_3:\ -x+\dfrac{-5+\sqrt{5}}{2}y=\dfrac{5+\sqrt{5}}{3+\sqrt{5}},\\
-r_4:\ -x+\dfrac{-5-\sqrt{5}}{2}y=\dfrac{5-\sqrt{5}}{3-\sqrt{5}}.
+r_3:\ -x+\dfrac{-5+\sqrt{5}}{2}y=5-2\sqrt{5},\\
+r_4:\ -x+\dfrac{-5-\sqrt{5}}{2}y=5+2\sqrt{5}.
 \end{aligned}
 \]
 Ara busquem les interseccions de les rectes que no són paral·leles i haurem trobat els vèrtexs del paral·lelogram.
@@ -59,23 +59,23 @@ Ara busquem les interseccions de les rectes que no són paral·leles i haurem tr
 	\item $r_1\cap r_2:x=0,y=0.$
 	\item $r_1\cap r_4:\begin{cases}
 	-x+\dfrac{-5+\sqrt{5}}{2}y=0\\
-	-x+\dfrac{-5-\sqrt{5}}{2}y=\dfrac{5-\sqrt{5}}{3-\sqrt{5}}
-	\end{cases}\implies(\cdots)\implies x=-\sqrt{5},y=\dfrac{-1+\sqrt{5}}{3-\sqrt{5}}.$
+	-x+\dfrac{-5-\sqrt{5}}{2}y=5+2\sqrt{5}
+	\end{cases}\implies(\cdots)\implies x=\dfrac{3\sqrt{5}+5}{2},y=-\sqrt{5}-2.$
 	\item $r_3\cap r_2:\begin{cases}
 	-x+\dfrac{-5-\sqrt{5}}{2}y=0\\
-	-x+\dfrac{-5+\sqrt{5}}{2}y=\dfrac{5+\sqrt{5}}{3+\sqrt{5}}
-	\end{cases}\implies(\cdots)\implies x=-\sqrt{5},y=\dfrac{1+\sqrt{5}}{3+\sqrt{5}}.$
+	-x+\dfrac{-5+\sqrt{5}}{2}y=5-2\sqrt{5}
+	\end{cases}\implies(\cdots)\implies x=\dfrac{-3\sqrt{5}+5}{2},y=\sqrt{5}-2$
 	\item $r_3\cap r_4:\begin{cases}
-	-x+\dfrac{-5+\sqrt{5}}{2}y=\dfrac{5+\sqrt{5}}{3+\sqrt{5}}\\
-	-x+\dfrac{-5-\sqrt{5}}{2}y=\dfrac{5-\sqrt{5}}{3-\sqrt{5}}
-	\end{cases}\implies(\cdots)\implies x=0,y=-1.$
+	-x+\dfrac{-5+\sqrt{5}}{2}y=5-2\sqrt{5}\\
+	-x+\dfrac{-5-\sqrt{5}}{2}y=5+2\sqrt{5}
+	\end{cases}\implies(\cdots)\implies x=-5,y=-4.$
 \end{itemize}
 Per tant, ja hem trobat els quatre vèrtexs, que són
 \begin{itemize}
 	\item[$A$]$=(0,0)$
-	\item[$B$]$=(-\sqrt{5},\dfrac{-1+\sqrt{5}}{3-\sqrt{5}})$
-	\item[$C$]$=(-\sqrt{5},\dfrac{1+\sqrt{5}}{3+\sqrt{5}})$
-	\item[$D$]$=(0,1).$
+	\item[$B$]$=(\dfrac{3\sqrt{5}+5}{2},-\sqrt{5}-2)$
+	\item[$C$]$=(\dfrac{-3\sqrt{5}+5}{2},\sqrt{5}-2)$
+	\item[$D$]$=(-5,-4).$
 \end{itemize}
 \newpage
 
@@ -85,4 +85,68 @@ Per tant, ja hem trobat els quatre vèrtexs, que són
 	\item[(b)] Demostreu que existeix una homotècia tal que les afinitats anteriors són el producte d'aquesta homotècia per les homologies especials d'eix $FA$.
 \end{enumerate}
 \textbf{Resolució}\\
+Primer de tot, expressarem les afinitats que ens demanen en equacions amb un sistema de referència $\mathcal{R}_0=\{F;v_1,\vec{FA}\}$, agafant $v_1$ qualsevol vector que compleixi $(\tilde{f}-\lambda\idn)(v_1)=\vec{FA}$. Per les hipòtesis del problema, $(F,A,B)=\lambda$. Aleshores, tenim la matriu de l'afinitat en coordenades ampliades de la següent forma:
+\[M(f_{\lambda};\mathcal{R}_0)=
+\left(\begin{array}{cc|c}
+\lambda & 0 & 0\\
+1 & \lambda & 0\\
+\hline
+0 & 0 & 1
+\end{array}\right).
+\]
+Com que només hi ha una recta invariant (fixa), aquesta només pot ser la recta que passa per $F$, $A$ i $B$.
+\begin{enumerate}
+	\item[(a)]	El lloc geomètric de les imatges d'un punt $p$ arbitrari per qualsevol $f_{\lambda}$ és el conjunt $\{z\equiv(z_1,z_2)\in A\ \vert\ \exists\lambda\in\mathbb{R}:z_1=\lambda p_1\wedge z_2=p_1+\lambda p_2\}$, pràcticament per definició. Fixem-nos en que la primera coordenada depèn de l'afinitat agafada i dels punts donats, doncs el primer vector del sistema de referència depèn de $f$ ja que s'agafa respecte $\vec{FA}$ (ha de complir $(\tilde{f}-\lambda\idn)(v_1)=\vec{FA}$) i la constant $\lambda$ és igual a la raó simple entre els tres punts. En canvi, la segona coordenada depèn \textit{només} dels punts donats $F,A,B$, ja que el segon vector de la base agafada és $\vec{FA}$ i $\lambda=(F,A,B)$. Per tant, el lloc geomètric resultant és una recta.
+	\item[(b)]	Per demostrar això, veurem que podem trobar la homotècia ($h_{\alpha}$) en concret per la qual es satisfà el producte per la homologia especial $H_{\beta}$. Aquesta homologia especial té per matriu de la part lineal, en la nostra referència,
+	\[
+	\begin{pmatrix}
+	1&0\\
+	\beta&1
+	\end{pmatrix},
+	\]
+	i és la que busquem doncs per qualsevol punt de la recta $\left<F,A\right>$, la seva imatge és ell mateix, i per qualsevol altre punt, no; veiem-ho:
+	\begin{itemize}
+		\item $p\in \left<F,A\right>:$ Aleshores, $p=F+\mu_{p}\vec{FA}$, i $H_{\beta}(p)=H_{\beta}(F)+\tilde{H_{\beta}}(\mu_p\vec{FA})$. Calculant per la matriu,
+		\[
+		H_{\beta}(p)=F+\begin{pmatrix}
+		1&0\\ \beta&1\end{pmatrix}\begin{pmatrix}
+		0\\ \mu_p
+		\end{pmatrix}=F+\begin{pmatrix}
+		0\\ \mu_p
+		\end{pmatrix}=F+\mu_p\vec{FA}=p.
+		\]
+		\item $p\not\in \left<F,A\right>:$ Aleshores, $p=F+\gamma_p v_1+\mu_p\vec{FA}$, i $H_{\beta}(p)=H_{\beta}(F)+\tilde{H_{\beta}}(\gamma_p v_1+\mu_p\vec{FA})$. Calculant per la matriu altre cop,
+		\[
+		H_{\beta}(p)=F+\begin{pmatrix}
+		1&0\\ \beta&1\end{pmatrix}\begin{pmatrix}
+		\gamma_p\\ 0
+		\end{pmatrix}+\begin{pmatrix}
+		1&0\\ \beta&1\end{pmatrix}\begin{pmatrix}
+		0\\ \mu_p
+		\end{pmatrix}		
+		=F+\begin{pmatrix}
+		\gamma_p\\ \beta\gamma_p
+		\end{pmatrix}+\begin{pmatrix}
+		0\\ \mu_p
+		\end{pmatrix}\neq p.
+		\]
+	\end{itemize}
+	
+	Per tant, imposem la condició $f_{\lambda}=h_{\alpha}\circ H_{\beta}$. Representant totes aquestes afinitats en coordenades, tenim	
+	\[
+	\begin{pmatrix}
+	\lambda&0\\ 1&\lambda
+	\end{pmatrix}=\begin{pmatrix}
+	\alpha&0\\
+	0&\alpha
+	\end{pmatrix}\begin{pmatrix}
+	1&0\\
+	\beta&1
+	\end{pmatrix}=\begin{pmatrix}
+	\alpha&0\\
+	\alpha\beta&\alpha
+	\end{pmatrix},
+	\]
+	i podem agafar $\alpha=\lambda,\beta=\dfrac{1}{\lambda}$ i tenim $f_{\lambda}$. $\alpha\neq0$ per definició d'homotècia, i $\beta$ el mateix per definició d'homologia.
+\end{enumerate}
 \end{document}
