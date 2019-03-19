@@ -7,15 +7,19 @@
 \usepackage[margin=1.25in]{geometry}
 \usepackage{color}
 \usepackage{breqn}
-\newcommand{\rev}{$\mathbb{R}$-e.v. }
-\newcommand{\propi}{\underline{\textbf{Propietats}}:\\}
-\newcommand{\defi}{\underline{\textbf{Definició}}:\\}
-\newcommand{\prop}{\underline{\textbf{Proposició}}:\\}
-\newcommand{\dem}{\underline{\textbf{Demostració}}:\\}
+\newcommand{\kev}[1]{$\mathbb{#1}$-e.v.}
+\newcommand{\undbf}[1]{\underline{\textbf{#1}}:\\}
+\newcommand{\propi}{\undbf{Propietats}}
+\newcommand{\defi}{\undbf{Definició}}
+\newcommand{\prop}{\undbf{Proposició}}
+\newcommand{\dem}{\undbf{Demostració}}
 \newcommand{\ej}{\underline{Exemples}:\\}
-\newcommand{\obs}{\underline{\textbf{Observació}}: }
-\newcommand{\cor}{\underline{\textbf{Corol·lari}}:\\}
-\newcommand{\scalarproduct}{\left<\cdot,\cdot\right>}
+\newcommand{\obs}{\undbf{Observació}}
+\newcommand{\cor}{\undbf{Corol·lari}}
+\newcommand{\dotpr}[2]{\left< #1,#2\right>}
+\newcommand{\norm}[1]{||#1||}
+\newcommand{\ball}[2]{B_{#1}(#2)}
+\newcommand{\set}[2]{\{#1\ \vert\ #2\}}
 \title{Càlcul Diferencial}
 \author{Àlex Batlle Casellas}
 \renewcommand*\contentsname{Índex}
@@ -62,7 +66,6 @@ com a funció d'assignació de vectors entre dos punts. Es té que, per $p\in A$
 		q &\mapsto \phi(p,q)
 \end{align*}
 és bijectiva. En aquest curs, prendrem $A=\mathbb{R}^n$.
-\newpage
 \subsection{Nocions de topologia.}
 \subsubsection{Espais mètrics i normats.}
 \defi Sigui $M$ un conjunt. Una \textbf{distància en $M$} és una aplicació
@@ -78,38 +81,38 @@ tal que compleix, $\forall x,y,z\in M$:
 	\item Desigualtat triangular: $d(x,y)\leq d(x,z)+d(y,z)$.
 \end{enumerate}
 Un \textbf{espai mètric} és un parell $(M,d)$.\\
-\defi Sigui $E$ un \rev de dimensió arbitrària. Una \textbf{norma en $E$} és una aplicació
+\defi Sigui $E$ un \kev{R} de dimensió arbitrària. Una \textbf{norma en $E$} és una aplicació
 \begin{align*}
-		||\cdot|| \colon E &\to \mathbb{R}\\
-		v &\mapsto ||v||
+		\norm{\cdot} \colon E &\to \mathbb{R}\\
+		v &\mapsto \norm{v}
 \end{align*}
 tal que compleix, $\forall u,v\in E$:
 \begin{enumerate}
-	\item Definida positiva: $||u||\geq0$.
-	\item No degeneració: $||u||=0\iff u=\vec{0}$.
-	\item Multiplicació per escalar: $||\lambda u||=|\lambda|\ ||u||\forall\lambda\in\mathbb{R}$.
-	\item Desigualtat triangular: $||u+v||\leq ||u||+||v||$.
+	\item Definida positiva: $\norm{u}\geq0$.
+	\item No degeneració: $\norm{u}=0\iff u=\vec{0}$.
+	\item Multiplicació per escalar: $\norm{\lambda u}=|\lambda|\ \norm{u}\forall\lambda\in\mathbb{R}$.
+	\item Desigualtat triangular: $\norm{u+v}\leq \norm{u}+\norm{v}$.
 \end{enumerate}
-Un \textbf{espai normat} és un parell $(E,||\cdot||)$.\\
-\prop Si $(E,||\cdot||)$ és un espai normat, aleshores $(E,d)$ és un espai mètric, amb $d$ la distància associada a la norma $||\cdot||$, $d(u,v):=||u-v||$.\\
+Un \textbf{espai normat} és un parell $(E,\norm{\cdot})$.\\
+\prop Si $(E,\norm{\cdot})$ és un espai normat, aleshores $(E,d)$ és un espai mètric, amb $d$ la distància associada a la norma $\norm{\cdot}$, $d(u,v):=\norm{u-v}$.\\
 \dem Les propietats (1),(2), i (4) d'espai mètric són immediates (s'hereten de les propietats de la norma). Comprovem la propietat (3) d'espai mètric: siguin $u,v\in E$, aleshores
 $$
 d(u,v):=||u-v||=||-(v-u)||=|-1|\ ||v-u||=||v-u||=:d(v,u).\square
 $$
-\defi Sigui $E$ un \rev Un \textbf{producte escalar euclidià} en $E$ és una aplicació
+\defi Sigui $E$ un \kev{R} Un \textbf{producte escalar euclidià} en $E$ és una aplicació
 \begin{align*}
-		\left<\cdot,\cdot\right> \colon E\times E &\to \mathbb{R}\\
-		(u,v) &\mapsto \left< u,v\right>
+		\dotpr{\cdot}{\cdot} \colon E\times E &\to \mathbb{R}\\
+		(u,v) &\mapsto \dotpr{u}{v}
 \end{align*}
 tal que compleix, $\forall u,v,w\in E,\alpha,\beta\in\mathbb{R}$:
 \begin{enumerate}
-	\item Linealitat: $\left<\alpha u+\beta v,w\right>=\alpha\left<u,w\right>+\beta\left<v,w\right>$.
-	\item Simetria: $\left<u,v\right>=\left<v,u\right>$.
-	\item Definida positiva: $\left<v,v\right>\geq0$.
-	\item No degeneració: $\left<v,v\right>=0\iff v=\vec{0}$.
+	\item Linealitat: $\dotpr{\alpha u+\beta v}{w}=\alpha\dotpr{u}{w}+\beta\dotpr{v}{w}$.
+	\item Simetria: $\dotpr{u}{v}=\dotpr{v}{u}$.
+	\item Definida positiva: $\dotpr{v}{v}\geq0$.
+	\item No degeneració: $\dotpr{v}{v}=0\iff v=\vec{0}$.
 \end{enumerate}
-Un \textbf{espai euclidià} és un parell $(E,\left<\cdot,\cdot\right>)$.\\
-\prop Si $(E,\left<\cdot,\cdot\right>)$ és un espai euclidià, aleshores $(E,||\cdot||)$ és un espai normat, amb $||\cdot||$ la norma inuïda per el producte escalar $\left<\cdot,\cdot\right>$, $||u||:=+\sqrt{\left<u,u\right>}$.\\
+Un \textbf{espai euclidià} és un parell $(E,\dotpr{\cdot}{\cdot})$.\\
+\prop Si $(E,\dotpr{\cdot}{\cdot})$ és un espai euclidià, aleshores $(E,||\cdot||)$ és un espai normat, amb $||\cdot||$ la norma inuïda per el producte escalar $\left<\cdot,\cdot\right>$, $||u||:=+\sqrt{\left<u,u\right>}$.\\
 \dem \\
 \prop El producte escalar i la seva norma associada tenen les següents propietats, $\forall u,v\in E$:
 \begin{enumerate}
@@ -137,7 +140,7 @@ $(M,d)$ espai mètric.\\
 	$$
 	\item \textbf{Bola oberta} amb centre a $p$ i radi $r$:
 	$$
-	B_r(p)\equiv B(p,r)=\{q\in M\ \vert\ d(p,q)<r\}.
+	\ball{r}{p}\equiv B(p,r)=\{q\in M\ \vert\ d(p,q)<r\}.
 	$$
 	\item \textbf{Bola tancada} amb centre a $p$ i radi $r$:
 	$$
