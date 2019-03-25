@@ -1,0 +1,2 @@
+\contentsline {section}{\numberline {0}Errors.}{2}
+\contentsline {section}{\numberline {1}Sistemes Lineals.}{3}
