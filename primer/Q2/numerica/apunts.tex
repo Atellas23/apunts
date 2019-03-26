@@ -46,7 +46,51 @@
 
 \vfill
 \newpage\tableofcontents\newpage
-\section{Errors.}
+\section{Aritmètica finita i control d'errors}
+Representem els nombres en un sistema de numeració posicional dependent d'una certa base $b$. Per representar un nombre (amb un nombre finit de decimals), seguim el següent esquema:
+\[
+\left(d_pd_{p-1}\ldots d_0.d_{-1}\ldots d_{-q}\right)=d_pb^p+\cdots+d_1b^1+d_0+d_{-1}b^{-1}+\cdots+d_{-q}b^{-q}=\sum_{i=-q}^pd_ib^i.
+\]
+En un ordinador, representem els nombres en binari; anem a veure com representem els enters i els reals:
+\paragraph{Enters}
+Els enters els representem de la forma següent:\\
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{ |c|c|c|c|c| }
+        \hline
+        $d_{s-1}$ & $d_{s-2}$ & $\cdots$ & $d_1$ & $d_0$\\
+        \hline
+    \end{tabular}
+\end{table}\\
+Utilitzem $s$ bits, i el primer és pel signe ($d_{s-1}=1\rightarrow-,d_{s-1}=0\rightarrow+$). Per tant, els enters en un ordinador es representen com una suma així
+\[
+(-1)^{s-1}\sum_{i=0}^{s-2}d_i2^i.
+\]
+D'aquí, deduïm que el nombre màxim que podem representar és
+\[
+|N_{\textrm{màx}}|=\sum_{i=0}^{s-2}2^i=2^{s-1}-1.
+\]
+En C/C++, que és el llenguatge que utilitzarem, tenim els següent tipus de dades
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{ |c|c|c|c|c| }
+        \hline
+        \textbf{Type} & \textbf{Bytes} & \textbf{Bits} & $N_{\textrm{màx}}$\\
+        \hline
+        char & 1 & 8 & $2^7-1=127$\\
+        \hline
+        short & 2 & 16 & $2^{15}-1=32767$\\
+        \hline
+        int & 4 & 32 & $2^{31}-1=2147483647$\\
+        \hline
+        unsigned int & 4 & 32 & $2^{32}-1=4294967295$\\
+        \hline
+        float & 4 & 32 (M:24,E:8) & $1.7815\cdot10^{38}$\\
+        \hline
+        double & 8 & 64 (M:53,E:11) & $0.8988\cdot10^{308}$\\
+        \hline
+    \end{tabular}
+\end{table}
 \newpage
 \section{Sistemes Lineals.}
 \newpage

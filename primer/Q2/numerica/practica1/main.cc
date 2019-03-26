@@ -59,7 +59,8 @@ int main(int argc, char *argv[]) {
 		fitxerDades >> j >> b[j];
 	fitxerDades.close();
 	double *x = vector(n);
-	int solved = sistema(a,x,b,n,epsilon());
+    double tol = epsilon();
+	int solved = sistema(a,x,b,n,tol);
 	if (solved == 0) {
 		cerr << "Matrix is singular!" << endl;
 		exit(-1);
