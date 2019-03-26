@@ -33,29 +33,21 @@ int max_pos(double *row,int n) {
 	return pos;
 }
 
-double max_in_row(double *row,int n) {
-	double max = mod(row[0]);
-	for (int j = 1; j < n; ++j) {
-		if (mod(row[j]) > max) max = mod(row[j]);
-	}
-	return max;
-}
-
 int escalate_rows_and_compare_and_swap(double **a,int perm[],int k,int n,double tol) {
-	double *escalats = vector(n-k);
+	double *scaled = vector(n-k);
 	for (int i = k; i < n; ++i) {
-		double max_i = max_in_row(a[i],n);
+		double max_i = a[i][max_pos(a[i],n)];
 		if (max_i < tol) return -1;
-		escalats[i] = a[i][k]/max_i;
+		scaled[i] = a[i][k]/max_i;
 	}
-	int M_pos = max_pos(escalats,n);
+	int M_pos = max_pos(scaled,n);
 	int number = 0;
 	if (M_pos != 0) {
 		swap_ints(perm[k],perm[M_pos]);
 		swap_rows(a[k],a[M_pos]);
 		++number;
 	}
-	eraseVector(escalats);
+	eraseVector(scaled);
 	return number;
 }
 
