@@ -1,3 +1,6 @@
-\contentsline {section}{\numberline {0}Aritm\IeC {\`e}tica finita i control d'errors}{2}
-\contentsline {paragraph}{Enters}{2}
-\contentsline {section}{\numberline {1}Sistemes Lineals.}{3}
+\contentsline {chapter}{\numberline {1}Aritm\IeC {\`e}tica finita i control d'errors}{5}
+\contentsline {paragraph}{Enters}{5}
+\contentsline {chapter}{\numberline {2}Sistemes Lineals.}{7}
+\contentsline {section}{\numberline {2.1}Descomposici\IeC {\'o} QR.}{7}
+\contentsline {subsection}{\numberline {2.1.1}M\IeC {\`e}tode d'ortogonalitzaci\IeC {\'o} modificat de Gram-Schmidt.}{7}
+\contentsline {paragraph}{Recordatori del m\IeC {\`e}tode de Gram-Schmidt:}{7}

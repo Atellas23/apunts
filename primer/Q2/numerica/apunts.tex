@@ -1,4 +1,4 @@
-\documentclass[11pt]{article}
+\documentclass[11pt]{book}
 \usepackage[utf8]{inputenc}
 \usepackage{amsfonts}
 \usepackage{amsmath,amssymb}
@@ -7,20 +7,24 @@
 \usepackage[margin=1.25in]{geometry}
 \usepackage{color}
 \usepackage{breqn}
-\newcommand{\kev}[1]{$\mathbb{#1}$-e.v. }
-\newcommand{\props}{\underline{\textbf{Propiedades}}:\\}
-\newcommand{\defi}{\underline{\textbf{Definición}}:\\}
-\newcommand{\prop}{\underline{\textbf{Proposición}}:\\}
-\newcommand{\dem}{\underline{\textbf{Demostración}}:\\}
-\newcommand{\ej}{\underline{Ejemplos}:\\}
-\newcommand{\obs}{\underline{\textbf{Observación}}: }
-\newcommand{\cor}{\underline{\textbf{Corolario}}:\\}
+\newcommand{\kev}[1]{$\mathbb{#1}$-e.v.}
+\newcommand{\propi}{\underline{\textbf{Propietats}}:\\}
+\newcommand{\defi}{\underline{\textbf{Definició}}:\\}
+\newcommand{\propo}{\underline{\textbf{Proposició}}:\\}
+\newcommand{\dem}{\underline{\textbf{Demostració}}:\\}
+\newcommand{\ej}{\underline{Exemples}:\\}
+\newcommand{\obs}{\underline{\textbf{Observació}}: }
+\newcommand{\cor}{\underline{\textbf{Corol·lari}}:\\}
 \title{Àlgebra Lineal Numèrica}
 \author{Àlex Batlle Casellas}
 \renewcommand*\contentsname{Índex}
 \DeclareMathOperator{\rg}{rg}
 \DeclareMathOperator{\nuc}{Nuc}
+\DeclareMathOperator{\idn}{Id}
+\DeclareMathOperator{\diag}{Diag}
 \newcommand{\field}[1]{\mathbb{#1}}
+\newcommand{\norm}[1]{||#1||}
+\newcommand{\matr}[2]{\mathcal{M}_{#1\times#2}(\field{R})}
 
 \begin{document}
 
@@ -45,8 +49,8 @@
 %\section*{Resumen}
 
 \vfill
-\newpage\tableofcontents\newpage
-\section{Aritmètica finita i control d'errors}
+\newpage\tableofcontents
+\chapter{Aritmètica finita i control d'errors}
 Representem els nombres en un sistema de numeració posicional dependent d'una certa base $b$. Per representar un nombre (amb un nombre finit de decimals), seguim el següent esquema:
 \[
 \left(d_pd_{p-1}\ldots d_0.d_{-1}\ldots d_{-q}\right)=d_pb^p+\cdots+d_1b^1+d_0+d_{-1}b^{-1}+\cdots+d_{-q}b^{-q}=\sum_{i=-q}^pd_ib^i.
@@ -92,6 +96,77 @@ En C/C++, que és el llenguatge que utilitzarem, tenim els següent tipus de dad
     \end{tabular}
 \end{table}
 \newpage
-\section{Sistemes Lineals.}
+\chapter{Sistemes Lineals.}
+\section{Descomposició QR.}
+\subsection{Mètode d'ortogonalització modificat de Gram-Schmidt.}
+Sigui $A\in\matr{n}{m},m\geq n$ de rang màxim $n$, volem calcular la descomposició $A=QR$ amb $Q\in\matr{m}{n}$ ortogonal ($Q^tQ=\idn$) i $R\in\matr{n}{n}$ triangular superior no singular.
+\paragraph{Recordatori del mètode de Gram-Schmidt:} Donada una base $\{\vec{v_1},\ldots,\vec{v_n}\}$, volem una base ortonormal $\{\vec{u_1},\ldots,\vec{u_n}\}$:\\
+$\vec{u_1}=\dfrac{\vec{v_1}}{\norm{\vec{v_1}}}\textrm{ unitari},$\\
+
+\begin{enumerate}
+    \item[\underline{Pas 0.}] Definim $A_1=A=(a_1^{(1)}a_2^{(1)}\cdots a_n^{(1)})$, on $a_j^{(1)}$ és la columna $j$-èssima (amb $m$ components d'$A_1$).
+    \item Normalitzem la primera columna $a_1^{(1)}$:
+    \[
+    r_{11}=\norm{a_1^{(1)}}_2\quad q_1=\dfrac{a_1^{(1)}}{r_{11}}.
+    \]
+    Ara ortogonalitzem, respecte d'aquesta, totes les columnes posteriors:
+    \[
+    r_{1s}=q_1^ta_s^{(1)},\quad a_s^{(2)}=a_s^{(1)}-r_{1s}q_1,\quad s=2,\ldots,n.
+    \]
+    Obtenim la matriu $A_2=(q_1\ a_2^{(2)}\ldots a_n^{(2)})$. Es compleix $q_1^ta_s^{(2)}=q_1^ta_s^{(1)}-r_{1s}q_1^tq_1=r_{1s}-r_{1s}=0,\ s=2,\ldots,n,$ i el rang d'$A_2$ és $n$. En forma matricial,
+    \[
+    \begin{pmatrix}
+        a_{11}^{(1)} & \ldots & a_{1n}^{(1)}\\
+        \vdots & \ & \vdots\\
+        \vdots & \ & a_{nn}^{(1)}
+    \end{pmatrix}\diag\left(\dfrac{1}{r_{11}},1\ldots,1\right)=\begin{pmatrix}
+    q_{11} & a_{12}^{(1)} & \ldots & a_{1n}^{(1)}\\
+    \vdots & \vdots & \ & \vdots\\
+    q_{m1} & a_{m2}^{(1)} & \ldots & a_{mn}^{(1)}
+    \end{pmatrix};    
+    \]
+    Ara
+    \[
+    \begin{pmatrix}
+    q_{11} & a_{21}^{(1)} & \vdots\\
+    \vdots & \vdots & \vdots\\
+    q_{m1} & \ldots & a_{mn}^{(1)}
+    \end{pmatrix}\begin{pmatrix}
+    1 & -r_{12} & -r_{13} & \ldots & -r_{1n}\\
+    0 & 1 & 0 & \ldots & 0\\
+    0 & 0 & 1 & \ldots & 0\\
+    \vdots & \vdots & \vdots & \vdots & \vdots\\
+    0 & \ldots & \ldots & \ldots & 1
+    \end{pmatrix}=
+    \]
+    \item[\underline{Pas 2.}] 
+    \item[\underline{Pas $k$.}] Suposem que tenim la matriu $A_k=(q_1q_2\ldots q_{k-1}a_k^{(k)}\ldots a_n^{(k)})$ que satisfà (per construcció)
+    \[
+    (\textrm{Q})\ q_j^tq_l=\delta_{jl},\ q_ja_s^{(k)}=0,\ j,l=1,\ldots,k-1,\ s=k,\ldots,n.
+    \]
+    Ara volem $A_{k+1}$:\\
+    Normalitzem la columna $k$-èssima
+    \[
+    r_{kk}=\norm{a_k^{(k)}}_2,\quad q_k=\dfrac{a_k^{(k)}}{r_{kk}}
+    \]
+    i ortogonalitzem respecte d'aquesta les columnes $a_{k+1}^{(k)},\ldots,a_n^{(k)}$, i.e.,
+    \[
+    r_{ks}=q_k^ta_s^{(k)},\ a_s^{(k+1)}=a_s^{(k)}-r_{ks}q_k,\ s=k+1,\ldots,n.
+    \]
+    Així obtenim $A_{k+1}=(q_1q_2\cdots q_k a_{k+1}^{(k+1)}\cdots a_n^{(k+1)})$ i se satisfan les relacions (Q) amb $k+1$ enlloc de $k$:
+    \[
+    q_j^tq_l=\delta_{jl},q_j^ta_s^{(k+1)}=0,\ j,l=1,\ldots,k,\ s=k+1,\ldots, n.
+    \]
+    Es té $A_k=A_{k+1}R^{(k)}\implies A_1=A_kR^{(k-1)}\ldots R^{(1)}=A_{k+1}R^{(k)}R^{(k-1)}\ldots R^{(1)}.$
+\end{enumerate}
+Després d'$n$ passos obtenim
+\[
+A_{n+1}=(q_1q_2\ldots q_n),\ A_n=(q_1\ldots q_{n-1}a_n^{(n)}),
+\]
+que té el mateix rang $n$ i es compleix
+\[
+A=A_{n+1}R^{(n)}\cdots R^{(1)}=QR,
+\]
+on $Q\in\matr{n}{n}$ de columnes ortonormals, $R\in\matr{n}{m}$ triangular superior.
 \newpage
 \end{document}
