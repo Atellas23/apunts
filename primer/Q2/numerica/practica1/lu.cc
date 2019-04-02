@@ -10,12 +10,13 @@ ui mod(int x) {
 }
 
 void swap_rows(double *r1,double *r2) {
-	double *aux = r1;
-	r1 = r2;
-	r2 = aux;
+	double *aux;
+    *aux = *r1;
+	*r1 = *r2;
+	*r2 = *aux;
 }
 
-void swap_ints(int i,int j) {
+void swap_ints(int& i,int& j) {
 	int aux = i;
 	i = j;
 	j = aux;

@@ -4,12 +4,6 @@ using namespace std;
 
 int sistema(double **,double *,double *,int,double);
 
-double epsilon() {
-	double deps = 1.0;
-    while (double(1.0)+deps > double(1.0)) deps /= 2;
-    return 2*deps;
-}
-
 double *vector(int n) {
 	double *b;
 	b = new double[n];
@@ -59,7 +53,7 @@ int main(int argc, char *argv[]) {
 		fitxerDades >> j >> b[j];
 	fitxerDades.close();
 	double *x = vector(n);
-    double tol = epsilon();
+    double tol = 1e-12;
 	int solved = sistema(a,x,b,n,tol);
 	if (solved == 0) {
 		cerr << "Matrix is singular!" << endl;

@@ -13,7 +13,6 @@ void permutate(double b[], int perm[], int n) {
 }
 
 void resol(double **a, double x[], double b[], int n, int perm[]) {
-<<<<<<< HEAD
 	x[n] = b[n]/a[n][n];
 	for (int i = 0; i < n; ++i) {
 		double res = b[i];
@@ -21,7 +20,6 @@ void resol(double **a, double x[], double b[], int n, int perm[]) {
 		res /= a[i][i];
 		x[i] = res;
 	}
-=======
 	//resolem LUx=Pb en dues parts, Ly=Pb i Ux=y:
     permutate(b,perm,n);
     //part triangular inferior, Ly=Pb
@@ -40,5 +38,4 @@ void resol(double **a, double x[], double b[], int n, int perm[]) {
         resx /= a[i][i];
         x[i] = resx;
     }
->>>>>>> 3a0978da98e6ac959ce5ed6db1947e96aefec8f6
 }
