@@ -3,17 +3,17 @@ all: main
 main: main.o sistema.o lu.o resol.o
 	g++ -O2 main.o sistema.o lu.o resol.o -o main
 
-main.o: main.cc
-	g++ -O2 -c main.cc
+main.o: main.cpp
+	g++ -O2 -c main.cpp
 
-sistema.o: sistema.cc
-	g++ -O2 -c sistema.cc
+sistema.o: sistema.cpp
+	g++ -O2 -c sistema.cpp
 
-lu.o: lu.cc
-	g++ -O2 -c lu.cc
+lu.o: lu.cpp
+	g++ -O2 -c lu.cpp
 
-resol.o: resol.cc
-	g++ -O2 -c resol.cc
+resol.o: resol.cpp
+	g++ -O2 -c resol.cpp
 
 clean:
 	rm -f *.o *~

@@ -1,3 +1,4 @@
+#include <iostream>
 using namespace std;
 using ui = unsigned int;
 
@@ -58,6 +59,8 @@ int lu(double **a, int n, int *perm, double tol) {
 			total_swaps += e;
 			for (int i = k+1; i < n; ++i) {
 				//ja està assegurat que a[k][k] és més gran que la tolerància, doncs si e>=0 aleshores necessàriament no és menor.
+                if (a[k][k] <= tol) return -1;
+                cout << a[k][k] << endl;
 				double m = a[i][k]/a[k][k];
 				for (int j = k; j < n; ++j) a[i][j] = a[i][j] - a[k][j]*m;
 				a[i][k] = m;
