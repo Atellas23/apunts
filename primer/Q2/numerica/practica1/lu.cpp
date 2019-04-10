@@ -38,6 +38,7 @@ int escalate_rows_and_compare_and_swap(double **a,int *perm,int k,int n,double t
 	for (int i = k; i < n; ++i) {
 		double max_i = a[i][max_pos(a[i],n)];
 		if (max_i <= tol) return -1;
+		if (a[i][k] <= tol) return -1;
 		scaled[i-k] = a[i][k]/max_i;
 	}
 	int M_pos = max_pos(scaled,n);
