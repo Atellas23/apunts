@@ -4,6 +4,12 @@ using namespace std;
 
 int sistema(double **,double *,double *,int,double);
 
+void swap_doubles(double& a,double& b) {
+	double aux = a;
+	a = b;
+	b = aux;
+}
+
 void test(double **a, double *b, int n) {
 	ofstream test;
 	test.open("test.dat",ofstream::out);
