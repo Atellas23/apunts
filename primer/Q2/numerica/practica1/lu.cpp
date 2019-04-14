@@ -1,12 +1,11 @@
 #include <iostream>
 using namespace std;
-using ui = unsigned int;
 
 double *vector(int);
 int eraseVector(double *);
 void swap_doubles(double& ,double&);
 
-ui mod(int x) {
+double mod(double x) {
 	if (x < 0) return -x;
 	return x;
 }
