@@ -68,6 +68,7 @@ int main(int argc, char *argv[]) {
 		cerr << "Error: data file does not exist in directory." << endl;
 		exit(-1);
 	}
+	cout << "Reading file..." << endl;
 	int n,m,i,j;
 	fitxerDades >> n >> m;
 	double **a = matrix(n,n);
@@ -79,14 +80,17 @@ int main(int argc, char *argv[]) {
 	for (int l = 0; l < q; ++l)
 		fitxerDades >> j >> b[j];
 	fitxerDades.close();
+	cout << "File read!" << endl;
 	//test(a,b,n);
 	double *x = vector(n);
     double tol = 1e-12;
+    cout << "Performing decomposition..." << endl << "..." << endl;
     int solved = sistema(a,x,b,n,tol);
 	if (solved == 0) {
 		cerr << "Matrix is singular!" << endl;
 		exit(-1);
 	}
+	cout << "Decomposition finished and system solved successfully!" << endl << "Writing results to res.dat..." << endl;
 	//out
 	ofstream results;
 	results.open("res.dat",ofstream::out);
@@ -101,4 +105,5 @@ int main(int argc, char *argv[]) {
 	eraseMatrix(a,n);
 	eraseVector(b);
 	eraseVector(x);
+	cout << "Results written successfully!" << endl << "Exiting program." << endl;
 }
