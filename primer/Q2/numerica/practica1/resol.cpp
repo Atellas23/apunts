@@ -4,18 +4,15 @@ double *vector(int);
 int eraseVector(double *);
 void swap_doubles(double& ,double&);
 
-void permutate(double *b, int *perm, int n) {
-	for (int i = 0; i < n; ++i) swap_doubles(b[i],b[perm[i]]);
-}
-
 void resol(double **a, double *x, double *b, int n, int *perm) {
+	double *aux = vector(n);
+	for (int i = 0; i < n; ++i) aux[i] = b[perm[i]];
 	//resolem LUx=Pb en dues parts, Ly=Pb i Ux=y:
-    permutate(b,perm,n);
     //part triangular inferior, Ly=Pb
     double *y = vector(n);
-    y[0] = b[0];
+    y[0] = aux[0];
     for (int i = 1; i < n; ++i) {
-		double resy = b[i];
+		double resy = aux[i];
 		for (int j = 0; j < i; ++j) resy -= a[i][j]*y[j];
 		y[i] = resy;
 	}

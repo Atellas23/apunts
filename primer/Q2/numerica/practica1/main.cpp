@@ -98,6 +98,8 @@ int main(int argc, char *argv[]) {
 		cerr << "Error: could not open file." << endl;
 		exit(-1);
 	}
+	results.setf(ios::scientific);
+	results.precision(15);
 	for (int l = 0; l < n; ++l)
 		results << l << ' ' << x[l] << endl;
 	results.close();
