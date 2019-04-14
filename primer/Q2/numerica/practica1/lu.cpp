@@ -33,7 +33,7 @@ int escalate_rows_and_compare_and_swap(double **a,int *perm,int k,int n,double t
 	for (int i = k; i < n; ++i) {
 		double max_i = mod(a[i][max_pos(a[i],n)]);
 		if (max_i <= tol) {
-			cout << "HERE1" << endl;
+			//cout << "HERE1" << endl;
 			return -1;
 		}
 		scaled[i-k] = mod(a[i][k]/max_i);
@@ -42,7 +42,7 @@ int escalate_rows_and_compare_and_swap(double **a,int *perm,int k,int n,double t
 	int M_pos = max_pos(scaled,n-k);
 	cout << scaled[M_pos] << endl;
 	if (scaled[M_pos] < tol) {
-		cout << "HERE2" << endl;
+		//cout << "HERE2" << endl;
 		return -1;
 	}
 	int number = 0;
@@ -62,7 +62,7 @@ int lu(double **a, int n, int *perm, double tol) {
 		if (e >= 0) {
 			total_swaps += e;
 			if (mod(a[k][k]) <= tol) {
-				cout << "HERE3" << endl;
+				//cout << "HERE3" << endl;
 				return 0;
 			}
 			for (int i = k+1; i < n; ++i) {

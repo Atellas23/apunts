@@ -17,6 +17,8 @@ void test(double **a, double *b, int n) {
 		cerr << "Error: could not open file." << endl;
 		exit(-1);
 	}
+	test.setf(ios::scientific);
+	test.precision(12);
 	for (int i = 0; i < n; ++i) {
 		test << a[i][0];
 		for (int j = 1; j < n; ++j) {
