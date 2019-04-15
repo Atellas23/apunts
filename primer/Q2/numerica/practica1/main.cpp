@@ -10,44 +10,6 @@ void swap_doubles(double& a,double& b) {
 	b = aux;
 }
 
-void test(double **a, double *b, int n) {
-	ofstream test;
-	test.open("test.dat",ofstream::out);
-	if (test.fail()) {
-		cerr << "Error: could not open file." << endl;
-		exit(-1);
-	}
-	test.setf(ios::scientific);
-	test.precision(12);
-	for (int i = 0; i < n; ++i) {
-		test << a[i][0];
-		for (int j = 1; j < n; ++j) {
-			test << ' ' << a[i][j];
-		}
-		test << "   ----   " << b[i] << endl;
-	}
-	test.close();
-}
-
-void test2(double **a, double *b, int n) {
-	ofstream sys;
-	sys.open("system.dat",ofstream::out);
-	if (sys.fail()) {
-		cerr << "Error: could not open file." << endl;
-		exit(-1);
-	}
-	sys.setf(ios::scientific);
-	sys.precision(12);
-	for (int i = 0; i < n; ++i) {
-		sys << a[i][0];
-		for (int j = 1; j < n; ++j) {
-			sys << ' ' << a[i][j];
-		}
-		sys << "   ----   " << b[i] << endl;
-	}
-	sys.close();
-}
-
 double *vector(int n) {
 	double *b;
 	b = new double[n];
@@ -89,7 +51,6 @@ int main(int argc, char *argv[]) {
 		cerr << "Error: data file does not exist in directory." << endl;
 		exit(-1);
 	}
-	cout << "Reading file..." << endl;
 	int n,m,i,j;
 	fitxerDades >> n >> m;
 	double **a = matrix(n,n);
@@ -101,17 +62,13 @@ int main(int argc, char *argv[]) {
 	for (int l = 0; l < q; ++l)
 		fitxerDades >> j >> b[j];
 	fitxerDades.close();
-	cout << "File read!" << endl;
-	test2(a,b,n);
 	double *x = vector(n);
     double tol = 1e-12;
-    cout << "Performing decomposition..." << endl << "..." << endl;
     int solved = sistema(a,x,b,n,tol);
 	if (solved == 0) {
 		cerr << "Matrix is singular!" << endl;
 		exit(-1);
 	}
-	cout << "Decomposition finished and system solved successfully!" << endl << "Writing results to res.dat..." << endl;
 	//out
 	ofstream results;
 	results.open("res.dat",ofstream::out);
@@ -124,9 +81,7 @@ int main(int argc, char *argv[]) {
 	for (int l = 0; l < n; ++l)
 		results << l << ' ' << x[l] << endl;
 	results.close();
-	test(a,b,n);
 	eraseMatrix(a,n);
 	eraseVector(b);
 	eraseVector(x);
-	cout << "Results written successfully!" << endl << "Exiting program." << endl;
 }
