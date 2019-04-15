@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 	}
 	//out
 	ofstream results;
-	results.open("res.dat",ofstream::out);
+	results.open("results.dat",ofstream::out);
 	if (results.fail()) {
 		cerr << "Error: could not open file." << endl;
 		exit(-1);
