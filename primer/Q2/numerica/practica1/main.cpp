@@ -29,6 +29,25 @@ void test(double **a, double *b, int n) {
 	test.close();
 }
 
+void test2(double **a, double *b, int n) {
+	ofstream sys;
+	sys.open("system.dat",ofstream::out);
+	if (sys.fail()) {
+		cerr << "Error: could not open file." << endl;
+		exit(-1);
+	}
+	sys.setf(ios::scientific);
+	sys.precision(12);
+	for (int i = 0; i < n; ++i) {
+		sys << a[i][0];
+		for (int j = 1; j < n; ++j) {
+			sys << ' ' << a[i][j];
+		}
+		sys << "   ----   " << b[i] << endl;
+	}
+	sys.close();
+}
+
 double *vector(int n) {
 	double *b;
 	b = new double[n];
@@ -83,7 +102,7 @@ int main(int argc, char *argv[]) {
 		fitxerDades >> j >> b[j];
 	fitxerDades.close();
 	cout << "File read!" << endl;
-	//test(a,b,n);
+	test2(a,b,n);
 	double *x = vector(n);
     double tol = 1e-12;
     cout << "Performing decomposition..." << endl << "..." << endl;
