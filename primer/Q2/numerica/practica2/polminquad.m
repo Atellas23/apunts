@@ -14,7 +14,7 @@ y=y(:);
 N=vander(x);
 m=size(N,1); %nombre de files
 M=N(:,m-grau:m);
-n=size(M,2); %nombre de columnes
+n=size(M,2); %nombre de columnes, grau+1
 Q=M; %dimensions m*(grau+1)
 R=zeros(n); %dimensions (grau+1)*(grau+1)
 
@@ -28,7 +28,7 @@ end
 R(n,n)=norm(Q(:,n));
 Q(:,n)=Q(:,n)/R(n,n);
 
-norm(Q'*Q-eye(n),inf)
+Qortogonal = norm(Q'*Q-eye(m),inf)
 
 %Solucionem el sistema triangular superior Ra=Q'*y, equivalent a M'*Ma=M'*y
 a = zeros(n,1);
