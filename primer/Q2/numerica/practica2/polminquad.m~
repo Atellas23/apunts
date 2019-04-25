@@ -1,4 +1,4 @@
-function [coefs, norm2res] = polyminquad(x,y,grau,plt)
+function [coefs, norm2res] = polminquad(x,y,grau,plt)
 %POLYMINQUAD    Calcula l'aproximació polinomial de les dades de x i y pel
 %mètode de mínims quadrats.
 %INPUT:
@@ -9,16 +9,18 @@ function [coefs, norm2res] = polyminquad(x,y,grau,plt)
 %OUTPUT:
 %coefs: vector de coeficients del polinomi aproximador.
 %norm2res: norma-2 del residu, ||A'A(coefs)=y||_2.
+x=x(:)';
+y=y(:)';
 x=transpose(x);
 y=transpose(y);
-M=vander(x);
+N=vander(x);
 m=size(M,1); %nombre de files
-A=M(:,m-grau:m);
-n=size(A,2); %nombre de columnes
-Q=A; %dimensions m*(q+1)
-R=zeros(n); %dimensions (q+1)*(q+1)
+M=N(:,m-grau:m);
+n=size(M,2); %nombre de columnes
+Q=M; %dimensions m*(grau+1)
+R=zeros(n); %dimensions (grau+1)*(grau+1)
 
-%Descomposem QR
+%Descomposem M=QR
 for k=1:n-1
     R(k,k)=norm(Q(:,k));
     Q(:,k)=Q(:,k)/R(k,k);
@@ -28,15 +30,25 @@ end
 R(n,n)=norm(Q(:,n));
 Q(:,n)=Q(:,n)/R(n,n);
 
-%Solucionem el sistema triangular superior R*a=Q'*y
+norm(Q'*Q-eye(n),inf)
+
+%Solucionem el sistema triangular superior Ra=Q'*y, equivalent a M'*Ma=M'*y
 a = zeros(n,1);
+b = Q'*y;
 a(m)=b(m)/R(m,m);
 for k=m-1:-1:1
-    a(k) = (a(k) - A(k,k+1:n)*a(k+1:n))/A(k,k);
+    a(k) = (a(k) - R(k,k+1:n)*a(k+1:n))/R(k,k);
 end
-res = norm(A*x-b);
+coefs = a;
+norm2res = norm(Ma-y,2);
 
-
+if (nargin == 4)
+    xx = linspace(x(1),x(end),plt);
+    plot(x,y,'ro')
+    hold on
+    yy = polyval(coefs,xx);
+    plot(xx,yy,'b-')
+end
 
 
 
