@@ -5,13 +5,10 @@ function [coefs, norm2res] = polminquad(x,y,grau,plt)
 %x: vector d'abcisses.
 %y: vector d'ordenades.
 %grau: grau del polinomi que es vol.
-%plt: (opcional) nombre de punts a utilitzar per dibuixar la gràfica de
-%l'aproximació.
+%plt: nombre de punts a utilitzar per dibuixar la gràfica de la funció.
 %OUTPUT:
 %coefs: vector de coeficients del polinomi aproximador.
-%norm2res: norma-2 del residu, ||A*coefs-y||_2, on A és la matriu formada
-%per les últimes grau+1 columnes de la matriu de Vandermonde generada pel
-%vector x.
+%norm2res: norma-2 del residu, ||A*coefs)-y||_2, on A és la matriu formada 
 %Imprimeix per pantalla la norma-infinit de Q'*Q-Id, anomenada
 %residu_Q_ortogonal.
 x=x(:);
