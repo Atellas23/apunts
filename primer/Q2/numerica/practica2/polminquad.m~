@@ -32,6 +32,7 @@ for k=1:n-1
 end
 R(n,n)=norm(Q(:,n));
 Q(:,n)=Q(:,n)/R(n,n);
+
 residu_Q_ortogonal = norm(Q'*Q-eye(n),inf)
 
 %Solucionem el sistema triangular superior Ra=Q'*y, equivalent a M'*Ma=M'*y
