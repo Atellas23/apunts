@@ -1,4 +1,4 @@
-function [coefs, norm2res] = polminquad(x,y,grau,plt)
+function [coefs, norm2Res] = polminquad(x,y,grau,plt)
 %POLMINQUAD    Calcula l'aproximació polinomial de les dades de x i y pel
 %mètode de mínims quadrats.
 %INPUT:
@@ -23,7 +23,7 @@ n=size(A,2); %nombre de columnes=grau+1
 Q=A; %dimensions m*(grau+1)
 R=zeros(n); %dimensions (grau+1)*(grau+1)
 
-%Descomposem M=QR
+%Descomposem A=QR
 for k=1:n-1
     R(k,k)=norm(Q(:,k));
     Q(:,k)=Q(:,k)/R(k,k);
@@ -32,7 +32,6 @@ for k=1:n-1
 end
 R(n,n)=norm(Q(:,n));
 Q(:,n)=Q(:,n)/R(n,n);
-
 residu_Q_ortogonal = norm(Q'*Q-eye(n),inf)
 
 %Solucionem el sistema triangular superior Ra=Q'*y, equivalent a M'*Ma=M'*y
@@ -43,7 +42,7 @@ coefs(n)=b(n)/R(n,n);
 for k=n-1:-1:1
     coefs(k)=(b(k)-R(k,k+1:n)*coefs(k+1:n))/R(k,k);
 end
-norm2res=norm(A*coefs-y,2);
+norm2Res=norm(A*coefs-y);
 
 if (nargin==4)
     xx=linspace(x(1),x(end),plt);
@@ -51,7 +50,7 @@ if (nargin==4)
     hold on
     yy=polyval(coefs,xx);
     plot(xx,yy,'b-')
-    title('mínims quadrats')
+    title('Mínims quadrats')
     xlabel('x')
     ylabel('y')
     legend('punts','polinomi')
