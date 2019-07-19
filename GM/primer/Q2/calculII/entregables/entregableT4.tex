@@ -1,0 +1,39 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{float}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{breqn}
+\title{Càlcul Diferencial}
+\author{Àlex Batlle Casellas}
+\newcommand{\rn}[1]{\mathbb{R}^{#1}}
+\DeclareMathOperator{\img}{Im}
+
+\begin{document}
+\begin{small}
+Àlex Batlle Casellas
+\end{small}
+\paragraph{15.} Siguin $f\in\mathbb{C}^1(\mathbb{R},\mathbb{R})$ estrictament creixent i $G:\ \rn{2}\rightarrow\rn{2}$ definida per $G(x,y)=(f(x),-y+xf(x))$.
+\begin{itemize}
+\item[(a)] Demostreu que $G$ satisfà les hipòtesis del teorema de la funció inversa, en tots els punts de $\rn{2}$.
+\item[(b)] Donat $(u_0,v_0)\in\img{G}$, calculeu $DG^{-1}(u_0,v_0)$.
+\item[(c)] Demostreu que $G$ és injectiva i calculeu l'expressió explícita de $G^{-1}$.
+\end{itemize}
+\paragraph{19.} Considereu el sistema d'equacions
+\[
+\begin{cases}
+x-u-v=0\\
+y-u^2-v^2=0\\
+z-u^3-v^3=0.
+\end{cases}
+\]
+Trobeu els punts $p=(x_0,y_0,z_0,u_0,v_0)\in\rn{5}$ que compleixin les dues condicions següents:
+\begin{itemize}
+\item[(a)] el sistema defineix funcions implícites diferenciables, $z=f_1(x,y),u=f_2(x,y),v=f_3(x,y)$, al voltant de $p$.
+\item[(b)] la derivada direccional de $f_1$ en $(x_0,y_0)$ és màxima en la direcció del vector $(1,0)$, i el valor d'aquesta derivada és 3.
+\end{itemize}
+\end{document}
+

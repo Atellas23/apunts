@@ -1,0 +1,135 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage[margin=3cm]{geometry}
+\usepackage{color}
+\usepackage{enumitem}
+\title{Exercicis: Àlgebra Lineal}
+\author{Àlex Batlle Casellas}
+\renewcommand*\contentsname{Índex}
+\newlist{legal}{enumerate}{10}
+\setlist[legal]{label*=\arabic*.}
+\newcommand{\pendent}{\textbf{\textcolor{red}{PENDENT D'ACABAR.}}\\}
+\DeclareMathOperator{\nuc}{Nuc}
+\DeclareMathOperator{\img}{Im}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\rg}{rg}
+
+\begin{document}
+
+\begin{small}
+Àlex Batlle Casellas
+\end{small}\\
+
+\begin{legal}
+	\item $c=0.3$, $x(0)=\begin{pmatrix}S_0\\ L_0\\ I_0\end{pmatrix}=\begin{pmatrix}3350000\\ 2100\\ 1500\end{pmatrix}$.\\
+	\begin{legal}
+	\item[a)] Per calcular la població a finals d'any i la seva distribució respecte l'afectació pel virus de l'èbola, fem el càlcul pel sistema dinàmic donat,
+	$$
+	x(0)=\begin{pmatrix}3350000\\ 2100\\ 1500\end{pmatrix},
+	\quad x(k+1)=Ax(k),
+	\quad A=\begin{pmatrix}
+	1.03 & 0 & -0.3\\
+	0.1 & 0.5 & 0.3\\
+	0 & 0.5 & 0.1
+	\end{pmatrix}.
+	$$
+	Busquem, per tant, $x(52)=Ax(51)=\cdots=A^{52}x(0)$. Per fer més senzill el càlcul, utilitzaré WolframAlpha. Així doncs, els resultats obtinguts són:
+	$$
+	x(52)=A^{52}x(0)=\begin{pmatrix}
+	1.03 & 0 & -0.3\\
+	0.1 & 0.5 & 0.3\\
+	0 & 0.5 & 0.1
+	\end{pmatrix}^{52}
+	\begin{pmatrix}3350000\\ 2100\\ 1500\end{pmatrix}=
+	\begin{pmatrix}1135337.536\\ 377054.217\\ 215967.926\end{pmatrix},
+	$$
+	que aproximarem al vector amb nombres enters següent:
+	$$
+	x(52)=\begin{pmatrix}1135338\\ 377054\\ 215968\end{pmatrix}.
+	$$
+	\item[b)] Volem trobar les solucions del sistema següent en funció dels seus valors i vectors propis:
+	$$
+	x(k+1)=Ax(k)=\begin{pmatrix}
+	1.03 & 0 & -0.3\\
+	0.1 & 0.5 & 0.3\\
+	0 & 0.5 & 0.1
+	\end{pmatrix}
+	\begin{pmatrix}S_k\\ L_k\\ I_k\end{pmatrix}
+	=\cdots=
+	\begin{pmatrix}
+	1.03 & 0 & -0.3\\
+	0.1 & 0.5 & 0.3\\
+	0 & 0.5 & 0.1
+	\end{pmatrix}^k
+	\begin{pmatrix}S_0\\ L_0\\ I_0\end{pmatrix}.
+	$$
+	Per tant, busquem els vectors propis de la matriu $A$, altre cop utilitzant WolframAlpha. En surten tres; això indica que cada espai propi per cadascun dels valors propis té dimensió 1 i per tant, que la matriu diagonalitza. Els vectors propis són:
+	$$
+	v_1\approx\begin{pmatrix}0.254\\ -0.500\\ 1\end{pmatrix},\quad v_2\approx\begin{pmatrix}1.347\\ 1.415\\ 1\end{pmatrix}\quad, v_3\approx\begin{pmatrix}5.257\\ 1.746\\ 1\end{pmatrix},
+	$$
+	de corresponents valors propis
+	$$
+	\lambda_1=-0.150233\quad \lambda_2=0.807303 \quad \lambda_3=0.97293.
+	$$
+	Ara podem trobar $A$ en la seva forma diagonal, que anomenarem $D_A$, posant els valors propis a la diagonal d'una matriu buida:
+	$$
+D_A=	\begin{pmatrix}
+	\lambda_1 & 0 & 0\\
+	0 & \lambda_2 & 0\\
+	0 & 0 & \lambda_3
+	\end{pmatrix}=\begin{pmatrix}
+	-0.150233 & 0 & 0\\
+	0 & 0.807303 & 0\\
+	0 & 0 & 0.97293
+	\end{pmatrix}.
+	$$
+	També ens seran útils per trobar les solucions les matrius de canvi de base de la base canònica a la base de vectors propis i viceversa. Aquestes, a les que anomenarem $P$ i $P^{-1}$ són:
+	$$
+	P=\begin{pmatrix}
+	0.254187 & 1.34712 & 5.25669\\
+	-0.500465 & 1.41461 & 1.74586\\
+	1 & 1 & 1
+	\end{pmatrix},\ 
+	P^{-1}=\begin{pmatrix}
+	0.464914 & -0.548707 & 0.713574\\
+	-0.315271 & 0.702099 & 0.431514\\
+	0.268779 & -0.153393 & -0.145088
+	\end{pmatrix}.
+	$$
+	Ara les solucions $x(k)$ les podem calcular fàcilment ja que sabem que els vectors solució de $x(k+1)=Ax(k)$ són els vectors solució de $x(k)=A^kx(0)$. Com que tenim $x(0)$ i $A$ diagonalitzada, el càlcul resulta senzill. Els $x(k)$ seran
+	%P={{0.254187, 1.34712, 5.25669}, {-0.500465, 1.41461, 1.74586}, {1., 1., 1.}}
+	$$
+	x(k)=A^kx(0)=(P^{-1}D_AP)^kx(0)=P^{-1}D_A^kPx(0)\approx$$
+	$$
+	\begin{pmatrix}
+	0.465 & -0.549 & 0.714\\
+	-0.315 & 0.702 & 0.432\\
+	0.269 & -0.153 & -0.145
+	\end{pmatrix}\begin{pmatrix}
+	(-0.150)^k & 0 & 0\\
+	0 & 0.807^k & 0\\
+	0 & 0 & 0.973^k
+	\end{pmatrix}\begin{pmatrix}
+	0.254 & 1.347 & 5.257\\
+	-0.500 & 1.415 & 1.746\\
+	1 & 1 & 1
+	\end{pmatrix}\begin{pmatrix}3350000\\ 2100\\ 1500\end{pmatrix}
+	.
+	$$
+	\item[c)] Efectivament, com es pot veure a la matriu diagonal $D_A$ els elements de la diagonal són menors que 1. Per tant, en calcular-ne les potències per una $k$ arbitràriament gran, veiem com la matriu cada vegada "s'apropa" més a la matriu nul·la. Com que quan es multiplica qualsevol matriu per la nul·la el resultat és una matriu nul·la, veiem doncs que la població de Libèria tendeix a l'extinció.
+	\item[d)] Un possible procediment podria ser veure quan la matriu $D_A$ s'apropa a la matriu nul·la amb els nostres criteris d'aproximació. Si agafem els tres primers decimals com a bons per determinar el nombre real que apareix a la diagonal de $D_A$, veiem que el que més triga a ser igual a zero és el tercer valor propi, 0.973, que per tenir els tres primers decimals iguals a zero ha de ser elevat a 253. Per veure si realment coincideix l'aproximació que hem fet i el moment exacte en el que es produeix l'extinció, calculem l'estat del sistema a la setmana 253. Com a resultat, tenim que
+	$$
+	x(253)=\begin{pmatrix}
+	4565.88\\ 1516.43\\ 868.585
+	\end{pmatrix},
+	$$
+	diferent de la matriu nul·la. Efectivament, doncs, aquesta és una mala manera d'aproximar el resultat. D'altra banda, podem aplicar la força bruta i trobar una $k$ per la qual el resultat numèric a WolframAlpha sigui el vector 0 i a partir d'aquí, fer una cerca binària per trobar la $k$ que compleix $x(k)=0$.
+	%{{1.03,0,-0.3},{0.1,0.5,0.3},{0,0.5,0.1}}^253{{3350000},{2100},{1500}}
+	\end{legal}
+\end{legal}
+\end{document}

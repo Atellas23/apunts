@@ -1,0 +1,78 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{float}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{color}
+\usepackage{breqn}
+\title{Càlcul Diferencial}
+\author{Àlex Batlle Casellas}
+\DeclareMathOperator{\Rn}{\mathbb{R}^n}
+\DeclareMathOperator{\Rm}{\mathbb{R}^m}
+\DeclareMathOperator{\fr}{Fr}
+\DeclareMathOperator{\intr}{Int}
+\DeclareMathOperator{\ext}{Ext}
+\DeclareMathOperator{\maxi}{max}
+
+\begin{document}
+\begin{small}
+Àlex Batlle Casellas
+\end{small}
+\paragraph{12.} Si $A\subset\Rm$, demostreu que:
+\begin{itemize}
+	\item[a)] $\mathring A$ és el conjunt obert més gran contingut en $A$. És a dir, si $B$ és un obert dins $A$, aleshores $B\subset\mathring A$.
+	\item[b)] $\bar{A}$ és el conjunt tancat més petit que conté $A$. És a dir, si $C$ és un tancat que conté $A$, aleshores $
+\bar{A}\subset C$.
+\end{itemize}
+\paragraph{Resolució}
+\begin{itemize}
+	\item[a)] $B$ és obert$\iff\mathring B=B\iff\forall p\in B\ \exists B_r(p)\subset B\implies\forall p\in B\subset A\ \exists B_r(p)\subset B\subset A\implies\mathring B\subset\mathring A\implies B\subset\mathring A.\square$
+	\item[b)] $\forall p\in\bar{A}\ (\forall B_r(p)\ A\cap B_r(p)\neq\emptyset)\implies\forall p\in\bar{A}\ (\forall B_r(p)\ C\cap B_r(p)\neq\emptyset)\implies\forall p\in\bar{A},p\in\bar{C}=C\implies\bar{A}\subset C.\square$
+\end{itemize}
+\paragraph{13.} Donats dos conjunts $A,B$, es defineix $A+B=\{x+y\ \vert\ x\in A, y\in B\}$. Suposeu $A$ obert.
+\begin{itemize}
+	\item[a)] Demostreu que si $y\in B$, el conjunt $A+\{y\}$ és obert.
+	\item[b)] Demostreu que el conjunt $A+B$ és obert.
+\end{itemize}
+\paragraph{Resolució}
+\begin{itemize}
+	\item[a)] $A+\{y\}=\{a+y\ \vert\ a\in A\}$. Com que la suma ha d'estar ben definida, sumar $y$ al conjunt és anàleg a fer un desplaçament fixat de tot el conjunt $A$. Aquesta operació no modifica l'estructura d'$A$, doncs només el desplaça a una altra localització dins del conjunt ambient $M$, i els elements de la frontera d'$A$ segueixen sense pertànyer a $A+\{y\}$. Per tant, sabent que $\intr A,\fr A,\ext A$ formen una partició del conjunt ambient per qualsevol conjunt $A$, segueix que $A+\{y\}=\intr(A+\{y\})$, i per tant, $A+\{y\}$ és un obert.$\square$
+	\item[b)] Això ho podem veure utilitzant l'apartat anterior; $A+B=\{a+b\ \vert\ a\in A,b\in B\}$ és el mateix que la unió següent:
+	$$
+	\bigcup_{y\in B}(A+\{y\}).
+	$$
+	Com que $A+\{y\}$ és obert i és sabut que la unió arbitrària d'oberts és oberta, es dedueix que $A+B$ és un obert.
+\end{itemize}
+\paragraph{15.} Demostreu que:
+\begin{itemize}
+	\item[a)] La intersecció d'un nombre arbitrari (finit o infinit) de subconjunts compactes de $\Rn$ també és compacte.
+	\item[b)] La unió d'un nombre finit de subconjunts compactes de $\Rn$ també és compacte.
+	\item[c)] La unió d'un nombre infinit de subconjunts compactes de $\Rn$ pot no ser compacte. (Doneu-ne exemples).
+\end{itemize}
+\paragraph{Resolució}
+\begin{itemize}
+	\item[a)] Com que ens trobem a $\Rn$, n'hi ha prou amb veure que la intersecció arbitrària de tancats és tancada (vist a teoria) i que la intersecció arbitrària de fitats és fitada.
+	\begin{itemize}
+		\item[Tancada.] Vist a teoria.
+		\item[Fitada.] Tenim un nombre arbitrari de conjunts fitats $\{A_{\alpha}\},A_{\alpha}\subseteq M$. Sabem, com a propietat elemental de conjunts, que $\bigcap_{\alpha}A_{\alpha}\subseteq A_i\ \forall i.$ Com que els $A_i$ són fitats, existeix una bola $B_{r_i}(p_i)$, per algun $p_i\in A_i$ tal que $A_i\subseteq B_{r_i}(p_i)$. Per tant, sigui $B_{r_0}(p_0)$ la bola més gran que fita els conjunts $A_i$; aleshores tenim $\bigcap_{\alpha}A_{\alpha}\subseteq A_i\subseteq B_{r_0}(p_0)\ \forall i$ i, per tant, $\bigcap_{\alpha}A_{\alpha}$ està fitat.$\square$
+	\end{itemize}
+	\item[b)] Com que ens trobem a $\Rn$, n'hi ha prou amb veure que la unió finita de tancats és tancada (vist a teoria) i que la unió finita de fitats és fitada.
+	\begin{itemize}
+		\item[Tancada.] Vist a teoria.
+		\item[Fitada.] Sigui $\{A_{\alpha}\}$ una família finita de $n$ subconjunts fitats de $\Rn$. Aleshores, segueix que $\forall\alpha\ \exists p_{\alpha}\in A_{\alpha},r_{\alpha}\in\mathbb{R}^+:A_{\alpha}\subseteq B_{r_{\alpha}}(p_{\alpha})$. Aleshores, siguin $p_0$ un $p_{\alpha}$ qualsevol i $r_0=\maxi\{r_1,\ldots,r_n\}+\maxi_j\{d(p_0,p_j)\}$. Llavors tenim
+		$$
+		\bigcup_{\alpha}A_{\alpha}\subseteq B_{r_0}(p_0).
+		$$
+	\end{itemize}
+	\item[c)] Donaré dos exemples:
+	\begin{itemize}
+		\item[(1)] Siguin $I_n=[-n,n]\subset\mathbb{R}$. Aleshores, tenim $\bigcup_{n=1}^{\infty}I_n=\mathbb{R}$, que no és compacte.
+		\item[(2)] Siguin $T_n\equiv\bar{B}_n(0)\subset\mathbb{R}^m$. Aleshores, tenim $\bigcup_{n=1}^{\infty}T_n=\Rm$, que tampoc és compacte.
+	\end{itemize}
+	En tots dos exemples, tant $I_n$ com $T_n$ són compactes doncs són tancats i fitats (i sabem que a $\mathbb{R}^n$ això equival a ser compacte).
+\end{itemize}
+
+\end{document}
+
