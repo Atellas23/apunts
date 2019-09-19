@@ -1,0 +1,594 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{float}
+\usepackage[margin=1.25in]{geometry}
+\usepackage{color}
+\usepackage{breqn}
+\newcommand{\kev}{$\mathbb{K}$-e.v. }
+\newcommand{\af}{\mathbb{A}}
+\newcommand{\props}{\underline{\textbf{Propiedades}}:\\}
+\newcommand{\defi}{\underline{\textbf{Definición}}:\\}
+\newcommand{\prop}{\underline{\textbf{Proposición}}:\\}
+\newcommand{\dem}{\underline{\textbf{Demostración}}:\\}
+\newcommand{\ej}{\underline{Ejemplos}:\\}
+\newcommand{\obs}{\underline{\textbf{Observación}}: }
+\newcommand{\cor}{\underline{\textbf{Corolario}}:\\}
+\title{Geometría Afín y Euclídea}
+\author{Àlex Batlle Casellas}
+\renewcommand*\contentsname{Índex}
+\DeclareMathOperator{\rg}{rg}
+\DeclareMathOperator{\nuc}{Nuc}
+\DeclareMathOperator{\cuerpo}{\mathbb{K}}
+
+\begin{document}
+
+\begin{titlepage}
+	\centering
+	{\scshape\LARGE Facultat de Matemàtiques i Estadística \par}
+	\vspace{1cm}
+	{\scshape\Large Universitat Politècnica de Catalunya - BarcelonaTech\par}
+	\vspace{1.5cm}
+	{\huge\bfseries Geometría Afín y Euclídea (Q2)
+	\par}
+	\vspace{2cm}
+	{\Large\itshape Àlex Batlle Casellas\par}
+
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
+%\section*{Resumen}
+
+\vfill
+\newpage\tableofcontents
+\newpage
+\section{Espacio Afín.}
+\subsection{Definiciones.}
+\defi Sea $E$ un \kev Un \textbf{espacio afín} asociado a $E$ es una triple $\af=(A,E,\delta)$ donde $A$ es un conjunto y $\delta$ es una aplicación
+\begin{align*}
+  \delta \colon A\times A &\to E\\
+  (p,q) &\mapsto \delta(p,q).
+\end{align*}
+que cumple con las siguientes propiedades:
+\begin{enumerate}
+	\item $\forall p_1,p_2,p_3\in A,\ \delta(p_1,p_2)+\delta(p_2,p_3)=\delta(p_1,p_3).$
+	\item $\forall p\in A$, la siguiente aplicación es biyectiva:
+	\begin{align*}
+		\delta_p \colon A &\to E\\
+		q &\mapsto \delta_p(q):=\delta(p,q).
+	\end{align*}
+\end{enumerate}
+A los elementos de $A$ les llamaremos \textbf{puntos}. Usaremos la siguiente notación:
+\begin{enumerate}
+	\item $\dim A:=\dim E.$
+	\item Si $\vec{u}=\delta(p,q)$, $p$ es el \textbf{origen} de $\vec{u}$ y $q$ es su \textbf{extremo}.
+	\item $\delta(p,q):=\vec{pq}=q-p.$
+	\item Usando la anterior notación, la propiedad (1): $(p_2-p_1)+(p_3-p_2)=(p_3-p_1).$
+	\item Si $\vec{u}=\vec{pq}=q-p \implies q=p+\vec{u}.$
+\end{enumerate}
+\ej \begin{enumerate}
+	\item $\af=((0,\infty),\mathbb{R},\delta):$
+	\begin{align*}
+		\delta \colon A\times A &\to E\\
+		(p,q) &\mapsto \delta(p,q):=\ln q-\ln p.
+	\end{align*}
+	Comprobemos las propiedades:
+	\begin{itemize}
+		\item Propiedad 1: $\delta(p_1,p_2)+\delta(p_2,p_3)=(\ln p_2-\ln p_1)+(\ln p_2-\ln p_3)=\ln p_3-\ln p_1=\delta(p_1,p_3).$
+		\item Propiedad 2: Si fijamos $p$,
+		\begin{align*}
+			\delta_p \colon A &\to E\\
+			q &\mapsto \delta_p(q):=\ln q-\ln p
+		\end{align*}
+		es biyectiva.$\square$
+	\end{itemize}
+	\item $\af=(\mathbb{R}^2,\mathbb{R}^2,\delta)$, y $\delta$ es la aplicación tal que si $p=(x_1,y_1),q=(x_2,y_2)$, entonces
+	\begin{align*}
+		\delta \colon A\times A &\to E\\
+		(p,q) &\mapsto \delta(p,q):=(x_2-x_1,y_2-y_1).
+	\end{align*}
+\end{enumerate}
+\defi $\af^n_{\mathbb{K}}$ es el espacio afín definido como $\af=(\mathbb{K}^n,\mathbb{K}^n,\delta)$, y $\delta$ es la aplicación de \textbf{resta de coordenadas}.\\
+\props Sea $\af$ un espacio afín:
+\begin{enumerate}
+	\item $\delta(p,q)=\vec{0}\iff q=p.$
+	\item $\delta(p,q)=-\delta(q,p).$
+	\item $\delta(p_1,p_2)=\delta(p_3,p_4)\iff \delta(p_1,p_3)=\delta(p_2,p_4).$ (regla del paralelogramo)
+\end{enumerate}
+\dem
+\begin{enumerate}
+	\item \begin{enumerate}
+		\item $\Leftarrow$) Cojamos $\vec{u}\in E$. Recordemos que $\delta_p$ es biyectiva para todo $p\in A$ fijado. Entonces, $\exists q\in A$ tal que $\vec{u}=\delta(p,q)$. Entonces, $\delta(p,p)+\vec{u}=\delta(p,p)+\delta(p,q)=\delta(p,q)=\vec{u}\implies\delta(p,p)=\vec{0}.$
+		\item $\Rightarrow$) Por hipótesis, $\delta(p,q)=\vec{0}$, y como ya hemos visto, $\delta(p,p)=\vec{0}$. Como $\delta_p$ es biyectiva, $p=q.\square$
+	\end{enumerate}
+	\item $\delta(p,q)+\delta(q,p)=\delta(p,p)=\vec{0}\implies \delta(p,q)=-\delta(q,p).\square$
+	\item Por simetría, solo hace falta demostrar una dirección. Por tanto, demostremos $\Rightarrow$, con hipótesis $\delta(p_1,p_2)=\delta(p_3,p_4)$:
+	$$\delta(p_1,p_3)=\delta(p_1,p_2)+\delta(p_2,p_3)=\delta(p_3,p_4)+\delta(p_2,p_3)=\delta(p_2,p_4).\square$$
+\end{enumerate}
+\subsection{Combinaciones afines de puntos.}
+\obs Hasta ahora, las "operaciones" definidas son:
+\begin{enumerate}
+	\item Combinaciones lineales de vectores en $E$.
+	\item $p,q\in A\implies \delta(p,q)=q-p\in E.$
+	\item $p\in A,\vec{u}\in E\implies p+\vec{u}\in A.$
+\end{enumerate}
+En general, hacer "combinaciones lineales" de una colección de puntos $p_1,\ldots,p_r\in A$, $\alpha_1,\ldots,\alpha_r\in\mathbb{K}$,
+$$\alpha_1p_1+\ldots+\alpha_rp_r=\sum_{i=1}^r\alpha_ip_i$$
+no tiene sentido, pero hay \textbf{dos casos} en los que sí lo tiene:
+\begin{enumerate}
+	\item $\sum\alpha_i=1$.\\
+	\defi Sean $p_1,\ldots,p_r\in A$, $\alpha_1,\ldots,\alpha_r\in\mathbb{K}$ tales que $\sum_{i=1}^r\alpha_i=1$. Entonces, por definición,
+	$$
+	\sum_{i=1}^r\alpha_ip_i:=\bar{p}+\sum_{i=1}^r\alpha_i(p_i-\bar{p})\in A,\textrm{ cogiendo }\bar{p}\in A\textrm{ como punto auxiliar.}
+	$$
+	\prop El proceso anterior no depende del punto auxiliar $\bar{p}$ que escojamos.\\
+	\dem Sean $\bar{p},\bar{\bar{p}}\in A$ puntos cualesquiera de $A$. Entonces,
+	\begin{dmath}
+	\bar{p}+\sum\alpha_i(p_i-\bar{p})=\bar{\bar{p}}+\sum\alpha_i(p_i-\bar{\bar{p}})\iff (\bar{p}-\bar{\bar{p}})+\sum\alpha_i(p_i-\bar{p})=(\bar{\bar{p}}-\bar{\bar{p}})+\sum\alpha_i(p_i-\bar{\bar{p}})\iff (\bar{p}-\bar{\bar{p}})+\sum\alpha_i[(p_i-\bar{p})-(p_i-\bar{\bar{p}})]=\vec{0}\iff (\bar{p}-\bar{\bar{p}})+\sum\alpha_i[(p_i-\bar{p})+(\bar{\bar{p}}-p_i)]=\vec{0}\iff (\bar{p}-\bar{\bar{p}})+\sum\alpha_i[(\bar{\bar{p}}-\bar{p})]=\vec{0}\iff (\bar{p}-\bar{\bar{p}})+(\bar{\bar{p}}-\bar{p})=\vec{0}\iff\delta(\bar{p},\bar{p})=\vec{0}.\square
+	\end{dmath}
+	\defi Dada una colección de puntos $p_1,\ldots,p_m\in A$, el \textbf{baricentro} de todos ellos es el punto $b$ resultante de la combinación afín siguiente:
+	$$
+	b=\dfrac{1}{m}p_1+\dfrac{1}{m}p_2+\ldots+\dfrac{1}{m}p_m=\sum_{i=1}^m\dfrac{1}{m}p_i\in A.
+	$$
+	\item $\sum\alpha_i=0$.\\
+	\defi Sean $p_1,\ldots,p_r\in A$, $\alpha_1,\ldots,\alpha_r\in\mathbb{K}$ tales que $\sum_{i=1}^r\alpha_i=0$. Entonces, por definición,
+	$$
+	\sum_{i=1}^r\alpha_ip_i:=\sum_{i=1}^r\alpha_i(p_i-\bar{p})\in E,\textrm{ cogiendo }\bar{p}\in A\textrm{ como punto auxiliar.}
+	$$
+	\prop El proceso anterior no depende del punto auxiliar $\bar{p}$ que escojamos.\\
+	\dem Sean $\bar{p},\bar{\bar{p}}\in A$ puntos cualesquiera de $A$. Entonces,
+	\begin{dmath}
+	\sum\alpha_i(p_i-\bar{p})=\sum\alpha_i(p_i-\bar{\bar{p}})\iff 
+	\end{dmath}
+\end{enumerate}
+\obs Combinaciones de puntos.
+\begin{enumerate}
+	\item $\af^n_{\mathbb{K}}$. En esta situación, sean $p_1=(a_1,\ldots,a_n)$, $p_2=(b_1,\ldots,b_n)$. Entonces, $\alpha_1p_1+\alpha_2p_2=(\alpha_1a_1+\alpha_2b_1,\ldots,\alpha_1a_n+\alpha_2b_n)$ (si $\alpha_1+\alpha_2=0$ o $\alpha_1+\alpha_2=1$).
+	\item Ejemplo: $p_1-\dfrac{3}{2}p_2+\dfrac{1}{2}p_3=(p_1-p_2)+\dfrac{1}{2}(p_3-p_2)$.
+\end{enumerate}
+\subsection{Coordenadas.}
+\defi Sea $\af$ un espacio afín de $\dim A=n<\infty$ asociado a un \kev $E$.
+\begin{enumerate}
+	\item Llamaremos \textbf{sistema de referencia en $\af$} a
+	$$
+	\mathcal{R}=\{p;\ v_1,\ldots,v_n\},\textrm{ donde }p\in A,\ \mathcal{B}=\{v_1,\ldots,v_n\}\textrm{ base de E}.
+	$$
+	\item Dado $q\in A$, llamaremos \textbf{coordenadas de} $q$ \textbf{en} $\mathcal{R}$ a $q_{\mathcal{R}}=(\vec{pq})_{\mathcal{B}}.$
+\end{enumerate}
+\obs
+\begin{enumerate}
+	\item Como $\delta_p$ es biyectiva y \begin{align*}
+		E &\to \mathbb{K}^n\\
+		v &\mapsto v_B
+	\end{align*}
+	también lo es, la asignación de coordenadas a un punto es biyectiva.
+	\item $q_R=\begin{pmatrix}
+	x_1\\
+	\vdots\\
+	x_n
+	\end{pmatrix}\iff q-p=\sum_{i=1}^nx_iv_i.$
+\end{enumerate}
+\ej
+\begin{enumerate}
+	\item $\af^2_{\mathbb{R}}$.\\
+	$\mathcal{R}=\{p=(1,3);\ v_1=(1,1),v_2=(2,1)\}$, $q=(4,5)$. Entonces, $q-p=(4,5)-(1,3)=(3,2)=v_1+v_2\implies q_{\mathcal{R}}=\begin{pmatrix}
+	1\\
+	1
+	\end{pmatrix}.$
+	\item $\mathcal{R}=\{(0,0);\ e_1=(1,0),e_2=(0,1)\}.\ q=(4,5)\implies q_{\mathcal{R}}=\begin{pmatrix}
+	4\\
+	5
+	\end{pmatrix}$.
+\end{enumerate}
+\defi En $\af^n_{\mathbb{K}}$ llamaremos \textbf{referencia ordinaria} a
+$$
+\mathcal{R}_{\textrm{ord}}:=\{0;\ \mathcal{B}_{\textrm{canónica}}\}.
+$$
+\obs $q=(q_1,\ldots,q_n)\in\mathbb{K}^n,\ q_{\textrm{ord}}=\begin{pmatrix}
+q_1\\
+\vdots\\
+q_n
+\end{pmatrix}.$\\
+\prop Sea $\af$ un espacio afín de dimensión finita, y sea la referencia $\mathcal{R}=\{p;\ B\}$, con $B$ una base de $E$. Entonces,
+\begin{enumerate}
+	\item $p_1,\ldots,p_r\in A,\ \alpha_1,\ldots,\alpha_r\in\mathbb{K}:\ \sum\alpha_i=1.$ Entonces, 
+	$(\alpha_1p_1+\ldots+\alpha_rp_r)_{\mathcal{R}}=\alpha_1(p_1)_{\mathcal{R}}+\ldots+\alpha_r(p_r)_{\mathcal{R}}.$
+	\item $p_1,\ldots,p_r\in A,\ \alpha_1,\ldots,\alpha_r\in\mathbb{K}:\ \sum\alpha_i=0.$ Entonces, 
+	$(\alpha_1p_1+\ldots+\alpha_rp_r)_B=\alpha_1(p_1)_{\mathcal{R}}+\ldots+\alpha_r(p_r)_{\mathcal{R}}.$
+	\item Caso particular. $(p_2-p_1)_B=(p_2)_{\mathcal{R}}-(p_1)_{\mathcal{R}}.$
+\end{enumerate}
+\dem \\
+\prop \textbf{Cambio de sistema de referencia.} Sea $\af$ un espacio afín de dimensión finita $n$. Sean $\mathcal{R}_1=\{p_1;\ v_1,\ldots,v_n\},\mathcal{R}_2=\{p_2;\ w_1,\ldots,w_n\}$ dos sistemas de referencia. Sean $(p_2)_{\mathcal{R}_1}=\begin{pmatrix}
+a_1\\
+\vdots\\
+a_n
+\end{pmatrix}$, y $S=M_{B_2\rightarrow B_1}=\begin{pmatrix}
+\vert &  & \vert\\
+(w_1)_{B_1} & \cdots & (w_n)_{B_1}\\
+\vert &  & \vert
+\end{pmatrix}$. Sea $q\in A$ tal que $q_{\mathcal{R}_1}=\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix},q_{\mathcal{R}_2}=\begin{pmatrix}
+\bar{x_1}\\
+\vdots\\
+\bar{x_n}
+\end{pmatrix}$. Entonces,
+$$
+\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix}=S\begin{pmatrix}
+\bar{x_1}\\
+\vdots\\
+\bar{x_n}
+\end{pmatrix}+\begin{pmatrix}
+a_1\\
+\vdots\\
+a_n
+\end{pmatrix},\quad q_{\mathcal{R}_1}=Sq_{\mathcal{R}_2}+(p_2)_{\mathcal{R}_2}.
+$$
+\dem $q_{\mathcal{R}_1}=\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix}.\ q-p_1=(q-p_2)+(p_2-p_1).$ Entonces,
+$$
+(q-p_1)_{B_1}=(q-p_2)_{B_1}+(p_2-p_1)_{B_1}\implies \begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix}=q_{\mathcal{R}_1}=S(q-p_2)_{B_2}+(p_2)_{\mathcal{R}_1}=S\begin{pmatrix}
+\bar{x_1}\\
+\vdots\\
+\bar{x_n}
+\end{pmatrix}+\begin{pmatrix}
+a_1\\
+\vdots\\
+a_n
+\end{pmatrix}.\square
+$$
+\obs \textbf{Fórmula matricial de cambio de referencia.}
+$$
+\begin{pmatrix}
+q_{\mathcal{R}_1}\\
+1
+\end{pmatrix}=\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n\\
+1
+\end{pmatrix}=\left(
+\begin{array}{c|c}
+S & (p_2)_{\mathcal{R}_1} \\ \hline
+0 & 1
+\end{array}\right)\begin{pmatrix}
+\bar{x_1}\\
+\vdots\\
+\bar{x_n}\\
+1
+\end{pmatrix},\quad \tilde{S}=\left(
+\begin{array}{c|c}
+S & (p_2)_{\mathcal{R}_1} \\ \hline
+0 & 1
+\end{array}\right)\in\mathcal{M}_{n+1}(\mathbb{K}).
+$$
+También definiremos $\tilde{S}:=M_{\mathcal{R}_2\rightarrow\mathcal{R}_1}$. Esta matriz cumple $\det\tilde{S}=\det
+S$.\\
+\defi \textbf{Coordenadas ampliadas.} $\mathcal{R}=\{p;B\},q\in A,v\in B$,
+$$
+\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix}=q_{\mathcal{R}}\longmapsto q_{\mathcal{R}}=\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n\\
+1
+\end{pmatrix}
+$$
+$$
+\begin{pmatrix}
+\alpha1\\
+\vdots\\
+\alpha_n
+\end{pmatrix}=v_B\longmapsto v_B=\begin{pmatrix}
+\alpha1\\
+\vdots\\
+\alpha_n\\
+0
+\end{pmatrix}.
+$$
+Llamaremos a los elementos de la derecha las \textbf{coordenadas ampliadas} de un punto y un vector.\\
+\obs
+\begin{enumerate}
+	\item $\mathcal{R}_1\xleftarrow{\tilde{S}}\mathcal{R}_2\xleftarrow{\tilde{T}}\mathcal{R}_3$, entonces $M_{\mathcal{R}_3\rightarrow\mathcal{R}_1}=\tilde{S}\tilde{T}.$
+	\item Otras ventajas de las coordenadas ampliadas: ecuaciones de variedades lineales, afinidades, cuádricas.
+	\item Las coordenadas ampliadas son coherentes con las combinaciones afines de puntos. Si $p_1,\ldots,p_m\in A,\alpha_1,\ldots,\alpha_m\in\mathbb{K}$, entonces
+	$$
+	(\alpha_1p_1+\ldots+\alpha_mp_m)_{\mathcal{R}}=\alpha_1(p_1)_{\mathcal{R}}+\ldots+\alpha_m(p_m)_{\mathcal{R}}=\alpha_1\begin{pmatrix}
+	\vert\\
+	\vert\\
+	1
+	\end{pmatrix}+\ldots+\alpha_m\begin{pmatrix}
+	\vert\\
+	\vert\\
+	1
+	\end{pmatrix}=\begin{pmatrix}
+	\vert\\
+	\vert\\
+	\sum\alpha_i
+	\end{pmatrix}=\begin{pmatrix}
+	\vert\\
+	\vert\\
+	1
+	\end{pmatrix}.
+	$$
+\end{enumerate}
+\subsection{Variedades lineales.}
+\defi Sea $\af$ un espacio afín asociado a un \kev $E$. Entonces, una \textbf{variedad lineal} de $\af$ es un subconjunto:
+$$
+V:=p+F=\{p+\vec{u}\vert\vec{u}\in F\},\ p\in A,\ F\subseteq E\textrm{ subespacio vectorial.}
+$$
+Definimos $\dim V:=\dim F$.\newpage
+\ej
+\begin{enumerate}
+	\item Variedades lineales de dimensión 0: \textbf{puntos}, $\{p\}$.
+	\item Variedades lineales de dimensión 1: \textbf{rectas}, $\{p\}+[\vec{u}]$.
+	\item Variedades lineales de dimensión 2: \textbf{planos}, $\{p\}+[\vec{u},\vec{v}]$.
+	\item Variedades lineales de dimensión $n-1$: \textbf{hiperplanos}.
+	\item $A=p+E$.
+\end{enumerate}
+\defi Sea $\af$ un espacio afín. Sean $V$ y $W$ variedades lineales, $V=p+F,W=q+G$. Entonces, definimos las siguientes \textbf{posiciones relativas} de dos variedades lineales:
+\begin{enumerate}
+	\item $V$ y $W$ son \textbf{paralelas} $\iff F\subseteq G$ o $G\subseteq F$.
+	\item $V\subseteq W$: $V$ está \textbf{incluída} en $W$.
+	\item $V\cap W\neq\emptyset\implies V$ y $W$ se \textbf{cortan}.
+	\item $V$ y $W$ se \textbf{cruzan}$\iff V\nparallel W\wedge V\cap W=\emptyset$.
+\end{enumerate}
+\prop Sean $V=p+F,W=q+G$ variedades lineales. Entonces,
+\begin{enumerate}
+	\item $V\subseteq W\iff F\subseteq G\wedge p-q\in G$. En particular, $V=W\iff F=G\wedge p-q\in F$.
+	\item $V\subseteq W\implies\dim V\leq\dim W.$
+	\item $V\subseteq W\wedge\dim V=\dim W\implies V=W.$
+\end{enumerate}
+\dem \begin{enumerate}
+	\item \begin{enumerate}
+		\item[$\Rightarrow$)] Si $V\subseteq W$, $p+F\subseteq q+G$. Veamos que $p-q\in G$:
+		$$p\in V\subseteq W=q+G\implies\exists\vec{v}\in G:p=q+\vec{v}\implies p-q=\vec{v}\in G.$$
+		Veamos ahora que $F\subseteq G$: sea $\vec{u}\in F\implies(p+\vec{u})\in V\subseteq W\implies\exists\vec{w}\in G:(p+\vec{u})=(q+\vec{w})\implies\vec{u}=(q-p)+\vec{w}=-(p-q)(\in G)+\vec{w}(\in G)\implies\vec{u}\in G\implies F\subseteq G.$
+		\item[$\Leftarrow$)] Sea $\bar{p}\in V=p+F\implies(\vec{u}\in F) \bar{p}=p+\vec{u}=q+(p-q)(\in G)+\vec{u}(\in F\subseteq G)\in q+G=W.\square$
+	\end{enumerate}
+	\item $V\subseteq W\implies F\subseteq G\implies\dim F\leq\dim G\implies\dim V\leq\dim W.\square$
+	\item $V\subseteq W\wedge\dim V=\dim W\implies F\subseteq G\wedge\dim F=\dim G\implies F=G.$ Como $V\subseteq W\implies p-q\in F\implies V=W.\square$.
+\end{enumerate}
+\prop Sean $V=p+F,W=q+G$ variedades lineales. Entonces, $V\cap W\neq\emptyset\iff p-q\in F+G$.\\
+\dem \begin{itemize}
+	\item[$\Rightarrow$)] Sea $a\in V\cap W\implies\begin{cases} a\in V\implies V=a+F\implies a=p+\vec{u}(\in F)\\ a\in W\implies W=a+G\implies a=q+\vec{v}(\in G)\end{cases}$. Entonces, $p-q=a-\vec{u}-(a-\vec{v})=\vec{v}-\vec{u}\in F+G.\square$
+	\item[$\Leftarrow$)] Si $p-q=\vec{w_1}(\in F)+\vec{w_2}(\in G)\implies (V=p+F\ni)p-\vec{w_1}=q+\vec{w_2}(\in q+G=W)\implies\exists p\in A:p\in W\wedge p\in V\implies V\cap W\neq\emptyset.\square$
+\end{itemize}
+\subsubsection{Variedades lineales y combinaciones de puntos.}
+\prop Sea $V=p+F$ una variedad lineal de $\af$. Sean $p_1,\ldots,p_m\in V$. Entonces $\forall\alpha_1,\ldots,\alpha_m\in\mathbb{K}:\sum\alpha_i=1,\ \alpha_1p_1+\ldots+\alpha_mp_m\in V$.\\
+\dem $\forall i\ p_i\in V=p+F\implies\forall i\exists\vec{u_i}\in F:p_i=p+\vec{u_i}.$ Entonces, $\alpha_1p_1+\ldots+\alpha_mp_m=p+\sum\alpha_i(p_i-p)=p+\sum\alpha_i\vec{u_i}(\in F)\in V.\square$\\
+\defi Sea $\af$ un espacio afín. Sea $S\subseteq A$ un subconjunto de puntos no vacío. Entonces, \textbf{la variedad lineal más pequeña que contiene a $S$} se denota $\left< S\right>$.\\
+\prop Sea $S=\{p_1,\ldots,p_m\}$. Entonces,
+$$
+\left< S\right>=\{\textrm{combinaciones lineales de }S\}=p_1+[p_2-p_1,\ldots,p_m-p_1]
+$$
+\dem $W=\{\textrm{c.l. de }\{p_1,\ldots,p_m\}\}=\{\sum\alpha_ip_i\vert\sum\alpha_i=1\}=\{p_1+\alpha_2(p_2-p_1)+\ldots+\alpha_m(p_m-p_1)\vert\sum\alpha_i=1\}=p_1+[p_2-p_1,p_3-p_1,\ldots,p_m-p_1].$ Por tanto, $W$ es una variedad lineal.\\
+Por construcción, $S=\{p_1,\ldots,p_m\}\subseteq W.$ Sea $V$ una variedad lineal tal que $S\subseteq V$. Por la proposición anterior, $W=\{\textrm{c.l. de S}\}\subseteq V\implies W\subseteq V\implies W=\left<S\right>.\square$\\
+\defi $\{p_1,\ldots,p_m\},m\geq 2$ son \textbf{linealmente independientes}$\iff\{p_2-p_1,\ldots,p_m-p_1\}$ son vectores l.i. Si $m<2$, el conjunto siempre es l.i.\\
+\obs $\{p_1,\ldots,p_m\}\textrm{ l.i.}\iff(\textrm{Fijado }i_0)\{p_1-p_{i_0},\ldots,p_{i_0-1}-p_{i_0},p_{i_0+1}-p_{i_0},\ldots,p_m-p_{i_0}\}$ es un conjunto de vectores l.i.\\
+\cor Si $p_1,\ldots,p_m$ son l.i., $\dim <p_1,\ldots,p_m>=m-1$.\\
+\ej $\af^n_{\mathbb{K}}$:
+\begin{enumerate}
+	\item $\left<p_1\right>=\{p_1\}$, variedad lineal de dimensión 0.
+	\item 2 puntos $p_1,p_2$ son l.i.$\iff p_1\neq p_2$. $\left<p_1,p_2\right>$, variedad lineal de dimensión 1.
+	\item 3 puntos $p_1,p_2,p_3$ l.i.$\implies\left<p_1,p_2,p_3\right>$ plano, variedad lineal de dimensión 2.
+\end{enumerate}
+\subsubsection{Ecuaciones de variedades lineales.}
+Sea $\af$ un espacio afín de $\dim\af=n$. Sea $\mathcal{R}=\{p;B=\{u_1,\ldots,u_n\}\}$ un sistema de referencia en $\af$. Sea $V=q+F=q+[v_1,\ldots,v_r],$ $\dim V=r,$ $\{v_1,\ldots,v_r\}$ base de F.
+\paragraph{(A) Ecuaciones paramétricas de $V$.}
+$\bar{q}\in V\iff \bar{q}=q+\alpha_1v_1+\ldots+\alpha_rv_r,\alpha_i\in\mathbb{K}\iff$
+\begin{equation}
+\bar{q_{\mathcal{R}}}=q_{\mathcal{R}}+\alpha_1(v_1)_B+\ldots+\alpha_r(v_r)_B=\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix}\quad\textrm{ (ecuaciones paramétricas de }V\textrm{)}
+\end{equation}
+\ej $\af^3_{\mathbb{K}}:\ V=\begin{pmatrix}1\\ 2\\ 3\end{pmatrix}+\left[\begin{pmatrix}1\\ 1\\ 1\end{pmatrix},\begin{pmatrix}1\\ 2\\ 0\end{pmatrix}\right].\ \mathcal{R}=\mathcal{R}_{\textrm{ord}}.$ Entonces, $\begin{pmatrix}x_1\\ x_2\\ x_3\end{pmatrix}=\begin{pmatrix}1\\ 2\\ 3\end{pmatrix}+\alpha_1\begin{pmatrix}1\\ 1\\ 1\end{pmatrix}+\alpha_2\begin{pmatrix}1\\ 2\\ 0\end{pmatrix}.$ Haciendo el proceso anterior,
+$$
+\bar{q}_{\mathcal{R}}=\begin{pmatrix}x_1\\ x_2\\ x_3\end{pmatrix}\in V\iff\exists\alpha_1,\alpha_2:\begin{pmatrix}x_1\\ x_2\\ x_3\end{pmatrix}=\begin{pmatrix}1\\ 2\\ 3\end{pmatrix}+\alpha_1\begin{pmatrix}1\\ 1\\ 1\end{pmatrix}+\alpha_2\begin{pmatrix}1\\ 2\\ 0\end{pmatrix}\iff
+$$
+
+$$
+\begin{pmatrix}x_1-1\\ x_2-2\\ x_3-3\end{pmatrix}\textrm{ es c.l. de }\begin{pmatrix}1\\ 1\\ 1\end{pmatrix},\begin{pmatrix}1\\ 2\\ 0\end{pmatrix}\iff\rg\begin{pmatrix}
+x_1-1 & 1 & 1\\
+x_2-2 & 1 & 2\\
+x_3-3 & 1 & 0
+\end{pmatrix}=2\iff
+$$
+
+$$
+\begin{vmatrix}
+x_1-1 & 1 & 1\\
+x_2-2 & 1 & 2\\
+x_3-3 & 1 & 0
+\end{vmatrix}=0\iff Ax_1+Bx_2+Cx_3+D=0.
+$$
+
+\paragraph{(B) Ecuaciones cartesianas/implícitas de $V$.} $V=q+[v_1,\ldots,v_r].$ $\bar{q}\in A,\bar{q}=\begin{pmatrix}
+x_1\\ \vdots\\ x_n
+\end{pmatrix}\in V\iff\begin{pmatrix}
+x_1\\ \vdots\\ x_n
+\end{pmatrix}=q_{\mathcal{R}}+\alpha_1(v_1)_B+\ldots+\alpha_r(v_r)_B$ para algunas $\alpha_i\in\mathbb{K}\iff\begin{pmatrix}
+x_1-a_1\\ \vdots\\ x_n-a_n
+\end{pmatrix}\in[(v_1)_B,\ldots,(v_r)_B]\iff\rg\begin{pmatrix}
+x_1-a_1 & \vert & \vert & \vert\\
+\vdots & (v_1)_B & \cdots & (v_r)_B\\
+x_n-a_n & \vert & \vert & \vert
+\end{pmatrix}=r\iff\textrm{Sus menores de orden }r+1\textrm{ son cero}:
+$
+$$
+\begin{cases}
+\ldots\ldots\ldots=0\\
+\ldots\ldots\ldots=0\\
+\vdots\\
+\ldots\ldots\ldots=0
+\end{cases}\textrm{ sistema lineal.}
+$$
+\obs \textbf{Método de "orlar" un menor.} $A\in\mathcal{M}_{m,n}(\mathbb{K}),\Delta_r=\det\begin{pmatrix}
+\cdots\\
+\cdots\\
+\cdots
+\end{pmatrix}\neq0.\ \rg A=r\iff\textrm{ todos los menores que contienen a }\Delta_r\textrm{ de orden }r+1\textrm{ son cero.}$
+$V=p+F=p+[v_1,\ldots,v_r],\ r=\dim F=\dim V.\ q\in V\iff q_{\mathcal{R}}=\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix};\ p_{\mathcal{R}}=\begin{pmatrix}
+a_1\\
+\vdots\\
+a_n
+\end{pmatrix}. \rg\begin{pmatrix}
+x_1-a_1 & \vert & \vert & \vert\\
+\vdots & (v_1)_B & \cdots & (v_r)_B\\
+x_n-a_n & \vert & \vert & \vert
+\end{pmatrix}=r.$\\
+$\implies$ Los menores $(r+1)\times(r+1)$ que contienen a uno de orden $r$ no nulo fijado deben ser cero $\implies$ En total, $n-r$ ecuaciones.\\
+\prop Sea $\af$ un espacio afín de dimensión $n$. Sea $\mathcal{R}$ un sistema de referencia. Sea $V\subseteq A$. Entonces, $V$ es una variedad lineal de dimensión $r\iff$ Los puntos $q\in V$ (sus coordenadas $q_{\mathcal{R}}$) verifican un sistema de ecuaciones lineales compatible, $A\begin{pmatrix}
+x_1\\
+\vdots\\
+x_n
+\end{pmatrix}=\begin{pmatrix}
+b_1\\
+\vdots\\
+b_r
+\end{pmatrix}
+$, con $\rg A=n-r$.\\
+\dem \begin{itemize}
+	\item[$\Leftarrow$)] $A\begin{pmatrix}
+	x_1\\ \vdots\\ x_n
+	\end{pmatrix}=\begin{pmatrix}
+	b_1\\ \vdots\\ b_k
+	\end{pmatrix}$ s.l. compatible, $k=\rg A\implies$ sus soluciones se escriben $\begin{pmatrix}
+	x_1\\ \vdots\\ x_n
+	\end{pmatrix}=\begin{pmatrix}
+	a_1\\ \vdots\\ a_n
+	\end{pmatrix}+\nuc A=p+F
+	$ variedad lineal. $\dim(p+F)=\dim F=\dim\nuc A=n-\rg A=n-k.$
+	\item[$\Rightarrow$)] \underline{Visto.} $V=p+F,\dim F=r\implies\{\textrm{SEL compatible}\}\rightarrow n-r\textrm{ ecuaciones.}\square$
+\end{itemize}
+\defi $A\begin{pmatrix}
+x_1\\ \vdots\\ x_n
+\end{pmatrix}=\begin{pmatrix}
+b_1\\ \vdots\\ b_m
+\end{pmatrix}\rightarrow\textrm{ecuaciones implícitas (o cartesianas) de }V.$
+\newpage
+\ej
+\begin{enumerate}
+	\item $\af^3_{\mathbb{K}},\mathcal{R}_{\textrm{ord}}.$\\
+	$V=\begin{pmatrix}
+	1\\ 2\\ 1\\ 3
+	\end{pmatrix}+\left[\begin{pmatrix}
+	1\\ 2\\ 3\\ 4
+	\end{pmatrix},\begin{pmatrix}
+	1\\ 2\\ 1\\ 1
+	\end{pmatrix}\right]$ (plano). $\rg\begin{pmatrix}
+	x_1-1 & 1 & 1\\
+	x_2-2 & 2 & 2\\
+	x_3-1 & 3 & 1\\
+	x_4-3 & 4 & 1
+	\end{pmatrix}=2\iff\begin{cases}\begin{vmatrix}
+	x_1-1 & 1 & 1\\
+	x_3-1 & 3 & 1\\
+	x_4-3 & 4 & 1
+	\end{vmatrix}=0.\\
+	\begin{vmatrix}
+	x_2-2 & 2 & 2\\
+	x_3-1 & 3 & 1\\
+	x_4-3 & 4 & 1
+	\end{vmatrix}=0.
+	\end{cases}$
+	\item $\af^2_{\mathbb{K}}.$\\
+	$\begin{cases}
+	x_1+x_2+x_3+x_4=5.\\
+	2x_1+3x_2-x_3+x_4=1.
+	\end{cases}$. Esto se puede escribir:
+	$\begin{pmatrix}
+	1 & 1 & 1 & 1\\
+	2 & 3 & -1 & 1
+	\end{pmatrix}\begin{pmatrix}
+	x_1\\ x_2\\ x_3\\ x_4
+	\end{pmatrix}=\begin{pmatrix}
+	5\\ 1
+	\end{pmatrix}.$ Reduciendo la matriz con el algoritmo de Gauss, $\begin{pmatrix}
+	1 & 1 & 1 & 1\\
+	2 & 3 & -1 & 1
+	\end{pmatrix}$
+\end{enumerate}
+\obs \begin{enumerate}
+	\item
+	\item
+	\item
+	\item
+	\item
+\end{enumerate}
+\subsubsection{Suma, intersección y fórmula de Grassmann.}
+\newpage
+
+
+
+
+
+\section{Afinidades.}
+\subsection{Definición y propiedades.}
+\defi Sean $\af,\af'$ espacios afines con espacios vectoriales asociados $E,E'$ (sobre el mismo cuerpo $\cuerpo$). Sea $f:\ \af\rightarrow\af'$ una función. Entonces, $f$ es una \textbf{afinidad}$\iff\exists p\in\af:\ \tilde{f}_p(\vec{u}):=f(p+\vec{u})-f(p)\ (\vec{u}\in E)$ es una aplicación lineal de $E$ en $E'$.\\
+\obs \begin{enumerate}
+	\item $A\xrightarrow{f}A'$. Entonces, $E\xrightarrow{\delta_p^{-1}}A\xrightarrow{f}A'\xrightarrow{\delta'_{f(p)}}E'$, y en total, $E\xrightarrow{\tilde{f}_p}E'$.
+	\item Si $\tilde{f}_p$ es lineal $\implies\ \forall q\in\af\ \tilde{f}_q=\tilde{f}_p.$ Veámoslo: sea $\vec{u}\in E$,\\
+	$\tilde{f}_q(u)=f(q+u)-f(q)=f(p+(q-p+u))-f(p+(q-p))=(f(p+(q-p+u))-f(p))-(f(p+(q-p))-f(p))=\tilde{f}_p((q-p)+u)-\tilde{f}_p(q-p)=\tilde{f}_p(u)+\tilde{f}_p(q-p)-\tilde{f}_p(q-p)=\tilde{f}_p(u).\square$
+	\item Entonces,\\
+	$f(p+u)-f(p)=\tilde{f}(u)$(def)$\leftrightarrow f(p+u)=f(p)+\tilde{f}(u)\leftrightarrow f(q)=f(p)+\tilde{f}(q-p).$
+\end{enumerate}
+\prop \begin{enumerate}
+	\item $f,g$ afinidades$\implies g\circ f$ es una afinidad y $\tilde{g\circ f}=\tilde{g}\circ\tilde{f}$.
+	\item Sea $f:\ \af\rightarrow\af'$ una afinidad. Entonces,
+	\begin{itemize}
+		\item $f$ inyectiva$\iff\tilde{f}$ inyectiva (y entonces $\dim\af\leq\dim\af'$).
+		\item $f$ exhaustiva$\iff\tilde{f}$ exhaustiva (y entonces $\dim\af\geq\dim\af'$).
+		\item $f$ biyectiva$\iff\tilde{f}$ biyectiva (y entonces $\dim\af=\dim\af'$).
+	\end{itemize}
+	\item Si $\dim\af=\dim\af'<\infty\implies$($f$ inyectiva$\iff f$ exhaustiva$\iff f$ biyectiva).
+	\item Si $f$ biyectiva$\implies f^{-1}$ es una afinidad y $\tilde{f^{-1}}=\tilde{f}^{-1}$.
+\end{enumerate}
+\dem \begin{enumerate}
+	\item 
+	\item 
+	\item 
+	\item 
+\end{enumerate}
+\prop
+\begin{enumerate}
+	\item Sean $f,g:\ \af\rightarrow\af'$ afinidades. Entonces,
+	$$f=g\iff\exists p\in\af:\ f(p)=g(p)\textrm{ y }\tilde{f}=\tilde{g}.$$
+	\item Sean $p\in\af,q\in\af$ y $\varphi:\ E\rightarrow E'$ una aplicación lineal. Entonces, existe una única afinidad tal que $f(p)=q,\tilde{f}=\varphi.$
+	\item Sea $\af$ tal que $\dim\af=n$. Si $p_0,p_1,\ldots,p_n$ son puntos independientes de $\af$, entonces dados $q_0,q_1,\ldots,q_n$ puntos cualesquiera de $\af'$ existe una única afinidad $f:\ \af\rightarrow\af'$ tal que $f(p_i)=q_i$.
+\end{enumerate}
+\dem \\
+\defi Sean $\af,\af'$ espacios afines. Entonces,
+$$\af\cong\af'\iff\exists f:\ \af\rightarrow\af'\textrm{ afinidad biyectiva.}$$
+\cor Sean $\af,\af'$ espacios afines de dimensión finita. Entonces,
+$$\af\cong\af'\iff\dim\af=\dim\af'.$$
+En particular, si $n=\dim\af$, $\af\cong\af^n_{\cuerpo}$.
+\newpage
+\end{document}

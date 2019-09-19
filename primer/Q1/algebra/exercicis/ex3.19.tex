@@ -1,0 +1,93 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage[margin=3cm]{geometry}
+\usepackage{color}
+\usepackage{enumitem}
+\title{Exercicis: Àlgebra Lineal}
+\author{Àlex Batlle Casellas}
+\renewcommand*\contentsname{Índex}
+\newlist{legal}{enumerate}{10}
+\setlist[legal]{label*=\arabic*.}
+\newcommand{\pendent}{\textbf{\textcolor{red}{PENDENT D'ACABAR.}}\\}
+\DeclareMathOperator{\nuc}{Nuc}
+\DeclareMathOperator{\img}{Im}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\rg}{rg}
+
+\begin{document}
+
+\begin{small}
+Àlex Batlle Casellas
+\end{small}\\
+
+\begin{legal}
+\item[3.19.] Sigui $f$ un endomorfisme d'un espai vectorial $E$.
+	\item[(a) ]\textbf{Proveu que $\img{f^{n+1}}\subset\img{f^n}$ i $\nuc{f^n}\subset\nuc{f^{n+1}}$ per a tot nombre natural $n$.}\\
+	Com que $f\in\End{f}$, $E$ és $f$-invariant, és a dir, que $f(E)\subseteq E$. També tenim que, per ser endomorfisme, $f(f(E))\subseteq f(E)$, o el que és el mateix, que $\img{f^2}\subseteq\img{f}$. Fem un procés inductiu sobre $n$ per veure que 
+	\begin{equation}
+		\img{f^{n+1}}\subset\img{f^n}
+	\end{equation}
+	és compleix:
+	\begin{enumerate}
+		\item \underline{Cas base:} $n=0$\\
+		En aquest cas, veiem que $\img{f^{0+1}\subseteq\img{f^0}}=E$ Com ja hem vist, $f(E)\subseteq E$, i per tant és cert per $n=0$.
+		\item \underline{Hipòtesi d'inducció:}
+		\begin{equation}
+			\forall n\leq n_0\in\mathbb{N}\ \img{f^{n+1}}\subseteq\img{f^n}.
+		\end{equation}
+		\item \underline{Pas inductiu:} volem veure que (2) és compleix per tota $n>n_0$. Per veure-ho, construïm l'aplicació lineal $f^{n+1}$:
+		$$
+		\begin{array}{lrr}
+			f^{n+1}:\ \img{f^{n}}\longrightarrow E\\
+			\qquad\qquad\qquad v\longmapsto f^{n+1}(v):=f(v)
+		\end{array}.
+		$$
+		Com que $f$ és un endomorfisme, necessàriament $f(V)\subseteq V\ \forall V\subseteq E$ i $f^{n+1}(V)\subseteq\img{f^n}\ \forall n>n_0,V\subseteq\img{f^n}$. Per tant, $f^{n+1}(\img{f^n})\subseteq\img{f^n}\ \forall n\in\mathbb{N}$.$\square$\\
+		\end{enumerate}
+		%nucli n subconjunt de nucli n+1
+		Pel cas del nucli, volem veure que:
+		$$
+		\nuc{f^n}\subseteq\nuc{f^{n+1}}\ \forall n\in\mathbb{N}.
+		$$
+		Per tant, sigui $v\in\nuc{f^n}$. Aleshores $f(f^n(v))=f(0)=0$ i per tant, $v\in\nuc{f^{n+1}}$.$\square$
+	\item[(b) ]\textbf{Demostreu que, si $E$ té dimensió finita, existeix un natural $m$ tal que $\img{f^n}=\img{f^m}$ i $\nuc{f^n}=\nuc{f^m}$ per a tot $n\geq m$.}\\
+	Distingim dos casos: $f$ és invertible i $f$ no és invertible.\\
+	En el primer cas, el rang de $f$ necessàriament és el rang màxim de la matriu, i per tant, $\img{f^n}=\img{f^m}\forall m,n$ i el nucli és l'espai del zero independentment de les $m,n$, $\nuc{f^n}=\nuc{f^m}\forall m,n$.\\
+	En el segon cas, com que la dimensió de la imatge no pot reduïr-se arbitràriament (està fitada inferiorment per 0 perquè $f$ itera sobre un espai de dimensió finita), existeix una $n_0$ natural a partir de la qual $\rg{f^{n_0+1}}=\rg{f^{n_0}}=0$. En particular, un cop s'arriba a $\img{f^{n_0}}=\{0_E\}$, $f(\img{f^{n_0+k}})$ és l'espai del zero per tota $k$ natural. Pel nucli existeix un raonament semblant: tenint en compte que $\{\dim\nuc{f^n}\}_n$ no creix arbitràriament (està fitada superiorment perquè $f$ itera sobre un espai de dimensió finita), existeix una $n_0$ a partir de la qual $\dim{\nuc{f^{n_0}}}=\dim{\nuc{f^{n_0+1}}}$. Ho podem veure per inducció:
+	\begin{itemize}
+	\item Hipòtesi d'Inducció: $\nuc{f^n}=\nuc{f^{n+1}}$
+	\item Sigui $v\in\nuc{f^{n+2}}$. Aleshores
+	$$
+	f^{n+2}(v)=f^{n+1}(f(v))=0\implies f(v)\in\nuc{f^{n+1}}=\nuc{f^n}.
+	$$
+	Aleshores,
+	$$
+	f^n(f(v))=f^{n+1}(v)=0\implies v\in\nuc{f^{n+1}},
+	$$
+	i per tant, $\nuc{f^{n+2}}\subseteq\nuc{f^{n+1}}$.
+	L'altra inclusió és senzilla de demostrar també: sigui $v\in\nuc{f^{n+1}}$, aleshores
+	$$
+	0=f^{n+1}(v)=f^n(f(v))\implies f(v)\in\nuc{f^n}=\nuc{f^{n+1}}.
+	$$
+	Seguint amb aquest raonament, apliquem $f^{n+1}$ a $f(v)$:
+	$$
+	0=f^{n+1}(f(v))=f^{n+2}(v)\implies v\in\nuc{f^{n+2}},
+	$$
+	i per tant, $\nuc{f^{n+1}}\subseteq\nuc{f^{n+2}}$ i tenim la igualtat.$\square$
+	\end{itemize}
+	\item[(c) ]\textbf{Proveu, donant un contraexemple a l’espai de polinomis $\mathbb{R}[x]$, que l’apartat (b) no és cert si $E$ no té dimensió finita.}\\
+	Com a exemple, podem posar l'endomorfisme $f$ de $\mathbb{R}[x]$ en $\mathbb{R}[x]$ tal que assigna a cada $p(x)$ el seu valor en $x=0$, $p(0)$. En elevar a una potència $m$ natural, passarà el següent:
+	$$
+	\begin{array}{lll}
+	f^m:\ \mathbb{R}[x]\longrightarrow\mathbb{R}[x]\\
+	\qquad\ p(x)\longmapsto p^m(0):=p(p(\cdots p(0))\cdots).
+	\end{array}
+	$$
+	Els valors del polinomi $p(x)$ en el zero no sempre són zero (de fet només són zero en el polinomi $p(x)=0$ i en els polinomis sense terme independent). De fet és possible que iterant sobre el polinomi es trobi una arrel. Un exemple és el cas de $p(x)=x^2-1$; el seu $p(0)$ val -1, i el seu $p(p(0))$ val 0. El nucli, doncs, canvia sempre per tota $n$ natural ja que agafant altre cop el mateix exemple, per $n$ parella $p(x)=x^2-1$ formarà part del nucli i per $n$ senar, no.
+\end{legal}
+\end{document}
