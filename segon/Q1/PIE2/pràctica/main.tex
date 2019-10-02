@@ -23,25 +23,40 @@
 
 \paragraph{a)} Let $X_n$ be the number of satisfied clauses after $n$ iterations of the loop in (2) (we will refer to it as time $n$). Given the execution up top time $n-1$, is it always true that $\mathbb{E}\left[X_n\right]\geq X_{n-1}$?\\
 \textbf{Solution}\\
-The claim is not true. Let us prove it by a counterexample: let $\phi$ be the following CNF formula: \[\phi=(x_1\vee x_2)\wedge(x_1\vee x_3)\wedge(\bar{x_1}\vee\bar{x_4})\wedge(\bar{x_1}\vee x_3)\wedge(\bar{x_4}\vee\bar{x_3}),\] and $\textbf{x}=(0,1,0,1)$ the assignment at time $n-1$. Then, it follows that $X_{n-1}=4$, and the expectancy of the variable $X_n$ can be calculated as follows; whether $x_1$ swaps its value, and then $X_n=3$, or $x_3$ swaps its value and $X_n=4$. This gives an expectancy
+The claim is not true. Let us prove it by a counterexample: let $\phi$ be the following CNF formula, \[\phi=(x_1\vee x_2)\wedge(x_1\vee x_3)\wedge(\bar{x_1}\vee\bar{x_4})\wedge(\bar{x_1}\vee x_3)\wedge(\bar{x_4}\vee\bar{x_3}),\] and $\textbf{x}=(0,1,0,1)$ the assignment at time $n-1$. Then, it follows that $X_{n-1}=4$, and the expectancy of the variable $X_n$ can be calculated as follows; whether $x_1$ swaps its value, and then $X_n=3$, or $x_3$ swaps its value and $X_n=4$. This gives an expectancy
 \[\mathbb{E}\left[X_n\right]=\dfrac{1}{2}3+\dfrac{1}{2}4=\dfrac{7}{2}<4=X_{n-1}.\]
 
-\paragraph{b)} Since $\phi$ is satisfiable, let $\textbf{x}^*$ be an arbitrary satisfying assignment. Let $Y_n$ be the number of variables in $\textbf{x}$ whose value coincides with the one in $\textbf{x}^*$ at time $n$. Given the execution up to time $n-1$, is it always true that $\mathbb{E}\left[Y_n\right]\geq X_{n-1}$?\\
+\paragraph{b)} Since $\phi$ is satisfiable, let $\textbf{x}^*$ be an arbitrary satisfying assignment. Let $Y_n$ be the number of variables in $\textbf{x}$ whose value coincides with the one in $\textbf{x}^*$ at time $n$. Given the execution up to time $n-1$, is it always true that $\mathbb{E}\left[Y_n\right]\geq Y_{n-1}$?\\
 \textbf{Solution}\\
+In order to prove this, we will first take a look at how does $Y_n$ behave with respect to $Y_{n-1}$. Since the algorithm only changes variables in violated clauses, we will take $Z^i_n$ to be the random variable that counts how many of the variables in clause $i$ have the same value in $\textbf{x}$ and in $\textbf{x}^*$. So, clause $i$ can be thought of as $(x_{j_1}\vee x_{j_2})$. In $\textbf{x}^*$ this can only be (1,1), (0,1), or (1,0), as a consequence of a clause being a disjunction, and in $\textbf{x}$ this variables have to be (0,0), because the clause is violated. Then, suppose the first step of the loop selects this clause; now it can only change the value of one of the two variables. So, the only possible outcomes of $Y_n$ are 
+\[
+Y_n=\begin{cases}
+Y_{n-1}+1\\
+Y_{n-1}-1
+\end{cases},
+\] and this will depend on the value of $Z^i_n$. As clause $i$ was violated at time $n-1$, $Z^i_{n-1}$ could have been 0 or 1, and it can at time $n$ equal zero, one or two:
+\[
+Z^i_n=\begin{cases}
+0\text{ with probability }\dfrac{1}{2}\text{, if }Z^i_{n-1}=1\\
+1\text{ with probability 1, if }Z^i_{n-1}=0\\
+2\text{ with probability }\dfrac{1}{2}\text{, if }Z^i_{n-1}=1
+\end{cases}.
+\] Taking this into account, it is more probable that $Z^i_n$ increases than that it decreases, and so is the case for $Y_n$. Then, the expectancy of $Y_n$ is greater than (or equal to) the value of $Y_{n-1}$.
 
 \paragraph{c)} Argue that if $Y_n=k$, then \textsc{Rand2SAT} terminates at time $n$. Is the converse true?\\
 \textbf{Solution}\\
-Since $Y_n=k$, it means that all variables in $\textbf{x}$ are equal to $\textbf{x}^*$. As $\textbf{x}^*$ is an arbitrary satisfying assignment, it means that $\phi(\textbf{x}^*)=1$, and as $\phi\in\textsc{CNF-2-SAT}$, it follows that is has no violated clauses. Then, as described by the algorithm, the loop in (2) stops when no clauses are violated. Hence, when $Y_n=k$, the algorithm halts at this moment (\textit{time $n$}).
+Since $Y_n=k$, it means that all variables in $\textbf{x}$ are equal to $\textbf{x}^*$. As $\textbf{x}^*$ is an arbitrary satisfying assignment, it means that $\phi(\textbf{x}^*)=1$, and as $\phi\in\textsc{CNF-2-SAT}$, it follows that is has no violated clauses. Then, as described by the algorithm, the loop in (2) stops when no clauses are violated. Hence, when $Y_n=k$, the algorithm halts at this moment (\textit{time $n$}).\\
+The converse is not true. Take for example the following \textsc{CNF-2-SAT} formula $\phi'$, \[\phi'=(x_1\vee x_2)\wedge(x_2\vee x_3);\] it has 4 different satisfying assignments, $a_1=(1,1,0)$, $a_2=(1,0,1)$, $a_3=(0,1,1)$, and $a_4=(0,1,0)$. If we take $\textbf{x}^*$ to be one of these, say $a_3$, the loop in (2) could possibly reach $a_4$ before reaching $a_3$ and halt as a consequence of $a_4$ being a satisfying assignment. If that were the case, $Y_n$ would be 2 instead of 3 (the $k$ in this example), and so the converse can't be true.
 
 \paragraph{d)} Is $Y_n$ a Markov chain?\\
 \textbf{Solution}\\
 
-\paragraph{e)} Design a Markov chain $Z_n$ such that $Y_n\geq Z_n$.\\
+\paragraph{e)} Design a Markov chain $Z_n$ such that $Y_n\geq Z_n$.\\ %Hint: modify the Gambler's ruin to design Z_n.
 \textbf{Solution}\\
 
 \paragraph{f)} Use $Z_n$ to prove that the expected running time of \textsc{Rand2SAT} is at most $k^2$.\\
 \textbf{Solution}\\
 
-\paragraph{*g)} We modify \textsc{Rand2SAT} to stop in bounded time as follows. Let $l\in\mathbb{Z}$. If after $2lk^2$ iterations of the loop in (2) we have not halted, we break the loop and return the current assignment $\textbf{x}$. Prove that the output of the modified \textsc{Rand2SAT} is a satisfying assignment with probability at least $1-2^{-l}$.\\
+\paragraph{*g)} We modify \textsc{Rand2SAT} to stop in bounded time as follows. Let $l\in\mathbb{Z}$. If after $2lk^2$ iterations of the loop in (2) we have not halted, we break the loop and return the current assignment $\textbf{x}$. Prove that the output of the modified \textsc{Rand2SAT} is a satisfying assignment with probability at least $1-2^{-l}$.\\ %Hint: use Markov's inequality.
 \textbf{Solution}\\
 \end{document}
