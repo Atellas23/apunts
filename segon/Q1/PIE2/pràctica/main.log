@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7140 64-bit) (preloaded format=pdflatex 2019.9.30)  2 OCT 2019 10:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7140 64-bit) (preloaded format=pdflatex 2019.9.30)  5 OCT 2019 19:13
 entering extended mode
 **./main.tex
 (main.tex
@@ -465,21 +465,155 @@ LaTeX Info: Redefining \addtolength on input line 81.
 \cur@row=\count274
 \cur@col=\count275
 \conditionsep=\skip65
+)
+(C:\Users\alexb\scoop\apps\latex\current\texmfs\install\tex/latex/qtree\qtree.s
+ty
+Package: 2008/12/12 v.3.1bQtree: tree-drawing for linguistics
+Package: qtree 2008/12/12 v.3.1bQtree: tree-drawing for linguistics
+
+(C:\Users\alexb\scoop\apps\latex\current\texmfs\install\tex/latex/pict2e\pict2e
+.sty
+Package: pict2e 2019/08/20 v0.3c Improved picture commands (HjG,RN,JT)
+
+(C:\Users\alexb\scoop\apps\latex\current\texmfs\install\tex/latex/pict2e\pict2e
+.cfg
+File: pict2e.cfg 2016/02/05 v0.1u pict2e configuration for teTeX/TeXLive
+)
+Package pict2e Info: Driver file: pdftex.def on input line 119.
+Package pict2e Info: Driver file for pict2e: p2e-pdftex.def on input line 121.
+
+(C:\Users\alexb\scoop\apps\latex\current\texmfs\install\tex/latex/pict2e\p2e-pd
+ftex.def
+File: p2e-pdftex.def 2016/02/05 v0.1u Driver-dependant file (RN,HjG,JT)
+)
+(C:\Users\alexb\scoop\apps\latex\current\texmfs\install\tex/latex/graphics\trig
+.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+\pIIe@GRAPH=\toks35
+\@arclen=\dimen178
+\@arcrad=\dimen179
+\@tempdimd=\dimen180
+)
+\c@treecount=\count276
+\c@branchcount=\count277
+\parentbox=\box56
+\treebox=\box57
+\treeboxone=\box58
+\treeboxtwo=\box59
+\treeboxthree=\box60
+\treeboxfour=\box61
+\treeboxfive=\box62
+\treeboxsix=\box63
+\treeboxseven=\box64
+\treeboxeight=\box65
+\treeboxnine=\box66
+\treeboxten=\box67
+\treeboxeleven=\box68
+\treeboxtwelve=\box69
+\treeboxthirteen=\box70
+\treeboxfourteen=\box71
+\treeboxfifteen=\box72
+\treeboxsixteen=\box73
+\treeboxseventeen=\box74
+\treeboxeighteen=\box75
+\treeboxnineteen=\box76
+\treeboxtwenty=\box77
+\treeoffsetone=\skip66
+\treeoffsettwo=\skip67
+\treeoffsetthree=\skip68
+\treeoffsetfour=\skip69
+\treeoffsetfive=\skip70
+\treeoffsetsix=\skip71
+\treeoffsetseven=\skip72
+\treeoffseteight=\skip73
+\treeoffsetnine=\skip74
+\treeoffsetten=\skip75
+\treeoffseteleven=\skip76
+\treeoffsettwelve=\skip77
+\treeoffsetthirteen=\skip78
+\treeoffsetfourteen=\skip79
+\treeoffsetfifteen=\skip80
+\treeoffsetsixteen=\skip81
+\treeoffsetseventeen=\skip82
+\treeoffseteighteen=\skip83
+\treeoffsetnineteen=\skip84
+\treeoffsettwenty=\skip85
+\treeshiftone=\skip86
+\treeshifttwo=\skip87
+\treeshiftthree=\skip88
+\treeshiftfour=\skip89
+\treeshiftfive=\skip90
+\treeshiftsix=\skip91
+\treeshiftseven=\skip92
+\treeshifteight=\skip93
+\treeshiftnine=\skip94
+\treeshiftten=\skip95
+\treeshifteleven=\skip96
+\treeshifttwelve=\skip97
+\treeshiftthirteen=\skip98
+\treeshiftfourteen=\skip99
+\treeshiftfifteen=\skip100
+\treeshiftsixteen=\skip101
+\treeshiftseventeen=\skip102
+\treeshifteighteen=\skip103
+\treeshiftnineteen=\skip104
+\treeshifttwenty=\skip105
+\treewidthone=\skip106
+\treewidthtwo=\skip107
+\treewidththree=\skip108
+\treewidthfour=\skip109
+\treewidthfive=\skip110
+\treewidthsix=\skip111
+\treewidthseven=\skip112
+\treewidtheight=\skip113
+\treewidthnine=\skip114
+\treewidthten=\skip115
+\treewidtheleven=\skip116
+\treewidthtwelve=\skip117
+\treewidththirteen=\skip118
+\treewidthfourteen=\skip119
+\treewidthfifteen=\skip120
+\treewidthsixteen=\skip121
+\treewidthseventeen=\skip122
+\treewidtheighteen=\skip123
+\treewidthnineteen=\skip124
+\treewidthtwenty=\skip125
+\daughteroffsetone=\skip126
+\daughteroffsettwo=\skip127
+\daughteroffsetthree=\skip128
+\daughteroffsetfour=\skip129
+\branchwidthone=\skip130
+\branchwidthtwo=\skip131
+\branchwidththree=\skip132
+\branchwidthfour=\skip133
+\parentoffset=\skip134
+\treeoffset=\skip135
+\daughteroffset=\skip136
+\branchwidth=\skip137
+\parentwidth=\skip138
+\treewidth=\skip139
+\qta=\toks36
+\qtb=\toks37
+\nbranches=\count278
+\qroofx=\count279
+\qroofy=\count280
+\@qrscratchbox=\box78
 ) (main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
-LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -519,25 +653,25 @@ LaTeX Font Info:    ... okay on input line 20.
 (C:\Users\alexb\scoop\apps\latex\current\texmfs\install\tex/context/base/mkii\s
 upp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count276
-\scratchdimen=\dimen178
-\scratchbox=\box56
-\nofMPsegments=\count277
-\nofMParguments=\count278
-\everyMPshowfont=\toks35
-\MPscratchCnt=\count279
-\MPscratchDim=\dimen179
-\MPnumerator=\count280
-\makeMPintoPDFobject=\count281
-\everyMPtoPDFconversion=\toks36
+\scratchcounter=\count281
+\scratchdimen=\dimen181
+\scratchbox=\box79
+\nofMPsegments=\count282
+\nofMParguments=\count283
+\everyMPshowfont=\toks38
+\MPscratchCnt=\count284
+\MPscratchDim=\dimen182
+\MPnumerator=\count285
+\makeMPintoPDFobject=\count286
+\everyMPtoPDFconversion=\toks39
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 22.
+LaTeX Font Info:    Try loading font information for U+msa on input line 23.
 
 (C:\Users\alexb\scoop\apps\latex\current\texmfs\install\tex/latex/amsfonts\umsa
 .fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 22.
+LaTeX Font Info:    Try loading font information for U+msb on input line 23.
 
 (C:\Users\alexb\scoop\apps\latex\current\texmfs\install\tex/latex/amsfonts\umsb
 .fd
@@ -546,34 +680,29 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 {C:/Users/alexb/scoop/apps/latex/current/texmfs/data/pdftex/config/pdftex.map}]
 
-Underfull \hbox (badness 10000) in paragraph at lines 51--53
+Underfull \hbox (badness 10000) in paragraph at lines 64--66
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 54--56
+Underfull \hbox (badness 10000) in paragraph at lines 67--69
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 57--59
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 60--62
+Underfull \hbox (badness 10000) in paragraph at lines 70--72
 
  []
 
 [2] (main.aux) ) 
 Here is how much of TeX's memory you used:
- 12773 strings out of 492895
- 230610 string characters out of 3120947
- 265598 words of memory out of 3000000
- 16648 multiletter control sequences out of 15000+200000
+ 13159 strings out of 492895
+ 235789 string characters out of 3120947
+ 293446 words of memory out of 3000000
+ 17018 multiletter control sequences out of 15000+200000
  540237 words of font info for 55 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,8n,63p,775b,317s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,20n,63p,775b,355s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Users/alexb/scoop/apps/latex/current/texmfs/install/fonts/t
 ype1/public/amsfonts/cm/cmbx10.pfb><C:/Users/alexb/scoop/apps/latex/current/tex
 mfs/install/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Users/alexb/scoop/ap
@@ -592,7 +721,7 @@ op/apps/latex/current/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy7.pfb><
 C:/Users/alexb/scoop/apps/latex/current/texmfs/install/fonts/type1/public/amsfo
 nts/cm/cmti10.pfb><C:/Users/alexb/scoop/apps/latex/current/texmfs/install/fonts
 /type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (2 pages, 143949 bytes).
+Output written on main.pdf (2 pages, 149507 bytes).
 PDF statistics:
  65 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

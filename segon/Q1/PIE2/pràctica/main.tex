@@ -7,6 +7,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{color}
 \usepackage{breqn}
+\usepackage{qtree}
 \newcommand{\af}{\mathbb{A}}
 \newcommand{\euc}[1]{\mathbb{E}_{\mathbb{R}}^{#1}}
 \newcommand{\norm}[1]{||#1||}
@@ -50,6 +51,15 @@ The converse is not true. Take for example the following \textsc{CNF-2-SAT} form
 
 \paragraph{d)} Is $Y_n$ a Markov chain?\\
 \textbf{Solution}\\
+It's not. In order to prove this, we are going to consider a counterexample. First, recall that in order for $Y_n$ to be a Markov chain, it is needed that $Y_{n-1}$ gives us all the information to determine the possible outputs of $Y_n$.
+
+\Tree[.Y_n=1 [.NP [.Det \textit{the} ]
+               [.N\1 [.N \textit{package} ]]]
+          [.I\1 [.I \textsc{3sg.Pres} ]
+                [.VP [.V\1 [.V \textit{is} ]
+                           [.AP [.Deg \textit{really} ]
+                                [.A\1 [.A \textit{simple} ]
+                                      \qroof{\textit{to use}}.CP ]]]]]]
 
 \paragraph{e)} Design a Markov chain $Z_n$ such that $Y_n\geq Z_n$.\\ %Hint: modify the Gambler's ruin to design Z_n.
 \textbf{Solution}\\
