@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7140 64-bit) (preloaded format=pdflatex 2019.9.30)  5 OCT 2019 19:13
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7140 64-bit) (preloaded format=pdflatex 2019.9.30)  9 OCT 2019 13:26
 entering extended mode
 **./main.tex
 (main.tex
@@ -602,18 +602,18 @@ Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
 ) (main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -665,13 +665,13 @@ upp-pdf.mkii
 \makeMPintoPDFobject=\count286
 \everyMPtoPDFconversion=\toks39
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 23.
+LaTeX Font Info:    Try loading font information for U+msa on input line 25.
 
 (C:\Users\alexb\scoop\apps\latex\current\texmfs\install\tex/latex/amsfonts\umsa
 .fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 23.
+LaTeX Font Info:    Try loading font information for U+msb on input line 25.
 
 (C:\Users\alexb\scoop\apps\latex\current\texmfs\install\tex/latex/amsfonts\umsb
 .fd
@@ -680,50 +680,51 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 {C:/Users/alexb/scoop/apps/latex/current/texmfs/data/pdftex/config/pdftex.map}]
 
-Underfull \hbox (badness 10000) in paragraph at lines 64--66
+Overfull \hbox (6.72757pt too wide) detected at line 73
+[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 Y[] \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 k[]\
+OMS/cmsy/m/n/10 j[]\OT1/cmr/m/n/10 ) = [](\OML/cmm/m/it/10 Y[] \OT1/cmr/m/n/10 
+= \OML/cmm/m/it/10 k[]\OMS/cmsy/m/n/10 j[]\OT1/cmr/m/n/10 ) = [](\OML/cmm/m/it/
+10 Y[] \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 k[]\OMS/cmsy/m/n/10 j[]\OT1/cmr/m/n/1
+0 )
+ []
+
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 108--110
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 67--69
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 70--72
-
- []
-
-[2] (main.aux) ) 
+[3] (main.aux) ) 
 Here is how much of TeX's memory you used:
- 13159 strings out of 492895
- 235789 string characters out of 3120947
- 293446 words of memory out of 3000000
- 17018 multiletter control sequences out of 15000+200000
+ 13162 strings out of 492895
+ 235796 string characters out of 3120947
+ 278468 words of memory out of 3000000
+ 17021 multiletter control sequences out of 15000+200000
  540237 words of font info for 55 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,20n,63p,775b,355s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 41i,9n,63p,775b,317s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Users/alexb/scoop/apps/latex/current/texmfs/install/fonts/t
 ype1/public/amsfonts/cm/cmbx10.pfb><C:/Users/alexb/scoop/apps/latex/current/tex
 mfs/install/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Users/alexb/scoop/ap
 ps/latex/current/texmfs/install/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/U
 sers/alexb/scoop/apps/latex/current/texmfs/install/fonts/type1/public/amsfonts/
 cm/cmmi10.pfb><C:/Users/alexb/scoop/apps/latex/current/texmfs/install/fonts/typ
-e1/public/amsfonts/cm/cmmi7.pfb><C:/Users/alexb/scoop/apps/latex/current/texmfs
-/install/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/alexb/scoop/apps/la
-tex/current/texmfs/install/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/a
+e1/public/amsfonts/cm/cmmi5.pfb><C:/Users/alexb/scoop/apps/latex/current/texmfs
+/install/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/alexb/scoop/apps/la
+tex/current/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/a
 lexb/scoop/apps/latex/current/texmfs/install/fonts/type1/public/amsfonts/cm/cmr
-17.pfb><C:/Users/alexb/scoop/apps/latex/current/texmfs/install/fonts/type1/publ
-ic/amsfonts/cm/cmr5.pfb><C:/Users/alexb/scoop/apps/latex/current/texmfs/install
-/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/alexb/scoop/apps/latex/curre
-nt/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/alexb/sco
-op/apps/latex/current/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy7.pfb><
+12.pfb><C:/Users/alexb/scoop/apps/latex/current/texmfs/install/fonts/type1/publ
+ic/amsfonts/cm/cmr17.pfb><C:/Users/alexb/scoop/apps/latex/current/texmfs/instal
+l/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/alexb/scoop/apps/latex/curr
+ent/texmfs/install/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/alexb/scoo
+p/apps/latex/current/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb><
 C:/Users/alexb/scoop/apps/latex/current/texmfs/install/fonts/type1/public/amsfo
-nts/cm/cmti10.pfb><C:/Users/alexb/scoop/apps/latex/current/texmfs/install/fonts
-/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (2 pages, 149507 bytes).
+nts/cm/cmsy5.pfb><C:/Users/alexb/scoop/apps/latex/current/texmfs/install/fonts/
+type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/alexb/scoop/apps/latex/current/tex
+mfs/install/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/alexb/scoop/app
+s/latex/current/texmfs/install/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on main.pdf (3 pages, 168784 bytes).
 PDF statistics:
- 65 PDF objects out of 1000 (max. 8388607)
+ 76 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

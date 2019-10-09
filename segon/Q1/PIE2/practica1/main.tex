@@ -13,7 +13,9 @@
 \newcommand{\norm}[1]{||#1||}
 \newcommand{\scal}[2]{\left<#1,#2\right>}
 \newcommand{\obs}{\underline{\textbf{Observació}}: }
-\DeclareMathOperator{\idn}{Id}
+\newcommand{\half}{\dfrac{1}{2}}
+\DeclareMathOperator{\pr}{Pr}
+\DeclareMathOperator{\im}{Im}
 \author{Àlex Batlle Casellas}
 \title{Randomly solving \textsc{2-SAT}.}
 \date{}
@@ -51,21 +53,57 @@ The converse is not true. Take for example the following \textsc{CNF-2-SAT} form
 
 \paragraph{d)} Is $Y_n$ a Markov chain?\\
 \textbf{Solution}\\
-It's not. In order to prove this, we are going to consider a counterexample. First, recall that in order for $Y_n$ to be a Markov chain, it is needed that $Y_{n-1}$ gives us all the information to determine the possible outputs of $Y_n$.
-
-\Tree[.Y_n=1 [.NP [.Det \textit{the} ]
-               [.N\1 [.N \textit{package} ]]]
-          [.I\1 [.I \textsc{3sg.Pres} ]
-                [.VP [.V\1 [.V \textit{is} ]
-                           [.AP [.Deg \textit{really} ]
-                                [.A\1 [.A \textit{simple} ]
-                                      \qroof{\textit{to use}}.CP ]]]]]]
-
+It's not. In order to prove this, we are going to consider a counterexample. First, recall that in order for $Y_n$ to be a Markov chain, it is needed that $Y_{n-1}$ gives us all the information to determine the possible outputs of $Y_n$. From the following CNF formula,
+\[
+(x_1\vee x_2)\wedge(x_1\vee\bar{x_3})\wedge(x_4\vee x_2)\wedge(x_4\vee x_3)
+\]
+the starting assignment $\textbf{x}=(0,0,0,0)$ and the satisfying assignment $\textbf{x}^*=(1,1,0,1)$. If we draw a part of the tree of possibilities,\\
+\Tree[.Y_1=1 [.Y_2=2 [.Y_3=1 [.Y_4=2 ]]]
+           [.Y_2=2 ]
+           [.Y_2=2 ]
+           [.Y_2=0 [.Y_3=1 [.Y_4=2 ]]]]\\
+we can clearly see that the event $\{Y_4=2\}$ can be reached from two paths that can have different probabilities; for example, the transition between $Y_2=2$ and $Y_3=1$ could be reached by switching the value of either of the variables that coincide with $\textbf{x}^*$. So, the following happens
+\[
+\pr(Y_4=2|_{Y_3=1,Y_2=0})\neq\pr(Y_4=2|_{Y_3=1,Y_2=2}),
+\]
+which should be equal in a Markov chain as, by definition, in a Markov chain the following should happen:
+\[
+\pr(Y_n=k_n|_{Y_{n-1}=k_{n-1},Y_{n-2}=k_{n-2}\ldots,Y_1=k_1})=\pr(Y_n=k_n|_{Y_{n-1}=k_{n-1}})=
+\pr(Y_n=k_n|_{Y_{n-1}=k_{n-1},Y_{n-2}=l_{n-2}\ldots,Y_1=l_1})
+\]
+for any $k_1,\ldots,k_n,l_1,\ldots,l_n\in\im{Y}$. This ends the proof.
 \paragraph{e)} Design a Markov chain $Z_n$ such that $Y_n\geq Z_n$.\\ %Hint: modify the Gambler's ruin to design Z_n.
 \textbf{Solution}\\
+As we have seen before, the worst case in which $Y_n$ increases is with probability $\half$. Then, we can define the following Markov chain:
+\[
+Z_n=
+\begin{cases}
+Z_{n-1}+1\text{ with probability }\half\\
+Z_{n-1}-1\text{ with probability }\half\\
+1\text{ if }Z_{n-1}=0\text{, with probability 1}\\
+\end{cases}
+\]
+starting at $Z_0=0$, similar to the Gambler's ruin. Now, by definition, $Z_n\leq Y_n$.
 
 \paragraph{f)} Use $Z_n$ to prove that the expected running time of \textsc{Rand2SAT} is at most $k^2$.\\
 \textbf{Solution}\\
+We will now calculate the expected running time of \textsc{Rand2SAT} by calculating the expected hitting time of $Z_n$ to state $k$, which by definition acts as an upper bound to the same expected hitting time of $Y_n$, starting at 0. Recall that the expected hitting times $\{\tau_i\}$ of a Markov chain obey the following recurrence equation,
+\[
+\tau_i=1+p\tau_{i+1}+q\tau_{i-1}.
+\]
+In this case, $p=q=\half$ (except for $\tau_0$, where the probability of increasing is 1), so the terms of this recurrence will be
+\[
+\tau_1=1+\tau_2\quad\tau_2=1+\half\tau_3+\half\tau_1\quad\tau_3=1+\half\tau_2+\half\tau_4\quad (\cdots)\quad \tau_k=0.
+\]
+If we expand $\tau_2$, we can see that
+\[
+\tau_2=1+\half\tau_3+\half(1+\tau_2)\implies\tau_2=1+2+\tau_3\implies\tau_3=1+\half\tau_4+\half(3+\tau_3)\implies\tau_3=2+3+\tau_4\quad\cdots
+\]
+Then, we can see by induction that
+\[
+\tau_i=\tau_{i+1}+2i-1,
+\]
+and as by definition $\tau_k=0$, we have that $\tau_1=1+\tau_2=1+(3+\tau_3)=1+(3+(5+\tau_4))+\cdots$. It is known that the sum of the first $m$ odd numbers is $m^2$, and as $\tau_k$ is zero, $\tau_1=\sum_{i=1}^{k-1} 2i-1=(k-1)^2<k^2$. As a consequence, \textsc{Rand2SAT} cannot run more than $k^2$ iterations.
 
 \paragraph{*g)} We modify \textsc{Rand2SAT} to stop in bounded time as follows. Let $l\in\mathbb{Z}$. If after $2lk^2$ iterations of the loop in (2) we have not halted, we break the loop and return the current assignment $\textbf{x}$. Prove that the output of the modified \textsc{Rand2SAT} is a satisfying assignment with probability at least $1-2^{-l}$.\\ %Hint: use Markov's inequality.
 \textbf{Solution}\\
