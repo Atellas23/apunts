@@ -1,0 +1,130 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{float}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{breqn}
+\usepackage{qtree}
+\newcommand{\af}{\mathbb{A}}
+\newcommand{\euc}[1]{\mathbb{E}_{\mathbb{R}}^{#1}}
+\newcommand{\norm}[1]{||#1||}
+\newcommand{\scal}[2]{\left<#1,#2\right>}
+\newcommand{\obs}{\underline{\textbf{Observació}}: }
+\newcommand{\half}{\dfrac{1}{2}}
+\DeclareMathOperator{\pr}{Pr}
+\DeclareMathOperator{\bino}{Bin}
+\DeclareMathOperator{\im}{Im}
+\author{Àlex Batlle Casellas}
+\title{Randomly solving \textsc{2-SAT}.}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\paragraph{a)} Let $X_n$ be the number of satisfied clauses after $n$ iterations of the loop in (2) (we will refer to it as time $n$). Given the execution up top time $n-1$, is it always true that $\mathbb{E}\left[X_n\right]\geq X_{n-1}$?\\
+\textbf{Solution}\\
+The claim is not true. Let us prove it by a counterexample: let $\phi$ be the following CNF formula, \[\phi=(x_1\vee x_2)\wedge(x_1\vee x_3)\wedge(\bar{x_1}\vee\bar{x_4})\wedge(\bar{x_1}\vee x_3)\wedge(\bar{x_4}\vee\bar{x_3}),\] and $\textbf{x}=(0,1,0,1)$ the assignment at time $n-1$. Then, it follows that $X_{n-1}=4$, and the expectancy of the variable $X_n$ can be calculated as follows; whether $x_1$ swaps its value, and then $X_n=3$, or $x_3$ swaps its value and $X_n=4$. This gives an expectancy
+\[\mathbb{E}\left[X_n\right]=\dfrac{1}{2}3+\dfrac{1}{2}4=\dfrac{7}{2}<4=X_{n-1}.\]
+
+\paragraph{b)} Since $\phi$ is satisfiable, let $\textbf{x}^*$ be an arbitrary satisfying assignment. Let $Y_n$ be the number of variables in $\textbf{x}$ whose value coincides with the one in $\textbf{x}^*$ at time $n$. Given the execution up to time $n-1$, is it always true that $\mathbb{E}\left[Y_n\right]\geq Y_{n-1}$?\\
+\textbf{Solution}\\
+In order to prove this, we will first take a look at how does $Y_n$ behave with respect to $Y_{n-1}$. Since the algorithm only changes variables in violated clauses, we will take $Z^i_n$ to be the random variable that counts how many of the variables in clause $i$ have the same value in $\textbf{x}$ and in $\textbf{x}^*$. So, clause $i$ can be thought of as $(x_{j_1}\vee x_{j_2})$. In $\textbf{x}^*$ this can only be (1,1), (0,1), or (1,0), as a consequence of a clause being a disjunction, and in $\textbf{x}$ this variables have to be (0,0), because the clause is violated. Then, suppose the first step of the loop selects this clause; now it can only change the value of one of the two variables. So, the only possible outcomes of $Y_n$ are 
+\[
+Y_n=\begin{cases}
+Y_{n-1}+1\\
+Y_{n-1}-1
+\end{cases},
+\] and this will depend on the value of $Z^i_n$. As clause $i$ was violated at time $n-1$, $Z^i_{n-1}$ could have been 0 or 1, and it can at time $n$ equal zero, one or two:
+\[
+Z^i_n=\begin{cases}
+0\text{ with probability }\dfrac{1}{2}\text{, if }Z^i_{n-1}=1\\
+1\text{ with probability 1, if }Z^i_{n-1}=0\\
+2\text{ with probability }\dfrac{1}{2}\text{, if }Z^i_{n-1}=1
+\end{cases}.
+\] Taking this into account, it is more probable that $Z^i_n$ increases than that it decreases, and so is the case for $Y_n$. Then, the expectancy of $Y_n$ is greater than (or equal to) the value of $Y_{n-1}$.
+\newpage
+
+\paragraph{c)} Argue that if $Y_n=k$, then \textsc{Rand2SAT} terminates at time $n$. Is the converse true?\\
+\textbf{Solution}\\
+Since $Y_n=k$, it means that all variables in $\textbf{x}$ are equal to $\textbf{x}^*$. As $\textbf{x}^*$ is an arbitrary satisfying assignment, it means that $\phi(\textbf{x}^*)=1$, and as $\phi\in\textsc{CNF-2-SAT}$, it follows that is has no violated clauses. Then, as described by the algorithm, the loop in (2) stops when no clauses are violated. Hence, when $Y_n=k$, the algorithm halts at this moment (\textit{time $n$}).\\
+The converse is not true. Take for example the following \textsc{CNF-2-SAT} formula $\phi'$, \[\phi'=(x_1\vee x_2)\wedge(x_2\vee x_3);\] it has 4 different satisfying assignments, $a_1=(1,1,0)$, $a_2=(1,0,1)$, $a_3=(0,1,1)$, and $a_4=(0,1,0)$. If we take $\textbf{x}^*$ to be one of these, say $a_3$, the loop in (2) could possibly reach $a_4$ before reaching $a_3$ and halt as a consequence of $a_4$ being a satisfying assignment. If that were the case, $Y_n$ would be 2 instead of 3 (the $k$ in this example), and so the converse can't be true.
+
+\paragraph{d)} Is $Y_n$ a Markov chain?\\
+\textbf{Solution}\\
+It's not. In order to prove this, we are going to consider a counterexample. First, recall that in order for $Y_n$ to be a Markov chain, it is needed that $Y_{n-1}$ gives us all the information to determine the possible outputs of $Y_n$. From the following CNF formula,
+\[
+(x_1\vee x_2)\wedge(x_1\vee\bar{x_3})\wedge(x_4\vee x_2)\wedge(x_4\vee x_3)
+\]
+the starting assignment $\textbf{x}=(0,0,0,0)$ and the satisfying assignment $\textbf{x}^*=(1,1,0,1)$. If we draw a part of the tree of possibilities,\\
+\Tree[.Y_1=1 [.Y_2=2 [.Y_3=1 [.Y_4=2 ]]]
+           [.Y_2=2 ]
+           [.Y_2=2 ]
+           [.Y_2=0 [.Y_3=1 [.Y_4=2 ]]]]\\
+we can clearly see that the event $\{Y_4=2\}$ can be reached from two paths that can have different probabilities; for example, the transition between $Y_2=2$ and $Y_3=1$ could be reached by switching the value of either of the variables that coincide with $\textbf{x}^*$. So, the following happens
+\[
+\pr(Y_4=2|_{Y_3=1,Y_2=0})\neq\pr(Y_4=2|_{Y_3=1,Y_2=2}),
+\]
+which should be equal in a Markov chain as, by definition, in a Markov chain the following should happen:
+\[
+\pr(Y_n=k_n|_{Y_{n-1}=k_{n-1},Y_{n-2}=k_{n-2}\ldots,Y_1=k_1})=\pr(Y_n=k_n|_{Y_{n-1}=k_{n-1}})=
+\pr(Y_n=k_n|_{Y_{n-1}=k_{n-1},Y_{n-2}=l_{n-2}\ldots,Y_1=l_1})
+\]
+for any $k_1,\ldots,k_n,l_1,\ldots,l_n\in\im{Y}$. This ends the proof.
+\paragraph{e)} Design a Markov chain $Z_n$ such that $Y_n\geq Z_n$.\\ %Hint: modify the Gambler's ruin to design Z_n.
+\textbf{Solution}\\
+As we have seen before, the worst case in which $Y_n$ increases is with probability $\half$. Then, we can define the following Markov chain:
+\[
+Z_n=
+\begin{cases}
+Z_{n-1}+1\text{ with probability }\half\\
+Z_{n-1}-1\text{ with probability }\half\\
+1\text{ if }Z_{n-1}=0\text{, with probability 1}\\
+k\text{ if }Z_{n-1}=k\text{, with probability 1}
+\end{cases}
+\]
+starting at $Z_0=0$, similar to the Gambler's ruin. Now, by definition, $Z_n\leq Y_n$.
+\newpage
+
+\paragraph{f)} Use $Z_n$ to prove that the expected running time of \textsc{Rand2SAT} is at most $k^2$.\\
+\textbf{Solution}\\
+We will now calculate the expected running time of \textsc{Rand2SAT} by calculating the expected hitting time of $Z_n$ to state $k$, which by definition acts as an upper bound to the same expected hitting time of $Y_n$, starting at 0. Recall that the expected hitting times $\{\tau_i\}$ of a Markov chain obey the following recurrence equation,
+\[
+\tau_i=1+p\tau_{i+1}+q\tau_{i-1}.
+\]
+In this case, $p=q=\half$ (except for $\tau_0$, where the probability of increasing is 1), so the terms of this recurrence will be
+\[
+\tau_0=1+\tau_1\quad\tau_1=1+\half\tau_2+\half\tau_0\quad\tau_2=1+\half\tau_1+\half\tau_3\quad (\cdots)\quad \tau_k=0.
+\]
+If we expand $\tau_1$, we can see that
+\[
+\tau_1=1+\half\tau_2+\half(1+\tau_1)\implies\tau_1=1+2+\tau_2\implies\tau_2=1+\half\tau_3+\half(3+\tau_2)\implies\tau_2=2+3+\tau_3\quad\cdots
+\]
+Then, we can see by induction that
+\[
+\tau_i=\tau_{i+1}+2i+1,
+\]
+and as by definition $\tau_k=0$, we have that $\tau_0=1+\tau_1=1+(3+\tau_2)=1+(3+(5+\tau_3))=\cdots$. It is known that the sum of the first $m$ odd numbers is $m^2$, and as $\tau_k$ is zero, $\tau_0=\sum_{i=0}^{k-1} 2i+1=k^2$. As a consequence, \textsc{Rand2SAT} cannot run more than $k^2$ iterations.
+
+\paragraph{*g)} We modify \textsc{Rand2SAT} to stop in bounded time as follows. Let $l\in\mathbb{Z}$. If after $2lk^2$ iterations of the loop in (2) we have not halted, we break the loop and return the current assignment $\textbf{x}$. Prove that the output of the modified \textsc{Rand2SAT} is a satisfying assignment with probability at least $1-2^{-l}$.\\ %Hint: use Markov's inequality.
+\textbf{Solution}\\
+Let $T_i$ be the random variable that counts the time (number of iterations) that it takes for $Y_n$ to reach $k$. Then, because of \textbf{f)}, it follows that $\mathbb{E}[T_i]=k^2$. Using Markov's inequality, we can see that
+\[
+\pr(T_i\geq2k^2)\leq\dfrac{k^2}{2k^2}\implies\pr(T_i\geq2k^2)\leq\half.
+\]
+Then, we define the random indicator variable $I_{T_i}$ to be
+\[
+I_{T_i}=\begin{cases}
+0\text{ if }T_i<2k^2\\
+1\text{ if }T_i\geq2k^2
+\end{cases}.
+\]
+We have that $I_{T_i}\sim B\left(\half\right)$. If $\mathcal{T}=\sum_{i=1}^l I_{T_i}$, then $\mathcal{T}\geq\mathcal{N}\sim\bino\left(l,\half\right)$, and then
+\[
+\pr(\mathcal{N}=0)=\binom{l}{0}\left(\half\right)^{l}=\dfrac{1}{2^l}.
+\]
+Now we have finished, as $\pr(\mathcal{N}>0)=1-\pr(\mathcal{N}=0)=1-2^{-l}$.
+\end{document}
