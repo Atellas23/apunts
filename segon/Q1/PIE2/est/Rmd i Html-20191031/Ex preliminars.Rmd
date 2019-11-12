@@ -1,0 +1,137 @@
+---
+title: "Exemples Preliminars"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**6 (1)  Si** $Y\sim N\left(\mu,\sigma^{2}\right)$ **amb** $\mu=174$ **i** $\sigma^{2}=92$ **coneguts,  trobeu-ne els resultats normals al 99% on els valors estranys són dues cues equiprobables.**
+
+*Amb la funció qnorm, directament o tipificant*
+
+```{r}
+c("inf"=qnorm(0.005,mean=174,sd=sqrt(92)),"sup"=qnorm(0.995,mean=174,sd=sqrt(92)))
+174+sqrt(92)*c("inf"=qnorm(0.005),"sup"=qnorm(0.995))
+```
+
+**6 (2)  Si** $Y\sim N\left(\mu,\sigma^{2}\right)$ **amb** $\mu$ **i** $\sigma^{2}$ **desconeguts,  però tenim una m.a.s.** $\left\{ Y_{1},...,Y_{10}\right\}$  **de la que s'ha obtingut** $\overline{Y}=33$ **i** $S^{2}=18$ , trobeu-ne (aproximadament,  “interval de predicció”) els resultats normals al 99%,  on els valors estranys són dues cues equiprobables.
+
+*Com que* $Y_{0}-\overline{Y}\sim N\left(0,\sigma^{2}\left(1+\frac{1}{n}\right)\right)$ *hem de tipificar i utilitzar la variància mostral en lloc de la poblacional amb el que tindrem* $\frac{Y_{0}-\overline{Y}}{\sqrt{S^{2}\left(1+\frac{1}{n}\right)}}\sim t_{n-1}\in\left(t_{n-1,0.005},t_{n-1,0.995}\right)$ *i per tant* $Y_{0}\in\left(\overline{Y}+t_{n-1,0.005}\sqrt{S^{2}\left(1+\frac{1}{n}\right)},\overline{Y}+t_{n-1,0.995}\sqrt{S^{2}\left(1+\frac{1}{n}\right)}\right)$ *utilitzant la funció qt tenim:*
+
+```{r}
+m<-33
+S2<-18
+n<-10
+m+sqrt(S2*(1+1/n))*c("inf"=qt(0.005,n-1),"sup"=qt(0.995,n-1))
+```
+
+**6 (3)  En la mateixa situació de l'apartat (2),  trobeu els resultats normals al 99% de dues cues iguals: de** $\overline{Y}$ **suposant** $\mu=33$ **i de** $S_{Y}^{2}=18$  **però suposant** $\sigma^{2}=16$ **conegut.**
+
+*Tenim* $\overline{Y}\sim N\left(\mu,\frac{\sigma^{2}}{n}\right)$ *per tant utilitzant la funció qnorm:*
+
+```{r}
+c("inf"=qnorm(0.005,mean=m,sd=sqrt(S2/n)),"sup"=qnorm(0.995,mean=m,sd=sqrt(S2/n)))
+```
+
+###Exemples d'intervals de confiança
+
+• Tenim la variable aleatòria $Y\sim N\left(\mu,\sigma^{2}\right)$ amb $\mu$ i $\sigma$ desconeguts.
+
+• Tenim $\boldsymbol{y}$ una m.a.s de grandària $n=12$,  $\overline{\boldsymbol{y}}=123$ i $S_{n}^{2}=\frac{\sum_{i=1}^{n}y_{i}}{n-1}=6.75$
+
+1. Calcular $IC_{95\%}\left(\mu\right)$
+
+*Interval de confiança fet a mà, utilitzant l'R com a calculadora, sabent que* $\overline{y}\sim N\left(\mu,\frac{\sigma^{2}}{n}\right)$ *amb el que* $\frac{\overline{y}-\mu}{\frac{\sigma^{2}}{n}}\sim N\left(0,1\right)\Rightarrow\frac{\overline{y}-\mu}{\frac{S^{2}}{n}}\sim t_{n-1}\in\left(t_{n-1,0.025},t_{n-1,0.975}\right)$ *per tant* $\mu\in\left(\overline{y}+\sqrt{\frac{S^{2}}{n}}t_{n-1,0.025},\overline{y}+\sqrt{\frac{S^{2}}{n}}t_{n-1,0.975},\right)$. 
+
+```{r}
+m<-123
+S2<-6.75
+n<-12
+m+sqrt(S2/n)*c("inf"=qt(0.025,n-1),"sup"=qt(0.975,n-1))
+```
+
+2. Calcular $IC_{95\%}\left(\sigma\right)$ o calcular $IC_{95\%}\left(\sigma^{2}\right)$
+
+*Interval de confiança fet a mà, utilitzant l'R com a calculadora, sabent que* $\frac{\left(n-1\right)S^{2}}{\sigma^{2}}\sim\chi_{n-1}^{2}\in\left(\chi_{n-1,0.025}^{2},\chi_{n-1,0.975}^{2}\right)$ *i per tant* $\sigma^{2}\in\left(\frac{\left(n-1\right)S^{2}}{\chi_{n-1,0.975}^{2}},\frac{\left(n-1\right)S^{2}}{\chi_{n-1,0.025}^{2}}\right)$.
+
+```{r}
+(ICsigma2<-(n-1)*S2*c("inf"=1/qchisq(0.975,n-1),"sup"=1/qchisq(0.025,n-1)))
+(ICsigma<-sqrt(ICsigma2))
+```
+
+###Exemples de tests, algunes preguntes sobre l'exercici 7)
+
+####S'ha fet un seguiment de iogurts en la fase de comercialització,  per comparar l'efecte de la temperatura de la fermentació. 
+
+####Individus: Unitats de iogurt,  de cada temperatura de fermentació,  analitzades alguns dies després:
+
+####Dues variables explicatives:
+
+####• Dies: transcorreguts entre la fermentació i l'anàlisi del iogurt.
+
+####• Grups: Dos temperatures de la fermentació 42° o 43.5°.
+
+####Tres variables resposta mesurades durant l'experiència: 
+
+####• pH: del iogurt. 
+
+####• Strep.: concentració de Streptococcus salivarius thermophilus 
+
+####• Lactob.: concentració de Lactobacillus delbrueckii bulgaricus 
+
+**Suposant que** $pH\sim N\left(\mu,\sigma^{2}\right)$**,  amb** $\alpha=0.05$.
+
+**Els valors obtinguts són {4.44,4.47,4.45,4.42,4.44,4.48}.**
+
+**a) dieu si el seu valor esperat és 4.4? o no?**
+
+• Hipòtesis $H_{0}:\mu_{pH}=4.4$ vs $H_{1}:\mu_{pH}\neq4.4$.
+
+• Estadístic: $\frac{\overline{pH}-\mu_{H_{0}}}{\sqrt{\frac{S^{2}}{n}}}\sim t_{n-1}$
+
+```{r}
+ph<-c(4.44,4.47,4.45,4.42,4.44,4.48)
+t.test(ph,mu=4.4,alternative="two.sided",conf.level=0.95)
+```
+
+*Comprovació de l'interval de confiança, fet a mà utilitzant l'R com a calculadora*
+
+```{r}
+(m<-mean(ph))
+(S<-sd(ph))
+(n<-length(ph))
+m+S/sqrt(n)*c("inf"=qt(0.025,n-1),"sup"=qt(0.975,n-1))
+```
+
+*Comprovació del Test, fet a mà utilitzant l'R com a calculadora*
+
+```{r}
+(T<-(m-4.4)/(S/sqrt(n)))
+(p.valor<-2*pt(-abs(T),n-1))
+```
+
+**b) dieu si el seu valor esperat és inferior 4.4? o no?**
+
+• Hipòtesis $H_{0}:\mu_{pH}\ge4.4$ vs $H_{1}:\mu_{pH}<4.4$.
+
+• Estadístic: $\frac{\overline{pH}-\mu_{H_{0}}}{\sqrt{\frac{S^{2}}{n}}}\sim t_{n-1}$
+
+```{r}
+t.test(ph,mu=4.4,alternative="less",conf.level=0.95)
+```
+
+**c) la seva desviació tipus és 0.02? o no?**
+
+• Hipòtesis: $H_{0}:\sigma_{pH}=0.02$ vs $H_{1}:\sigma_{pH}\neq0.02$.
+
+• Estadístic: $\frac{\left(n-1\right)S_{pH}^{2}}{\sigma_{pH}^{2}}\sim\chi_{n-1}^{2}$
+
+```{r}
+(T<-(n-1)*S^2/0.02^2)
+(p.valor<-2*min(pchisq(T,n-1),1-pchisq(T,n-1)))
+```
+

@@ -1,0 +1,151 @@
+---
+title: "Ex13 Descriptiva iogurts"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### El mateix enunciat de l'exercici dels iogurts però ara tenim totes les dades al fitxer ”Iogurt.csv”.
+S'ha fet un seguiment de iogurts en la fase de comercialització, per comparar l'efecte de la temperatura de la fermentació. 
+
+Individus: Unitats de iogurt, de cada temperatura de fermentació, analitzades alguns dies després:
+
+Dues variables explicatòries:
+
+• Dies: transcorreguts entre la fermentació i l'anàlisi del iogurt.
+
+• Grups: Dos temperatures de la fermentació 42° o 43.5°.
+
+Tres variables resposta mesuradesdurant l'experiència: 
+
+• pH: del iogurt. 
+
+• Strep.: concentració de Streptococcus salivarius thermophilus 
+
+• Lactob.: concentració de Lactobacillus delbrueckii bulgaricus 
+
+Utilitzant el programa R, contesteu els apartats següents:
+
+*Comencem posant el directòri de treball, llegint i mirant les dades, definint el factor dia i carregant els paquests necessaris:*
+
+```{r}
+#setwd("...")
+
+dd<-read.csv2("../Dades/Iogurt.csv")
+dd
+dd$Fdia<-as.factor(dd$dia)
+
+library(car)
+library(tables)
+
+```
+
+**a)** Per les tres variables mesurades, descriviu les dades amb:
+
+**i.** Diagrames de dispersió de l'estil
+
+```{r,echo=FALSE}
+sp(pH~dia|Ferm,dd,smooth=F)
+```
+```{r}
+sp(pH~dia|Ferm,dd,smooth=F,main="pH")
+abline(h=4,lt=2)
+sp(strep~dia|Ferm,dd,smooth=F,main="strep")
+sp(lactob~dia|Ferm,dd,smooth=F,main="lactob")
+```
+
+**ii.** Taules de l'estil
+
+```{r,echo=FALSE}
+print(tabular((pH)*Ferm*(mean+sd)~Fdia,dd),justification="r")
+```
+```{r}
+print(tabular((strep)*Ferm*(mean+sd)~Fdia,dd),justification="r")
+print(tabular((lactob)*Ferm*(mean+sd)~Fdia,dd),justification="r")
+
+```
+
+**b)** Inmediatament després de la fermentació, dia 0, amb $\alpha=0.05$ contesteu les preguntes
+
+**i.** hi ha diferències entre els valors esperats $\mu_{1}=E\left[pH_{|T42}\right]$ i $\mu_{2}=E\left[pH_{|T43.5}\right]$?
+
+```{r}
+# Hem d'utilitzar les dades 
+d0<-dd[dd$dia==0,]
+# Si considerem variàncies iguals
+t.test(pH~Ferm,var.equal=T,d0)
+t.test(strep~Ferm,var.equal=T,d0)
+t.test(lactob~Ferm,var.equal=T,d0)
+# Si considerem variàncies no iguals
+t.test(pH~Ferm,d0)
+t.test(strep~Ferm,d0)
+t.test(lactob~Ferm,d0)
+```
+
+*Si ho repetim per algun altre dia, per exemple el 28, queda:*
+
+```{r}
+# Hem d'utilitzar les dades 
+d28<-dd[dd$dia==28,]
+# Si considerem variàncies iguals
+t.test(pH~Ferm,var.equal=T,d28)
+t.test(strep~Ferm,var.equal=T,d28)
+t.test(lactob~Ferm,var.equal=T,d28)
+# Si considerem variàncies no iguals
+t.test(pH~Ferm,d28)
+t.test(strep~Ferm,d28)
+t.test(lactob~Ferm,d28)
+```
+
+**ii.** i entre les variancies $\sigma_{1}^{2}=Var\left(pH_{|T42}\right)$ i $\sigma_{2}^{2}=Var\left(pH_{|T43.5}\right)$?
+
+```{r}
+# Pel dia 0 ja tenom d0
+var.test(pH~Ferm,d0)
+var.test(strep~Ferm,d0)
+var.test(lactob~Ferm,d0)
+```
+
+Nota: podeu repetir l'apartat per a qualsevol dels 5 dies de les dades i qualsevol de les tres variables analitzades. El cas del dia 0 ja el tenim fet a mà a l'exercici 8) i amb R però entrant les dades a ma a l'exercici 12).
+
+#### *Definint les dades com d0 o d28, ho podem fer per qualsevol dels dies*
+
+**c)** Com que és molt més senzill obtenir el pH que la concentració de strep, o de lactob, voldriem predir-les a partir del pH.
+
+**i.** Quina expressió senzilla donarieu per obtenir la concetració de strep a partir del pH? Si es considera que per sota de pH=4 el iogurt ha expirat quin seria el límit per strep?
+
+```{r}
+mod1<-lm(strep~pH,dd)
+summary(mod1)
+paste0("strep=",coef(mod1)[1],"+",coef(mod1)[2],"·pH")
+print(limit1<-sum(coef(mod1)*c(1,4)))
+
+# Gràfica
+with(dd,plot(pH,strep))
+abline(coef(mod1),col="blue")
+abline(v=4,col="red")
+abline(h=limit1,col="red")
+```
+
+**ii.** Quina expressió senzilla donarieu per obtenir la concetració de lactob a partir del pH? Si es considera que per sota de pH=4 el iogurt ha expirat quin seria el límit per lactob?
+
+```{r}
+mod2<-lm(lactob~pH,dd)
+summary(mod2)
+paste0("lactob=",coef(mod2)[1],"+",coef(mod2)[2],"·pH")
+print(limit2<-sum(coef(mod2)*c(1,4)))
+
+# Gràfica
+with(dd,plot(pH,lactob))
+abline(coef(mod2),col="blue")
+abline(v=4,col="red")
+abline(h=limit2,col="red")
+```
+
+**iii.** Quina de les dues expressions anteriors us sembla que ajusta millor? per què?
+
+#### *Molt iguals, una mica millor la del lactob pel coeficient de determinació lleugerament millor*

@@ -1,0 +1,42 @@
+---
+title: "14 Gràfiques reg8"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### En el fitxer “reg8.csv” hi teniu les dades de X i Y, en 8 situacions diferents indicades per la variable REG, volem descriure la relació entre la variable Y la X. 
+
+Nota: Teniu les mateixes dades en el fitxer reg8h.csv, però les 8 situacions estan en columnes diferents.
+
+```{r}
+#setwd("...")
+dd8<-read.csv2("../Dades/reg8.csv")
+library(car)
+head(dd8)
+```
+
+Per a cadaascun dels 8 casos:
+
+**a)** feu la gràfica descriptiva de les dades amb la recta de regressió.
+
+**b)** Observeu si la recta ajusta bé les dades i quines particularitats hi ha. 
+
+```{r}
+for (reg in 1:8){
+  write(paste("Exemple: ",reg),"")
+  X<-dd8[dd8$REG==reg,"X"]
+  Y<-dd8[dd8$REG==reg,"Y"]
+  scatterplot(X,Y,smooth=F,box=F,main=reg)
+  mod<-lm(Y~X)
+  summary(mod)
+}
+```
+
+**b)** Observeu si la recta ajusta bé les dades i quines particularitats hi ha. 
+
+#### *Només REG=4 és correcte sense cap tipus de problema.*
