@@ -1,4 +1,4 @@
-setwd('.')
+setwd('../practicapie2')
 
 y <- read.csv(file="input1.csv", header=TRUE, sep=";")
 y <- as.numeric(sub(",", ".", unlist(y), fixed = TRUE))
@@ -58,16 +58,6 @@ beta_estimator[2]
 
 # d)
 # the test is H_0: beta = 18 vs. H_1: beta != 18
-# so we compute the log-likelihoods of each one
+# we have to calculate the contrast statistic
 
-# H_0: beta = 18 and (again) suppose beta ~ N(mu,sigma)
-mu = 18
-sigma <- sqrt(-1/h)
-# likelihood and log-likelihood functions
-f0 <- dnorm(y,mean=mu,sd=sigma)
-lf0 <- log(f0)
-slf0 <- sum(lf0) # this is the log-likelihood function
-
-# H_1: beta != 18 (repeat previous assumptions)
-f1 <- 
 
