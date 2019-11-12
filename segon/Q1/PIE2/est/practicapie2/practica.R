@@ -60,4 +60,101 @@ beta_estimator[2]
 # the test is H_0: beta = 18 vs. H_1: beta != 18
 # we have to calculate the contrast statistic
 
+# calcular estadistic de contrast quan sapigues algo d'en max
 
+# the p-value for the normal distribution with mean: beta_estimator, and sd: -1/second_derivative is
+pv <- 2*pnorm(0.025,mean=beta_estimator[2],sd=sqrt(-1/h))
+pv
+
+
+
+#### EXERCICI 2
+y2 <- read.csv(file="input2.csv", header=TRUE, sep=";")
+# a)
+# we calculate the means and standard deviations for each data sample
+ysencer <- y2[1:20,1:5]
+ytriturat <- y2[21:40,1:5]
+
+sencerA <- ysencer[1:20,2] #G495
+sencerA <- as.numeric(sub(",", ".", unlist(sencerA), fixed = TRUE))
+
+sencerB <- ysencer[1:20,3] #G465
+sencerB <- as.numeric(sub(",", ".", unlist(sencerB), fixed = TRUE))
+
+sencerC <- ysencer[1:20,4] #G537
+sencerC <- as.numeric(sub(",", ".", unlist(sencerC), fixed = TRUE))
+
+sencerD <- ysencer[1:20,5] #G436
+sencerD <- as.numeric(sub(",", ".", unlist(sencerD), fixed = TRUE))
+
+msa <- mean(sencerA)
+dsa <- sd(sencerA)
+
+msb <- mean(sencerB)
+dsb <- sd(sencerB)
+
+msc <- mean(sencerC)
+dsc <- sd(sencerC)
+
+msd <- mean(sencerD)
+dsd <- sd(sencerD)
+
+max(msa,msb,msc,msd)
+
+trituratA <- ytriturat[1:20,2] #G495
+trituratA <- as.numeric(sub(",", ".", unlist(trituratA), fixed = TRUE))
+
+trituratB <- ytriturat[1:20,3] #G465
+trituratB <- as.numeric(sub(",", ".", unlist(trituratB), fixed = TRUE))
+
+trituratC <- ytriturat[1:20,4] #G537
+trituratC <- as.numeric(sub(",", ".", unlist(trituratC), fixed = TRUE))
+
+trituratD <- ytriturat[1:20,5] #G436
+trituratD <- as.numeric(sub(",", ".", unlist(trituratD), fixed = TRUE))
+
+mta <- mean(trituratA)
+dta <- sd(trituratA)
+
+mtb <- mean(trituratB)
+dtb <- sd(trituratB)
+
+mtc <- mean(trituratC)
+dtc <- sd(trituratC)
+
+mtd <- mean(trituratD)
+dtd <- sd(trituratD)
+
+min(mta,mtb,mtc,mtd)
+max(dta,dtb,dtc,dtd)
+
+# b) G495, sencers
+sencerA
+# suppose Y follows a normal distribution
+
+# then (Y-mu)/sqrt(S^2/Y.size)=
+# (Y-mu)/(sqrt(sigma^2/n)sqrt(S^2/sigma^2)) ~ N(0,1)/sqrt(chi^2_(n-1)/(n-1)) ~ t_(Y.size-1)
+# then the normal tails of t_19 at 99% are
+inf <- qt(0.005,19)
+sup <- qt(0.995,19)
+c("inf"=inf,"sup"=sup)
+# then (mean(Y)-mu)/sqrt(S^2/Y.size) has to fall inside
+# iff mu falls inside (liminf,limsup)
+ss <- sum(sencerA^2)/19
+den <- sqrt(ss/20)
+liminf <- inf*den+mean(sencerA)
+limsup <- sup*den+mean(sencerA)
+c("inf"=liminf,"sup"=limsup)
+
+# then (Y.size-1)S^2/sigma^2 ~ chi^2_(Y.size-1)
+# the normal tails of chi^2_19 at 99% are
+inf <- qchisq(0.005,19)
+sup <- qchisq(0.995,19)
+c("inf"=inf,"sup"=sup)
+# then 19*ss/sigma^2 has to fall inside
+# iff sigma^2 falls inside (liminf,limsup)
+liminf <- 19*ss/sup
+limsup <- 19*ss/inf
+# iff sigma falls inside (sqrt liminf, sqrt limsup)
+c("inf"=sqrt(liminf),"sup"=sqrt(limsup))
+limsup-liminf
