@@ -60,12 +60,12 @@ beta_estimator[2]
 # the test is H_0: beta = 18 vs. H_1: beta != 18
 # we have to calculate the contrast statistic
 
-# calcular estadistic de contrast quan sapigues algo d'en max
+contrast <- (beta_estimator[2]-18)/(-1/h)
+contrast
 
 # the p-value for the normal distribution with mean: beta_estimator, and sd: -1/second_derivative is
-pv <- 2*pnorm(0.025,mean=beta_estimator[2],sd=sqrt(-1/h))
+pv <- 2*pnorm(0.025,mean=18,sd=sqrt(-1/h))
 pv
-
 
 
 #### EXERCICI 2
@@ -132,7 +132,7 @@ max(dta,dtb,dtc,dtd)
 sencerA
 # suppose Y follows a normal distribution
 
-# then (Y-mu)/sqrt(S^2/Y.size)=
+# then (Y-mu)/sqrt(S^2/Y.size)=g
 # (Y-mu)/(sqrt(sigma^2/n)sqrt(S^2/sigma^2)) ~ N(0,1)/sqrt(chi^2_(n-1)/(n-1)) ~ t_(Y.size-1)
 # then the normal tails of t_19 at 99% are
 inf <- qt(0.005,19)
@@ -140,7 +140,7 @@ sup <- qt(0.995,19)
 c("inf"=inf,"sup"=sup)
 # then (mean(Y)-mu)/sqrt(S^2/Y.size) has to fall inside
 # iff mu falls inside (liminf,limsup)
-ss <- sum(sencerA^2)/19
+ss <- var(sencerA)
 den <- sqrt(ss/20)
 liminf <- inf*den+mean(sencerA)
 limsup <- sup*den+mean(sencerA)
@@ -157,4 +157,29 @@ liminf <- 19*ss/sup
 limsup <- 19*ss/inf
 # iff sigma falls inside (sqrt liminf, sqrt limsup)
 c("inf"=sqrt(liminf),"sup"=sqrt(limsup))
-limsup-liminf
+sqrt(limsup)-sqrt(liminf)
+
+# c) G436 --> D variety
+# contrast statistic is T=(mean(triturat)-mean(sencer))/(sqrt((1/triturat.size+1/sencer.size)(joint variance)^2))
+difference <- abs(mean(trituratD)-mean(sencerD))
+joint_variance <- (var(sencerD)+var(trituratD))/38
+den <- sqrt(joint_variance/10)
+tcalc <- difference/den
+tcalc
+# the p-value is
+pv <- 2*pt(-tcalc,38)
+pv
+
+# d) G465 (B) i G537 (C) triturats
+# contrast statistic is (mean-mean)/sqrt(S1^2/n1+S2^2/n2)
+ss1 <- var(trituratB)
+ss2 <- var(trituratC)
+dif <- abs(mean(trituratB)-mean(trituratC))
+den <- sqrt((ss1+ss2)/20)
+tcl <- dif/den
+tcl
+# the p-value is
+edf <- 19*(ss1+ss2)^2/(ss1^2+ss2^2)
+pv <- 2*pt(-tcl,edf)
+pv
+
