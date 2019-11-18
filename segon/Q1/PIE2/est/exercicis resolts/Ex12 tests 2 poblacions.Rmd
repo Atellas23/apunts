@@ -1,0 +1,128 @@
+---
+title: "Ex12 tests dues poblacions I REGRESSIÓ"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Feu els càlculs amb R d'exercicis ja fets a mà:
+
+**a)** Els tests dels problemes  8) i 9)
+
+8) El mateix exercici 7) a més de les mesures del pH dels iogurts fermentats a 42° 
+$\left\{ 4.44,4.47,4.45,4.42,4.44,4.48\right\}$ , tenim la dels fermentats a 43.5° que són 
+$\left\{ 4.38,4.37,4.33,4.34,4.31,4.39\right\}$ .Suposant que $pH|T\sim N\left(\mu_{T},\sigma^{2}\right)$ amb $\mu_{T}$ i $\sigma$ desconeguts. Amb $\alpha=0.05$, plantejant i contestant els tests adequats, contesteu les preguntes següents:
+
+8.a) Les dues esperances són iguals? o no? (hem suposat variàncies iguals)
+
+```{r}
+# Entrar les dates
+ph42<-c(4.44,4.47,4.45,4.42,4.44,4.48)
+ph43.5<-c(4.38,4.37,4.33,4.34,4.31,4.39)
+
+# Fer el test
+t.test(ph42,ph43.5,var.equal=T)
+```
+
+8.a) Fet a mà, utilitzant R com a calculadora
+
+el test és. $H_{0}:\mu_{42\text{°}}=\mu_{43.5\text{°}}$ vs $H_{1}:\mu_{42\text{°}}\neq\mu_{43.5\text{°}}$
+
+Amb $Y=pH_{42°}$ i $Z=pH_{43.5°}$ l'estadístic de contratst és $T=\frac{\overline{y}-\overline{z}}{\sqrt{\left(\frac{1}{n_{y}}+\frac{1}{n_{z}}\right)S_{C}^{2}}}\sim t_{n_{y}+n_{z}-2}$ suposant $\sigma_{42\text{°}}=\sigma_{43.5\text{°}}$ 
+
+on $S_{C}^{2}=\frac{\left(n_{y}-1\right)S_{y}^{2}+\left(n_{z}-1\right)S_{z}^{2}}{\left(n_{y}-1\right)+\left(n_{z}-1\right)}$
+
+```{r}
+(my<-mean(ph42))
+(mz<-mean(ph43.5))
+(S2y<-var(ph42))
+(S2z<-var(ph43.5))
+(ny<-length(ph42))
+(nz<-length(ph43.5))
+(S2C<-((ny-1)*S2y+(nz-1)*S2z)/(ny+nz-2))
+((S2y+S2z)/2)
+(T.calc<-(my-mz)/sqrt(S2C*(1/ny+1/nz)))
+(gl<-ny+nz-2)
+(regio.acceotació95<-c(qt(0.025,gl),qt(0.975,gl)))
+(p.valor<-2*pt(-abs(T.calc),gl))
+```
+
+l'interval de confiànça de $\overline{y}-\overline{z}\sim N\left(\mu_{Y}-\mu_{Z},\sigma^{2}\left(\frac{1}{n_{y}}+\frac{1}{n_{z}}\right)\right)$ és $\left(\overline{y}-\overline{z}+t_{gl,0.025}\sqrt{S_C^{2}\left(\frac{1}{n_{y}}+\frac{1}{n_{z}}\right)},\overline{y}-\overline{z}+t_{gl,0.975}\sqrt{S_C^{2}\left(\frac{1}{n_{y}}+\frac{1}{n_{z}}\right)}\right)$
+
+```{r}
+(my-mz+regio.acceotació95*sqrt(S2C*(1/ny+1/nz)))
+```
+
+
+8.b) Podem assegurar que el pH és més alt al fermentar a 42°?
+
+```{r}
+# Ja tenim les dades entrades
+
+# Fer el test
+t.test(ph42,ph43.5,var.equal=T,alternative="greater")
+```
+
+8.c) Les variàncies del pH a les dues temperatures són iguals? o no?
+
+```{r}
+# Ja tenim les dades entrades
+
+# Fer el test
+var.test(ph42,ph43.5)
+```
+
+9) S'ha fet un tast per coneixer les preferències dels consumidors respecte a dos vins A i B, cada tastador puntua els dos vins. Els resultats obtinguts són:
+
+|Consumidor|	1|	2|	3|	4|	5|	6|	7|	8|	9| 10|
+|:---------|:--|:--|:--|:--|:--|:--|:--|:--|:--|:--|
+|A	       |5.3|4.1|5.0|5.7|5.8|7.2|3.4|5.0|6.2|5.8|
+|B	       |4.7|5.0|6.2|5.6|6.4|7.9|4.4|5.5|6.5|5.7|
+
+9.a) Contrasteu amb $\alpha=0.05$ el test addient per contestar la pregunta:
+
+#### **Els consumidors prefereixen algun dels dos vins?**
+
+```{r}
+# Entrar les dates
+A<-c(5.3,4.1,5.0,5.7,5.8,7.2,3.4,5.0,6.2,5.8)
+B<-c(4.7,5.0,6.2,5.6,6.4,7.9,4.4,5.5,6.5,5.7)
+
+# Fer el test
+t.test(A,B,paired=T)
+```
+
+Fet a mà utilitzant l'R com a calculadora
+
+
+
+b) Dieu quines suposicions heu fet per poder contrastar el test.
+
+#### **Només que les diferències A-B són Normals**
+## ________________________________________________________________________________
+
+**b)** L'apartat a) de l'exercici 5). 
+En aquest cas la comanda és lm, que serà bàsica en els models lineals.
+
+**5)** Sabem que la distribució del pes $\left(P\right)$ d'estudiants (sexe masculi, edat entre 18 i 26 anys) depèn de la seva alçada $\left(H\right)$ i és $P\sim N\left(\beta_{0}+\beta_{1}\cdot H,\sigma^{2}\right)$. Tenim l'alçada de 5 estudiants $\boldsymbol{h}=\left\{ 170,188,178,192,184\right\}$  i els seus pesos han donat respectivament $\boldsymbol{p}=\left\{ 74,90,75,86,80\right\}$ . 
+
+5.a) Trobeu l'estimador màxim versemblant de $\beta$. Comproveu que $\hat{\beta}=\left(\hat{\beta}_{0},\hat{\beta}_{1}\right)$ és únic.
+```{r}
+# Entrem les dades
+h<-c(170,188,178,192,184)
+pes<-c(74,90,75,86,80)
+
+# Càlcul dels paràmetres
+(mod<-lm(pes~h))
+```
+
+*Resum d'inferència del model*
+
+```{r}
+summary(mod)
+```
+

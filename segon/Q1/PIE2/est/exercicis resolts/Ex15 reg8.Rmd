@@ -1,0 +1,157 @@
+---
+title: "Ex15 reg8"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### En el fitxer “reg8.csv” hi teniu les dades de X i Y, en 8 situacions diferents indicades per la variable REG, per a calcular les rectes de regressió de Y respecte X. 
+
+### **El que veurem és que en les 8 regressions, el paràmetres estimats i els tests donen els mateixos resultats, però amb els diagnòstics veurem que no totes són correctes, de fet només n'hi ha una (REG=4) que és correcte i noté cap observació problemàtica.**
+
+Definim el directori de treball, llegim les dades i carreguem els paquets necessaris
+
+```{r}
+#setwd("...")
+dd8<-read.csv2("../Dades/reg8.csv")
+library(car)
+# head(dd8)
+```
+
+### Fem tot el procés complet amb la REG=4, després ja compararem totes les REG
+
+**Ajustem el model i mirem si explica el comportament.**
+
+```{r}
+reg<-4
+dd<-dd8[dd8$REG==reg,]
+scatterplot(dd$X,dd$Y,smooth=F,box=F,main=reg)
+mod<-lm(Y~X,dd)
+summary(mod)
+mod0<-lm(Y~1,dd)
+anova(mod0,mod)
+```
+
+**Comprovem si compleix els requisits de ML**
+
+**1. Residuals al voltant de 0**
+
+**2. Residuals amb variància constant**
+
+**3. Normalitat (independència la suposem)**
+
+*1 i 2 els podem fer amb la gràfica residual front predits. 3 amb el gràfic qqplot normal*
+
+```{r}
+plot(predict(mod),resid(mod),main=paste0("Residuals REG=",reg))
+abline(h=0,lt=2)
+
+# Utilitzant plot(mod)
+plot(mod,which=1)
+abline(h=0,lt=2)
+
+################################
+
+qqnorm(resid(mod),main=paste0("qqnorm REG=",reg))
+qqline(resid(mod),lt=2)
+
+# Utilitzant plot(mod)
+plot(mod,which=2)
+```
+
+### Anàlisi de observacions individuals
+
+**Valors estranys**
+
+```{r}
+plot(rstudent(mod),main=paste0("Rstudent REG=",reg))
+abline(h=c(-3,-2,0,2,3),lt=2)
+
+plot(rstandard(mod),main=paste0("Rstandard REG=",reg))
+abline(h=c(-3,-2,0,2,3),lt=2)
+```
+
+**Leverage**
+```{r}
+plot(hatvalues(mod),main=paste0("Hatvalues REG=",reg))
+(lhat<-2*mean(hatvalues(mod)))
+abline(h=c(0,lhat),lty=2)
+```
+
+**Valors influents**
+```{r}
+(paste0("n=",n<-dim(dd)[1]))
+(paste0("p=",p<-2))
+
+#########################
+
+plot(cooks.distance(mod),main=paste0("Cook's distance REG=",reg))
+abline(h=c(0,4/n,6/n),lty=2)
+
+#########################
+
+plot(dffits(mod),main=paste0("Dffits REG=",reg))
+abline(h=c(-3*sqrt(p/n),-2*sqrt(p/n),0,2*sqrt(p/n),3*sqrt(p/n)),lty=2)
+
+#########################
+
+plot(mod,which=5)
+
+```
+
+### Ajustem les 8 regressions i els comparem
+
+```{r}
+res<-c()
+for (reg in 1:8){
+  X<-dd8[dd8$REG==reg,"X"]
+  Y<-dd8[dd8$REG==reg,"Y"]
+
+  mod<-lm(Y~X)
+  res<-rbind(res,c(reg,mod$coefficients,summary(mod)$coef[,"Std. Error"],summary(mod)$sigma,summary(mod)$r.square,summary(mod)$fstatistic))
+}
+colnames(res)[4:7]<-c("ES int","ES X","S","R2")
+print(res)
+```
+
+### Comprovem si les 8 regressions compleixen les condicions de ML i si hi ha punts especials
+
+**Gràfica residuals front predits + altres
+```{r}
+for (reg in 1:8){
+  print(paste("REGRESSIÓ:",reg))
+  X<-dd8[dd8$REG==reg,"X"]
+  Y<-dd8[dd8$REG==reg,"Y"]
+  mod<-lm(Y~X)
+  scatterplot(X,Y,smooth=F,box=F,main=reg)
+  oldpar <- par( mfrow=c(3,2))
+  plot(predict(mod),resid(mod),main=paste0("Residuals REG=",reg))
+  abline(h=0,lt=2)
+  
+  qqnorm(resid(mod),main=paste0("qqnorm REG=",reg))
+  qqline(resid(mod),lty=2)
+
+  plot(rstudent(mod),main=paste0("Rstudent REG=",reg))
+  abline(h=c(-3,-2-0,2,3),lt=2)
+  
+  plot(hatvalues(mod),main=paste0("Hatvalues REG=",reg))
+  (lhat<-2*mean(hatvalues(mod)))
+  abline(h=c(0,lhat),lty=2)
+  
+  plot(dffits(mod),main=paste0("Dffits REG=",reg))
+  abline(h=c(-3*sqrt(p/n),-2*sqrt(p/n),0,2*sqrt(p/n),3*sqrt(p/n)),lty=2)
+  
+  plot(X,Y,main="punts amb la recta")
+  abline(mod$coefficients)
+  par(oldpar)
+}
+
+```
+
+

@@ -1,0 +1,279 @@
+---
+title: "Ex16 COL"
+author: "PIE2"
+date: "Tardor 2019-2010"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T)
+```
+
+### En un estudi per estudiar el nivell de colesterol en sang, en persones en edat de creixement (9-20 anys), s'ha plantejat un model per explicar el nivell de colesterol *(C)* en funció del pes *(P)*, edat *(E)* i alçada *(H)*. 
+
+### **“És conegut que el Pes és un dels factors que influeixen en l'augment del nivell de Colesterol”**
+
+### Les dades experimentals són independents i estan en el fitxer “col.csv”. 
+
+```{r}
+#setwd("..")
+library(car)
+dd <- read.csv2("../data/col.csv")
+n<-dim(dd)[1]
+
+# a-0) DESCRIPTIVA
+sp(C~P,boxplot=F,smooth=F,dd)
+
+# Model Nul
+mod0<-lm(C~1,dd)
+
+```
+
+**a)** Per començar plategeu la recta de regressió del colesterol respecte el pes.
+
+```{r}
+mod<-lm(C~P,dd)
+```
+
+**i.** Trobeu els coeficients de la recta de regressió i la variància del error.
+
+```{r}
+summary(mod)
+```
+
+**ii.** Dieu si el pes explica el nivell de colesterol. Veieu alguna contradicció en els resultats?
+
+
+**iii.** Dibuixeu, junt amb les dades la banda 99% de confiança i la de predicció del colesterol.
+
+```{r}
+# a- Banda de confiança i de predicció
+CC<-predict(mod,interval="confidence",alpha=0.01)
+CP<-predict(mod,interval="prediction",alpha=0.01)
+O<-order(dd$P)
+plot(dd$P,dd$C,ylim=c(min(CP),max(CP)),xlab="Pes",ylab="Colesterol",main="Banda predicció 99%")
+lines(dd$P[O],CC[O,"fit"],lty=2,col="blue")
+lines(dd$P[O],CC[O,"lwr"],lty=2,col="blue")
+lines(dd$P[O],CC[O,"upr"],lty=2,col="blue")
+lines(dd$P[O],CP[O,"lwr"],lty=2,col="red")
+lines(dd$P[O],CP[O,"upr"],lty=2,col="red")
+```
+
+**iv.** Utilitzant diagnòstics dieu si el model és correcte.
+
+```{r}
+# a-Diagnòstic: TENDÈNCIES
+
+plot(predict(mod),resid(mod),main="Residuals vs Predits")
+abline(h=0,lty=2)
+
+# a-Diagnòstic: VALORS ESTRANYS
+plot(rstudent(mod),main="Residuals studentitzats")
+abline(h=c(-3,-2,0,2,3),lty=2)
+
+# a-Diagnòstic: VALORS INFLUENTS
+p<-2
+plot(dffits(mod),main="dffits")
+abline(h=c(-3,-2,0,2,3)*sqrt(p/n),lty=2)
+
+#=============================================================================
+```
+
+**a-Interpretació i contracicció**
+
+```{r}
+scatterplot(C~P|E,smooth=F,boxplots=F,col=1:12,dd)
+```
+
+**b)** Plantegeu ara la regressió múltiple $C_{i}=\beta_{0}+\beta_{1}P_{i}+\beta_{2}H_{i}+\beta_{3}E_{i}+\varepsilon_{i}\;\mathrm{amb}\;\varepsilon_{i}\sim N\left(0,\sigma^{2}\right)$.
+
+**i.** Trobeu els coeficients de la regressió i la variància del error.
+
+**ii.** Dieu si alguna de les variables $\left(P,H,E\right)$ explica el nivell de colesterol. Hi ha col·linealitat?
+
+```{r}
+# b-Models de regressió múltiple
+
+# b-1) Model 3 variables C~P+E+H
+summary(mod3v<-lm(C~P+E+H,dd))
+
+anova(mod0,mod3v)
+Anova(mod3v) # Com summary t^2=F
+vif(mod3v)
+```
+
+**iii.** Utilitzant diagnòstics dieu si el model és correcte.
+
+```{r}
+# Diagnòstic: TENDÈNCIES
+plot(predict(mod3v),resid(mod3v),main="Residuals vs Predits 3v")
+abline(h=0,lty=2)
+# Diagnòstic: VALORS ESTRANYS
+plot(rstudent(mod3v),main="Residuals studentitzats 3v")
+abline(h=c(-3,-2,0,2,3),lty=2)
+# Diagnòstic: VALORS INFLUENTS
+p<-4
+plot(dffits(mod3v),main="dffits 3v")
+abline(h=c(-3,-2,0,2,3)*sqrt(p/n),lty=2)
+
+#=============================================================================
+
+```
+
+**c)** En l'enunciat hi ha una falta de precisió, no és el pes el que fa augmentar el nivell de colesterol si no l'excés de pes. Si per aquest rang d'edats coneixem el patró de pes P=-10+0.5H. Calculeu l'excés de pes $\left(EP\right)$ i plantegeu la regressió múltiple $C_{i}=\beta_{0}+\beta_{1}EP_{i}+\beta_{2}H_{i}+\beta_{3}E_{i}+\varepsilon_{i}\;\mathrm{amb}\;\varepsilon_{i}\sim N\left(0,\sigma^{2}\right)$
+
+**i.** Trobeu els coeficients de la regressió i la variància del error.
+
+```{r}
+# c)-Models amb excés de pes en lloc de pes, ja que tenim un patró del pes.
+# pes0=.5*alçada-10
+
+dd$EP<-dd$P-(dd$H/2-10)
+
+# c-1) Model 3 variables C~EP+E+H
+summary(modE3v<-lm(C~EP+E+H,dd))
+
+```
+
+**ii.** Quines diferències hi ha respecte la regressió de l'apartat b)? Les prediccions són iguals?
+
+```{r}
+# Diferències amb el model anterior
+plot(predict(mod3v)-predict(modE3v),ylim=c(-1e-8,1e-8),main="Diferències de predicció b) i c)")
+c("S b)"=summary(mod3v)$sigma,"S c)"=summary(modE3v)$sigma)
+rbind("b)"=coef(mod3v),"c)"=coef(modE3v))
+
+```
+
+**iii.** Dieu si alguna de les variables $\left(EP,H,E\right)$ explica el nivell de colesterol. Hi ha col·linealitat?
+
+```{r}
+# Tests i colinealitat
+anova(mod0,modE3v) #igual que el de b)
+Anova(modE3v) # Com summary t^2=F
+vif(modE3v)
+
+```
+
+**iv.** Utilitzant diagnòstics dieu si el model és correcte.
+
+```{r}
+# Diagnòstic: TENDÈNCIES Tots iguals que els de b)
+plot(predict(modE3v),resid(modE3v),main="Residuals vs Predits E3v")
+abline(h=0,lty=2)
+# Diagnòstic: VALORS ESTRANYS
+plot(rstudent(modE3v),main="Residuals studentitzats E3v")
+abline(h=c(-3,-2,0,2,3),lty=2)
+# Diagnòstic: VALORS INFLUENTS
+p<-4
+plot(dffits(modE3v),main="dffits E3v")
+abline(h=c(-3,-2,0,2,3)*sqrt(p/n),lty=2)
+
+#=============================================================================
+
+```
+
+**d)** Si es pot, simplifica el model de l'apartat c).
+
+**i.** Trobeu els coeficients de la regressió i la variància del error.
+
+```{r}
+# d-1) Model 2 variables C~EP+E
+modE2v<-lm(C~EP+E,dd)
+summary(modE2v)
+```
+
+**ii.** Quines diferències hi ha respecte la regressió de l'apartat c)? Les prediccions són iguals?
+
+```{r}
+# Diferències amb el model anterior
+plot(predict(modE3v)-predict(modE2v),main="Diferències de predicció c) i d)")
+abline(h=0,lt=2)
+plot((predict(modE3v)-predict(modE2v))/predict(modE3v),main="Diferències relatives \n de predicció c) i d)")
+abline(h=0,lt=2)
+c("S c)"=summary(modE3v)$sigma,"S d)"=summary(modE2v)$sigma) # d) variància més petita
+rbind("c)"=coef(modE3v),"d)"=c(coef(modE2v),0))
+anova(modE2v,modE3v)
+```
+
+**iii.** Dieu si alguna de les variables $\left(EP,E\right)$ explica el nivell de colesterol. Hi ha col·linealitat?
+
+```{r}
+# Tests i colinealitat
+anova(mod0,modE2v) #igual que el de b)
+Anova(modE2v) # Com summary t^2=F
+vif(modE2v)
+```
+
+**iv.** Utilitzant diagnòstics dieu si el model és correcte.
+
+```{r}
+plot(predict(modE2v),resid(modE2v),main="Residuals vs Predits E2v")
+abline(h=0,lty=2)
+# Diagnòstic: VALORS ESTRANYS
+plot(rstudent(modE2v),main="Residuals studentitzats E2v")
+abline(h=c(-3,-2,0,2,3),lty=2)
+# Diagnòstic: VALORS INFLUENTS
+p<-3
+plot(dffits(modE2v),main="dffits E2v")
+abline(h=c(-3,-2,0,2,3)*sqrt(p/n),lty=2)
+
+
+#=============================================================================
+
+```
+
+**e)** Amb el model més simplificat
+
+**i.** Pels que no tenen excés de pes, dibuixeu la banda de predicció del colesterol $_{95\%}$ respecte l'edat.
+```{r}
+# e) Prediccions amb el model modE2v
+
+edat<-9:20
+C1<-data.frame(cbind(E=edat,EP=0))
+CC1<-predict(modE2v,C1,interval="confidence")
+CP1<-predict(modE2v,C1,interval="prediction")
+
+plot(edat,CC1[,"fit"],ty="l",ylim=c(min(CP1),max(CP1)),main="Banda predicció colesterol 95% \n dels que no tenen execés de pes")
+lines(edat,CC1[,"lwr"],lty=2,col="blue")
+lines(edat,CC1[,"upr"],lty=2,col="blue")
+lines(edat,CP1[,"lwr"],lty=2,col="red")
+lines(edat,CP1[,"upr"],lty=2,col="red")
+```
+
+**ii.** Per 3 persones amb P={60, 65 70}, però E=15 i H=150, utilitzant el millor dels models anteriors, calculeu-ne:
+
+• Les e regions de “predicció del 95%” del colesterol.
+
+```{r}
+#Per alguns casos predeterminats, IC de E(Y)
+C0<-data.frame(cbind(EP=c(c(60,65,70)-(150/2-10)),E=c(15)))
+predict(modE2v, C0, interval="prediction", level=.95)
+
+```
+
+• Els 3 intervals de confiança $IC_{95\%}\left(E\left[C|P=60,E=15,H=150\right]\right)$, $IC_{95\%}\left(E\left[C|P=65,E=15,H=150\right]\right)$ i $IC_{95\%}\left(E\left[C|P=70,E=15,H=150\right]\right)$.
+
+```{r}
+#Per alguns casos predeterminats, IC de E(Y)
+predict(modE2v, C0, interval="confidence", level=.95)
+
+```
+
+• Amb un nivell de significació del 5%, contrasteu els 3 test: 
+
+$H_{0}:E\left[C|P=60,E=15,H=150\right]=200$ vs $H_{1}:E\left[C|P=60,E=15,H=150\right]\neq200$.
+
+$H_{0}:E\left[C|P=65,E=15,H=150\right]=200$ vs $H_{1}:E\left[C|P=65,E=15,H=150\right]\neq200$.
+
+$H_{0}:E\left[C|P=70,E=15,H=150\right]=200$ vs $H_{1}:E\left[C|P=70,E=15,H=150\right]\neq200$.
+
+```{r}
+lht(modE2v,c(1,-5,15),200)
+lht(modE2v,c(1,0,15),200)
+lht(modE2v,c(1,5,15),200)
+# o bé manualment
+print(pC<-predict(modE2v,C0,se.fit=T))
+print(((pC$fit-200)/pC$se.fit)^2)
+print(2*(1-pt(abs(pC$fit-200)/pC$se.fit,pC$df)))
+```

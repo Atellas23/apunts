@@ -1,0 +1,158 @@
+---
+title: "Test Raó de Versemblança"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+###Exercici 10) En l'exercici 1) teníem:
+
+**En un punt d'una carretera amb poc tràfic comptem el nombre de vehicles que passen durant 10 minuts,  considerem que el recompte segueix una distribució** $Poisson\left(\lambda\right)$ **d'esperança** $\lambda$ **desconeguda. S'han fet 5 recomptes i s'ha obtingut la mostra** $\boldsymbol{y}=\left\{ 11,6,8,5,8\right\}$ **.Aquests recomptes s'havien fet en dies sense pluja. S'ha fet també recomptes en dies de pluja,  obtenint-se** $\boldsymbol{z}=\left\{ 8,11,7,10\right\}$ **.**
+
+*dades*
+
+```{r}
+y<-c(11,6,8,5,8)
+z<-c(8,11,7,10)
+```
+
+**(a) Estimeu per màxima versemblança el nombre esperat de vehicles els dies de pluja.**
+
+*Sabem que per la Poisson l'estimador màxim versemblant de la $\lambda$ és la mitjana*
+
+```{r}
+(ly<-mean(y))
+(lz<-mean(z))
+```
+
+**(b) Utilitzant el test de raó de versemblança,  amb** $\alpha=0.05$**,  dieu si passen el mateix nombre de cotxes tant els dies de pluja com els dies que no plou.**
+
+*el test que plantegem és* $H_{0}:\lambda_{y}=\lambda_{z}$ *vs* $H_1:\lambda_y\neq\lambda_z$
+
+*log-vesrsemblança del model0* $H_0:\lambda_y=\lambda_z$
+
+```{r}
+(yz<-c(y,z))
+(l0<-mean(yz))
+(f0<-dpois(yz,l0))
+(lf0<-log(f0))
+(lv0=sum(lf0))
+```
+
+*log vesrsemblança del model1* $H_1:\lambda_y\neq\lambda_z$
+
+```{r}
+(f1<-c(dpois(y,ly),dpois(z,lz)))
+(lf1<-log(f1))
+(lv1=sum(lf1))
+```
+
+*test de raó de versemblança l'estadístic i la seva distribució (asimptòtica) és* $2\cdot\left(\ell_{1}-\ell_{0}\right)\sim\chi_{2-1}^{2}$
+
+```{r}
+(Tcalc<-2*(lv1-lv0))
+(regio.acceptació<-c(0,qchisq(0.95,1)))
+pchisq(Tcalc,1)
+(p.valor<-1-pchisq(Tcalc,1))
+```
+
+###Exercici 11) En l'exercici 3) teníem:
+
+**No sabem quina és la probabilitat (p) de germinació d'unes llavors,  però n'hem comptat el nombre de germinades de 3 safates de 144 alvèols/safata i hem obtingut** $\boldsymbol{y}=\left(106,112,124\right)$**.Tractàvem les tres safates com si les llavors fossin les mateixes,  però sabem que abans de l'experiència s'havien conservat de formes diferents que anomenarem** $\boldsymbol{c}=\left(C1,C2,C3\right).$
+
+*dades*
+
+```{r}
+(ng<-c(106,112,124))
+(nt<-144)
+```
+
+
+**(a) Per a cada tipus de conservació estimeu (m.v)** $\hat{p}=\left(\hat{p}_{1},\hat{p}_{2},\hat{p}_{3}\right).$
+
+```{r}
+(p.est<-ng/nt)
+```
+
+**(b) Utilitzant lrt contesteu la pregunta: El tipus de conservació té algun efecte sobre les** $p_{i}$**?**
+
+*Model0* $H_{0}:p_{1}=p_{2}=p_{3}$
+
+```{r}
+(p.est0<-sum(ng)/3/nt)
+(f0<-dbinom(ng,nt,p.est0))
+(lf0<-log(f0))
+(lv0<-sum(lf0))
+```
+
+*Model1* $H_{1}:\exists\left(i,j\right)|p_{i}\neq p_{j}$
+
+```{r}
+(f1<-dbinom(ng,nt,p.est))
+(lf1<-log(f1))
+(lv1<-sum(lf1))
+```
+
+*test de raó de versemblança l'estadístic i la seva distribució (asimptòtica) és* $2\cdot\left(\ell_{1}-\ell_{0}\right)\sim\chi_{3-1}^{2}$
+
+```{r}
+(Tcalc<-2*(lv1-lv0))
+(regio.acceptació<-c(0,qchisq(0.95,2)))
+pchisq(Tcalc,2)
+(p.valor<-1-pchisq(Tcalc,2))
+```
+
+**(c) Si fos el cas,  dieu quines diferències hi ha entre les** $p_{i}.$
+
+*Per exemple la parella 1 i 2*
+
+```{r}
+(p12<-sum(ng[c(1,2)])/2/nt)
+(p.est12<-c(p12,p12,p.est[3]))
+
+(f012<-dbinom(ng,nt,p.est12))
+(lf012<-log(f012))
+(lv012<-sum(lf012))
+
+(Tcalc12<-2*(lv1-lv012))
+(regio.acceptació<-c(0,qchisq(0.95,1)))
+pchisq(Tcalc12,1)
+(p.valor<-1-pchisq(Tcalc12,1))
+```
+
+*Per exemple la parella 1 i 3*
+
+```{r}
+(p13<-sum(ng[c(1,3)])/2/nt)
+(p.est13<-c(p13,p.est[2],p13))
+
+(f013<-dbinom(ng,nt,p.est13))
+(lf013<-log(f013))
+(lv013<-sum(lf013))
+
+(Tcalc13<-2*(lv1-lv013))
+(regio.acceptació<-c(0,qchisq(0.95,1)))
+pchisq(Tcalc13,1)
+(p.valor<-1-pchisq(Tcalc13,1))
+```
+
+*Per últim la parella 2 i 3*
+
+```{r}
+(p23<-sum(ng[c(2,3)])/2/nt)
+(p.est23<-c(p.est[1],p23,p23))
+
+(f023<-dbinom(ng,nt,p.est23))
+(lf023<-log(f023))
+(lv023<-sum(lf023))
+
+(Tcalc23<-2*(lv1-lv023))
+(regio.acceptació<-c(0,qchisq(0.95,1)))
+pchisq(Tcalc23,1)
+(p.valor<-1-pchisq(Tcalc23,1))
+```
+
