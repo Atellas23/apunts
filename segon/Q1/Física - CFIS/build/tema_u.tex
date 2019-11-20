@@ -1,0 +1,63 @@
+\chapter{Càlcul vectorial}
+
+\section{Relacions útils i definicions bàsiques}
+
+\begin{enumerate}
+	\item Producte vectorial:
+	\begin{itemize}
+		\item $\vec{a}\times\vec{b}=-\vec{b}\times\vec{a}$ (d'aquí en endavant en aquest tema s'utilitzarà la fletxeta només quan no posar-la pugui dur a malentesos)
+		\item $a\times(b\times c)\neq (a\times b)\times c$
+		\item $a\times(b\times c)=(a\cdot c)b-(a\cdot b)c$
+		\item Pel tensor antisimètric,
+		\[
+		c_i=\sum_{j,k}\epsilon_{ijk}a_jb_k
+		\]
+		on \[
+		\epsilon_{ijk}=\begin{cases}
+			0\text{, si }i=j\vee j=k\vee i=k\\
+			+1\text{, si }(i,j,k)\text{ és una permutació parella de }(1,2,3)\\
+			-1\text{, si }(i,j,k)\text{ és una permutació imparella de }(1,2,3)
+			\end{cases}
+		\]
+	\end{itemize}
+	\item Desigualtat de Cauchy-Schwarz: $|u\cdot v|\leq |u||v|$
+	\item Representació vectorial de superfícies: el vector que representa una superfície és perpendicular a aquesta i té mòdul igual a la seva àrea.
+\end{enumerate}
+
+\section{Derivades i integrals de funcions vectorials}
+
+\begin{enumerate}
+	\item Vector gradient: $\vec{\nabla}T=\left(\dfrac{\partial T}{\partial x},\dfrac{\partial T}{\partial y},\dfrac{\partial T}{\partial z}\right),\ \dfrac{\partial T}{\partial\hat{n}}=\vec{\nabla}T\cdot\hat{n}$.
+	\item Derivada d'una funció escalar respecte d'un escalar: donat un canvi de coordenades $\{\varphi\mapsto\varphi',s\mapsto s'\}$, aleshores $\varphi_s=\dfrac{d\varphi}{ds}=\dfrac{d\varphi'}{ds'}=\varphi'_{s'}$.
+	\item Derivada d'una funció vectorial respecte d'un escalar: \[\dfrac{d\vec{A}(s)}{ds}=\lim_{\Delta s\rightarrow0}\dfrac{\vec{A}(s+\Delta s)-\vec{A}(s)}{\Delta s}.\] Donat un canvi de coordenades,
+	\[
+	A_i'(s')=\sum_j\lambda_{ij}A_j(s),\ \dfrac{dA_i'(s')}{ds'}=\dfrac{dA_i'(s)}{ds}=\dfrac{d}{ds}\left(\sum_{j}\lambda_{ij}A_j(s)\right)=\sum_{j}\lambda_{ij}\dfrac{dA_j}{ds}
+	\]
+	\item Integral d'una funció vectorial respecte un escalar:
+	\[\int A(s)ds=\sum_iu_i\int A_i(s)ds,\text{ on els }u_j\text{ formen una base ortonormal}\]
+	\item Derivada total d'un camp escalar:
+	\[d\Phi=\dfrac{\partial\Phi}{\partial x}dx+\dfrac{\partial\Phi}{\partial y}dy+\dfrac{\partial\Phi}{\partial z}dz\]
+	Per tant, $d\Phi=\vec{\nabla}\Phi\cdot d\vec{r}$.
+	\item Laplacià d'una funció vectorial: \[\vec{\nabla}\cdot\vec{\nabla}\Phi=\nabla^2\Phi\equiv\Delta\Phi.\]
+\end{enumerate}
+\subsection{Divergència i rotacional}
+\begin{enumerate}
+	\item La \textbf{divergència} d'un camp vectorial és $\vec{\nabla}\cdot A$, la suma de les seves derivades parcials en la component corresponent.
+	\item El \textbf{rotacional} d'un camp vectorial és $\vec{\nabla}\times A$.
+	\item \textbf{Circulació d'un vector}: tenim una corba en l'espai $\vec{r}(s)$. La integral entre dos punts d'aquesta és \[\int_a^b\vec{A}\cdot d\vec{r},\] la circulació. Si ho integrem al llarg d'una corba tancada, tenim \[\oint\vec{A}\cdot d\vec{r}.\]
+	Si es compleix $\oint_C\vec{A}\cdot d\vec{r}=0$, aleshores tenim \[{\int_a^b}_{C_1}\vec{A}\cdot d\vec{r}+{\int_a^b}_{C_2}\vec{A}\cdot d\vec{r}=0\iff{\int_a^b}_{C_1}\vec{A}\cdot d\vec{r}={\int_b^a}_{C_2}\vec{A}\cdot d\vec{r}.\] Aleshores, $\vec{A}$ és un \textit{camp conservatiu}. Si definim $A=\vec{\nabla}\Phi$, aleshores \[\int_a^bA\cdot d\vec{r}=\int_a^b\vec{\nabla}\Phi\cdot d\vec{r}=\int_a^bd\Phi=\Phi(b)-\Phi(a).\] Si volem calcular la integral sobre una corba tancada, donarà zero.
+	\item \textbf{Flux} d'un camp vectorial $A$ a través d'una superfície $S$: \[\Phi=\iint_SA\cdot d\vec{s}.\] Si $S$ és tancada, altre cop s'utilitza la notació encerclant el centre de les integrals. Si $A$ és constant, el flux a través d'una superfície tancada és 0.
+\end{enumerate}
+
+\begin{teo}[Teorema de Gauss]
+    \[
+    \int_V\vec{\nabla}\cdot\vec{A}dV=\oint_S\vec{A}\cdot d\vec{s}.
+    \]
+    Si $\oint_S\vec{A}\cdot d\vec{s}=0$, $\vec{A}$ s'anomena \textit{camp solenoidal}.
+\end{teo}
+
+\begin{teo}[Teorema d'Stokes]
+	\[
+	\int_S(\vec{\nabla}\times\vec{A})d\vec{s}=\oint_C\vec{A}\cdot d\vec{l}.\]
+	Si $\vec{A}$ és un camp conservatiu, $\vec{\nabla}\times\vec{A}$. Si $\vec{A}=\vec{\nabla}\Phi$, aleshores $\vec{\nabla}\times(\vec{\nabla}\Phi)=0$
+\end{teo}

@@ -1,0 +1,88 @@
+\chapter{Sistemes de referència en rotació}
+No sempre podem escollir un sistema de referència inercial. En alguns casos hem de plantejar les equacions en un sistema de referència no inercial (per exemple, lligat a la Terra). En aquest cas apareixen forces lligades a la inèrcia, forces fictícies o inercials, que venen donades per $-m\vec a_0$, on $\vec a_0$ és l'acceleració del sistema de referència no inercial respecte de l'inercial.
+\section{Moviment relatiu rotacional}
+Suposem per simplicitat que disposem de dos sistemes de referència amb origen comú, $S=XYZ$ i $S'=X'Y'Z'$, que roten l'un sobre l'altre respecte un eix donat per $\vec\omega$. La posició d'un punt $P$ ve donada per:
+\[
+\vec r=x\hat i+y\hat j+z\hat k\text{ a S,}\quad
+\vec r'=\vec r=x'\hat i'+y'\hat j'+z'\hat k'\text{ a S'}.
+\]
+\subsection{Velocitat relativa rotacional}
+La velocitat del punt $P$ a $S$ és:
+\[\vec v=\dfrac{d\vec r}{dt}=\dfrac{dx}{dt}\hat i+\dfrac{dy}{dt}\hat j+\dfrac{dz}{dt}\hat k.\]
+Això a $S'$ és
+\[\vec v'=\dfrac{d\vec r'}{dt}|_M=\dfrac{dx'}{dt}\hat i'+\dfrac{dy'}{dt}\hat j'+\dfrac{dz'}{dt}\hat k'.\]
+Però $\vec v\neq\vec v'$! L'equació que ens determina com funciona realment això és:
+\[
+\dfrac{d\vec r'}{dt}|_F=\dfrac{dx'}{dt}\hat i'+\dfrac{dy'}{dt}\hat j'+\dfrac{dz'}{dt}\hat k'+
+x'\dfrac{d\hat i'}{dt}+y'\dfrac{d\hat j'}{dt}+z'\dfrac{d\hat k'}{dt}.
+\]
+Utilitzarem que $\dfrac{d\vec r}{dt}=\vec v=\vec\omega\times\vec r\ \forall\vec r$, aleshores tenim
+\[
+\dfrac{d\hat i}{dt}=\vec\omega\times\vec\hat i,
+\quad
+\dfrac{d\hat j}{dt}=\vec\omega\times\vec\hat j,
+\quad
+\dfrac{d\hat k}{dt}=\vec\omega\times\vec\hat k.
+\]
+Aleshores,
+\[
+\vec v=\vec v'+x'(\vec\omega\times\hat i)+y'(\vec\omega\times\hat j)+z'(\vec\omega\times\hat k)=\vec v'+\vec\omega\times(x'\hat i'+y'\hat j'+z'\hat k')\implies\vec v=\vec v'+\vec\omega\times\vec r'.
+\]
+En el cas més general en el que els referencials no comparteixen l'origen, aleshores un es mou respecte l'altre amb velocitat $\vec v_0$, i tenim $\vec v=\vec v_0+\vec v'+\vec\omega\times\vec r'$,
+on:
+\begin{itemize}
+	\item $\vec v\longrightarrow$ velocitat de la partícula en el referencial fixe
+	\item $\vec v'\longrightarrow$ velocitat de la partícula en el referencial mòbil
+	\item $\vec v_0\longrightarrow$ velocitat del referencial mòbil respecte el fixe
+	\item $\vec\omega\longrightarrow$ velocitat angular de rotació del referencial mòbil respecte el fixe.
+	\item $\vec\omega\times\vec r'\longrightarrow$ velocitat d'arrossegament
+\end{itemize}
+En general, tenim
+\[
+\dfrac{d\vec r}{dt}|_F=\dfrac{d\vec r'}{dt}|_M+\vec\omega\times\vec r',\quad 
+\dfrac{d\vec A}{dt}|_F=\dfrac{d\vec A'}{dt}|_M+\vec\omega\times\vec A'\ \forall\vec A.\]
+
+\subsection{Acceleració relativa rotacional}
+\[
+\vec a=\dfrac{d\vec v}{dt}|_F=\dfrac{d\vec v_0}{dt}|_F+\dfrac{d\vec v'}{dt}|_F+\dfrac{d(\vec\omega\times\vec r')}{dt}|_F.
+\]
+Això implica que
+\[
+\vec a=\vec a_0+\dfrac{d\vec v'}{dt}|_M+\vec\omega\times\vec v'+\dfrac{d}{dt}(\vec\omega\times\vec r')|_M+\vec\omega\times(\vec\omega\times\vec r')\implies
+\]
+\[
+\vec a=\vec a_0+\vec a'+\vec\omega\times\vec v'+\dfrac{d\vec\omega}{dt}|_M\times\vec r'+\vec\omega\times\dfrac{d\vec r'}{dt}|_M+\vec\omega\times(\vec\omega\times\vec r')\implies
+\]
+\[
+\vec a=\vec a_0+\vec a'+2\vec\omega\times\vec v'+\dot\vec\omega\times\vec r'+\vec\omega\times(\vec\omega\times\vec r'),
+\]
+on
+\begin{itemize}
+	\item $\vec a\longrightarrow$ acceleració mesurada en $S$
+	\item $\vec a_0\longrightarrow$ acceleració mesurada en $S'$ respecte $S$
+	\item $\vec a'\longrightarrow$ acceleració mesurada en $S'$
+	\item $2\vec\omega\times\vec v'\longrightarrow$ acceleració de Coriolis
+	\item $\dot\vec\omega\times\vec r'\longrightarrow$ acceleració tangencial
+	\item $\vec\omega\times(\vec\omega\times\vec r')\longrightarrow$ acceleració centrífuga
+\end{itemize}
+
+\section{Forces fictícies (o inercials)}
+En un sistema de referència inercial, $\vec F=m\vec a$. En un sistema en rotació, en canvi, tenim
+\[\vec F=m(\vec a_0+\vec a'+2\vec\omega\times\vec v'+\dot\vec\omega\times\vec r'+\vec\omega\times(\vec\omega\times\vec r')).\]
+La força efectiva, $\vec F_{eff}$, serà $\vec F_{eff}=m\vec a'$, i per tant,
+\[
+\vec F_{eff}=\vec F'-m\vec a_0-2m\vec\omega\times\vec v-m\dot\vec\omega\times\vec r'-m\vec\omega\times(\vec\omega\times\vec r').
+\]
+
+\section{Moviment relatiu a la Terra}
+En el nostre cas, la velocitat angular l'agafarem constant, aleshores
+\[
+m\vec a'=\vec F_g-m\vec a_0-m\vec\omega\times(\vec\omega\times\vec r')-2m\vec\omega\times\vec v'
+\implies\]
+\[
+\vec a'=\dfrac{\vec F_g}{m}-\vec a_0-\vec\omega\times(\vec\omega\times\vec r')-2\vec\omega\times\vec v'.
+\]
+Amb $\vec a_0=\vec\omega\times(\vec\omega\times\vec R_0)$ i $\vec g_{eff}=\vec g-\vec\omega\times(\vec\omega\times\vec R_0)$, obtenim que
+\[
+\vec a'=\vec g_{eff}-\vec\omega\times(\vec\omega\times\vec r')-2\vec\omega\times\vec v'.
+\]

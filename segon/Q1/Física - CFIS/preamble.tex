@@ -1,0 +1,224 @@
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[pdftex]{hyperref}
+\usepackage{amsmath,amsthm,amssymb,graphicx,mathtools,tikz,hyperref,enumerate,upgreek}
+\usepackage{mdframed,cleveref,cancel,stackengine,pgf,pgfplots,mathrsfs,thmtools}
+\usepackage{xfrac,stmaryrd,commath,needspace,multirow,float,siunitx,faktor,centernot}
+\usepackage{tikz-cd,multicol,dsfont}
+\usepackage[shortlabels]{enumitem}
+\usepackage{xcolor}
+\usepackage[catalan]{babel}
+%\usepackage{unicode-math}
+
+\usepackage{makeidx}
+\usepackage{hyperref}
+\usepackage[
+    type={CC},
+    modifier={by-nc-sa},
+    version={4.0},
+]{doclicense}
+
+\newmdenv[leftline=false,topline=false]{topright}
+\let\proof\relax
+\usetikzlibrary{positioning,arrows, calc, babel}
+\tikzset{
+	reverseclip/.style={insert path={(current page.north east) --
+		(current page.south east) --
+		(current page.south west) --
+		(current page.north west) --
+		(current page.north east)}
+	}
+}
+\usetikzlibrary{external}
+\tikzexternalize[prefix=figures/]
+\pgfplotsset{compat=1.11}
+
+\makeatletter
+\@ifclassloaded{book}{\renewcommand{\theequation}{\arabic{chapter}.\roman{equation}}}{\renewcommand{\theequation}{\arabic{section}.\roman{equation}}}
+\makeatother
+\newcommand*{\bimplies}{\boxed{\implies}}
+\newcommand*{\bimpliedby}{\boxed{\impliedby}}
+
+\newcommand{\class}[1]{\mkern 1.3mu\overline{\mkern-1.3mu#1\mkern-1.3mu}\mkern 1.3mu}
+\newcommand{\trir}{\triangleright}
+\newcommand{\tril}{\triangleleft}
+\newcommand{\n}{\mathbb{N}}
+\newcommand{\z}{\mathbb{Z}}
+\newcommand{\q}{\mathbb{Q}}
+\newcommand{\cx}{\mathbb{C}}
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\C}{\mathscr{C}}
+\newcommand{\p}{\mathfrak{P}}
+\newcommand{\m}{\mathfrak{M}}
+\newcommand{\Pa}{\mathcal{P}}
+\newcommand{\Es}{\mathcal{E}}
+\newcommand{\V}{\mathcal{V}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\B}{\mathcal{B}}
+\let\O\relax
+\newcommand{\O}{\mathcal{O}}
+\newcommand{\Sim}{\mathcal{S}}
+\newcommand{\Asim}{\mathcal{A}}
+\newcommand{\bb}[1]{\mathbb{#1}}
+\newcommand{\pdv}[3][]{\frac{\partial^{#1} #2}{\partial #3^{#1}}}
+\newcommand{\dv}[3][]{\frac{\operatorname{d}^{#1} #2}{\operatorname{d} #3^{#1}}}
+\let\k\relax
+\newcommand{\k}{\Bbbk}
+\newcommand{\ita}[1]{\textit{#1}}
+\newcommand\inv[1]{#1^{-1}}
+\newcommand\setb[1]{\left\{#1\right\}}
+\newcommand{\vbrack}[1]{\langle #1\rangle}
+\newcommand{\determinant}[1]{\begin{vmatrix}#1\end{vmatrix}}
+\newcommand{\Po}{\mathbb{P}}
+\newcommand{\lp}{\left(}
+\newcommand{\rp}{\right)}
+\newcommand{\lc}{\left\{}
+\newcommand{\rc}{\right\}}
+\newcommand{\lb}{\left[}
+\newcommand{\rb}{\right]}
+\newcommand{\limvar}[2]{\lim\limits_{#1 \rightarrow #2}}   % Para escribir limites más rapido
+\newcommand{\fl}[0]{\text{fl}} % Representación en coma flotante
+\newcommand{\sgn}[0]{\text{sgn}}% Función signo (sgn) de una permutación
+\newcommand{\diag}[0]{\text{diag}}% Notación corta para matriz diagonal: diag(d_1,...,d_n)
+\newcommand{\vspan}[0]{\text{span}}
+\newcommand{\scin}[1]{\ensuremath\SI{#1}{}}
+\newcommand{\ap}[1]{\ensuremath\overline{#1}}
+\newcommand{\Sup}[1]{\ensuremath\underset{#1}{\sup}}
+\newcommand{\Max}[1]{\ensuremath\underset{#1}{\max}}
+\newcommand{\Min}[1]{\ensuremath\underset{#1}{\min}}
+\newcommand{\notimplies}{\mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+\newcommand{\gen}[1]{\left< #1 \right>}
+\newcommand{\spr}[1]{\langle #1 \rangle}% Producto escalar
+\newcommand{\Asuc}{\mathcal{A}} %Conjunt de successos
+\newcommand\comp[1]{\overline{#1}} %Complementari
+\newcommand{\idx}[1]{\index{#1((tlab))}}
+\newcommand{\defeq}{\stackrel{\text{\tiny def}}{=}} %Símbol 'definit com'
+\newcommand{\matspace}{\mathcal{M}} %Espai de matrius
+\newcommand{\ndiv}{\hspace{-0.2em}\centernot\vert\hspace{-0.2em}}
+\newcommand{\fid}{\mathbb{I}}
+\newcommand{\sRarr}{\ \Rightarrow\ } %Spaced Rightarrow
+\newcommand{\adotsb}[2][1]{#1, \ldots, #2}
+\newcommand{\subdots}[3][1]{#2_#1, \ldots, #2_#3}
+\newcommand{\setdots}[2][1]{\{\adotsb[#1]{#2}\}}
+\newcommand{\opdots}[3][+]{#2 #1 \cdots #1 #3}
+
+\DeclareMathOperator{\MAX}{Max}
+\DeclareMathOperator{\Frob}{Frob}
+\DeclareMathOperator{\Irr}{Irr}
+\DeclareMathOperator{\GL}{GL}
+\DeclareMathOperator{\Ep}{Ep}
+\DeclareMathOperator{\Syl}{Syl}
+\DeclareMathOperator{\Ec}{Ec}
+\DeclareMathOperator{\orden}{o}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\mcm}{mcm}
+\DeclareMathOperator{\mcd}{mcd}
+\DeclareMathOperator{\lcm}{lcm}
+\DeclareMathOperator{\Em}{Em}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\fr}{Fr}
+\DeclareMathOperator{\Id}{Id}
+\DeclareMathOperator{\ext}{Ext}
+\DeclareMathOperator{\inte}{Int}
+\DeclareMathOperator{\rie}{Rie}
+\DeclareMathOperator{\rg}{rg}
+\DeclareMathOperator{\gr}{gr}
+\DeclareMathOperator{\nuc}{Nuc}
+\DeclareMathOperator{\car}{car}
+\DeclareMathOperator{\im}{Im}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\spec}{Spec}
+\DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator{\grad}{grad}
+\DeclareMathOperator{\rot}{rot}
+\DeclareMathOperator{\diver}{div}
+\DeclareMathOperator{\sinc}{sinc}
+\DeclareMathOperator{\graf}{graf}
+\DeclareMathOperator{\tq}{\;t.q.\;}
+\DeclareMathOperator{\TQ}{\text{ tal que }}
+\DeclareMathOperator{\TsQ}{\text{ tales que }}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\esp}{\mathbb{E}}
+\DeclareMathOperator{\cov}{\mathbb{C}ov}
+\DeclareMathOperator{\var}{\mathbb{V}ar}
+\DeclareMathOperator{\qcolon}{\colon\quad} %Dos puntos cuantificadores (e.g. \forall a \in A\; \forall b \in B \qcolon [...])
+\DeclareMathOperator{\rowsp}{row}
+\DeclareMathOperator{\colsp}{col}
+\DeclareMathOperator{\rang}{rang}
+\DeclareMathOperator{\normald}{N}
+\let\emptyset\varnothing
+\setcounter{secnumdepth}{4}
+
+\def\mydate{\today}
+\hypersetup{
+    colorlinks,
+    linkcolor=blue
+}
+\def\upint{\mathchoice%
+    {\mkern13mu\overline{\vphantom{\intop}\mkern7mu}\mkern-20mu}%
+    {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+    {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+    {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  \int}
+\def\lowint{\mkern3mu\underline{\vphantom{\intop}\mkern7mu}\mkern-10mu\int}
+
+\newtheoremstyle{break}% name
+{}%         Space above, empty = `usual value'
+{}%         Space below
+{}% Body font
+{}%         Indent amount (empty = no indent, \parindent = para indent)
+{\bfseries}% Thm head font
+{}%        Punctuation after thm head
+{5pt plus 1pt minus 1pt}% Space after thm head: \newline = linebreak
+{\thmname{#1}\thmnumber{ #2}.\thmnote{ {\it #3.}\newline}}%         Thm head spec
+
+\newtheoremstyle{demo}% name
+{}%         Space above, empty = `usual value'
+{}%         Space below
+{}% Body font
+{}%         Indent amount (empty = no indent, \parindent = para indent)
+{\it}% Thm head font
+{}%        Punctuation after thm head
+{5pt plus 1pt minus 1pt}% Space after thm head: \newline = linebreak
+{#1\thmnote{ #3}.}%         Thm head spec
+
+\newtheoremstyle{breakthm}% name
+{}%         Space above, empty = `usual value'
+{}%         Space below
+{}% Body font
+{}%         Indent amount (empty = no indent, \parindent = para indent)
+{\bfseries}% Thm head font
+{}%        Punctuation after thm head
+{\newline}% Space after thm head: \newline = linebreak
+{\thmname{#1}\thmnumber{ #2}.\thmnote{ {\it #3.}}\addcontentsline{toc}{subsection}{#3}}%         Thm head spec
+
+\newtheoremstyle{normal}% name
+{}%         Space above, empty = `usual value'
+{}%         Space below
+{}% Body font
+{}%         Indent amount (empty = no indent, \parindent = para indent)
+{\bfseries}% Thm head font
+{}%        Punctuation after thm head
+{5pt plus 1pt minus 1pt}% Space after thm head: \newline = linebreak
+{\thmname{#1}\thmnumber{ #2}.\thmnote{ {\it #3.}}}%         Thm head spec
+
+\newtheoremstyle{autodefi}% name
+{}%         Space above, empty = `usual value'
+{}%         Space below
+{}% Body font
+{}%         Indent amount (empty = no indent, \parindent = para indent)
+{\bfseries}% Thm head font
+{}%        Punctuation after thm head
+{5pt plus 1pt minus 1pt}% Space after thm head: \newline = linebreak
+{\index{#3((defi:#2))}\label{defi:#2}\thmname{#1}\thmnumber{ #2}.}% Thm head specko
+
+\makeindex
+\usepackage[totoc]{idxlayout}       % Glossari a l'índex

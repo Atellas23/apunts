@@ -1,0 +1,77 @@
+\chapter{Dinàmica de la partícula}
+
+\section{Principis de la mecànica clàssica}
+%La dinàmica estudia el moviment de les partícules degut a interaccions amb els cossos que l'envolten. Per calcular el moviment degut a aquestes interaccions, hem d'introduïr el concepte de força. Coneguda la força, el moviment es regeix per les 3 lleis de Newton:
+\begin{itemize}
+\item[I.] Tot cos es manté en un estat de repòs o de moviment rectilini uniforme excepte si se l'obliga a variar aquest estat mitjançant forces que actuen sobre ell.
+\item[II.] La variació del moviment és proporcional a la força que actua sobre el cos i s'efectua en la direcció de la recta en la que actua la força.
+\item[III.] A tota acció s'oposa sempre una reacció igual.
+\end{itemize}
+\subsection{La primera llei de Newton: la llei de la inèrcia}
+%Ja fou formulada per Galileu. Defineix de manera operacional el que és una força.
+%Quan diem que una partícula, sense l'acció d'una força, es troba en repòs o en moviment rectilini, hem de dir respecte qui es troba en aquest estat. Ha de ser respecte una altra partícula lliure. Tal \textit{observador} és un observador \textit{inercial}, i el sistema de referència associat és un \textit{sistema de referència inercial}.
+%La Terra, per exemple, no és un referencial inercial, però per la majoria dels problemes d'interès la podem considerar com a tal.
+\subsubsection{Transformacions de Galileu}
+Tots els referencials inercials són equivalents. Siguin dos referencials inercials $S$ i $S'$ que es mouen un respecte l'altre amb velocitat uniforme, de manera que el vector entre els seus origens $O$ i $O'$ és $\vec{OO'}=\vec v_0 t$. La recta de posició del punt $P$ està relacionada per $\vec r_P=\vec{r_{P}'}+\vec v_0  t$, on suposarem que $t=t'$, de manera que la mesura del temps és la mateixa a $S$ i a $S'$. Això és la transformació de Galileu. Derivant un cop,
+\[\vec v'=\dfrac{d\vec r'}{dt'}=\dfrac{d\vec r'}{dt},\quad \vec v=\dfrac{d\vec r}{dt}=\dfrac{d\vec r'}{dt}+\vec v_0=\vec v' + \vec v_0.\]
+Per l'acceleració,
+\[\vec a'=\dfrac{d\vec v'}{dt'},\quad \vec a=\dfrac{d\vec v}{dt}\implies\vec a=\vec a'.\]
+L'acceleració queda invariant. D'aquí arribem al principi de relativitat de Galileu: les lleis bàsiques de la física són idèntiques en totes els referencials que es mouen amb velocitat uniforme els uns respecte dels altres.
+
+\subsubsection{Transformacions de Lorentz}
+No imposarem que $t=t'$, però sí que la velocitat de la llum és la mateixa mesurada en qualsevol referencial inercial. Un dels sistemes es mou amb velocitat $v$ respecte de l'altre.
+%Aquí passen coses màgiques que estan als apunts d'en Blas
+\[\gamma=\dfrac{1}{\sqrt{1-\dfrac{v^2}{c^2}}}\implies\begin{cases}x'=\dfrac{x-vt}{\sqrt{1-\dfrac{v^2}{c^2}}}\\ y'=y\\ z'=z\\ t'=\dfrac{t-\gamma v\dfrac{x}{c^2}}{\sqrt{1-\dfrac{v^2}{c^2}}}\end{cases}\]
+
+\subsection{La segona llei de Newton}
+Actualment, l'escrivim com $\vec F=m\vec a$. Si tenim que la mateixa força provoca acceleracions diferents en cossos diferents, podem definir el quocient de les seves masses (la seva inèrcia, o oposició al moviment) com
+\[\dfrac{m_1}{m_2}=\dfrac{a_2}{a_1}.\]
+A partir d'una massa patró podem definir la resta.\\
+Tantmateix, l'enunciat original de Newton no parla ni de massa ni d'acceleració, sinó de variació de moviment. Podem definir la quantitat de moviment com $\vec p=m\vec v$, de manera que podem escriure la segona llei de Newton com
+\[\vec F=\dfrac{d\vec p}{dt}=m\dfrac{d\vec v}{dt}=m\vec a.\]
+Per una partícula puntual passa això, però no per un sistema de partícules. En mecànica relativista, coses.
+%inserir coses
+
+\subsection{La tercera llei de Newton}
+Si un cos $A$ exerceix una força sobre un cos $B$, $\vec F_{AB}$, aleshores $B$ exerceix una força $\vec F_{BA}$ sobre $A$, tal que $\vec F_{BA}=-\vec F_{AB}$.
+\subsubsection{Conservació de la quantitat de moviment}
+Siguin dues partícules aïllades que exerceixen forces entre elles. Per la segona llei de Newton,
+\[\vec F_1=\dfrac{d\vec p_1}{dt},\quad\vec F_2=\dfrac{d\vec p_2}{dt}.\]
+Però, segons la tercera llei,
+\[\vec F_1+\vec F_2=0\implies\dfrac{d\vec p_1}{dt}+\dfrac{d\vec p_2}{dt}=0\implies\vec p_1+\vec p_2=\text{const}.\]
+
+\subsection{Forces de fricció}
+Dos cossos en contacte presenten una força entre ells que s'oposa a que llisquin. Aquesta força és proporcional a la força normal (la força de reacció del terra al pes del cos), $F_R\propto N$, $F_R=\mu N$. La força de fregament s'oposa al moviment, i per tant és $\vec F_R=-\mu N\vec v$. Existeixen dos coeficients de fregament,
+\begin{itemize}
+	\item $\mu_s\longrightarrow$ coeficient de fregament estàtic
+	\item $\mu_d\longrightarrow$ coeficient de fregament dinàmic
+\end{itemize}
+\subsubsection{Forces de fregament en fluids}
+Les forces de fregament en fluids normalment són proporcionals a la velocitat, $\vec F_R=-k\eta\vec v$. $\eta$ és el \textit{coeficient de viscositat}, i $k$ és un factor geomètric; per una esfera, $k=6\pi r$, $\vec F_R=-6\pi r\eta\vec v$ (l'anomenada Força d'Stokes).
+
+\subsection{Sistemes de massa variable}
+\[\vec F=\dfrac{d\vec p}{dt}=\dfrac{d}{dt}(m\vec v)=\dfrac{dm}{dt}\vec v+\dfrac{d\vec v}{dt}m.\]
+Si les forces externes són zero, la quantitat de moviment es conserva.
+
+\section{Moviment curvilini}
+Si la força no és proporcional a la velocitat, aleshores el moviment descrit serà curvilini. Com que tenim $\vec F=m\vec a$, aleshores podem definir les components tangencial i normal de la força, de manera que:
+\[
+\begin{cases}
+F_t=ma_t=m\dfrac{dv}{dt}\\
+F_n=ma_n=\dfrac{mv^2}{\rho}
+\end{cases}.
+\]
+En el cas de moviment circular, $\rho=R,\ v=\omega R$, i les forces són
+\[
+\begin{cases}
+F_t=mR\dfrac{d\omega}{dt}\\
+F_n=m\dfrac{m\omega^2R^2}{R}=m\omega^2R
+\end{cases}.
+\]
+Si a més, $\omega$ és uniforme,
+\[
+\begin{cases}
+F_t=0\\
+F_n=m\omega^2R
+\end{cases}\implies\vec a=\vec\omega\times\vec v,\ \vec F=m\vec a=\vec\omega\times m\vec v=\vec\omega\times\vec p.
+\]

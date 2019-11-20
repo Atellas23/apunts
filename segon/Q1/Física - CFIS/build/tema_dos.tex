@@ -1,0 +1,106 @@
+\chapter{Cinemàtica de la partícula}
+
+\section{Moviment}
+L'objectiu d'aquesta secció és descriure el moviment d'una partícula mitjançant expressions matemàtiques. Per tal de fer això, necessitarem un espai amb
+\begin{itemize}
+	\item un origen;
+	\item una base vectorial.
+\end{itemize}
+\begin{defi}[Moviment]
+    El moviment d'una partícula és un vector $\vec{r}$ que uneix l'origen de coordenades amb la posició de la partícula, i que pot dependre de diversos paràmetres. Si depèn del paràmetre $t$, en coordenades cartesianes el podem escriure com
+    \[
+    \vec{r}(t)=x(t)\hat{\mathbf{i}}+y(t)\hat{\mathbf{j}}+z(t)\hat{\mathbf{k}}.
+    \]
+\end{defi}
+\begin{defi}[Velocitat]
+	La velocitat d'una partícula amb moviment $\vec{r}$ és la seva derivada respecte el temps,
+	\[
+	\vec{v}=\lim_{\Delta t\rightarrow 0}\dfrac{\Delta\vec{r}}{\Delta t}=\dfrac{d\vec{r}}{dt}=\dot{\vec{r}}.
+	\]
+\end{defi}
+La velocitat sempre és tangent a la trajectòria, i per tant, si $\hat{\mathbf{t}}$ és el vector unitari en la direcció tangent a $\vec{r}$, tenim $\vec{v}=v\hat{\mathbf{t}}$. En coordenades cartesianes,
+\[
+\dfrac{d\vec{r}}{dt}=\dfrac{dx}{dt}\hat{\mathbf{i}}+\dfrac{dy}{dt}\hat{\mathbf{j}}+\dfrac{dz}{dt}\hat{\mathbf{k}}.
+\]
+\begin{defi}[Acceleració]
+	L'acceleració d'una partícula amb velocitat $\vec{v}$ és la seva derivada respecte el temps,
+	\[
+	\vec{a}=\dot{\vec{v}}=\lim_{\Delta t\rightarrow 0}\dfrac{\Delta\vec{v}}{\Delta t}=\dfrac{d^2\vec{r}}{dt^2}=\ddot{\vec{r}}.
+	\]
+\end{defi}
+\newpage
+
+\section{Canvis de coordenades}
+\subsection{Coordenades polars}
+\[
+\begin{cases}
+\hat{\mathbf{r}}=\hat{\mathbf{i}}\cos\theta+\hat{\mathbf{j}}\sin\theta\\
+\hat{\mathbf{\theta}}=-\hat{\mathbf{i}}\sin\theta+\hat{\mathbf{j}}\cos\theta
+\end{cases}\iff
+\begin{pmatrix}
+\cos\theta & \sin\theta\\
+-\sin\theta & \cos\theta
+\end{pmatrix}\begin{pmatrix}\hat{\mathbf{i}}\\ \hat{\mathbf{j}}\end{pmatrix}=
+\begin{pmatrix}\hat{\mathbf{r}}\\ \hat{\mathbf{\theta}}\end{pmatrix}
+\iff
+\begin{pmatrix}
+\cos\theta & -\sin\theta\\
+\sin\theta & \cos\theta
+\end{pmatrix}\begin{pmatrix}\hat{\mathbf{r}}\\ \hat{\mathbf{\theta}}\end{pmatrix}=
+\begin{pmatrix}\hat{\mathbf{i}}\\ \hat{\mathbf{j}}\end{pmatrix}
+\]
+\textbf{Canvis en la velocitat i l'acceleració}
+\begin{itemize}
+	\item Velocitat:
+		\[
+		\begin{cases}
+		v_r=\dot r \\
+		v_\theta=r\dot\theta
+		\end{cases}
+		\]
+	\item Acceleració:
+		\[
+		\begin{cases}
+		a_r=\ddot r - r\dot\theta^2 \\
+		a_\theta=r\ddot\theta + 2\dot r\dot\theta
+		\end{cases}
+		\]
+\end{itemize}
+
+\subsection{Coordenades intrínseques}
+\[\vec{r}(t),\ \vec{v}=\dfrac{d\vec r}{dt}=v\hat t,\ \vec{a}=\dfrac{d\vec v}{dt}=\dfrac{d}{dt}(v\hat t)=\dfrac{dv}{dt}\hat t + v\dfrac{d\hat t}{dt}.\]
+Tenim que $\hat t\cdot\hat t=1$, i aleshores 
+\[
+\dfrac{d}{dt}(\hat t\cdot\hat t)=0\implies2\hat t\dfrac{d\hat t}{dt}=0\implies\dfrac{d\hat t}{dt}\perp\hat t.
+\]
+Si considerem un diferencial d'arc de la trajectòria, tenim que localment $ds=\rho d\theta$. També, el mòdul del vector tangent $\hat t$ és localment $|d\hat t|=d\theta$. Sabent que $\dfrac{d\hat t}{dt}=a\hat n$, aleshores
+\[\left|\dfrac{d\hat t}{dt}\right|=\left|\dfrac{d\hat t}{ds}\right|\dfrac{ds}{dt}=v\dfrac{d\theta}{ds}=\dfrac{v}{\rho}\implies
+\dfrac{d\hat t}{dt}=\dfrac{v}{\rho}\hat n.\]
+\textbf{Canvis en la velocitat i l'acceleració}
+\[\vec a=\dfrac{dv}{dt}\hat t + \dfrac{v^2}{\rho}\hat n=a_t\hat t + a_n\hat n,\ a_t=\dfrac{dv}{dt},\ a_n=\dfrac{v^2}{\rho}.\]
+Si sabem $a$ i $v$,
+\[\begin{cases}v\cdot a=v\cdot(\vec a_t + \vec a_n)=va_t \\ v\times a=va_n(\hat t\times\hat n)\end{cases}\implies\begin{cases}a_t=\dfrac{\vec v\cdot\vec a}{v}\\ a_n=\dfrac{|\vec v\times\vec a|}{v}\\ \rho=\dfrac{v^3}{|\vec v\times\vec a|}\end{cases}\]
+
+\section{Tipus de moviments}
+\subsection{Uniforme}
+$\vec v=\vec v_0$ és constant, $\vec r(t)=\int\vec v dt=\vec v_0 t+\vec r_0$ és una recta. 
+\subsection{Uniformement accelerat}
+$\vec a=\vec a_0$ constant, per tant
+\[\vec v=\int\vec a dt=\vec a_0t+\vec v_0\implies\vec r(t)=\int\vec v dt=\int(\vec a_0t+\vec v_0)dt=\vec a_0\dfrac{t^2}{2}+\vec v_0 t+\vec r_0.\]
+$\vec v$ es troba sempre en el pla definit per $\vec v_0$ i $\vec a_0$, i $\vec r - \vec r_0$ també es troba en aquest mateix pla$\implies$ el moviment és sempre en el mateix pla.
+\subsection{Circular}
+La velocitat és tangent a la circumferència que descriu el moviment, $\vec v\perp\vec r$, i $|\vec r|=R$ constant. És habitual representar la velocitat angular amb un vector $\omega$, de direcció l'eix de rotació i sentit governat per la regla de la mà dreta. En aquest cas, $\vec v=\vec\omega\times\vec r$. La velocitat i l'acceleració són, respectivament,
+\[
+\text{Velocitat:}
+\begin{cases}
+v_r=\dot r=0\\
+v_\theta=r\dot\theta=\omega R
+\end{cases}
+;\quad
+\text{Acceleració:}
+\begin{cases}
+a_r=\ddot r - r\dot\theta^2=-r\omega^2\\
+a_\theta=r\ddot\theta + 2\dot r\dot\theta=r\dot\omega
+\end{cases}.
+\]
+Si $\omega$ és constant, tenim $a_\theta=0$, i aleshores,\[\vec a=\dfrac{d\vec v}{dt}=\dfrac{d}{dt}(\vec\omega\times\vec r)=\vec\omega\times\dfrac{d\vec r}{dt}=\vec\omega\times\vec v=\vec\omega\times(\vec\omega\times\vec r).\]
