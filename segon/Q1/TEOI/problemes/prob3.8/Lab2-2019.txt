@@ -1,0 +1,138 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Exemples d'Asymptotic Equipartition Property, seqüències típiques i seqüències més probables.\n",
+    "\n",
+    "Es considera una font i.i.d. amb distribució de Bernoulli de probabilitat $p$.\n",
+    "\n",
+    "La funció AEP té tres paràmetres: $p$ és la probabilitat, $n$ la longitud de les seqüències i eps$=\\epsilon$ el paràmetre que determina la tipicitat.\n",
+    "\n",
+    "La funció no té cap sortida sino que, en cridar-la amb uns certs paràmetres, imprimeix diverses dades relacionades amb el problema que es vol estudiar: seqüències típiques, de probabilitat màxima, i codificació de blocs de longitud $n$ segons l'esquema explicat a classe.\n",
+    "\n",
+    "Primer conjunt de dades: entropia, entropia de seqüències de longitud $n$ i fita inferior del nombre de bits per codificar aquests blocs donada per l'entropia.\n",
+    "\n",
+    "Segon conjunt de dades: codificació per seqüències típiques del conjunt $A_\\epsilon^{(n)}$. Primer es recorda el valor del paràmetre $\\epsilon$ i quant val $1-\\epsilon$, que és la probabilitat que es vol assolir a base de seqüències típiques. Es dona l'interval amb el nombre de uns de les seqüències típiques; el nombre $|A_\\epsilon^{(n)}|$ de seqüències típiques; la seva probabilitat $\\operatorname{Pr}(A_\\epsilon^{(n)})$, i s'indica si és $>1-\\epsilon$ (recordi's que a teoria s'ha demostrat al Teorema 3.1 que, fixat un $\\epsilon$, això es compleix per a $n$ prou gran); la desigualtat del Teorema 3.2 es dóna en forma logarítmica i es diu si es compleix la inferior (només s'ha de complir per a $n$ prou gran); finalment, es diu el nombre de bits per seqüència si es codifica usant seqüències típiques.\n",
+    "\n",
+    "Tercer conjunt de dades: codificació usant les seqüències més probables del conjunt $B_\\delta^{(n)}$. Primer s'agafa $\\delta=\\epsilon$. Per tant es tracta d'agafar les seqüències més probables fins a superar la probabilitat $1-\\epsilon$. Es donen les dades anàlogues al cas anterior: nombre de uns d'aquestes seqüències; nombre total de seqüències i el seu logaritme en base 2; probabilitat total i, finalment, el nombre de bits en la codificació usant aquestes seqüències.\n",
+    "\n",
+    "Finalment, el quart conjunt de dades fa exactament el mateix que el tercer, però s'agafen les seqüències més probables fins a arribar a la mateixa probabilitat assolida amb les típiques $\\operatorname{Pr}(A_\\epsilon^{(n)})$, que en general és més gran que $1-\\epsilon$. Això fa que aquestes dades siguin més indicades per comparar els dos mètodes: seqüències típiques vs. seqüències més probables."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from math import log2,ceil\n",
+    "from scipy.special import binom\n",
+    "def AEP(p,n,eps):\n",
+    "    if p>0.5: p = 1-p; #les probabilitats p**k*(1-p)**(n-k) són decreixents; els -log2 creixents\n",
+    "    H = -p*log2(p)-(1-p)*log2(1-p);\n",
+    "    print(\"################################################################################\")\n",
+    "    print(\"### DADES DEL PROBLEMA #########################################################\")\n",
+    "    print(\"Entropia H = H(p) =\",round(H,10));\n",
+    "    print(\"n*H =\",round(n*H,5));\n",
+    "    print(\"Fita inferior de bits/bloc segons entropia =\",ceil(n*H))\n",
+    "    print(\"################################################################################\")\n",
+    "    print(\"### SEQÜÈNCIES TÍPIQUES ########################################################\")\n",
+    "    k = 0;\n",
+    "    while -k*log2(p)-(n-k)*log2(1-p) < n*(H-eps):\n",
+    "        k=k+1\n",
+    "    k_min = k;\n",
+    "    k = n;\n",
+    "    while -k*log2(p)-(n-k)*log2(1-p) > n*(H+eps):\n",
+    "        k=k-1\n",
+    "    k_max = k;\n",
+    "    print(\"epsilon i 1-epsilon =\",eps,1-eps);\n",
+    "    print(\"Interval nombre de uns de seqüències típiques =\",[k_min,k_max]);\n",
+    "    num_tip_seq = sum(binom(n,k) for k in range(k_min,k_max+1));\n",
+    "    print(\"Nombre de seqüències típiques =\",round(num_tip_seq,5));\n",
+    "    pro_tip_seq = sum(binom(n,k)*(p**k)*(1-p)**(n-k) for k in range(k_min,k_max+1));\n",
+    "    print(\"Probabilitat de seqüències típiques; és >1-eps? =\",round(pro_tip_seq,6),pro_tip_seq>1-eps);\n",
+    "    fita_num_tip_sup = n*(H+eps);\n",
+    "    fita_num_tip_inf = log2(1-eps)+n*(H-eps);\n",
+    "    print(\"log2 de fites i nombre de seqüències típiques =\",round(fita_num_tip_inf,3),round(log2(num_tip_seq),3),round(fita_num_tip_sup,3),fita_num_tip_inf<log2(num_tip_seq))\n",
+    "    codif_seq_tip = ceil(log2(num_tip_seq)+1)*pro_tip_seq+(n+1)*(1-pro_tip_seq)\n",
+    "    print(\"Nombre de bits/bloc codificació amb seqüències típiques =\",ceil(codif_seq_tip))\n",
+    "    print(\"################################################################################\")\n",
+    "    print(\"### SEQÜÈNCIES DE POBABILITAT GRAN #############################################\")\n",
+    "    print(\"Seqüències més probables fins a probabilitat\",1-eps);\n",
+    "    pro = 0; k = 0;\n",
+    "    while pro < 1-eps:\n",
+    "        pro = pro + binom(n,k)*(p**k)*((1-p)**(n-k)); k+=1; # pro és de les seqüències fins a k-1 uns\n",
+    "    k_max = k-1;\n",
+    "    print(\"Interval seqüències prob. gran. =\",[0,k_max-1],\"més algunes de \",k_max);\n",
+    "    num_sub_min = sum(binom(n,x) for x in range(0,k_max));\n",
+    "    print(\"Nombre de seqüències prob. gran. =\",round(num_sub_min,5));\n",
+    "    pro_sub_min = sum(binom(n,k)*p**k*(1-p)**(n-k) for k in range(0,k_max));\n",
+    "    num_sub_min_falten = ceil((1-eps-pro_sub_min)/(p**k_max*(1-p)**(n-k_max)));\n",
+    "    num_sub_min = num_sub_min + num_sub_min_falten;\n",
+    "    print(\"log2 del nombre de seqüències de prob. gran =\",round(log2(num_sub_min),3));\n",
+    "    pro_sub_min = pro_sub_min + num_sub_min_falten*(p**k_max*(1-p)**(n-k_max));\n",
+    "    print(\"Probabilitat de seqüències de probabilitat gran =\",round(pro_sub_min,6));\n",
+    "    codif_sub_min = ceil(log2(num_sub_min)+1)*pro_sub_min+(n+1)*(1-pro_sub_min)\n",
+    "    print(\"Nombre de bits/bloc codificació seqüències de prob. gran.\",ceil(codif_sub_min))\n",
+    "    print(\"################################################################################\")\n",
+    "    print(\"### SEQÜÈNCIES DE PROBABILITAT GRAN = TÍPIQUES #################################\")\n",
+    "    print(\"Seqüències més probables fins a probabilitat\",round(pro_tip_seq,6));\n",
+    "    pro = 0; k = 0;\n",
+    "    while pro < pro_tip_seq:\n",
+    "        pro = pro + binom(n,k)*(p**k)*((1-p)**(n-k)); k+=1; # pro és de les seqüències fins a k-1 uns\n",
+    "    k_max = k-1;\n",
+    "    print(\"Interval seqüències prob. gran. =\",[0,k_max-1],\"més algunes de \",k_max);\n",
+    "    num_sub_min = sum(binom(n,x) for x in range(0,k_max));\n",
+    "    print(\"Nombre de seqüències prob. gran. =\",round(num_sub_min,5));\n",
+    "    pro_sub_min = sum(binom(n,k)*p**k*(1-p)**(n-k) for k in range(0,k_max));\n",
+    "    num_sub_min_falten = ceil((pro_tip_seq-pro_sub_min)/(p**k_max*(1-p)**(n-k_max)));\n",
+    "    num_sub_min = num_sub_min + num_sub_min_falten;\n",
+    "    print(\"log2 del nombre de seqüències de prob. gran =\",round(log2(num_sub_min),3));\n",
+    "    pro_sub_min = pro_sub_min + num_sub_min_falten*(p**k_max*(1-p)**(n-k_max));\n",
+    "    print(\"Probabilitat de seqüències de probabilitat gran =\",round(pro_sub_min,6));\n",
+    "    codif_sub_min = ceil(log2(num_sub_min)+1)*pro_sub_min+(n+1)*(1-pro_sub_min)\n",
+    "    print(\"Nombre de bits/bloc codificació seqüències de prob. gran.\",ceil(codif_sub_min))\n",
+    "    return"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "AEP(0.05,3000,0.05)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
