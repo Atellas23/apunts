@@ -1,0 +1,201 @@
+---
+title: "P08 COMRECT"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Es vol comparar les valoracions (*V*) de dos mètodes pedagògics (*M*) en funció del coeficient d'intel·ligència (*C*) amb les dades del fitxer “comrect.csv” . 
+
+*Directori de treball, llegir dades, carregar paquets i descriptiva*
+
+```{r}
+#setwd("...")
+#options(contrasts = c("contr.sum", "contr.treatment"))
+library(emmeans)
+library(car)
+dd <- read.csv2("../data/comrect.csv")
+
+head(dd)
+is.factor(dd$M)
+dd$M<-as.factor(dd$M)
+
+##############################################################################
+
+# DESCRIPTIVA
+
+scatterplot(V~C|M,smooth=F,data=dd)
+
+##############################################################################
+```
+
+**Plantegeu i ajusteu el model lineal factorial de la variable V en funció del factor M i de la covariable C.** 
+
+```{r}
+m0<-lm(V~1,dd)
+mv<-lm(V~M+C+M:C,dd)
+#mv<-lm(V~M*C,dd)
+emmip(mv,M~C,CIs=T,at=list(C=c(90,105,120)))
+```
+
+**Suposant que es compleixen les condicions dels models lineal, amb $\alpha=0.05$, estimeu els paràmetres i contrasteu els test de cada paràmetre (paràmetre=0, o no),**
+
+```{r}
+summary(mv)
+```
+
+** Tenen algun efecte C i M sobre V?**
+
+```{r}
+#Test omnibus
+anova(m0,mv)
+
+# Tests anova
+Anova(mv)
+```
+
+**Es compleixen les condicions de ML? Hi ha valors estranys?**
+
+```{r}
+# Diagnòstics
+plot(predict(mv),resid(mv),pch=3,main="V Model factorial")
+abline(h=0,lty=2)
+
+#Valors estranys
+plot(rstudent(mv),pch=3,main="V Model factorial")
+abline(h=c(-3,-2,0,2,3),lty=2)
+```
+
+### Contrasteu també els test adequats per contestar les preguntes següents: 
+
+**a) Les dues rectes són iguals? o no? **
+
+```{r}
+# Iguals vs diferents
+anova(lm(V~C,dd),mv) 
+
+# Iguals vs paral·leles diferente
+anova(lm(V~C,dd),lm(V~C+M,dd)) 
+
+# En algun punt prop del centre de les C, les E[V] són diferents?
+pairs(emmeans(mv,~M|C)) 
+```
+
+**b) Les dues rectes són paral·leles? o no? **
+
+```{r}
+anova(lm(V~M+C,dd),mv)
+Anova(mv)
+
+# Separació dels pendents
+(emmp<-emtrends(mv,~M,var="C")) 
+pairs(emmp)
+#CLD(emmp)
+```
+
+**c) Les dues rectes tenen el mateix terme independent? o no?**
+
+```{r}
+anova(lm(V~C+M:C,dd),mv)
+pairs(emmeans(mv,~M|C,at=list(C=0)))
+```
+
+**d) Per cadascun dels següents valores de la variable C: 90, 105 i 120, quines diferències hi ha en la valoració segons el mètode?**
+
+```{r}
+(emm<-emmeans(mv,~M|C,at=list(C=c(90,105,120))))
+pairs(emm)
+#CLD(emm)
+
+```
+
+**e) En cas de poder simplificar el model, torneu a respondre les preguntes c) i d)**
+
+***Podem simplificar traient la interacció.***
+
+**Estimeu els paràmetres i contrasteu els test de cada paràmetre (paràmetre=0, o no), Tenen algun efecte C i M sobre V?**
+
+```{r}
+# e) traient la inreracció per simplificar el model
+
+mv2<-lm(V~M+C,dd)
+emmip(mv2,M~C,CIs=T,at=list(C=c(90,105,120)))
+summary(mv2)
+
+anova(m0,mv2)
+Anova(mv2)
+```
+
+**Es compleixen les condiciond de ML? Hi ha valors estranys?**
+
+```{r}
+plot(predict(mv2),resid(mv2),pch=3,main="V Model additiu")
+abline(h=0,lty=2)
+
+plot(rstudent(mv2),pch=3,main="V Model additiu")
+abline(h=c(-3,-2,0,2,3),lty=2)
+# mes guai fer abline(h=c(-3,-1.96,0,1.96,3),lty=2)
+# perque normal i merdes
+```
+
+**c) Les dues rectes tenen el mateix terme independent? o no?**
+
+```{r}
+# Resposta a c)
+anova(lm(V~C,dd),mv2)
+```
+
+**d) Per cadascun dels següents valors de la variable C: 90, 105 i 120, quines diferències hi ha en la valoració segons el mètode?**
+
+```{r}
+# Resposta a d)
+(emm2<-emmeans(mv2,~M|C,at=list(C=c(90,105,120))))
+pairs(emm2)
+#CLD(emm2)
+```
+##=============================================================================
+## Repetiu l'exercici, però amb les valoracions de la variable VV.
+
+*Descriptiva*
+
+```{r}
+scatterplot(VV~C|M,smooth=F,data=dd)
+
+m0<-lm(VV~1,dd)
+mvv<-lm(VV~M+C+M:C,dd)
+#mvv<-lm(VV~M*C,dd)
+emmip(mvv,M~C,CIs=T,at=list(C=c(90,105,120)))
+
+
+```
+
+**Estimeu els paràmetres i contrasteu els test de cada paràmetre (paràmetre=0, o no), Tenen algun efecte C i M sobre VV?**
+```{r}
+summary(mvv)
+```
+
+```{r}
+#Test omnibus
+anova(m0,mvv)
+
+# Tests anova
+Anova(mvv)
+```
+
+**Es compleixen les condiciond de ML? Hi ha valors estranys?**
+
+## Utilitzem el model factorial per haver-hi interacció
+
+**a) Les dues rectes són iguals? o no?.** 
+
+**b) Les dues rectes són paral·leles? o no?** 
+
+**c) Les dues rectes tenen el mateix terme independent? o no?**
+
+**d) Per cadascun dels següents valores de la variable c: 90, 105 i 120, quines diferències hi ha en la valoració segons el mètode?**
+
+**e) En cas de poder simplificar el model, torneu a respondre les preguntes c) i d).** 

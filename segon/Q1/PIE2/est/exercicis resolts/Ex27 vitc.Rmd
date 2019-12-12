@@ -1,0 +1,101 @@
+---
+title: "Ex27 VitC"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+####Es vol comparar com evoluciona, en passar el temps, el contingut de vitamina C d'un suc de taronja natural, depenent del tipus d'envàs i la temperatura de conservació, dels que hem escollit tres tractaments, ”a”, ”b” i ”c” .
+
+####Durant 12 setmanes, començant al cap d'una setmana després de l'envasat dels sucs, s'ha analitzat el contingut de vitamina C de dues unitats de cada tractament. Les dades experimentals (simulades) són al fitxer “vitc.csv”. 
+
+*Llegir dades, paquets descriptiva*
+
+```{r}
+dd<-read.csv2("../Dades/vitc.csv")
+library(car)
+library(emmeans)
+scatterplot(log(vitc)~set|tract,smooth=F,dd)
+```
+
+####En general sabem que el contingut de vitamina C evoluciona seguint una funció exponencial, $vitc=\alpha e^{-\beta\cdot set}$,on $\alpha>0, \beta>0$ , i el valor d'aquests paràmetres depèn del tractament de conservació. Amb $\alpha=0.05$, feu:
+
+**a) Sabent que a l'envasat tots els sucs tenien el mateix contingut de vitamina C, és a dir** $\alpha_{1}=\alpha_{2}=\alpha_{3}$ **, plantegeu, i ajusteu, un model lineal adequat per veure si en els tres tractaments la pèrdua de vitamina C es fa amb la mateixa rapidesa, o no. Amb aquest model:**
+
+```{r}
+mm<-lm(log(vitc)~set+tract:set,dd)
+emmip(mm,tract~set,at=list(set=(0:6)*2),CIs=T)
+summary(mm)
+```
+
+**• Estimeu el contingut de vitamina C esperat, en el moment de l'envasat.**
+
+```{r}
+(emm0<-emmeans(mm,~tract|set,at=list(set=0)))
+exp(summary(emm0)[,"emmean"])
+```
+
+**• Per a cada tractament calculeu el valor estimat de la** $\beta$.
+
+```{r}
+(emt<-emtrends(mm,~tract,var="set"))
+```
+
+
+**• Dieu si les tres** $\beta's$ **són totes iguals, o no, i quines diferències hi ha.**
+
+```{r}
+CLD(emt,Letters=letters,reverse=T)
+```
+
+**• Quin tractament, o tractaments, conserven més la vitamina C?**
+
+* Els que tinguin la a*
+
+
+####b) Test blanc: Plantegeu, i ajusteu, un altre model de dimensió més gran, amb el que es pugui comprovar que a l'envasat, els sucs dels tres tractaments tenien realment el mateix nivell de vitamina C. 
+
+```{r}
+mf<-lm(log(vitc)~tract+set+tract:set,dd)
+emmip(mf,tract~set,at=list(set=(0:6)*2),CIs=T)
+summary(mf)
+anova(mm,mf)
+```
+
+####Amb aquest model:
+
+**• Estimeu, per cada tractament, el contingut esperat de vitamina C que tenien en ser envasats, es a dir quan set=0.**
+
+```{r}
+(emmf<-emmeans(mf,~tract|set,at=list(set=0)))
+```
+
+**• Els continguts de vitamina C a set=0, són iguals? o no?**
+
+```{r}
+CLD(emmf,Letters=letters,reverse=T)
+```
+
+**• Amb aquest model, quin tractament, o tractaments, conserven més la vitc? El resultat coincideix amb la mateixa pregunta de l'apartat a)? per què?**
+
+```{r}
+(emft<-emtrends(mf,~tract,var="set"))
+CLD(emft,Letters=letters,reverse=T)
+```
+
+
+c) Justifiqueu si els models lineals utilitzats compleixen totes les hipòtesis dels “models lineals” i dieu si ajusten bé les dades.
+
+```{r}
+plot(mm,which=1)
+abline(h=0,lt=2)
+
+plot(mf,which=1)
+abline(h=0,lt=2)
+
+```
+

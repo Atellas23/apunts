@@ -1,0 +1,184 @@
+---
+title: "Ex19 Formatges"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+###En l'elaboració de formatges, el rendiment és la relació entre el pes del formatge obtingut i el de la llet utilitzada. Es vol veure, per separat en llet de cabra, d'ovella i de vaca; com canvia el rendiment amb un tractament tèrmic (crua/pasteuritzada) i amb l'addició de CaCl2 (si/no). 
+
+Les dades són al fitxer “formatges.csv”.
+
+Per cadascun dels tres tipus de llet per separat, suposant que es compleixen les hipòtesis dels models lineals i amb $\alpha=0.05$:
+
+**Directori de treball, dades i paquets del R**
+
+```{r}
+#setwd("...")
+dd <- read.csv2("../data/formatges.csv")
+
+library(tables)
+library(emmeans)
+library(car)
+library(RcmdrMisc)
+```
+
+==========================================================================================================
+
+
+### **Let de VACA**
+
+**Descriptiva**
+
+```{r}
+print(tabular(mean*VACA*(TERMIC+1)~(CaCl2+1),dd),justification="r")
+print(tabular(sd*VACA*(TERMIC)~(CaCl2),dd),justification="r")
+print(tabular((n=1)*VACA*(TERMIC+1)~(CaCl2+1),dd),justification="r")
+
+#with(dd, plotMeans(VACA, TERMIC, CaCl2, error.bars="conf.int", level=0.95, connect=TRUE))
+with(dd, plotMeans(VACA, CaCl2, TERMIC, error.bars="conf.int", level=0.95, connect=TRUE))
+
+```
+
+
+
+a) Plantegeu el model factorial:
+
+```{r}
+mv<-lm(VACA~TERMIC*CaCl2,dd)
+mv0<-lm(VACA~1,dd)
+emmip(mv,TERMIC~CaCl2,CIs=T)
+#emmip(mv,CaCl2~TERMIC,CIs=T)
+```
+
+Tenen algun efecte els tractaments (combinacions dels nivells dels dos factors) utilitzats? En cas afirmatiu responeu justificadament les preguntes següents:
+
+```{r}
+# Omnibus
+anova(mv0,mv)
+
+#Anova tipus II
+Anova(mv)
+```
+
+• Quin és el millor o els millors tractaments?
+
+```{r}
+(emm<-emmeans(mv,~TERMIC*CaCl2)) 
+
+# Comparacions dels tractaments
+pairs(emm)
+#CLD(emm)
+CLD(emm,Letters=letters,reversed=T)
+```
+
+• El CaCl2 té algun efecte sobre el rendiment?
+*Sí, tant en l'efecte principal com en la interacció*
+
+• Podem dir que afegir CaCl2 fa augmentar el rendiment?
+*No, en llet crua el disminueix. En llet pasteuritzada no es detecten diferències*
+
+```{r}
+pairs(emmeans(mv,~CaCl2|TERMIC)) 
+
+CLD(emmeans(mv,~CaCl2|TERMIC),Letters=letters,reversed=T)
+```
+
+• El tractament tèrmic té algun efecte sobre el rendiment?
+*Sí, encara que l'efecte principal és no significatiu, la interacció és significativa*
+
+• Podem dir que pasteuritzar fa augmentar el rendiment?
+*No, amb CaCl2 no es detecten diferències. Sense CaCl2 el disminueix*
+```{r}
+pairs(emmeans(mv,~TERMIC|CaCl2)) 
+CLD(emmeans(mv,~TERMIC|CaCl2),Letters=letters,reversed=T)
+```
+
+• Podríem utilitzar un altre model lineal de dimensió més petita? per què? quin? canviarien els resultats del test anova? i els de les comparacions múltiples?
+*No, ja que tots els factors tenen algun efecte*
+
+b) Si és convenient, simplifiqueu el model i contesteu les preguntes de l'apartat a)
+*En aquest cas no és convenient*
+
+==========================================================================================================
+
+### **Let de CABRA**
+
+**Descriptiva**
+
+```{r}
+print(tabular(mean*CABRA*(TERMIC+1)~(CaCl2+1),dd),justification="r")
+print(tabular(sd*CABRA*(TERMIC)~(CaCl2),dd),justification="r")
+print(tabular((n=1)*CABRA*(TERMIC+1)~(CaCl2+1),dd),justification="r")
+
+#with(dd, plotMeans(CABRA, TERMIC, CaCl2, error.bars="conf.int", level=0.95, connect=TRUE))
+with(dd, plotMeans(CABRA, CaCl2, TERMIC, error.bars="conf.int", level=0.95, connect=TRUE))
+
+```
+
+
+
+a) Plantegeu el model factorial:
+
+```{r}
+mc<-lm(CABRA~TERMIC*CaCl2,dd)
+mc0<-lm(CABRA~1,dd)
+emmip(mc,TERMIC~CaCl2,CIs=T)
+#emmip(mc,CaCl2~TERMIC,CIs=T)
+```
+
+Tenen algun efecte els tractaments (combinacions dels nivells dels dos factors) utilitzats? En cas afirmatiu responeu justificadament les preguntes següents:
+
+```{r}
+# Omnibus
+anova(mc0,mc)
+
+#Anova tipus II
+Anova(mc)
+```
+
+*El test omnibus no detecte efectes.* 
+
+*Amb l'anova (tipus II) els tres efectes són no significatius, el principal TERMIC és no significatiu per molt poc*
+
+**Podem provar de simplificar el model treient la interacció i veure si hi ha algun efecte**
+
+```{r}
+mca<-lm(CABRA~TERMIC+CaCl2,dd)
+emmip(mca,TERMIC~CaCl2,CIs=T)
+#emmip(mca,CaCl2~TERMIC,CIs=T)
+
+# Omnibus
+anova(mc0,mca)
+
+#Anova tipus II
+Anova(mca)
+```
+
+*El test omnibus diu que hi ha (per molt poc) algun efecte però l'anova tots surten no significatius, el TERMIC per molt poc. És una situació possible però molt estranya*
+
+**Provem ara amb les comparacions múltiples**
+*Com que no hi ha interacció ho podem fer per cada factor per separat**
+
+```{r}
+(emmT<-emmeans(mca,~TERMIC))
+(emmC<-emmeans(mca,~CaCl2))
+
+# Comparacions dels tractaments
+pairs(emmT)
+pairs(emmC)
+```
+
+*Tampoc es veuen efectes significatius*
+
+==========================================================================================================
+
+### **Let de OVELLA**
+
+#### **Feu-lo vosaltres**
+
+==========================================================================================================

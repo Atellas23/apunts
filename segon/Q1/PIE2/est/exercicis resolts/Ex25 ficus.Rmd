@@ -1,0 +1,282 @@
+---
+title: "Ex25 ficus"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+####Tenim l'alçada (H) de plantes de ficus i el nombre de dies des de que es van plantar (DIES) al fitxer ficus.csv. Sabem que
+$E\left[H|DIES\right]=e^{\alpha+\beta\cdot DIES}.$
+
+####És un exemple en la recta no ajusta bé les dades i tant la regressió no lineal com la regressió amb la variable aleatòria transformada pel logaritme, no compleixe la homoscedasticitat. En el tema models lineals generalitzats resoldrem aquest problema.
+
+####En tot l'exercici utilitzarem el nivell de significació
+$\alpha=0.05$
+####i treballarem els 4 models lineals següents :
+
+####En cadascun d'aquest models ens centrarem en:
+• Analitzar si el model ajusta bé.
+• Veure si els residuals tenen variància constant o no.
+• En predir l'alçada en el moment de plantar els ficus, als 105 dies
+– i també al cap de 150 dies de la plantació.
+
+
+*Directori de treball, paquets de R, llegir dades, descriptiva*
+
+```{r}
+#setwd("...")
+dd<-read.csv2("../Dades/ficus.csv")
+library(RcmdrMisc)
+library(tables)
+
+head(dd)
+
+#DESCRIPTIVA
+
+cv<-function(x) {sd(x)/mean(x)}
+di<-function(x) {var(x)/mean(x)}
+(t<-tabular((DIES=as.factor(DIES))~H*((n.dades=1)+(mitjana=mean)+(desv.tipus=sd)+(coef.variació=cv)+(index.disp.=di)),dd))
+
+scatterplot(H~DIES, regLine=F, smooth=F, boxplots=F,pch=3, data=dd)
+lines(rowLabels(t),t[,2])
+```
+
+#___________________________________________________________________________________________
+
+####Model A. La recta de regressió de H respecte DIES, 
+$E\left[H|DIES\right]=\alpha+\beta\cdot DIES$ i $Var\left(H|DIES\right)=\sigma^{2}$.
+
+**a) Ajusteu les dades amb la regressió lineal (o no lineal) calculeu els paràmetres estimats.**
+
+```{r}
+summary(ma<-lm(H~DIES,dd))
+```
+
+
+**b) Feu l'anàlisi dels residus “residual vs predit” i només pels models lineals també del dels “residuals studentitzats”.**
+
+```{r}
+plot(predict(ma),resid(ma))
+abline(h=0,lt=2)
+
+plot(rstudent(ma))
+abline(h=c(-3,-2,0,2,3),lt=2)
+```
+
+
+**c) Una característica de les dades d'aquest exemple és que hi ha moltes dades per a cadascun dels valors de la variable DIES, amb el que també es podria utilitzar DIES com a factor (FDIES). Així amb l'Anova del model Y\sim DIES+FDIES podrem determinar si afegir el factor FDIES millora el model o no. Nota: Pel model no lineal no contrasteu aquesta pregunta.** 
+
+```{r}
+dd$FDIES<-as.factor(dd$DIES)
+maf<-lm(H~DIES+FDIES,dd)
+anova(ma,maf)
+```
+
+
+**d) Per la mateixa característica anterior, es pot estudiar l'homoscedasticitat dels residuals amb el test de levene (leveneTest(...)). Utilitzant aquest test dieu si hi ha homoscedasticitat o no.**
+
+```{r}
+leveneTest(resid(ma),dd$FDIES)
+```
+
+
+**e) Calculeu la regió de predicció de H en els (models lineals), en els DIES={ 0,105,150}.**
+
+```{r}
+predict(ma,data.frame(DIES=c(0,105,150)),interval="prediction")
+
+```
+
+#___________________________________________________________________________________________
+
+####Mod B. Amb la funció de regressió la paràbola de H respecte DIES ja que la podem considerar una aproximació a la funció exponencial.
+$E\left[H|DIES\right]=\alpha+\beta\cdot DIES+\gamma\cdot DIES^{2}$ i $Var\left(H|DIES\right)=\sigma^{2}$.
+
+**a) Ajusteu les dades amb la regressió lineal (o no lineal) calculeu els paràmetres estimats.**
+
+```{r}
+dd$DIES2<-dd$DIES^2
+summary(mb<-lm(H~DIES+DIES2,dd))
+```
+
+
+**b) Feu l'anàlisi dels residus “residual vs predit” i només pels models lineals també del dels “residuals studentitzats”.**
+
+```{r}
+plot(predict(mb),resid(mb))
+abline(h=0,lt=2)
+
+plot(rstudent(mb))
+abline(h=c(-3,-2,0,2,3),lt=2)
+```
+
+
+**c) Una característica de les dades d'aquest exemple és que hi ha moltes dades per a cadascun dels valors de la variable DIES, amb el que també es podria utilitzar DIES com a factor (FDIES). Així amb l'Anova del model Y\sim DIES+FDIES podrem determinar si afegir el factor FDIES millora el model o no. Nota: Pel model no lineal no contrasteu aquesta pregunta.** 
+
+```{r}
+dd$FDIES<-as.factor(dd$DIES)
+mbf<-lm(H~DIES+DIES2+FDIES,dd)
+anova(mb,mbf)
+```
+
+
+**d) Per la mateixa característica anterior, es pot estudiar l'homoscedasticitat dels residuals amb el test de levene (leveneTest(...)). Utilitzant aquest test dieu si hi ha homoscedasticitat o no.**
+
+```{r}
+leveneTest(resid(mb),dd$FDIES)
+```
+
+
+**e) Calculeu la regió de predicció de H en els (models lineals), en els DIES={ 0,105,150}.**
+
+```{r}
+predict(mb,data.frame(DIES=c(0,105,150),DIES2=c(0,105,150)^2),interval="prediction")
+
+```
+
+#___________________________________________________________________________________________
+
+####Mod C. La recta de regressió de log(H) respecte DIES, ja que la transformació *log* homogeneitza les variàncies quan $Var\propto\mu^{2}$ encara que l'important en aquest cas és que linealitza la funció $e^{\alpha+\beta\cdot DIES}$.
+$E\left[log\left(H\right)|DIES\right]=\alpha+\beta\cdot DIES$ i $Var\left(log\left(H\right)|DIES\right)=\sigma^{2}.$
+
+**a) Ajusteu les dades amb la regressió lineal (o no lineal) calculeu els paràmetres estimats.**
+
+```{r}
+summary(mc<-lm(log(H)~DIES,dd))
+```
+
+
+**b) Feu l'anàlisi dels residus “residual vs predit” i només pels models lineals també del dels “residuals studentitzats”.**
+
+```{r}
+plot(predict(mc),resid(mc))
+abline(h=0,lt=2)
+
+plot(rstudent(mc))
+abline(h=c(-3,-2,0,2,3),lt=2)
+```
+
+
+**c) Una característica de les dades d'aquest exemple és que hi ha moltes dades per a cadascun dels valors de la variable DIES, amb el que també es podria utilitzar DIES com a factor (FDIES). Així amb l'Anova del model Y\sim DIES+FDIES podrem determinar si afegir el factor FDIES millora el model o no. Nota: Pel model no lineal no contrasteu aquesta pregunta.** 
+
+```{r}
+dd$FDIES<-as.factor(dd$DIES)
+mcf<-lm(log(H)~DIES+FDIES,dd)
+anova(mc,mcf)
+```
+
+
+**d) Per la mateixa característica anterior, es pot estudiar l'homoscedasticitat dels residuals amb el test de levene (leveneTest(...)). Utilitzant aquest test dieu si hi ha homoscedasticitat o no.**
+
+```{r}
+leveneTest(resid(mc),dd$FDIES)
+```
+
+
+**e) Calculeu la regió de predicció de H en els (models lineals), en els DIES={ 0,105,150}.**
+
+```{r}
+exp(predict(mc,data.frame(DIES=c(0,105,150)),interval="prediction"))
+
+```
+
+
+#___________________________________________________________________________________________
+
+####Mod D. La recta de regressió de $\sqrt{H}$ respecte DIES, ja que la transformació $\sqrt{}$ homogeneitza les variàncies quan $Var\propto\mu$.
+$E\left[sqrt\left(H\right)|DIES\right]=\alpha+\beta\cdot DIES$ i $Var\left(\left(H\right)|DIES\right)=\sigma^{2}.$
+
+**a) Ajusteu les dades amb la regressió lineal (o no lineal) calculeu els paràmetres estimats.**
+
+```{r}
+summary(md<-lm(sqrt(H)~DIES,dd))
+```
+
+
+**b) Feu l'anàlisi dels residus “residual vs predit” i només pels models lineals també del dels “residuals studentitzats”.**
+
+```{r}
+plot(predict(md),resid(md))
+abline(h=0,lt=2)
+
+plot(rstudent(md))
+abline(h=c(-3,-2,0,2,3),lt=2)
+```
+
+
+**c) Una característica de les dades d'aquest exemple és que hi ha moltes dades per a cadascun dels valors de la variable DIES, amb el que també es podria utilitzar DIES com a factor (FDIES). Així amb l'Anova del model Y\sim DIES+FDIES podrem determinar si afegir el factor FDIES millora el model o no. Nota: Pel model no lineal no contrasteu aquesta pregunta.** 
+
+```{r}
+dd$FDIES<-as.factor(dd$DIES)
+mdf<-lm(sqrt(H)~DIES+FDIES,dd)
+anova(ma,maf)
+```
+
+
+**d) Per la mateixa característica anterior, es pot estudiar l'homoscedasticitat dels residuals amb el test de levene (leveneTest(...)). Utilitzant aquest test dieu si hi ha homoscedasticitat o no.**
+
+```{r}
+leveneTest(resid(md),dd$FDIES)
+```
+
+
+**e) Calculeu la regió de predicció de H en els (models lineals), en els DIES={ 0,105,150}.**
+
+```{r}
+(predict(md,data.frame(DIES=c(0,105,150)),interval="prediction"))^2
+
+```
+
+
+#___________________________________________________________________________________________
+
+####Per tots 4 models:
+
+**f) Compareu els models entre ells**
+
+```{r}
+rbind("logLik"=c("Model A"=logLik(ma),"Model B"=logLik(mb),"Model C"=logLik(mc),"Model D"=logLik(md)),
+"AIC"=c(AIC(ma),AIC(mb),AIC(mc),AIC(md)),
+"BIC"=c(BIC(ma),BIC(mb),BIC(mc),BIC(md)),
+"R2"=c(summary(ma)$adj.r.squared,summary(mb)$adj.r.squared,summary(mc)$adj.r.squared,summary(md)$adj.r.squared))
+
+```
+
+**i feu les gràfiques de les dades amb les bandes de predicció.**
+
+```{r}
+dies=0:150
+pra<-predict(ma,data.frame(DIES=dies),interval="prediction")
+prb<-predict(mb,data.frame(DIES=dies,DIES2=dies^2),interval="prediction")
+prc<-predict(mc,data.frame(DIES=dies),interval="prediction")
+prd<-predict(md,data.frame(DIES=dies),interval="prediction")
+
+#oldpar <- par( mfrow=c(2,2))
+
+plot(dd$DIES,dd$H,pch=3,xlim=c(0,150),xlab="dies",ylab="H",ylim=c(min(dd$H,pra),max(dd$H,pra)),main="Model A")
+lines(dies,pra[,"fit"],col="blue")
+lines(dies,pra[,"lwr"],col="red")
+lines(dies,pra[,"upr"],col="red")
+
+plot(dd$DIES,dd$H,pch=3,xlim=c(0,150),xlab="dies",ylab="H",ylim=c(min(dd$H,prb),max(dd$H,prb)),main="Model B")
+lines(dies,prb[,"fit"],col="blue")
+lines(dies,prb[,"lwr"],col="red")
+lines(dies,prb[,"upr"],col="red")
+
+plot(dd$DIES,dd$H,pch=3,xlim=c(0,150),xlab="dies",ylab="H",ylim=c(min(dd$H,exp(prc)),max(dd$H,exp(prc))),main="Model C")
+lines(dies,exp(prc[,"fit"]),col="blue")
+lines(dies,exp(prc[,"lwr"]),col="red")
+lines(dies,exp(prc[,"upr"]),col="red")
+
+plot(dd$DIES,dd$H,pch=3,xlim=c(0,150),xlab="dies",ylab="H",ylim=c(min(dd$H,prd^2),max(dd$H,prd^2)),main="Model D")
+lines(dies,prd[,"fit"]^2,col="blue")
+lines(dies,prd[,"lwr"]^2,col="red")
+lines(dies,prd[,"upr"]^2,col="red")
+
+#par(oldpar)
+```
+

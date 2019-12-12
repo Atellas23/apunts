@@ -1,0 +1,185 @@
+---
+title: "Ex17 GMD"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Per veure si afegir edulcorant millora l'engreix de garrins s'ha fet una experiència en la que s'ha mesurat el guany mig diari, GMD, de garrins en les mateixes condicions però afegint edulcorant. S'han provat les 5 dosis: D00, D08, D15, D20 i D30, incloent la dosi D00 que de fet és la dieta sense edulcorant, i cada dieta s'ha provat en 5 garrins. 
+Els resultats experimentals obtinguts són al fitxer “gmd.csv”.
+
+```{r}
+#setwd("...")
+#options(contrasts = c("contr.sum", "contr.treatment"))
+library(car)
+library(emmeans)
+
+library(tables)
+library(RcmdrMisc)
+dd<-read.csv2("../Dades/gmd.csv")
+head(dd)
+
+#Descriptiva
+print(tabular(DOSI~GMD*((Dades=1)+(Mitjana=mean)+(Desv.Tipus=sd)),dd),justification="r")
+print(tabular(DOSI~GMD*((n=1)+mean+sd),dd),justification="r")
+
+scatterplot(GMD~DOSI,dd)
+with(dd,plotMeans(GMD,DOSI,error.bars = "sd"))
+with(dd,plotMeans(GMD,DOSI,error.bars = "conf.int",level=0.95))
+
+
+#==============================================================================
+```
+
+Tractant la dosis com els nivells d'un factor i $\alpha=0.05$, calculeu:
+
+**a)** Les matrius dels següents models lineals:
+
+**i.** $y_{ij}=\mu_{i}+\varepsilon_{ij}=\beta_{i}+\varepsilon_{ij}$
+
+```{r}
+x1<-diag(5)
+rownames(x1)<-paste0("mu",1:5)
+colnames(x1)<-paste0("beta",1:5)
+print(x1)
+
+```
+
+**ii.** $y_{ij}=\mu_{i}+\varepsilon_{ij}=\mu+\beta_{i}+\varepsilon_{ij}$ amb $\sum_{i=1}^{k}\beta_{i}=0$
+
+```{r}
+x2<-cbind(1,contrasts(C(dd$DOSI,sum)))
+rownames(x2)<-paste0("mu",1:5)
+colnames(x2)<-c("Int.=mu",paste0("beta",1:4))
+print(x2)
+```
+
+**iii.** $y_{ij}=\mu_{i}+\varepsilon_{ij}=\mu+\beta_{i}+\varepsilon_{ij}$ amb $\beta_{1}=0$
+
+```{r}
+x3<-cbind(1,contrasts(C(dd$DOSI,treatment)))
+rownames(x3)<-paste0("mu",1:5)
+colnames(x3)<-c("Int.=mu1",paste0("beta",2:5))
+print(x3)
+```
+
+**b)** Plantegeu, contrasteu i interpreteu, el test de l'anàlisi de la variància. 
+
+**Primer veiem la matriu X que utilitza cada parametrització i comprovem que la parametrització no afecta a les prediccions ni a les estimacions de les esperances marginals. En la parametrització que no hi ha terme independent l'anova surt diferent ja que en aques cas el model nul és ser tot=0 (generalment no té sentit)**
+
+```{r}
+m0<-lm(GMD~0+DOSI,x=T,dd)
+m1<-lm(GMD~DOSI,dd,x=T,contrasts=list(DOSI="contr.sum"))
+m2<-lm(GMD~DOSI,x=T,dd,contrasts=list(DOSI="contr.treatment"))
+
+m0$x
+m1$x
+m2$x
+
+cbind(predict(m0),predict(m1),predict(m2))
+
+# Anova de m0 és diferent perquè no hi ha terme independent i el model nul en lloc de ser constant és constant=0 
+Anova(m0)
+Anova(m1)
+Anova(m2)
+
+
+```
+
+**Per continuar utilitzem la parametrització per defecte**
+
+```{r}
+# Utilitzem la parametrització per defecte (té terme independent)
+
+m<-lm(GMD~DOSI,dd)
+
+# Gràfiques de les estimacions del model
+emmip(m,~DOSI) # nomes estimació dels valors esperats
+emmip(m,~DOSI,CIs=T) # Amb intervals de confiança
+
+# Test Anova
+Anova(m)
+
+# Diagnòstics
+
+plot(m,which=1)
+#plot(m,which=1,add.smooth=F)
+abline(h=0,lty=2)
+
+plot(predict(m),resid(m)) # El mateix gràfic
+abline(h=0,lty=2)
+
+
+#==============================================================================
+```
+
+
+
+**c)** Utilitzant el mètode de Tukey:
+
+*(Notes: No importa la parametrització escollida i es necessita el paquet del R: emmeans)*.
+
+• Per cada nivell de dosi, estimeu els valors esperats del GMD i el seu interval de confiança.
+
+```{r}
+coef(m)
+(C2<-cbind(1,contrasts(C(dd$DOSI,treatment))))
+C2%*%coef(m)
+(emm<-emmeans(m,~DOSI))
+```
+
+ – Comproveu que no depèn de la parametrització del model.
+ 
+```{r}
+#    Amb totes les parametritzacions 
+#    sobté els mateixos resultats de l'estimació
+#    de les esperances marginals (emmeans)
+
+(emm0<-emmeans(m0,~DOSI))
+(emm1<-emmeans(m1,~DOSI))
+(emm2<-emmeans(m2,~DOSI))
+```
+
+• Feu les comparacions de totes les dosis entre elles. Dieu quines parelles de nivell de dosi, donen un GMD esperat diferent.
+
+```{r}
+pairs(emm) # comparació de totes les dosis entre elles
+```
+
+• Expresseu el resultat anterior de forma compacta.
+
+```{r}
+CLD(emm,Letters=letters) # Compact letter display
+pwpp(emm)
+```
+
+### ==============================================================================
+### Annex: Diferents comandes i opcions, per fer les comparacions múltiples
+### ==============================================================================
+
+```{r}
+pairs(emm,adjust="scheffe")
+pairs(emm,adjust="tukey")
+pairs(emm,adjust="none")
+
+CLD(emm,level=0.99,adjust="scheffe")
+CLD(emm,level=0.99,adjust="tukey")
+CLD(emm,level=0.99,adjust="none")
+
+confint(emm,level=0.99,adjust="scheffe")
+confint(emm,level=0.99,adjust="tukey")
+confint(emm,level=0.99,adjust="none")
+
+pwpp(emm,adjust="scheffe")
+pwpp(emm,adjust="tukey")
+pwpp(emm,adjust="none")
+
+plot(emm,alpha=0.05,adjust="scheffe",comparisons=T)
+plot(emm,alpha=0.05,adjust="tukey",comparisons=T)
+plot(emm,alpha=0.05,adjust="none",comparisons=T)
+```
+

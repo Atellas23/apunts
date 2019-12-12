@@ -1,0 +1,200 @@
+---
+title: "Ex23 pllet"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Per estudiar com evoluciona la quantitat de llet diària produïda per una vaca en funció dels dies que han passat des del part, s'han obtingut les dades del fitxer “pllet.csv”, en el que la primera columna són els dies i la segona la producció en l/dia. 
+
+*Directori de treball, dades, paquets del R i descriptiva*
+
+```{r}
+#setwd("")
+library(car)
+dd <- read.csv2("../data/pllet.csv")
+nd<-dim(dd)[1]
+head(dd)
+################################################################
+# Descriptiva
+sp(PROD~DIES,boxplot=F,smooth=F,dd)
+```
+
+**Quan es necessiti utilitzeu \alpha=0.05.**
+
+#___________________________________________________________________________________________________________________
+
+### a) Amb el model de la recta 
+$E\left[prod\right]=\beta_{0}+\beta_{1}dies :$ 
+
+#### Ajusteu el model 
+
+**1. Trobeu la funció de regressió, plantegeu i contrasteu el test de cadascun dels paràmetres i estimeu-ne la variància de l'Error.**
+
+```{r}
+m1<-lm(PROD~DIES,dd)
+summary(m1)
+sm1<-summary(m1)$sigma
+c("S"=sm1,"var"=sm1^2)
+
+```
+
+**2. Feu l'anàlisi del residus**
+
+```{r}
+plot(predict(m1),resid(m1),main="Anàlisi dels residuals \n Recta de regressió")
+abline(h=0,lty=2)
+```
+
+**3. Dibuixeu la funció de regressió amb els punts observats, i la banda $predits\pm2\cdot\sigma$.**
+
+```{r}
+pm1<-predict(m1,interval="prediction")
+plot(dd$DIES,dd$PROD,main="Prediccions de PROD \n amb banda de predicció",xlab="dies",ylab="prod",pch="+",ylim=c(0,max(pm1)))
+lines(dd$DIES,predict(m1),col="red",lwd=2)
+lines(dd$DIES,pm1[,"lwr"],col="blue",lwd=2)
+lines(dd$DIES,pm1[,"upr"],col="blue",lwd=2)
+abline(h=0,lwd=2,col="gray")
+```
+
+**4. Justifiqueu si us sembla que el model és adequat o no. **
+
+#___________________________________________________________________________________________________________________
+
+### b) Amb el model de la paràbola 
+$E[prod]=\beta_{0}+\beta_{1}dies+\beta_{2}dies^{2} :$
+
+#### Ajusteu el model 
+
+**1. Trobeu la funció de regressió, plantegeu i contrasteu el test de cadascun dels paràmetres i estimeu-ne la variància de l'Error.**
+
+```{r}
+dd$DIES2<-dd$DIES^2
+m2<-lm(PROD~DIES+DIES2,dd)
+summary(m2)
+sm2<-summary(m2)$sigma
+c("S"=sm2,"var"=sm2^2)
+
+```
+
+**2. Feu l'anàlisi del residus**
+
+```{r}
+plot(predict(m2),resid(m2),main="Anàlisi dels residuals \n Paràbola")
+abline(h=0,lty=2)
+```
+
+**3. Dibuixeu la funció de regressió amb els punts observats, i la banda de predicció**
+
+```{r}
+pm2<-predict(m2,interval="prediction")
+plot(dd$DIES,dd$PROD,main="Prediccions de PROD \n amb banda de predicció",xlab="dies",ylab="prod",pch="+",ylim=c(0,max(pm2)))
+lines(dd$DIES,predict(m2),col="red",lwd=2)
+lines(dd$DIES,pm2[,"lwr"],col="blue",lwd=2)
+lines(dd$DIES,pm2[,"upr"],col="blue",lwd=2)
+abline(h=0,lwd=2,col="gray")
+```
+
+**4. Justifiqueu si us sembla que el model és adequat o no. **
+
+#___________________________________________________________________________________________________________________
+
+### c) Amb el model del polinomi de 3r grau 
+$E[prod]=\beta_{0}+\beta_{1}dies+\beta_{2}dies^{2}+\beta_{3}dies^{3} : $
+
+#### Ajusteu el model 
+
+**1. Trobeu la funció de regressió, plantegeu i contrasteu el test de cadascun dels paràmetres i estimeu-ne la variància de l'Error.**
+
+```{r}
+dd$DIES3<-dd$DIES^3
+m3<-lm(PROD~DIES+DIES2+DIES3,dd)
+summary(m3)
+sm3<-summary(m3)$sigma
+c("S"=sm3,"var"=sm3^2)
+
+```
+
+**2. Feu l'anàlisi del residus**
+
+```{r}
+plot(predict(m3),resid(m3),main="Anàlisi dels residuals \n Polinomi de 3r grau")
+abline(h=0,lty=2)
+```
+
+**3. Dibuixeu la funció de regressió amb els punts observats, i la banda de predicció**
+
+```{r}
+pm3<-predict(m3,interval="prediction")
+plot(dd$DIES,dd$PROD,main="Prediccions de PROD \n amb banda de predicció",xlab="dies",ylab="prod",pch="+",ylim=c(0,max(pm3)))
+lines(dd$DIES,predict(m3),col="red",lwd=2)
+lines(dd$DIES,pm3[,"lwr"],col="blue",lwd=2)
+lines(dd$DIES,pm3[,"upr"],col="blue",lwd=2)
+abline(h=0,lwd=2,col="gray")
+```
+
+**4. Justifiqueu si us sembla que el model és adequat o no. **
+
+#___________________________________________________________________________________________________________________
+
+
+## d) Amb el Model lineal amb transformació log,
+
+#### $E\left[\log\left(prod\right)\right]=\beta_{0}+\beta_{1}dies+\beta_{2}\log\left(dies\right)$ : 
+
+#### Ajusteu el model i
+
+**1. Trobeu la funció de regressió, plantegeu i contrasteu el test ANOVA i estimeu-ne la variància de l'Error.**
+
+```{r}
+ml<-lm(log(PROD)~DIES+log(DIES),dd)
+summary(ml)
+sl<-summary(ml)$sigma
+c("S"=sl,"var"=sl^2)
+```
+
+**2. Dibuixeu la funció de regressió amb els punts, els residuals front els valors predits i la banda de predicció amb la funció de regressió i els punts observats.  **
+
+```{r}
+plot(predict(ml),resid(ml),main="Anàlisi dels residuals \n ml trans log")
+abline(h=0,lty=2)
+```
+
+**3. Dibuixeu la funció de regressió amb els punts observats i la banda de** $predicció_{\left(95\%\right)}$. 
+
+```{r}
+prl<-predict(ml,interval="prediction",alpha=0.05)
+plot(dd$DIES,dd$PROD,main="Prediccions (lm trans log) de PROD \n amb banda de predicció 95%",xlab="dies",ylab="prod",pch="+",ylim=c(0,exp(max(prl))))
+lines(dd$DIES,exp(prl[,"fit"]),col="red",lwd=2)
+lines(dd$DIES,exp(prl[,"lwr"]),col="blue",lwd=2)
+lines(dd$DIES,exp(prl[,"upr"]),col="blue",lwd=2)
+abline(h=0,lwd=2,col="gray")
+
+```
+
+**4. Justifiqueu si us sembla que el model és adequat o no. **
+
+#___________________________________________________________________________________________________________________
+
+### e) Entre tots els models d'aquest exercici, quin us sembla que és més adequat? per què?
+
+***El ml de la funció Gamma transformada pel logaritme, sobretot per l'anàlisi dels residus, però també pels estadístics següents:***
+
+```{r}
+comp<-rbind("coef. det. aj."=
+      c(summary(m1)$adj.r.squared,summary(m2)$adj.r.squared,summary(m3)$adj.r.squared,summary(ml)$adj.r.squared),
+      "log versemblança"=
+      c(logLik(m1),logLik(m2),logLik(m3),logLik(ml)),
+      "AIC"=
+      c(AIC(m1),AIC(m2),AIC(m3),AIC(ml)),
+      "BIC"=
+      c(BIC(m1),BIC(m2),BIC(m3),BIC(ml)))
+colnames(comp)<-c("Recta","Prab.","P.3r.g","trans log")
+print(comp)
+
+```
+

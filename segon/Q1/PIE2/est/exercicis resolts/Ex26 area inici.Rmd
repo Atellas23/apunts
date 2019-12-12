@@ -1,0 +1,104 @@
+---
+title: "Ex26 Area"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### Tenim els resultats de mesurar l'àrea que cobreixen plantes entapissant a talussos de carreteres. S'han estudiat dues especies E1 i E2 (factor ESPECIE) i haver posat, o no, compost al talús (factor COMPOST). 
+Les dades experimentals són al fitxer “area.csv”. 
+Utilitzant $\alpha=0.05$:
+
+```{r}
+#setwd("...")
+#options(contrasts = c("contr.sum", "contr.treatment"))
+library(emmeans)
+library(car)
+dd<-read.csv2("../data/area.csv")
+head(dd)
+library(RcmdrMisc)
+library(tables)
+
+
+```
+
+### a) Plantegeu el model lineal additiu de la variable AREA respecte els factors ESPECIE i COMPOST. 
+
+```{r}
+##############################################################################
+
+#DESCRIPTIVA
+
+#cv<-function(x) {sd(x)/mean(x)}
+#print(tabular(AREA*ESPECIE*COMPOST~((Dades=1)+(Mitjana=mean)+(Desv.tipus=sd)+(Coef.var.=cv)),dd),justification="r")
+with(dd,plotMeans(AREA,ESPECIE,COMPOST,error.bars="none",level=0.95))
+with(dd,plotMeans(AREA,COMPOST,ESPECIE,error.bars="none",level=0.95))
+
+##############################################################################
+
+```
+
+**• Ajusteu aquest model.**
+
+```{r}
+# a) Model additiu
+ma<-lm(AREA~ESPECIE+COMPOST,data=dd)
+summary(ma)
+emmip(ma,ESPECIE~COMPOST,CIs=T)
+emmip(ma,COMPOST~ESPECIE,CIs=T)
+```
+**• Contrasteu el test anova "Omnibus". Què ens diu el test?**
+
+```{r}
+m0<-lm(AREA~1,dd)
+anova(m0,ma)
+```
+
+**• Contrasteu el test anova. Què ens diu el test?**
+
+```{r}
+Anova(ma)
+
+```
+
+**• Contrasteu el test adequat per comprovar que en el model no era necessària la interacció dels dos factors.**
+
+```{r}
+mf<-lm(AREA~ESPECIE*COMPOST,data=dd)
+Anova(mf)
+anova(ma,mf)
+
+```
+
+**• Feu les comparacions múltiples. Què ens diuen?**
+
+```{r}
+(emmf<-emmeans(ma,~ESPECIE+COMPOST))
+pairs(emmf)
+CLD(emmf)
+
+```
+
+**• Mitjançant gràfics de diagnòstic i tests, comproveu que no es compleixen les hipòtesis dels models lineals. On és el problema?**
+
+```{r}
+plot(ma,which=1)
+abline(h=0,lty=2)
+
+with(dd,leveneTest(resid(ma),as.factor(paste(ESPECIE,COMPOST))))
+
+# (extra) El mateix en el model factorial
+
+mf<-lm(AREA~ESPECIE*COMPOST,data=dd)
+
+plot(mf,which=1)
+abline(h=0,lty=2)
+
+with(dd,leveneTest(resid(mf),as.factor(paste(ESPECIE,COMPOST))))
+
+```
+
+### b) Plantegeu el model lineal additiu de la variable $\log\left(AREA\right)$ en lloc de AREA.

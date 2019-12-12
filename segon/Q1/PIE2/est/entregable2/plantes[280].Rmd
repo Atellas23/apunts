@@ -1,0 +1,196 @@
+---
+title: "Plantes estressades"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+En un estudi per veure com influeix, a primera hora del matí, l'estrès hídric sobre la fisiologia d'unes plantes, es va realitzar una experiència en la que es va mesurar la la fotosíntesi, FS, i la evapotranspiració, ET, de plantes sotmeses a un nivell d'estrès hídric, $S_1,\ldots,S_k$ del factor SHIDR amb $k = 3$ nivells d'estrès codificats. El nombre de plantes utilitzades a cada nivell d'estrès de la experiència és el mateix, 7. La forma de mesurar aquestes variables és pinçant una fulla de la planta amb un aparell que a més de mesurar les variables FS i ET, mesura altres variables com l'hora en que s'ha fet la mesura, T, la radiació solar que rep la planta en el moment de fer la mesura, R. En realitzar l'experiència, un problema va ser que fer les mesures d'una planta dura uns tres minuts i que a primera hora del mati les condicions atmosfèriques canvien ràpidament i això pot influir a la fisiologia de les plantes. Per aquest motiu s'ha aleatoritzat l'ordre en que s'han mesurat les plantes. Totes les dades (SHIDR, FS, ET, T i R) les teniu en el fitxer amb el vostre nom a Atenea (carpeta de dades del 2n entregable).
+Resoleu els exercicis següents suposant que es compleixen las condiciones dels models lineals, i utilitzeu un nivell de significació $\alpha = 0.05$. En el cas d'haver de comparar els nivells del factor SHIDR, utilitzeu el mètode de Tukey i si heu de fer l'ANOVA utilitzeu les sumes de quadrats de tipus 2.
+
+*Directori de treball, llegir dades, calcular global i definir factors*
+
+```{r}
+setwd('.')
+library(car)
+library(emmeans)
+library(tables)
+library(RcmdrMisc)
+dd<-read.csv2("input.csv")
+dd$SHIDR<-as.factor(dd$SHIDR)
+```
+
+
+**Inicialment plantegeu, ajusteu i analitzeu el model lineal (Mod1) que explica la ET, a partir de SHIDR.**
+
+##### 1) L'estimació de $E[FS|S_1]$ és el coeficient $\beta_0$ és a dir el coeficient de l'intercept.
+##### 2) L'estimació de $Var[Error]$ és $\frac{\text{Sum Sq of Residulats}}{Df}$ del test Anova o directament summary(mod1)$sigma^2
+##### 3) Mirem en el test Anova si el pvalor (Pr(> F)) és menor a 0.001, si és així rebutgem la H0
+##### 4) L'estadístic de contrast és el F-statistic o F-value (són el mateix). En general és $\frac{\text{variació explicada pel model · (k-1)}}{\text{variació no explicada pel model · (n-1)}} = \frac{R^2/(k-1)}{(1-R^2)/(n-k)}$ on n és el nombre de mostres, k és el nombre de variables (comptant l'intercept) i R és el Multiple R-squared
+##### 5)El pvalor és pf(F, df.model, df.residual, lower.tail=F)
+
+
+```{r}
+mod1 <-lm(ET~SHIDR, dd)
+m0 <- lm(ET~1, dd)
+
+summary(mod1)
+summary(mod1)$sigma^2
+Anova(mod1)
+
+pf(1.1336, 2, 18, lower.tail=F)
+```
+
+**Com que fer les mesures han durat molt temps, plantegeu, contrasteu i analitzeu, el model lineal (Mod2) que explica la ET, a partir de T i R.**
+
+##### 6) El coeficient de T és $\beta_1$, l'Estimate de T en el summary.
+##### 7) La significació del coeficient de R és el pvalor quan plantegem la hipòtesis que el coeficient de R $(\beta_2) \neq 0$. Apareix en el summary i es calcula mitjançant una t-student
+##### 8) Fem el test omnibus (que ve a ser comparar el nostre model amb el model nul mitjançant una anova(model, model nul)). 
+##### 9) Observem el F-value de l'omnibus
+##### 10) El pvalor és pf(F, df.model, df.residual, lower.tail=F)
+
+
+
+```{r}
+mod2 <-lm(ET~T+R,  dd)
+
+summary(mod2)
+anova(mod2, m0)
+pf(2.781, 2, 18, lower.tail=F)
+```
+
+
+**Per intentar millorar el Mod1, plantegeu, ajusteu i analitzeu el model lineal (Mod3) que explica la ET, a partir de SHIDR i T, sense interacció.**
+
+##### Extra 1. Fem el test omnibus i mirem si el pvalor és significatiu
+##### Extra 2. Mirem si el coeficient de T és rellevant Test Anova
+##### Extra 3. Mirem si el coeficient de SHIDR és rellevant Test Anova
+
+##### 11) Observem F-value de l'Anova per el SHIDR
+##### 12) L'estimació de $Var[Error]$ és $\frac{\text{Sum Sq of Residulats}}{Df}$ del test Anova o directament summary(mod1)$sigma^2
+##### 13) Hem de calcular el pendent de T donat S1 (és a dir respecte del factor SHIDR). Per això utilitzem la funció emtrends(m, ~M, var = "C") la qual calcula els pendents de la variable C emprant el model m i respecte del factor M.
+##### 14) Mirem en summary quins coeficients del SHIDR són diferents al intercept
+##### 15) Fem el test omnibus i mirem si el pvalor és significatiu
+
+```{r}
+mod3 <-lm(ET~SHIDR+R,  dd)
+
+summary(mod3)
+Anova(mod3)
+
+summary(mod3)$sigma^2
+
+anova(mod3, m0)
+
+emtrends (mod3, ~SHIDR, var = "R") 
+```
+
+**Per intentar millorar el Mod3, plantegeu el model lineal (Mod4 ) que expliqui la ET a partir de SHIDR i R amb interacció.**
+
+##### Extra 1. Fem el test omnibus i mirem si el pvalor és significatiu
+##### Extra 2. Mirem si el coeficient de R és rellevant Test Anova o si la interacció ho és.
+##### Extra 3. Fem el emtrends i després fem pairs
+##### Extra 4. Fem el emmeans i després fem pairs
+
+
+##### 16) L'estimació de $Var[Error]$ és $\frac{\text{Sum Sq of Residuals}}{Df}$ del test Anova o directament summary(mod1)$sigma^2
+##### 17) Fem emmeans del model respecte al factor SHIDR de la variable R quan R = 390
+##### 18) Fem els emmeans de T = mean(T) i fem els pairs per comparar-los 1 a 1
+##### 19) Calculem els pendents amb emtrends i fem un pairs per comparar-los 1 a 1
+##### 20) Fem el test omnibus i mirem si el pvalor és significatiu
+
+```{r}
+mod4 <-lm(ET~SHIDR*R,  dd)
+
+summary(mod4)
+Anova(mod4)
+summary(mod4)$sigma^2
+
+anova(mod4, m0)
+scatterplot(ET~R|SHIDR,smooth=F,data=dd)
+
+(slopes <- emtrends (mod4, ~SHIDR, var = "R"))
+pairs(slopes)
+emmeans(mod4,~SHIDR|R,at=list(R =390))
+emm <- emmeans(mod4,~SHIDR|R,at=list(R = mean(dd$R)))
+pairs(emm)
+
+```
+
+
+**Compareu els 4 models anteriors. Escolliu-ne el que us sembli millor.**
+
+##### 21) calculem la variança de tots els models 
+##### 22) fem l'anova de mod3 amb mod4 i mirem pvalor
+##### 23) Mirem quins tenen tots els efectes significatius emprant el test Anova. Després fem el qqplots per veure si és lineal i mirem l'scatter plot de $\hat{e}$ vs $\hat{y}$ per comprobar que hi hagi homocedasticitat
+
+
+```{r}
+summary(mod1)$sigma^2
+summary(mod2)$sigma^2
+summary(mod3)$sigma^2
+summary(mod4)$sigma^2
+
+anova(mod4, mod3)
+
+Anova(mod1) #SHIDR no significatiu
+Anova(mod2) #Ni T ni SHIDR significatiu 
+Anova(mod3) #Tot significatiu
+Anova(mod4) #Tot significatiu
+
+
+plot(predict(mod1),resid(mod1),pch=3,main="model 1")
+abline(h=0,lty=2)
+plot(rstudent(mod1),pch=3,main="model 1")
+abline(h=c(-3,-2,0,2,3),lty=2)
+
+
+plot(predict(mod2),resid(mod2),pch=3,main="model 2")
+abline(h=0,lty=2)
+plot(rstudent(mod2),pch=3,main="model 2")
+abline(h=c(-3,-2,0,2,3),lty=2)
+
+plot(predict(mod3),resid(mod3),pch=3,main="model 3")
+abline(h=0,lty=2)
+plot(rstudent(mod3),pch=3,main="model 3")
+abline(h=c(-3,-2,0,2,3),lty=2)
+
+plot(predict(mod4),resid(mod4),pch=3,main="model 4")
+abline(h=0,lty=2)
+plot(rstudent(mod4),pch=3,main="model 4")
+abline(h=c(-3,-2,0,2,3),lty=2)
+
+
+qqnorm(resid(mod1))
+qqline(resid(mod1), lt = 2)
+
+qqnorm(resid(mod2))
+qqline(resid(mod2), lt = 2) # no gaire 
+
+qqnorm(resid(mod3))
+qqline(resid(mod3), lt = 2)
+
+qqnorm(resid(mod4))
+qqline(resid(mod4), lt = 2) # no gaire 
+
+```
+
+
+### Escollim el model 3 com a millor model
+##### 24) fem l'emmeans en R = 680
+##### 25) fem pairs
+
+
+```{r}
+(emm2 <- emmeans(mod3,~SHIDR|R,at= list(R=680)))
+pairs(emm2)
+
+CLD(emm2)
+emm3 <- emmeans(mod3,~SHIDR|R)
+pairs(emm3)
+CLD(emm3)
+```
