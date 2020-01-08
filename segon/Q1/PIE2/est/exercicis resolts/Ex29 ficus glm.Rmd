@@ -1,0 +1,238 @@
+---
+title: "Ex29 ficus glm"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+####Continuació de l'exercici 25)
+####Tenim l'alçada (H) de plantes de ficus i el nombre de dies des de que es van plantar (DIES) al fitxer ficus.csv.
+
+*Directori de treball, paquets de R, llegir dades, descriptiva*
+
+```{r}
+#setwd("...")
+dd<-read.csv2("../Dades/ficus.csv")
+library(RcmdrMisc)
+library(tables)
+
+head(dd)
+
+#DESCRIPTIVA
+
+cv<-function(x) {sd(x)/mean(x)}
+di<-function(x) {var(x)/mean(x)}
+(t<-tabular((DIES=as.factor(DIES))~H*((n.dades=1)+(mitjana=mean)+(desv.tipus=sd)+(coef.variació=cv)+(index.disp.=di)),dd))
+
+scatterplot(H~DIES, regLine=F, smooth=F, boxplots=F,pch=3, data=dd)
+lines(rowLabels(t),t[,2])
+```
+
+####Sabem que 
+$E\left[H|DIES\right]=e^{\alpha+\beta\cdot DIES}$.
+
+**Com a models lineals generalitzats la funció link ha de ser log ja que** $\mu=e^{\alpha+\beta\cdot DIES}\Longleftrightarrow log\left(\mu\right)=\alpha+\beta\cdot DIES$
+
+####En els 4 casos següents:
+• Calculeu els paràmetres estimats.
+
+• Calculeu els valors predits i analitzeu els residus.
+
+• Feu una gràfica amb les dades, la funció dels valors predits i la banda de predicció del 95%.
+
+• Comproveu que si féssim el model quasi amb $V\left(\mu\right)=\mu^{2}$, obtenim el mateix que amb la família Gamma excepte el AIC.
+
+####a) Família Normal
+
+**• Calculeu els paràmetres estimats.**
+
+```{r}
+mn<-glm(H~DIES,family=gaussian(link=log),dd)
+summary(mn)
+anova(glm(H~1,family=gaussian(link=log),dd),mn,test="F")
+```
+
+**• Calculeu els valors predits i analitzeu els residus.**
+
+```{r}
+plot(predict(mn,ty="response"))
+plot(predict(mn,ty="response"),resid(mn))
+abline(h=0,lt=2)
+
+#plot(predict(mn,ty="link"),resid(mn))
+plot(predict(mn),resid(mn))
+abline(h=0,lt=2)
+
+```
+
+**• Feu una gràfica amb les dades, la funció dels valors predits i la banda de predicció del 95%.**
+
+```{r}
+pmn<-predict(mn,ty="response",se.fit=T)
+vpy<-pmn$se.fit
+vy<-summary(mn)$dispersion
+sip<-sqrt(vpy+vy)
+zip<-qnorm(0.975)
+with(dd,plot(DIES,H))
+lines(dd$DIES,pmn$fit)
+lines(dd$DIES,pmn$fit-zip*sip,col="red")
+lines(dd$DIES,pmn$fit+zip*sip,col="red")
+
+```
+
+####b) Família Gamma
+
+**• Calculeu els paràmetres estimats.**
+
+```{r}
+mg<-glm(H~DIES,family=Gamma(link=log),dd)
+summary(mg)
+anova(glm(H~1,family=Gamma(link=log),dd),mg,test="F")
+```
+
+**• Calculeu els valors predits i analitzeu els residus.**
+
+```{r}
+plot(predict(mg,ty="response"))
+plot(predict(mg,ty="response"),resid(mg))
+abline(h=0,lt=2)
+
+#plot(predict(mn,ty="link"),resid(mn))
+plot(predict(mg),resid(mg))
+abline(h=0,lt=2)
+
+```
+
+**• Feu una gràfica amb les dades, la funció dels valors predits i la banda de predicció del 95%.**
+
+```{r}
+pmg<-predict(mg,ty="response",se.fit=T)
+vpy<-pmg$se.fit
+vy<-summary(mg)$dispersion*(pmg$fit)^2
+sip<-sqrt(vpy+vy)
+zip<-qnorm(0.975)
+with(dd,plot(DIES,H))
+lines(dd$DIES,pmg$fit)
+lines(dd$DIES,pmg$fit-zip*sip,col="red")
+lines(dd$DIES,pmg$fit+zip*sip,col="red")
+
+```
+
+**• Comproveu que si féssim el model quasi amb** $V\left(\mu\right)=\mu^{2}$**, obtenim el mateix que amb la família Gamma excepte el AIC.**
+
+```{r}
+summary(glm(H~DIES,family=quasi(link=log,var=mu^2),dd))
+summary(mg)
+```
+
+
+####c) Família Inversa Gaussiana.
+
+
+**• Calculeu els paràmetres estimats.**
+
+```{r}
+mig<-glm(H~DIES,family=inverse.gaussian(link=log),dd)
+summary(mig)
+anova(glm(H~1,family=inverse.gaussian(link=log),dd),mig,test="F")
+```
+
+**• Calculeu els valors predits i analitzeu els residus.**
+
+```{r}
+plot(predict(mig,ty="response"))
+plot(predict(mig,ty="response"),resid(mg))
+abline(h=0,lt=2)
+
+#plot(predict(mn,ty="link"),resid(mn))
+plot(predict(mig),resid(mig))
+abline(h=0,lt=2)
+
+```
+
+**• Feu una gràfica amb les dades, la funció dels valors predits i la banda de predicció del 95%.**
+
+```{r}
+pmig<-predict(mig,ty="response",se.fit=T)
+vpy<-pmig$se.fit
+vy<-summary(mig)$dispersion*(pmig$fit)^3
+sip<-sqrt(vpy+vy)
+zip<-qnorm(0.975)
+with(dd,plot(DIES,H))
+lines(dd$DIES,pmig$fit)
+lines(dd$DIES,pmig$fit-zip*sip,col="red")
+lines(dd$DIES,pmig$fit+zip*sip,col="red")
+
+```
+
+
+####d) (Opcional) Quasi-versemblança amb funció de variància $V\left(\mu\right)=\mu$.
+
+
+**• Calculeu els paràmetres estimats.**
+
+```{r}
+mq<-glm(H~DIES,family=quasi(link=log,var=mu),dd)
+summary(mq)
+anova(glm(H~1,family=quasi(link=log,var=mu),dd),mq,test="F")
+```
+
+**• Calculeu els valors predits i analitzeu els residus.**
+
+```{r}
+plot(predict(mq,ty="response"))
+plot(predict(mq,ty="response"),resid(mg))
+abline(h=0,lt=2)
+
+#plot(predict(mn,ty="link"),resid(mn))
+plot(predict(mq),resid(mq))
+abline(h=0,lt=2)
+
+```
+
+**• Feu una gràfica amb les dades, la funció dels valors predits i la banda de predicció del 95%.**
+
+```{r}
+pmq<-predict(mq,ty="response",se.fit=T)
+vpy<-pmq$se.fit
+vy<-summary(mq)$dispersion*(pmq$fit)
+sip<-sqrt(vpy+vy)
+zip<-qnorm(0.975)
+with(dd,plot(DIES,H))
+lines(dd$DIES,pmq$fit)
+lines(dd$DIES,pmq$fit-zip*sip,col="red")
+lines(dd$DIES,pmq$fit+zip*sip,col="red")
+
+```
+
+####Compareu els 4 mlg anteriors, i dieu quin escolliríeu.
+
+```{r}
+comp<-rbind("coef. det."=
+      c(1-mn$deviance/mn$null.deviance,1-mg$deviance/mg$null.deviance,1-mig$deviance/mig$null.deviance,1-mq$deviance/mq$null.deviance),
+      "deviance"=
+      c(deviance(mn),deviance(mg),deviance(mig),deviance(mq)),
+      "log versemblança"=
+      c(logLik(mn),logLik(mg),logLik(mig),logLik(mq)),
+      "AIC"=
+      c(AIC(mn),AIC(mg),AIC(mig),AIC(mq)),
+      "BIC"=
+      c(BIC(mn),BIC(mg),BIC(mig),BIC(mq)))
+colnames(comp)<-c("Normal","Gamma","Inv.Gauss.","quasi")
+print(comp)
+
+leveneTest(resid(mn),as.factor(dd$DIES))
+leveneTest(resid(mg),as.factor(dd$DIES))
+leveneTest(resid(mig),as.factor(dd$DIES))
+leveneTest(resid(mq),as.factor(dd$DIES))
+
+anova(mn,glm(H~DIES+as.factor(DIES),family=gaussian(link=log),dd),test="F")
+anova(mg,glm(H~DIES+as.factor(DIES),family=Gamma(link=log),dd),test="F")
+anova(mig,glm(H~DIES+as.factor(DIES),family=inverse.gaussian(link=log),dd),test="F")
+anova(mq,glm(H~DIES+as.factor(DIES),family=quasi(link=log,var=mu),dd),test="F")
+```
+

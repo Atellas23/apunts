@@ -1,0 +1,218 @@
+---
+title: "Ex34 insecticida"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### 2. En un estudi s'ha provat l'efectivitat de diferents dosis d'un insecticida. Les variables són: la dosi de l'insecticida, DOSI, el nombre d'insectes al que s'ha aplicat una dosi d'insecticida, T, i el nombre d'insectes que han mort amb l'insecticida, MORTS.
+
+#### Els resultats de mortalitat obtinguts són al fitxer “insecticida.csv”. Amb $\alpha=0.05$:
+
+*Entrar dades, paquests, descriptiva...*
+
+```{r}
+#setwd("...")
+dd<-read.csv2("../data/insecticida.csv")
+library(car)
+library(RcmdrMisc)
+head(dd)
+
+scatterplot(MORTS/T~log(DOSI),smooth=F,boxplots=F,data=dd)
+scatterplot(qnorm(MORTS/T)~log(DOSI),smooth=F,boxplots=F,data=dd[2:10,])
+```
+
+**a) Proposeu un model lineal generalitzat en el que la probabilitat de morir** $\pi$**, depengui de la dosi seguint la funció** $\pi=\Phi\left(\beta_{0}+\beta_{1}\cdot log\left(DOSI\right)\right)$**, on** $\Phi$ **és la funció de distribució d'una N(0,1).** 
+
+***i. Estimeu*** $\beta_{0}$ ***i*** $\beta_{1}$***.*** $\beta_{0}=0?$***,*** $\beta_{1}=0?$
+
+```{r}
+summary(m1<-glm(cbind(MORTS,T-MORTS)~log(DOSI),family=binomial(link="probit"),data=dd))
+
+#dosis<-0:100+.5
+dosis<-exp(seq(-1,5,.1))
+plot(MORTS/T~log(DOSI),dd,ylim=c(0,1))
+lines(predict(m1,data.frame(DOSI=dosis),ty="response")~log(dosis),col="red")
+abline(h=c(0,1),col="grey")
+```
+
+Predicció link feta a mà
+
+```{r}
+(X<-cbind(1,log(dd$DOSI)))
+(beta<-m1$coefficients)
+# %*% = producte de matrius
+# t = transposar
+t(pl<-X%*%beta)
+predict(m1)
+```
+
+Predicció resposta feta a mà.
+
+La inversa del link és  $\pi=\Phi\left(\beta_{0}+\beta_{1}\cdot log\left(DOSI\right)\right)$, on $\Phi$ és la funció de distribució d'una N(0,1).
+
+```{r}
+t(pr<-pnorm(pl))
+predict(m1,ty="response")
+```
+
+Càlcul de la deviància a mà $2\sum_{i=1}^{N}\left(y_{i}\log\left(\frac{y_{i}}{\hat{\mu}_{i}}\right)+\left(m_{i}-y_{i}\right)\log\left(\frac{m_{i}-y_{i}}{m_{i}-\hat{\mu}_{i}}\right)\right)$
+
+```{r}
+t(pmu<-pr*dd$T)
+(dev<-2*sum(ifelse(dd$MORTS==0,0,dd$MORTS*log(dd$MORTS/pmu))+(dd$T-dd$MORTS)*log((dd$T-dd$MORTS)/(dd$T-pmu))))
+m1$deviance
+```
+
+Residus de Pearson
+
+```{r}
+t((dd$MORTS-pmu)/sqrt(dd$T*pr*(1-pr)))
+resid(m1,ty="pearson")
+
+```
+
+Residus deviance
+
+```{r}
+t(sign(dd$MORTS-pmu)*sqrt(2*(ifelse(dd$MORTS==0,0,dd$MORTS*log(dd$MORTS/pmu))+(dd$T-dd$MORTS)*log((dd$T-dd$MORTS)/(dd$T-pmu)))))
+resid(m1,ty="deviance")
+```
+
+
+***ii. Mitjançant l'estadístic de Pearson, calculeu el paràmetre de dispersió. Penseu que pot haver-hi sobredispersió?***
+
+```{r}
+c("Pearson"=PS1<-sum(residuals(m1,type="pearson")^2),"G.L."=m1$df.res)
+c("Par.disp"=PS1/m1$df.res,"p.valor"=2*min(pchisq(PS1,m1$df.res),1-pchisq(PS1,m1$df.res)))
+
+```
+
+*No es detecta si sobre ni sub-dispersió.*
+
+***iii. Amb la gràfica de residuals front predits, dieu si us sembla que la funció ajusta bé.***
+
+```{r}
+plot(m1,1)
+
+plot(rstudent(m1))
+abline(h=c(-2,0,2),lt=2)
+```
+
+
+**b) Proposeu un model lineal generalitzat en el que la probabilitat de morir** $\pi$**, depengui de la dosi seguint la funció** $\pi=\frac{1}{1+a\cdot DOSI^{b}}.$ 
+
+***i. Estimeu*** $\beta_{0}$ ***i*** $\beta_{1}$***.*** $\beta_{0}=0?$***,*** $\beta_{1}=0?$
+
+```{r}
+summary(m2<-glm(cbind(MORTS,T-MORTS)~log(DOSI),family=binomial(link="logit"),data=dd))
+
+plot(MORTS/T~log(DOSI),dd,ylim=c(0,1))
+lines(predict(m2,data.frame(DOSI=dosis),ty="response")~log(dosis),col="red")
+abline(h=c(0,1),col="grey")
+```
+
+***ii. Mitjançant l'estadístic de Pearson, calculeu el paràmetre de dispersió. Penseu que pot haver-hi sobredispersió?***
+
+```{r}
+c("Pearson"=PS2<-sum(residuals(m2,type="pearson")^2),"G.L."=m2$df.res)
+c("Par.disp"=PS2/m2$df.res,"p.valor"=2*min(pchisq(PS2,m2$df.res),1-pchisq(PS2,m2$df.res)))
+
+```
+
+*No es detecta si sobre ni sub-dispersió.*
+
+***iii. Amb la gràfica de residuals front predits, dieu si us sembla que la funció ajusta bé.***
+
+```{r}
+plot(m2,1)
+
+plot(rstudent(m2))
+abline(h=c(-2,0,2),lt=2)
+```
+
+
+
+**c) Proposeu un model lineal generalitzat en el que la probabilitat de morir** $\pi$**, depengui de la dosi seguint la funció** $\pi=1-e^{-a\cdot DOSI^{b}}.$ 
+
+***i. Estimeu*** $\beta_{0}$ ***i*** $\beta_{1}$***.*** $\beta_{0}=0?$***,*** $\beta_{1}=0?$
+
+```{r}
+summary(m3<-glm(cbind(MORTS,T-MORTS)~log(DOSI),family=binomial(link="cloglog"),data=dd))
+
+plot(MORTS/T~log(DOSI),dd,ylim=c(0,1))
+lines(predict(m3,data.frame(DOSI=dosis),ty="response")~log(dosis),col="red")
+abline(h=c(0,1),col="grey")
+```
+
+***ii. Mitjançant l'estadístic de Pearson, calculeu el paràmetre de dispersió. Penseu que pot haver-hi sobredispersió?***
+
+```{r}
+c("Pearson"=PS3<-sum(residuals(m3,type="pearson")^2),"G.L."=m3$df.res)
+c("Par.disp"=PS3/m3$df.res,"p.valor"=2*min(pchisq(PS3,m3$df.res),1-pchisq(PS3,m3$df.res)))
+
+```
+
+*Sí hi ha sobre-dispersió.*
+
+***iii. Amb la gràfica de residuals front predits, dieu si us sembla que la funció ajusta bé.***
+
+```{r}
+plot(m3,1)
+
+plot(rstudent(m3))
+abline(h=c(-2,0,2),lt=2)
+```
+
+**d) Proposeu un model lineal generalitzat en el que la probabilitat de morir** $\pi$**, depengui de la dosi seguint la funció** $\pi=e^{-a\cdot DOSI^{b}}.$ 
+
+***i. Estimeu*** $\beta_{0}$ ***i*** $\beta_{1}$***.*** $\beta_{0}=0?$***,*** $\beta_{1}=0?$
+
+```{r}
+summary(m4<-glm(cbind(T-MORTS,MORTS)~log(DOSI),family=binomial(link="cloglog"),data=dd))
+
+plot(MORTS/T~log(DOSI),dd,ylim=c(0,1))
+lines(1-predict(m4,data.frame(DOSI=dosis),ty="response")~log(dosis),col="red")
+abline(h=c(0,1),col="grey")
+```
+
+***ii. Mitjançant l'estadístic de Pearson, calculeu el paràmetre de dispersió. Penseu que pot haver-hi sobredispersió?***
+
+```{r}
+c("Pearson"=PS4<-sum(residuals(m4,type="pearson")^2),"G.L."=m4$df.res)
+c("Par.disp"=PS4/m4$df.res,"p.valor"=2*min(pchisq(PS4,m4$df.res),1-pchisq(PS4,m4$df.res)))
+
+```
+
+*Sí hi ha sobre-dispersió.*
+
+***iii. Amb la gràfica de residuals front predits, dieu si us sembla que la funció ajusta bé.***
+
+```{r}
+plot(m4,1)
+
+plot(rstudent(m4))
+abline(h=c(-2,0,2),lt=2)
+```
+
+
+
+**d) Dels tres models anteriors quin us sembla més adequat? per què?**
+
+```{r}
+rbind("Deviancies"=c("probit"=m1$deviance,"logit"=m2$deviance,"cloglog"=m3$deviance,"loglog"=m4$deviance),
+     "Par.disp.Dev"=c(m1$deviance/m1$df.residual,m2$deviance/m2$df.residual,m3$deviance/m3$df.residual,m4$deviance/m4$df.residual),
+     "Pearson"=c(PS1,PS2,PS3,PS4),
+     "Par.disp.P"=c(PS1/m1$df.residual,PS2/m2$df.residual,PS3/m3$df.residual,PS4/m4$df.residual),
+     "logLik"=c(logLik(m1),logLik(m2),logLik(m3),logLik(m4)),
+     "AIC"=c(AIC(m1),AIC(m2),AIC(m3),AIC(m4)),
+     "Dif.Dev."=c(m1$null.deviance-m1$deviance,m2$null.deviance-m2$deviance,m3$null.deviance-m3$deviance,
+                  m4$null.deviance-m4$deviance),
+     "R2"=c(1-m1$deviance/m1$null.deviance,1-m2$deviance/m2$null.deviance,
+            1-m3$deviance/m3$null.deviance,1-m4$deviance/m4$null.deviance))
+```
+

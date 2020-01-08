@@ -1,189 +1,126 @@
-install.packages(emmeans)
-install.packages("emmeans")
-install.packages("tables")
-install.packages("RcmdrMisc")
-install.packages("multcompView")
+---
+title: "Exercici 37 Especies"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-# e) traient la inreracció per simplificar el model
-mv2<-lm(V~M+C,dd)
-knitr::opts_chunk$set(echo = TRUE)
-#setwd("...")
-#options(contrasts = c("contr.sum", "contr.treatment"))
-library(emmeans)
-library(car)
-dd <- read.csv2("../data/comrect.csv")
-head(dd)
-is.factor(dd$M)
-dd$M<-as.factor(dd$M)
-##############################################################################
-# DESCRIPTIVA
-scatterplot(V~C|M,smooth=F,data=dd)
-##############################################################################
-m0<-lm(V~1,dd)
-mv<-lm(V~M+C+M:C,dd)
-#mv<-lm(V~M*C,dd)
-emmip(mv,M~C,CIs=T,at=list(C=c(90,105,120)))
-summary(mv)
-#Test omnibus
-anova(m0,mv)
-# Tests anova
-Anova(mv)
-# Diagnòstics
-plot(predict(mv),resid(mv),pch=3,main="V Model factorial")
-abline(h=0,lty=2)
-#Valors estranys
-plot(rstudent(mv),pch=3,main="V Model factorial")
-abline(h=c(-3,-2,0,2,3),lty=2)
-# Iguals vs diferents
-anova(lm(V~C,dd),mv)
-# Iguals vs paral·leles diferente
-anova(lm(V~C,dd),lm(V~C+M,dd))
-# En algun punt prop del centre de les C, les E[V] són diferents?
-pairs(emmeans(mv,~M|C))
-anova(lm(V~M+C,dd),mv)
-Anova(mv)
-# Separació dels pendents
-(emmp<-emtrends(mv,~M,var="C"))
-pairs(emmp)
-#CLD(emmp)
-anova(lm(V~C+M:C,dd),mv)
-pairs(emmeans(mv,~M|C,at=list(C=0)))
-(emm<-emmeans(mv,~M|C,at=list(C=c(90,105,120))))
-pairs(emm)
-#CLD(emm)
-# e) traient la inreracció per simplificar el model
-mv2<-lm(V~M+C,dd)
-emmip(mv2,M~C,CIs=T,at=list(C=c(90,105,120)))
-summary(mv2)
-anova(m0,mv2)
-Anova(mv2)
-plot(predict(mv2),resid(mv2),pch=3,main="V Model additiu")
-abline(h=0,lty=2)
-plot(rstudent(mv2),pch=3,main="V Model additiu")
-abline(h=c(-3,-2,0,2,3),lty=2)
-# Resposta a c)
-anova(lm(V~C,dd),mv2)
-# Resposta a d)
-(emm2<-emmeans(mv2,~M|C,at=list(C=c(90,105,120))))
-pairs(emm2)
-#CLD(emm2)
-scatterplot(V~C|M,smooth=F,data=dd)
-scatterplot(VV~C|M,smooth=F,data=dd)
-scatterplot(V~C|M,smooth=F,data=dd)
-scatterplot(VV~C|M,smooth=F,data=dd)
-scatterplot(VV~C|M,smooth=F,data=dd)
-m0<-lm(V~1,dd)
-mv<-lm(V~M+C+M:C,dd)
-#mv<-lm(V~M*C,dd)
-emmip(mv,M~C,CIs=T,at=list(C=c(90,105,120)))
-summary(mv)
-#Test omnibus
-anova(m0,mv)
-# Tests anova
-Anova(mv)
-#Test omnibus
-anova(m0,mv)
-# Tests anova
-# Anova(mv)
-#Test omnibus
-anova(m0,mv)
-# Tests anova
-Anova(mv)
-? Anova
-scatterplot(VV~C|M,smooth=F,data=dd)
-m0<-lm(VV~1,dd)
-mvv<-lm(VV~M+C+M:C,dd)
-#mvv<-lm(VV~M*C,dd)
-emmip(mvv,M~C,CIs=T,at=list(C=c(90,105,120)))
-summary(mvv)
-#Test omnibus
-anova(m0,mvv)
-# Tests anova
-Anova(mvv,type=3)
-#Test omnibus
-anova(m0,mvv)
-# Tests anova
-Anova(mvv,type=2)
-#Test omnibus
-anova(m0,mvv)
-# Tests anova
-Anova(mvv,type=3)
-#Test omnibus
-anova(m0,mvv)
-# Tests anova
-Anova(mvv,type=2)
-#Test omnibus
-anova(m0,mvv)
-# Tests anova
-Anova(mvv)
-knitr::opts_chunk$set(echo = TRUE)
-#setwd("...")
-#options(contrasts = c("contr.sum", "contr.treatment"))
-library(emmeans)
-library(car)
-dd<-read.csv2("../data/area.csv")
-head(dd)
-library(RcmdrMisc)
-library(tables)
-##############################################################################
-#DESCRIPTIVA
-#cv<-function(x) {sd(x)/mean(x)}
-#print(tabular(AREA*ESPECIE*COMPOST~((Dades=1)+(Mitjana=mean)+(Desv.tipus=sd)+(Coef.var.=cv)),dd),justification="r")
-with(dd,plotMeans(AREA,ESPECIE,COMPOST,error.bars="none",level=0.95))
-with(dd,plotMeans(AREA,COMPOST,ESPECIE,error.bars="none",level=0.95))
-##############################################################################
-# a) Model additiu
-ma<-lm(AREA~ESPECIE+COMPOST,data=dd)
-summary(ma)
-emmip(ma,ESPECIE~COMPOST,CIs=T)
-emmip(ma,COMPOST~ESPECIE,CIs=T)
-m0<-lm(AREA~1,dd)
-anova(m0,ma)
-Anova(ma)
-mf<-lm(AREA~ESPECIE*COMPOST,data=dd)
-Anova(mf)
-anova(ma,mf)
-(emmf<-emmeans(ma,~ESPECIE+COMPOST))
-pairs(emmf)
-CLD(emmf)
-plot(ma,which=1)
-abline(h=0,lty=2)
-with(dd,leveneTest(resid(ma),as.factor(paste(ESPECIE,COMPOST))))
-# (extra) El mateix en el model factorial
-mf<-lm(AREA~ESPECIE*COMPOST,data=dd)
-plot(mf,which=1)
-abline(h=0,lty=2)
-with(dd,leveneTest(resid(mf),as.factor(paste(ESPECIE,COMPOST))))
-knitr::opts_chunk$set(echo = TRUE)
+```
+
+### En diferents àrees s'ha comptat el nombre d'espècies de plantes que hi havia (Especies). Les àrees considerades tenien diferents quantitats de biomassa (Biomassa) i també diferents valors del pH del sòl (pH),els valors del pH s'han classificat en tres nivells: alt, mitja, baix. Assumint que donat un valor de biomassa i un nivell del pH del sòl la variable pH segueix una distribució Poisson, es vol comprovar si les dues variables (Biomassa i pH) tenen algun efecte sobre en nombre d'espècies amb un nivell de significació del 5%. amb aquest objectiu:
+
+Directori, paquets, dades ...
+
+```{r}
 #setwd("...")
 dd<-read.csv2("../data/especies.csv")
 library(car)
 library(emmeans)
 head(dd)
+```
+
+#### a) Feu una gràfica per descriure les dades. 
+
+```{r}
 sp(Especies~Biomassa|pH,smooth=F,dat=dd)
+```
+
+#### b) Ajusteu el MLG adequat utilitzant la seva funció link canònica. 
+
+```{r}
 summary(m1<-glm(Especies~Biomassa*pH,family=poisson,data=dd))
+```
+
+**i. Quins efectes són significants?**
+
+Test Omnibus i test Anova
+
+```{r}
 anova(glm(Especies~1,family=poisson,data=dd),m1,test="Chisq")
 Anova(m1)
+```
+
+**• En el valor mitjà de la biomassa, quines diferències hi ha entre els efectes dels tres nivells del pH sobre el nombre d'espècies?**
+
+```{r}
 CLD(emmeans(m1,~pH|Biomassa),ty="response")
+```
+
+**• i quan Biomassa= 0, 1, 5 o 9))**
+
+```{r}
 CLD(emmeans(m1,~pH|Biomassa,at=list(Biomassa=c(0,1,5,9))))
 CLD(emmeans(m1,~pH|Biomassa,at=list(Biomassa=c(0,1,5,9))),ty="response")
+```
+
+**• Donat un nivell del pH, la variable Especies canvia en funció de la Biomassa?**
+
+Mirar els pendents
+
+```{r}
 emtrends(m1,~pH,var="Biomassa")
 CLD(emtrends(m1,~pH,var="Biomassa"))
+```
+
+**ii. Hi ha sobre o subdispersió?**
+
+```{r}
 c(PS=PS1<-sum(residuals(m1,type="pearson")^2),"Par.Disp"=disp1<-PS1/m1$df.res)
 c("P-valor"=2*min(pchisq(PS1,m1$df.res),1-pchisq(PS1,m1$df.res)))
+```
+
+**iii. Aquest model és adequat per les dades obtingudes? **
+És adequat si l'esperança dels errors és 0 i la variància constant.
+Residuals
+
+```{r}
 plot(m1,1)
+```
+
+Valors estranys
+
+```{r}
 plot(predict(m1,ty="response"),rstudent(m1,ty="pearson"))
 abline(h=c(--3,-2,0,2,3),lty=2)
+```
+
+*La dispersió sembla bé, la tendència central duptosa, la dispersió sembla bé i hi ha algun valor estrany*
+
+#### c) Calculeu els valors predits del nombre d'espècies: 
+
+**i. Per cada nivell del pH, doneu l'expressió de** $\hat{\mathbb{E}}\left(Especies\right)$ **en funció de la Biomassa?** 
+
+```{r}
 family(m1)
+```
+
+*predit(i,j)=exp(ai+bi·Biomassa)*
+
+**ii. Feu una gràfica amb les dades experimentals i els valors predits del nombre d'espècies per cada nivell del pH.**
+
+```{r}
 bm<-seq(0,10,0.01)
 plot(Especies~Biomassa,col=pH,dd,pch=16)
 lines(bm,predict(m1,data.frame(Biomassa=bm,pH="alt"),ty="response"))
 lines(bm,predict(m1,data.frame(Biomassa=bm,pH="baix"),ty="response"),col=2)
 lines(bm,predict(m1,data.frame(Biomassa=bm,pH="mig"),ty="response"),col=3)
+```
+
+El mateix gràfic a nivell link
+
+```{r}
 plot(log(Especies)~Biomassa,col=pH,dd,pch=16)
 lines(bm,predict(m1,data.frame(Biomassa=bm,pH="alt"),ty="link"))
 lines(bm,predict(m1,data.frame(Biomassa=bm,pH="baix"),ty="link"),col=2)
 lines(bm,predict(m1,data.frame(Biomassa=bm,pH="mig"),ty="link"),col=3)
+```
+
+
+**iii. Per cada nivell del pH, dibuixeu la banda de predicció asimptòtica (95%) de les Especies en funció de Biomassa.**
+
+```{r}
 # Intervals o regions de prediccio assimptòtiques:
 plot(Especies~Biomassa,col=pH,dd,pch=16)
 lines(bm,predict(m1,data.frame(Biomassa=bm,pH="alt"),ty="response"))
@@ -195,18 +132,30 @@ lines(bm,qpois(0.975,predict(m1,data.frame(Biomassa=bm,pH="baix"),ty="response")
 lines(bm,predict(m1,data.frame(Biomassa=bm,pH="mig"),ty="response"),col=3)
 lines(bm,qpois(0.025,predict(m1,data.frame(Biomassa=bm,pH="mig"),ty="response"))-1,lty=2,col=3)
 lines(bm,qpois(0.975,predict(m1,data.frame(Biomassa=bm,pH="mig"),ty="response")),lty=2,col=3)
+```
+
+Potser millor per separat
+
+```{r}
 plot(Especies~Biomassa,col=1,dd[dd$pH=="alt",],pch=16)
 lines(bm,predict(m1,data.frame(Biomassa=bm,pH="alt"),ty="response"))
 lines(bm,qpois(0.025,predict(m1,data.frame(Biomassa=bm,pH="alt"),ty="response"))-1,lty=2)
 lines(bm,qpois(0.975,predict(m1,data.frame(Biomassa=bm,pH="alt"),ty="response")),lty=2)
+
 plot(Especies~Biomassa,col=2,dd[dd$pH=="baix",],pch=16)
 lines(bm,predict(m1,data.frame(Biomassa=bm,pH="baix"),ty="response"),col=2)
 lines(bm,qpois(0.025,predict(m1,data.frame(Biomassa=bm,pH="baix"),ty="response"))-1,lty=2,col=2)
 lines(bm,qpois(0.975,predict(m1,data.frame(Biomassa=bm,pH="baix"),ty="response")),lty=2,col=2)
+
 plot(Especies~Biomassa,col=3,dd[dd$pH=="mig",],pch=16)
 lines(bm,predict(m1,data.frame(Biomassa=bm,pH="mig"),ty="response"),col=3)
 lines(bm,qpois(0.025,predict(m1,data.frame(Biomassa=bm,pH="mig"),ty="response"))-1,lty=2,col=3)
 lines(bm,qpois(0.975,predict(m1,data.frame(Biomassa=bm,pH="mig"),ty="response")),lty=2,col=3)
+```
+
+**iv. Per cada nivell del pH, dibuixeu la banda de confiança (95%) de les Especies en funció de Biomassa.**
+
+```{r}
 palt<-predict(m1,data.frame(Biomassa=bm,pH="alt"),ty="response",se.fit=T)
 pbaix<-predict(m1,data.frame(Biomassa=bm,pH="baix"),ty="response",se.fit=T)
 pmig<-predict(m1,data.frame(Biomassa=bm,pH="mig"),ty="response",se.fit=T)
@@ -221,26 +170,101 @@ lines(bm,pbaix$fit-z*pbaix$se.fit,lty=2,col=2)
 lines(bm,pmig$fit,col=3)
 lines(bm,pmig$fit+z*pmig$se.fit,lty=2,col=3)
 lines(bm,pmig$fit-z*pmig$se.fit,lty=2,col=3)
+```
+
+## Repetiu els apartats b) i c) canviant la funció link a la identitat, si es pot simplifiqueu el model. Compareu els models amb els dos links.
+
+#### b) Ajusteu el MLG adequat utilitzant la seva funció link identitat. 
+
+```{r}
 summary(m2<-glm(Especies~Biomassa*pH,family=poisson(link=identity),data=dd))
+```
+
+**i. Quins efectes són significants?**
+
+Test Omnibus i test Anova
+
+```{r}
 anova(glm(Especies~1,family=poisson(link=identity),data=dd),m2,test="Chisq")
 Anova(m2)
+```
+
+***Simplifiquem el model treient la interacció***
+
+```{r}
 summary(m2<-glm(Especies~Biomassa+pH,family=poisson(link=identity),data=dd))
 anova(glm(Especies~1,family=poisson(link=identity),data=dd),m2,test="Chisq")
 Anova(m2)
+```
+
+
+**• En el valor mitjà de la biomassa, quines diferències hi ha entre els efectes dels tres nivells del pH sobre el nombre d'espècies?**
+
+```{r}
 CLD(emmeans(m2,~pH|Biomassa),ty="response")
+```
+
+**• i quan Biomassa= 0, 1, 5 o 9)), de fet no cal**
+
+```{r}
 CLD(emmeans(m2,~pH|Biomassa,at=list(Biomassa=c(0,1,5,9))),ty="response")
+```
+
+**• Donat un nivell del pH, la variable Especies canvia en funció de la Biomassa?**
+
+Mirar els pendents
+
+```{r}
 emtrends(m2,~pH,var="Biomassa")
+```
+
+**ii. Hi ha sobre o subdispersió?**
+
+```{r}
 c(PS=PS2<-sum(residuals(m2,type="pearson")^2),"Par.Disp"=disp2<-PS2/m2$df.res)
 c("P-valor"=2*min(pchisq(PS2,m2$df.res),1-pchisq(PS2,m2$df.res)))
+```
+
+**iii. Aquest model és adequat per les dades obtingudes? **
+
+Residuals
+
+```{r}
 plot(m2,1)
+```
+
+Valors estranys
+
+```{r}
 plot(predict(m2,ty="response"),rstudent(m2,ty="pearson"))
 abline(h=c(--3,-2,0,2,3),lty=2)
+```
+
+*La dispersió sembla bé, la tendència sembla bé, la dispersió sembla bé i hi ha algun valor estrany*
+
+#### c) Calculeu els valors predits del nombre d'espècies: 
+
+**i. Per cada nivell del pH, doneu l'expressió de** $\hat{\mathbb{E}}\left(Especies\right)$ **en funció de la Biomassa?** 
+
+```{r}
 family(m2)
+```
+
+*predit(i,j)=(ai+bi·Biomassa)*
+
+**ii. Feu una gràfica amb les dades experimentals i els valors predits del nombre d'espècies per cada nivell del pH.**
+
+```{r}
 bm<-seq(0,10,0.1)
 plot(Especies~Biomassa,col=pH,dd,pch=16)
 lines(bm,predict(m2,data.frame(Biomassa=bm,pH="alt"),ty="response"))
 lines(bm,predict(m2,data.frame(Biomassa=bm,pH="baix"),ty="response"),col=2)
 lines(bm,predict(m2,data.frame(Biomassa=bm,pH="mig"),ty="response"),col=3)
+```
+
+**iii. Per cada nivell del pH, dibuixeu la banda de predicció asimptòtica (95%) de les Especies en funció de Biomassa.**
+
+```{r}
 plot(Especies~Biomassa,col=pH,dd,pch=16)
 lines(bm,predict(m2,data.frame(Biomassa=bm,pH="alt"),ty="response"))
 lines(bm,qpois(0.025,predict(m2,data.frame(Biomassa=bm,pH="alt"),ty="response")),lty=2)
@@ -251,18 +275,30 @@ lines(bm,qpois(0.975,predict(m2,data.frame(Biomassa=bm,pH="baix"),ty="response")
 lines(bm,predict(m2,data.frame(Biomassa=bm,pH="mig"),ty="response"),col=3)
 lines(bm,qpois(0.025,predict(m2,data.frame(Biomassa=bm,pH="mig"),ty="response")),lty=2,col=3)
 lines(bm,qpois(0.975,predict(m2,data.frame(Biomassa=bm,pH="mig"),ty="response")),lty=2,col=3)
+```
+
+Potser millor per separat
+
+```{r}
 plot(Especies~Biomassa,col=1,dd[dd$pH=="alt",],pch=16)
 lines(bm,predict(m2,data.frame(Biomassa=bm,pH="alt"),ty="response"))
 lines(bm,qpois(0.025,predict(m2,data.frame(Biomassa=bm,pH="alt"),ty="response")),lty=2)
 lines(bm,qpois(0.975,predict(m2,data.frame(Biomassa=bm,pH="alt"),ty="response")),lty=2)
+
 plot(Especies~Biomassa,col=2,dd[dd$pH=="baix",],pch=16)
 lines(bm,predict(m2,data.frame(Biomassa=bm,pH="baix"),ty="response"),col=2)
 lines(bm,qpois(0.025,predict(m2,data.frame(Biomassa=bm,pH="baix"),ty="response")),lty=2,col=2)
 lines(bm,qpois(0.975,predict(m2,data.frame(Biomassa=bm,pH="baix"),ty="response")),lty=2,col=2)
+
 plot(Especies~Biomassa,col=3,dd[dd$pH=="mig",],pch=16)
 lines(bm,predict(m2,data.frame(Biomassa=bm,pH="mig"),ty="response"),col=3)
 lines(bm,qpois(0.025,predict(m2,data.frame(Biomassa=bm,pH="mig"),ty="response")),lty=2,col=3)
 lines(bm,qpois(0.975,predict(m2,data.frame(Biomassa=bm,pH="mig"),ty="response")),lty=2,col=3)
+```
+
+**iv. Per cada nivell del pH, dibuixeu la banda de confiança (95%) de les Especies en funció de Biomassa.**
+
+```{r}
 palt<-predict(m2,data.frame(Biomassa=bm,pH="alt"),ty="response",se.fit=T)
 pbaix<-predict(m2,data.frame(Biomassa=bm,pH="baix"),ty="response",se.fit=T)
 pmig<-predict(m2,data.frame(Biomassa=bm,pH="mig"),ty="response",se.fit=T)
@@ -277,5 +313,12 @@ lines(bm,pbaix$fit-z*pbaix$se.fit,lty=2,col=2)
 lines(bm,pmig$fit,col=3)
 lines(bm,pmig$fit+z*pmig$se.fit,lty=2,col=3)
 lines(bm,pmig$fit-z*pmig$se.fit,lty=2,col=3)
+```
+
+**Comparacions**
+
+```{r}
 rbind("Canònic"=c(Deviancia=m1$deviance,Pearson=PS1,Par.disp=disp1,LogLik=logLik(m1),AIC=AIC(m1)),
-"Identitat"=c(m2$deviance,PS2,disp2,logLik(m2),AIC(m2)))
+      "Identitat"=c(m2$deviance,PS2,disp2,logLik(m2),AIC(m2)))
+```
+

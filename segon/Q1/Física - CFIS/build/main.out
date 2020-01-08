@@ -4,26 +4,49 @@
 \BOOKMARK [2][-]{subsection.1.2.1}{Diverg\350ncia i rotacional}{section.1.2}% 4
 \BOOKMARK [2][-]{teo.1.2.1}{Teorema de Gauss}{section.1.2}% 5
 \BOOKMARK [2][-]{teo.1.2.2}{Teorema d'Stokes}{section.1.2}% 6
-\BOOKMARK [0][-]{chapter.2}{Cinem\340tica de la part\355cula}{}% 7
-\BOOKMARK [1][-]{section.2.1}{Moviment}{chapter.2}% 8
-\BOOKMARK [1][-]{section.2.2}{Canvis de coordenades}{chapter.2}% 9
-\BOOKMARK [2][-]{subsection.2.2.1}{Coordenades polars}{section.2.2}% 10
-\BOOKMARK [2][-]{subsection.2.2.2}{Coordenades intr\355nseques}{section.2.2}% 11
-\BOOKMARK [1][-]{section.2.3}{Tipus de moviments}{chapter.2}% 12
-\BOOKMARK [2][-]{subsection.2.3.1}{Uniforme}{section.2.3}% 13
-\BOOKMARK [2][-]{subsection.2.3.2}{Uniformement accelerat}{section.2.3}% 14
-\BOOKMARK [2][-]{subsection.2.3.3}{Circular}{section.2.3}% 15
-\BOOKMARK [0][-]{chapter.3}{Din\340mica de la part\355cula}{}% 16
-\BOOKMARK [1][-]{section.3.1}{Principis de la mec\340nica cl\340ssica}{chapter.3}% 17
-\BOOKMARK [2][-]{subsection.3.1.1}{La primera llei de Newton: la llei de la in\350rcia}{section.3.1}% 18
-\BOOKMARK [2][-]{subsection.3.1.2}{La segona llei de Newton}{section.3.1}% 19
-\BOOKMARK [2][-]{subsection.3.1.3}{La tercera llei de Newton}{section.3.1}% 20
-\BOOKMARK [2][-]{subsection.3.1.4}{Forces de fricci\363}{section.3.1}% 21
-\BOOKMARK [2][-]{subsection.3.1.5}{Sistemes de massa variable}{section.3.1}% 22
-\BOOKMARK [1][-]{section.3.2}{Moviment curvilini}{chapter.3}% 23
-\BOOKMARK [0][-]{chapter.4}{Sistemes de refer\350ncia en rotaci\363}{}% 24
-\BOOKMARK [1][-]{section.4.1}{Moviment relatiu rotacional}{chapter.4}% 25
-\BOOKMARK [2][-]{subsection.4.1.1}{Velocitat relativa rotacional}{section.4.1}% 26
-\BOOKMARK [2][-]{subsection.4.1.2}{Acceleraci\363 relativa rotacional}{section.4.1}% 27
-\BOOKMARK [1][-]{section.4.2}{Forces fict\355cies \(o inercials\)}{chapter.4}% 28
-\BOOKMARK [1][-]{section.4.3}{Moviment relatiu a la Terra}{chapter.4}% 29
+\BOOKMARK [2][-]{subsection.1.2.2}{Potencial associat a una for\347a conservativa}{section.1.2}% 7
+\BOOKMARK [0][-]{chapter.2}{Cinem\340tica de la part\355cula}{}% 8
+\BOOKMARK [1][-]{section.2.1}{Moviment}{chapter.2}% 9
+\BOOKMARK [1][-]{section.2.2}{Canvis de coordenades}{chapter.2}% 10
+\BOOKMARK [2][-]{subsection.2.2.1}{Coordenades polars}{section.2.2}% 11
+\BOOKMARK [2][-]{subsection.2.2.2}{Coordenades intr\355nseques}{section.2.2}% 12
+\BOOKMARK [1][-]{section.2.3}{Tipus de moviments}{chapter.2}% 13
+\BOOKMARK [2][-]{subsection.2.3.1}{Uniforme}{section.2.3}% 14
+\BOOKMARK [2][-]{subsection.2.3.2}{Uniformement accelerat}{section.2.3}% 15
+\BOOKMARK [2][-]{subsection.2.3.3}{Circular}{section.2.3}% 16
+\BOOKMARK [0][-]{chapter.3}{Din\340mica de la part\355cula}{}% 17
+\BOOKMARK [1][-]{section.3.1}{Principis de la mec\340nica cl\340ssica}{chapter.3}% 18
+\BOOKMARK [2][-]{subsection.3.1.1}{La primera llei de Newton: la llei de la in\350rcia}{section.3.1}% 19
+\BOOKMARK [2][-]{subsection.3.1.2}{La segona llei de Newton}{section.3.1}% 20
+\BOOKMARK [2][-]{subsection.3.1.3}{La tercera llei de Newton}{section.3.1}% 21
+\BOOKMARK [2][-]{subsection.3.1.4}{Forces de fricci\363}{section.3.1}% 22
+\BOOKMARK [2][-]{subsection.3.1.5}{Sistemes de massa variable}{section.3.1}% 23
+\BOOKMARK [1][-]{section.3.2}{Moviment curvilini}{chapter.3}% 24
+\BOOKMARK [0][-]{chapter.4}{Sistemes de refer\350ncia en rotaci\363}{}% 25
+\BOOKMARK [1][-]{section.4.1}{Moviment relatiu rotacional}{chapter.4}% 26
+\BOOKMARK [2][-]{subsection.4.1.1}{Velocitat relativa rotacional}{section.4.1}% 27
+\BOOKMARK [2][-]{subsection.4.1.2}{Acceleraci\363 relativa rotacional}{section.4.1}% 28
+\BOOKMARK [1][-]{section.4.2}{Forces fict\355cies \(o inercials\)}{chapter.4}% 29
+\BOOKMARK [1][-]{section.4.3}{Moviment relatiu a la Terra}{chapter.4}% 30
+\BOOKMARK [0][-]{chapter.5}{Treball i energia}{}% 31
+\BOOKMARK [1][-]{section.5.1}{Treball d'una for\347a.}{chapter.5}% 32
+\BOOKMARK [1][-]{section.5.2}{Camps de forces. Forces conservatives.}{chapter.5}% 33
+\BOOKMARK [2][-]{subsection.5.2.1}{Energia potencial.}{section.5.2}% 34
+\BOOKMARK [2][-]{subsection.5.2.2}{Conservaci\363 de l'energia mec\340nica}{section.5.2}% 35
+\BOOKMARK [2][-]{subsection.5.2.3}{Forces que depenen del temps.}{section.5.2}% 36
+\BOOKMARK [0][-]{chapter.6}{Forces centrals}{}% 37
+\BOOKMARK [1][-]{section.6.1}{Definicions b\340siques}{chapter.6}% 38
+\BOOKMARK [1][-]{section.6.2}{Forces centrals}{chapter.6}% 39
+\BOOKMARK [2][-]{subsection.6.2.1}{Moviment de la part\355cula en coordenades polars.}{section.6.2}% 40
+\BOOKMARK [2][-]{subsection.6.2.2}{Equaci\363 de l'\362rbita}{section.6.2}% 41
+\BOOKMARK [0][-]{chapter.7}{Oscil\267lacions}{}% 42
+\BOOKMARK [1][-]{section.7.1}{Moviment Harm\362nic Simple.}{chapter.7}% 43
+\BOOKMARK [2][-]{subsection.7.1.1}{Energia del MHS.}{section.7.1}% 44
+\BOOKMARK [1][-]{section.7.2}{Oscil\267lacions harm\362niques en dues dimensions.}{chapter.7}% 45
+\BOOKMARK [1][-]{section.7.3}{Oscil\267lacions amortiguades.}{chapter.7}% 46
+\BOOKMARK [1][-]{section.7.4}{Oscil\267lacions for\347ades.}{chapter.7}% 47
+\BOOKMARK [2][-]{subsection.7.4.1}{Superposici\363 de forces.}{section.7.4}% 48
+\BOOKMARK [1][-]{section.7.5}{Oscil\267lacions acoplades}{chapter.7}% 49
+\BOOKMARK [1][-]{section.7.6}{Ones.}{chapter.7}% 50
+\BOOKMARK [2][-]{subsection.7.6.1}{Ones harm\362niques.}{section.7.6}% 51
+\BOOKMARK [2][-]{subsection.7.6.2}{Equacions de Maxwell en abs\350ncia de c\340rregues i corrents.}{section.7.6}% 52

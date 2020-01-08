@@ -5,6 +5,7 @@
 \contentsline {subsection}{\numberline {1.2.1}Diverg\IeC {\`e}ncia i rotacional}{2}{subsection.1.2.1}% 
 \contentsline {subsection}{Teorema de Gauss}{3}{teo.1.2.1}% 
 \contentsline {subsection}{Teorema d'Stokes}{3}{teo.1.2.2}% 
+\contentsline {subsection}{\numberline {1.2.2}Potencial associat a una for\IeC {\c c}a conservativa}{3}{subsection.1.2.2}% 
 \contentsline {chapter}{\numberline {2}Cinem\IeC {\`a}tica de la part\IeC {\'\i }cula}{5}{chapter.2}% 
 \contentsline {section}{\numberline {2.1}Moviment}{5}{section.2.1}% 
 \contentsline {section}{\numberline {2.2}Canvis de coordenades}{6}{section.2.2}% 
@@ -18,11 +19,11 @@
 \contentsline {section}{\numberline {3.1}Principis de la mec\IeC {\`a}nica cl\IeC {\`a}ssica}{9}{section.3.1}% 
 \contentsline {subsection}{\numberline {3.1.1}La primera llei de Newton: la llei de la in\IeC {\`e}rcia}{9}{subsection.3.1.1}% 
 \contentsline {subsubsection}{\numberline {3.1.1.1}Transformacions de Galileu}{9}{subsubsection.3.1.1.1}% 
-\contentsline {subsubsection}{\numberline {3.1.1.2}Transformacions de Lorentz}{10}{subsubsection.3.1.1.2}% 
+\contentsline {subsubsection}{\numberline {3.1.1.2}Transformacions de Lorentz}{9}{subsubsection.3.1.1.2}% 
 \contentsline {subsection}{\numberline {3.1.2}La segona llei de Newton}{10}{subsection.3.1.2}% 
 \contentsline {subsection}{\numberline {3.1.3}La tercera llei de Newton}{10}{subsection.3.1.3}% 
 \contentsline {subsubsection}{\numberline {3.1.3.1}Conservaci\IeC {\'o} de la quantitat de moviment}{10}{subsubsection.3.1.3.1}% 
-\contentsline {subsection}{\numberline {3.1.4}Forces de fricci\IeC {\'o}}{11}{subsection.3.1.4}% 
+\contentsline {subsection}{\numberline {3.1.4}Forces de fricci\IeC {\'o}}{10}{subsection.3.1.4}% 
 \contentsline {subsubsection}{\numberline {3.1.4.1}Forces de fregament en fluids}{11}{subsubsection.3.1.4.1}% 
 \contentsline {subsection}{\numberline {3.1.5}Sistemes de massa variable}{11}{subsection.3.1.5}% 
 \contentsline {section}{\numberline {3.2}Moviment curvilini}{11}{section.3.2}% 
@@ -32,3 +33,25 @@
 \contentsline {subsection}{\numberline {4.1.2}Acceleraci\IeC {\'o} relativa rotacional}{14}{subsection.4.1.2}% 
 \contentsline {section}{\numberline {4.2}Forces fict\IeC {\'\i }cies (o inercials)}{14}{section.4.2}% 
 \contentsline {section}{\numberline {4.3}Moviment relatiu a la Terra}{15}{section.4.3}% 
+\contentsline {chapter}{\numberline {5}Treball i energia}{17}{chapter.5}% 
+\contentsline {section}{\numberline {5.1}Treball d'una for\IeC {\c c}a.}{17}{section.5.1}% 
+\contentsline {section}{\numberline {5.2}Camps de forces. Forces conservatives.}{17}{section.5.2}% 
+\contentsline {subsection}{\numberline {5.2.1}Energia potencial.}{17}{subsection.5.2.1}% 
+\contentsline {subsection}{\numberline {5.2.2}Conservaci\IeC {\'o} de l'energia mec\IeC {\`a}nica}{18}{subsection.5.2.2}% 
+\contentsline {subsection}{\numberline {5.2.3}Forces que depenen del temps.}{18}{subsection.5.2.3}% 
+\contentsline {chapter}{\numberline {6}Forces centrals}{19}{chapter.6}% 
+\contentsline {section}{\numberline {6.1}Definicions b\IeC {\`a}siques}{19}{section.6.1}% 
+\contentsline {section}{\numberline {6.2}Forces centrals}{19}{section.6.2}% 
+\contentsline {subsection}{\numberline {6.2.1}Moviment de la part\IeC {\'\i }cula en coordenades polars.}{20}{subsection.6.2.1}% 
+\contentsline {subsection}{\numberline {6.2.2}Equaci\IeC {\'o} de l'\IeC {\`o}rbita}{20}{subsection.6.2.2}% 
+\contentsline {chapter}{\numberline {7}Oscil\IeC {\textperiodcentered }lacions}{23}{chapter.7}% 
+\contentsline {section}{\numberline {7.1}Moviment Harm\IeC {\`o}nic Simple.}{23}{section.7.1}% 
+\contentsline {subsection}{\numberline {7.1.1}Energia del MHS.}{23}{subsection.7.1.1}% 
+\contentsline {section}{\numberline {7.2}Oscil\IeC {\textperiodcentered }lacions harm\IeC {\`o}niques en dues dimensions.}{24}{section.7.2}% 
+\contentsline {section}{\numberline {7.3}Oscil\IeC {\textperiodcentered }lacions amortiguades.}{24}{section.7.3}% 
+\contentsline {section}{\numberline {7.4}Oscil\IeC {\textperiodcentered }lacions for\IeC {\c c}ades.}{25}{section.7.4}% 
+\contentsline {subsection}{\numberline {7.4.1}Superposici\IeC {\'o} de forces.}{25}{subsection.7.4.1}% 
+\contentsline {section}{\numberline {7.5}Oscil\IeC {\textperiodcentered }lacions acoplades}{26}{section.7.5}% 
+\contentsline {section}{\numberline {7.6}Ones.}{26}{section.7.6}% 
+\contentsline {subsection}{\numberline {7.6.1}Ones harm\IeC {\`o}niques.}{27}{subsection.7.6.1}% 
+\contentsline {subsection}{\numberline {7.6.2}Equacions de Maxwell en abs\IeC {\`e}ncia de c\IeC {\`a}rregues i corrents.}{27}{subsection.7.6.2}% 

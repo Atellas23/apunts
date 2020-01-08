@@ -1,0 +1,137 @@
+---
+title: "Ex33 clusters"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+####En el fitxer clusters.csv hi ha dues variables: Cancers i Distancia. 
+
+####• Cancers: nombre de càncers detectats en un hospital durant un any.
+
+####• Distancia: distància des de l'hospital a una central nuclear.
+
+####L'objectiu és conèixer si hi ha alguna relació entre la proximitat a la central nuclear i la incidència de càncers. Dieu, en aquest cas, quina és la variable resposta, la variable explicativa i de quin tipus són.
+
+*Entrar dades, paquests, descriptiva...*
+
+```{r}
+#setwd("...")
+dd<-read.csv2("../data/clusters.csv")
+library(car)
+```
+
+**a) Descriptiva: feu una gràfica de les dades.**
+
+```{r}
+sp(Cancers~Distancia,smooth=F,boxplot=F,dat=dd)
+```
+
+
+**b) Ajusteu el MLG adequat per explicar el nombre de càncers en funció de la distància a la central nuclear. Suposeu que **$Cancers\sim Poisson\left(\mu\right)$ **on** $\mu$ **depèn de la distància seguint la funció:** $\mu=e^{\alpha+\beta\cdot Distancia}.$ 
+
+***i. Quina família de distribucions i quina funció link heu de considerar?***
+
+*Familia Poisson i link=log* 
+
+***ii. La relació entre Cancers i Distancia és significativa amb un nivell del 10%?***
+
+```{r}
+m1<-glm(Cancers~Distancia,family=poisson,data=dd)
+#m1<-glm(Cancers~Distancia,family=poisson(link=log),data=dd)
+summary(m1)
+```
+
+**Test anova, també fet a mà**
+
+```{r}
+Anova(m1)
+
+c("Est.contrast"=(m1$null.deviance-m1$deviance)/1)
+```
+
+
+*Sí, per molt poc.*
+
+***iii. Valideu el model. Hi ha sobredispersió?***
+
+```{r}
+c("Pearson"=PS<-sum(residuals(m1,type="pearson")^2))
+c("Par.disp"=PS/m1$df.res)
+# P value
+c("p.valor"=2*min(pchisq(PS,m1$df.res),1-pchisq(PS,m1$df.res)))
+# IC
+c("IC.inf"=qchisq(0.025,m1$df.res),"IC.sup"=qchisq(0.975,m1$df.res))/m1$df.res
+
+plot(m1,1)
+
+
+plot(rstudent(m1)~Distancia,dd)
+abline(h=c(-3,-2,0,2,3),lty=2,col="red")
+```
+
+*Sí hi ha sobre-dispersió. Model no vàlid encara que la gràfica de residuals suert raonablement bé.*
+
+**c) Repetiu l'apartat b) suposant ara que \mu depèn de Distancia seguint la funció:** $\mu=\alpha+\beta\cdot Distancia$. 
+
+***i. Quina família de distribucions i quina funció link heu de considerar?***
+
+*Familia Poisson i link=identity* 
+
+***ii. La relació entre Cancers i Distancia és significativa amb un nivell del 10%?***
+
+```{r}
+m2<-glm(Cancers~Distancia,family=poisson(link=identity),data=dd)
+summary(m2)
+```
+
+*No és significatiu per molt poc.*
+
+***iii. Valideu el model. Hi ha sobredispersió?***
+
+```{r}
+c("Pearson"=PS<-sum(residuals(m2,type="pearson")^2))
+c("Par.disp"=PS/m2$df.res)
+# P value
+c("p.valor"=2*min(pchisq(PS,m2$df.res),1-pchisq(PS,m2$df.res)))
+# IC
+c("IC.inf"=qchisq(0.025,m2$df.res),"IC.sup"=qchisq(0.975,m2$df.res))/m1$df.res
+
+plot(m2,1)
+
+plot(rstudent(m2)~Distancia,dd)
+abline(h=c(-3,-2,0,2,3),lty=2,col="red")
+```
+
+*Sí hi ha sobre-dispersió. Model no vàlid encara que la gràfica de residuals suert raonablement bé.*
+
+iv. Pot aparèixer algun problema utilitzant aquest model? 
+
+```{r}
+plot(dd$Distancia,dd$Cancers,xlim=c(0,250),ylim=c(-1,6),pch=3,cex=.7)
+lines(0:250,exp(coef(m1)[1]+coef(m1)[2]*(0:250)),col="blue")
+lines(0:250,(coef(m2)[1]+coef(m2)[2]*(0:250)),col="red")
+abline(h=0,col="grey")
+abline(v=0,col="grey")
+```
+
+*Sí, el valor predit pot arribar a ser negatiu*
+
+**d) Opcional. El mateix que en l'apartat b) però assumint que pot haver-hi sobredispersió o subdispersió.** 
+
+***i. Quina família de distribucions i quina funció link heu de considerar?***
+
+*Familia quasipoisson i link=log* 
+
+***ii. La relació entre Cancers i Distancia és significativa amb un nivell del 10%?*** 
+
+```{r}
+mq<-glm(Cancers~Distancia,family=quasipoisson(link=log),data=dd)
+summary(mq)
+```
+
+*No és significatiu. El paràmetre de dispersió és el que haviem calculat a l'apartat b).*

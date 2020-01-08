@@ -1,0 +1,261 @@
+---
+title: "Ex28 pllet glm"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Continuar l'exercici 23):
+#### Per estudiar com evoluciona la quantitat de llet diària produïda per una vaca en funció dels dies que han passat des del part, s'han obtingut les dades del fitxer “pllet.csv”, en el que la primera columna són els dies i la segona la producció en l/dia. Quan es necessiti utilitzeu $\alpha=0.05$ . 
+
+*Directori de treball, dades, paquets del R i descriptiva*
+
+```{r}
+#setwd("")
+library(car)
+dd <- read.csv2("../data/pllet.csv")
+nd<-dim(dd)[1]
+head(dd)
+################################################################
+# Descriptiva
+sp(PROD~DIES,boxplot=FALSE,smooth=FALSE,dd)
+```
+
+#### **• Primer plantegeu un GLM amb** $PROD\sim N\left(a\cdot dies^{b}e^{-c\cdot dies},\sigma^{2}\right)$ **i resoleu els apartats a), b) i c).**
+
+#### a) Estimeu els paràmetres del model i
+
+*La família és gaussian, el predictor lineal a+b·DIES+c·log(DIES) i la funció link=log*
+
+```{r}
+ModN<-glm(PROD~DIES+log(DIES),family=gaussian(link=log),dd)
+ModN0<-glm(PROD~1,family=gaussian(link=log),dd) #model null
+```
+
+#### i. i. Plantegeu i contrasteu els tests per saber si hi ha algun efecte, i per cada paràmetre saber si són necessaris o no. 
+
+*Test omnibus per saber si hi ha algun efecte*
+
+```{r}
+# la F (ve d'una F de Fisher) s'haura de posar cada vegada que haguem d'estimar el parametre de dispersio
+anova(ModN0,ModN,test="F")
+```
+
+*Resum per obtenir els paràmetres estimats, tests de les betes, deviàncies, graus de llibertat i AIC*
+
+```{r}
+summary(ModN)
+```
+
+*Per calcular manualment l'estadístic de contrast del test omnibus, F*
+
+```{r}
+c(num=num<-(ModN$null.deviance-ModN$deviance)/(ModN$df.null-ModN$df.residual))
+c(den=den<-summary(ModN)$dispersion) 
+c(F=F<-num/den)
+```
+
+#### ii. Estimeu l'estadístic de Pearson, el paràmetre de dispersió (el tipus Pearson i el tipus Deviance) i calculeu $Var\left(Y|\left\{ a,b,c\right\} \right)$. 
+
+```{r}
+c(Pearson=Pearson<-sum(resid(ModN,ty="pearson")^2))
+c(dispP=dispP<-Pearson/ModN$df.residual)
+c(Deviance=Deviance<-sum(resid(ModN,ty="deviance")^2),ModN$deviance)
+c(dispD=dispD<-Deviance/ModN$df.residual)
+```
+
+*En la normal, Pearson coincideix amb Deviance.* 
+*Per tant dispP coincideix amb dispD i són les dues possibles formes de calcular el paràmetre de dispersió, per defecte el summary dona del dispP.*
+*Com que la funció de variància de la normal és 1, aleshores* $Var\left(Y|\left\{ a,b,c\right\} \right)=disp.$
+
+#### b) Dibuixeu: 
+
+#### i. La funció de regressió amb els punts. 
+
+```{r}
+pPROD<-predict(ModN,ty="response")
+plot(PROD~DIES,dd)
+lines(pPROD~DIES,col="blue",dd)
+```
+
+*Si repetim la gràfica anterior a nivell link*
+
+```{r}
+lpPROD<-predict(ModN,ty="link")
+plot(log(PROD)~DIES,dd)
+lines(lpPROD~DIES,col="blue",dd)
+```
+
+#### ii. Els residuals front els valors predits. 
+
+```{r}
+plot(resid(ModN,ty="pearson")~lpPROD)
+abline(h=0,lt=2)
+plot(ModN,1)
+residualPlot(ModN)
+```
+
+* Són 3 formes alternatives d'obtenir el mateix, també es pot fer respecte la PROD predita*
+
+#### iii. La banda de predicció asimptòtica (95%) amb la funció de regressió i els punts observats. 
+
+```{r}
+#pPROD<-predict(ModN,ty="response")
+lsup<-pPROD+qnorm(0.975)*sqrt(dispP)
+linf<-pPROD-qnorm(0.975)*sqrt(dispP)
+
+plot(PROD~DIES,dd,ylim=c(min(linf),max(lsup)))
+lines(pPROD~DIES,col="blue",dd)
+lines(lsup~DIES,col="red",lt=2,dd)
+lines(linf~DIES,col="red",lt=2,dd)
+```
+
+c) Justifiqueu si us sembla que el model és adequat o no. 
+
+*No, les dades no compleixen la funció de variància*
+
+#### **• Després, suposant que en lloc de ser $PROD\sim N\left(a\cdot dies^{b}e^{-c\cdot dies},\sigma^{2}\right)$, tenim un model lineal generalitzat, d'esperança $E\left[PROD|\left\{ a,b,c\right\} \right]=a\cdot dies^{b}e^{-c\cdot dies}$ i família de distribucions Gamma, torneu a fer els apartats a), b) i c).
+
+#### a) Estimeu els paràmetres del model i
+
+*La família és Gamma, el predictor lineal a+b·DIES+c·log(DIES) i la funció link=log*
+
+```{r}
+ModG<-glm(PROD~DIES+log(DIES),family=Gamma(link=log),dd)
+ModG0<-glm(PROD~1,family=Gamma(link=log),dd) #model null
+```
+
+#### i. i. Plantegeu i contrasteu els tests per saber si hi ha algun efecte, i per cada paràmetre saber si són necessaris o no. 
+
+*Test omnibus per saber si hi ha algun efecte*
+
+```{r}
+anova(ModG0,ModG,test="F")
+```
+
+*Resum per obtenir els paràmetres estimats, tests de les betes, deviàncies, graus de llibertat i AIC*
+
+```{r}
+summary(ModG)
+```
+
+*Per calcular manualment l'estadístic de contrast del test omnibus, F*
+
+```{r}
+c(num=num<-(ModG$null.deviance-ModG$deviance)/(ModG$df.null-ModG$df.residual))
+c(den=den<-summary(ModG)$dispersion) 
+c(F=F<-num/den)
+```
+
+#### ii. Estimeu l'estadístic de Pearson, el paràmetre de dispersió (el tipus Pearson i el tipus Deviance) i calculeu $Var\left(Y|\left\{ a,b,c\right\} \right)$. 
+
+```{r}
+c(Pearson=Pearson<-sum(resid(ModG,ty="pearson")^2))
+c(dispP=dispP<-Pearson/ModG$df.residual)
+c(Deviance=Deviance<-sum(resid(ModG,ty="deviance")^2),ModG$deviance)
+c(dispD=dispD<-Deviance/ModG$df.residual)
+```
+
+*A part de la normal on Pearson coincideix amb Deviance, en les altres famílies són similars.* 
+*Per tant dispP és similar dispD i són les dues possibles formes de calcular el paràmetre de dispersió, per defecte el R utilitza el dispP.*
+*Com que la funció de variància de la Gamma és $\mu^2$, aleshores* $Var\left(Y|\left\{ a,b,c\right\} \right)=disp\cdot\mu^2$.
+
+#### b) Dibuixeu: 
+
+#### i. La funció de regressió amb els punts. 
+
+```{r}
+pPRODG<-predict(ModG,ty="response")
+plot(PROD~DIES,dd)
+lines(pPRODG~DIES,col="blue",dd)
+```
+
+*Si repetim la gràfica anterior a nivell link*
+
+```{r}
+lpPRODG<-predict(ModG,ty="link")
+plot(log(PROD)~DIES,dd)
+lines(lpPRODG~DIES,col="blue",dd)
+```
+
+#### ii. Els residuals front els valors predits. 
+
+```{r}
+plot(resid(ModG,ty="pearson")~lpPRODG)
+abline(h=0,lt=2)
+plot(ModG,1)
+residualPlot(ModG)
+```
+
+* Són 3 formes alternatives d'obtenir el mateix, també es pot fer respecte la PROD predita*
+
+#### iii. La banda de predicció asimptòtica (95%) amb la funció de regressió i els punts observats. 
+
+*Els paràmetres de la distribució gamma que utilitza el R són: scale=mu·disp i shape=1/disp*
+
+```{r}
+#pPRODG<-predict(ModG,ty="response")
+lsupG<-qgamma(0.975,scale=pPRODG*dispP,shape=1/dispP)
+linfG<-qgamma(0.025,scale=pPRODG*dispP,shape=1/dispP)
+
+plot(PROD~DIES,dd,ylim=c(min(linf),max(lsup)))
+lines(pPRODG~DIES,col="blue",dd)
+lines(lsupG~DIES,col="red",lt=2,dd)
+lines(linfG~DIES,col="red",lt=2,dd)
+```
+
+*Orientativament (descriptivament) també es pot fer la següent gràfica dels valors esperats ± 2·S* 
+
+```{r}
+#pPRODG<-predict(ModG,ty="response")
+lsupO<-pPRODG+2*sqrt(dispP)*pPRODG
+linfO<-pPRODG-2*sqrt(dispP)*pPRODG
+
+plot(PROD~DIES,dd,ylim=c(min(linf),max(lsup)))
+lines(pPRODG~DIES,col="blue",dd)
+lines(lsupO~DIES,col="red",lt=2,dd)
+lines(linfO~DIES,col="red",lt=2,dd)
+```
+
+#### c) Justifiqueu si us sembla que el model és adequat o no.
+
+*Sí, les dades sembla que compleixen la funció de variància*
+
+#### **• Expliqueu les diferències entre els dos models anteriors.**
+
+*Les estimacions de les produccions esperades són molt semblants*
+
+```{r}
+plot(pPROD~DIES,dd,ty="l",ylab="prediccions")
+lines(pPRODG~DIES,dd,col="red",ylab="dif.pred.")
+
+plot(pPROD-pPRODG~DIES,dd,ty="l")
+abline(h=0,lt=2)
+```
+
+*Les variàncies canvien*
+
+```{r}
+plot(lsup~DIES,dd,ty="l",ylab="bandes",ylim=c(min(linf,linfG),max(lsup,lsupG)))
+lines(linf~DIES,dd)
+lines(lsupG~DIES,dd,col="red")
+lines(linfG~DIES,dd,col="red")
+lines(pPROD~DIES,dd,lt=2)
+lines(pPRODG~DIES,dd,lt=2,col="red")
+
+plot(lsup-pPROD~DIES,dd,ty="l",ylab="radi bandes",ylim=c(min(linf-pPROD,linfG-pPRODG),max(lsup-pPROD,lsupG-pPRODG)))
+lines(linf-pPROD~DIES,dd)
+lines(lsupG-pPRODG~DIES,dd,col="red")
+lines(linfG-pPRODG~DIES,dd,col="red")
+abline(h=0,lt=2)
+```
+
+
+
+
+
+

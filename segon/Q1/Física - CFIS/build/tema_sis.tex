@@ -1,0 +1,87 @@
+\chapter{Forces centrals}
+\section{Definicions bàsiques}
+\begin{defi}[Moment d'una força]
+Sigui una força que actua sobre una partícula. Definirem el moment de la força respecte un punt $O$ com el producte \[\vec M=\vec r\times\vec F.\]
+\end{defi}
+\begin{defi}[Moment angular]
+Definirem el moment angular d'una partícula respecte cert punt $O$ com \[\vec L=\vec r\times m\vec v=\vec r\times\vec p.\]Si tenim un moviment de rotació, \[v = \omega\times r\implies L=m(r\times(\omega\times r))=m\omega(r^2)-mr(\omega\cdot r),\]
+però com que $\omega\perp r$,
+\[
+L=m\omega r^2.
+\]
+Si definim $I=mr^2$ el \textit{moment d'inèrcia}, aleshores
+\[
+L=I\omega.
+\]
+\end{defi}
+\begin{obs}
+Variació del moment angular:
+\[
+\dfrac{dL}{dt}=\dfrac{d}{dt}(r\times p)=\dfrac{dr}{dt}\times p+r\times\dfrac{dp}{dt}=r\times F=M,
+\]
+i sabent que $L=I\omega$,
+\[
+M=I\dfrac{d\omega}{dt}=I\alpha.
+\]
+Conservació del moment angular:
+Si $M=0$,
+\[
+M=\sum_iM_i=\sum_ir_i\times F_i\implies\dfrac{dL}{dt}=0\implies L\text{ és constant.}
+\]
+\end{obs}
+\section{Forces centrals}
+Una força central és tal que $F=f(r)\hat r$ respecte el seu origen. El moment de la força respecte l'origen és zero: $M=r\times F=0$, ja que $r$ i $F$ són paral·leles. Per tant, el moment angular respecte l'origen és constant. Com que $L=r\times p$, el moviment serà en un pla.
+\subsection{Moviment de la partícula en coordenades polars.}
+El moment angular segueix sent constant i amb la mateixa expressió. L'acceleració en polars és $\vec a=(\ddot r-r\dot\theta^2)\hat r+(r\ddot\theta+2\dot r\dot\theta)\hat\theta$. Com que la component angular és zero,
+\[
+\begin{cases}
+f(r)=m(\ddot r-r\dot\theta^2),\\
+0=m(r\ddot\theta+2\dot r\dot\theta).
+\end{cases}
+\]
+Multiplicant la component angular per $r$ tenim $r^2\ddot\theta+2r\dot r\dot\theta=0\implies\dfrac{d}{dt}(r^2\dot\theta)=0\implies r^2\dot\theta=\text{const.}=\dfrac{L}{m}\implies\dot\theta=\dfrac{L}{mr^2}.$ Ara, de la primera equació (la component radial), obtenim
+\[
+\ddot r-r\dot\theta^2=\dfrac{f(r)}{m}\implies\ddot r=\dfrac{f(r)}{m}+\dfrac{L^2}{m^2r^3}.
+\]
+Aleshores, per la segona llei de Newton,
+\[
+F(r)=f(r)+\dfrac{L^2}{mr^3}=-\dfrac{\partial E_p^{eff}}{\partial r},
+\]
+i podem calcular $E_p^{eff}$ l'energia potencial efectiva com
+\[
+E_p^{eff}=E_p(r)+\dfrac{L^2}{2mr^2}.
+\]
+Si apliquem tot això a la conservació de l'energia mecànica, sent $E=E_M$,
+\[
+\dfrac{1}{2}m\dot r^2+E_p^{eff}=E\implies\dot r=\sqrt{\dfrac{2}{m}\left(E-E_p^{eff}\right)}.
+\]
+\subsection{Equació de l'òrbita}
+Si $r = r(\theta)$,
+\[
+\dfrac{dr}{dt}=\dfrac{dr}{d\theta}\dfrac{d\theta}{dt}=\dfrac{L}{mr^2}\dfrac{dr}{d\theta}.
+\]
+Això implica que
+\[
+\dfrac{d^2r}{dt^2}=\dfrac{d}{dt}\left(\dfrac{L}{mr^2}\dfrac{dr}{d\theta}\right)=\dfrac{d}{d\theta}\left(\dfrac{L}{mr^2}\dfrac{dr}{d\theta}\right)\dfrac{d\theta}{dt}=(*).
+\]
+Aquí utilitzem el fet que
+\[
+\dfrac{d}{d\theta}\left(\dfrac{L}{mr^2}\right)=\dfrac{d}{dr}\left(\dfrac{L}{mr^2}\right)\dfrac{dr}{d\theta},
+\]
+i aleshores, tenim que
+\[
+(*)=\dfrac{L}{mr^2}\left(\dfrac{L}{mr^2}\dfrac{d^2r}{d\theta^2}-\dfrac{2L}{mr^3}\left(\dfrac{dr}{d\theta}\right)^2\right)=\dfrac{L^2}{m^2r^4}\dfrac{d^2r}{d\theta^2}-\dfrac{2L^2}{m^2r^5}\left(\dfrac{dr}{d\theta}\right)^2.
+\]
+Aleshores, ajuntant-ho tot tenim
+\[
+\ddot r = \dfrac{f(r)}{m}+\dfrac{L^2}{m^2r^3}, \quad \ddot r = \dfrac{L^2}{m^2r^4}\dfrac{d^2r}{d\theta^2}-\dfrac{2L^2}{m^2r^5}\left(\dfrac{dr}{d\theta}\right)^2\implies
+\]
+\[
+\dfrac{f(r)}{m}+\dfrac{L^2}{m^2r^3}=\dfrac{L^2}{m^2r^4}\dfrac{d^2r}{d\theta^2}-\dfrac{2L^2}{m^2r^5}\left(\dfrac{dr}{d\theta}\right)^2
+\iff
+\dfrac{f(r)}{m}=\dfrac{L^2}{m^2r^4}\dfrac{d^2r}{d\theta^2}-\dfrac{2L^2}{m^2r^5}\left(\dfrac{dr}{d\theta}\right)^2-\dfrac{L^2}{m^2r^3}
+\iff
+\]
+\[
+f(r)=\dfrac{-L^2}{mr^2}\left[\dfrac{1}{r}-\dfrac{1}{r^2}\dfrac{d^2r}{d\theta^2}+\dfrac{2}{r^3}\left(\dfrac{dr}{d\theta}\right)^2\right]=\dfrac{-L^2}{mr^2}\left[\dfrac{1}{r}+\dfrac{d^2r}{d\theta^2}\left(\dfrac{1}{r}\right)\right]
+\]

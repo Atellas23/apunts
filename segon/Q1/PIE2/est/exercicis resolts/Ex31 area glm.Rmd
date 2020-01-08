@@ -1,0 +1,170 @@
+---
+title: "Ex31 area glm"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+options(encoding="UTF-8")
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Continuació de l'exercici 26):
+#### Tenim els resultats de mesurar l'àrea que cobreixen plantes entapissant a talussos de carreteres. S'han estudiat dues especies E1 i E2 (factor ESPECIE) i haver posat, o no, compost al talús (factor COMPOST). Les dades experimentals són al fitxer “area.csv”. 
+
+*llegir dades, paquests, descriptiva...*
+
+```{r}
+#setwd("...")
+library(emmeans)
+library(car)
+dd<-read.csv2("../data/area.csv")
+library(RcmdrMisc)
+library(tables)
+cv<-function(x) {sd(x)/mean(x)}
+print(tabular(AREA*ESPECIE*COMPOST~((Dades=1)+(Mitjana=mean)+(Desv.tipus=sd)+(Coef.var.=cv)),dd),justification="r")
+#with(dd,plotMeans(AREA,ESPECIE,COMPOST,error.bars="conf.int",level=0.95))
+with(dd,plotMeans(AREA,COMPOST,ESPECIE,error.bars="conf.int",level=0.95))
+
+
+```
+
+#### Suposant ara, que la variable aleatòria AREA té distribució Gamma, i utilitzant $\alpha = 0.05$:
+
+**Plantegeu el mlg de la variable AREA respecte els factors ESPECIE i COMPOST sense interacció. **
+
+#### a) Utilitzant la funció link identity:
+
+*Recordeu: en l'exercici 26) vèiem que AREA no té interacció però no compleix la homoscedasticitat, en canvi log(AREA) té interacció però si compleix la homoscedasticitat, en la separació de mitjanes no distingiem E1-Sí de E2-Sí*
+
+**• Ajusteu el model.**
+
+```{r}
+mg<-glm(AREA~ESPECIE+COMPOST,family=Gamma(link=identity),dd)
+mg0<-glm(AREA~1,family=Gamma(link=identity),dd)
+mgf<-glm(AREA~ESPECIE*COMPOST,family=Gamma(link=identity),dd)
+emmip(mg,ESPECIE~COMPOST)
+summary(mg)
+```
+
+**• Contrasteu el test anova. Què ens diu el test?**
+
+```{r}
+#Omnibus
+anova(mg0,mg,test="F")
+
+#Anova
+Anova(mg,test.statistic = "F")
+```
+
+**• Contrasteu el test adequat per comprovar que en el model no era necessària la interacció dels dos factors.**
+
+```{r}
+anova(mg,mgf,test="F")
+
+Anova(mgf,test.statistic = "F")
+```
+
+**• Feu les comparacions múltiples. Què ens diuen?**
+
+```{r}
+(emg<-emmeans(mg,~ESPECIE+COMPOST))
+CLD(emg)
+CLD(emmeans(mg,~ESPECIE|COMPOST))
+```
+
+**• Feu una gràfica de les prediccions amb els intervals de predicció.**
+
+```{r}
+emmip(mg,ESPECIE~COMPOST,PIs=T)
+```
+
+**• Mitjançant gràfics de diagnòstic, comproveu si compleixen les hipòtesis dels models lineals generalitzats.**
+
+```{r}
+plot(predict(mg,ty="response"),resid(mg))
+abline(h=0,lt=2)
+
+with(dd,leveneTest(resid(mg),as.factor(paste(ESPECIE,COMPOST))))
+
+qqnorm(resid(mg))
+qqline(resid(mg))
+```
+
+#### b) Utilitzant la funció link log, contesteu les preguntes de l'apartat a), amb la diferència que en aquest cas potser sí que fa falta la interacció.
+
+**• Ajusteu el model.**
+
+```{r}
+mgl<-glm(AREA~ESPECIE+COMPOST,family=Gamma(link=log),dd)
+mgl0<-glm(AREA~1,family=Gamma(link=log),dd)
+mglf<-glm(AREA~ESPECIE*COMPOST,family=Gamma(link=log),dd)
+emmip(mgl,ESPECIE~COMPOST)
+summary(mgl)
+```
+
+**• Contrasteu el test anova. Què ens diu el test?**
+
+```{r}
+#Omnibus
+anova(mgl0,mgl,test="F")
+
+#Anova
+Anova(mgl,test.statistic = "F")
+```
+
+**• Contrasteu el test adequat per comprovar que en el model no era necessària la interacció dels dos factors.**
+
+```{r}
+anova(mgl,mglf,test="F")
+
+Anova(mglf,test.statistic = "F")
+```
+
+**• Feu les comparacions múltiples. Què ens diuen?**
+
+*Amb el model additiu veiem que les estimacións són diferents del model amb link=identity*
+
+```{r}
+emg
+(emgl<-emmeans(mgl,~ESPECIE+COMPOST,ty="response"))
+```
+
+*Passem al model factorial, ja que fa falta la interacció**
+
+```{r}
+(emglf<-emmeans(mglf,~ESPECIE*COMPOST,ty="response"))
+CLD(emglf)
+```
+*Nota: No distingeix E1-Sí de E2-Sí*
+
+**• Feu una gràfica de les prediccions amb els intervals de predicció.**
+
+```{r}
+emmip(mglf,ESPECIE~COMPOST,PIs=T)
+```
+
+**• Mitjançant gràfics de diagnòstic, comproveu si compleixen les hipòtesis dels models lineals generalitzats.**
+
+```{r}
+plot(predict(mglf,ty="response"),resid(mg))
+abline(h=0,lt=2)
+
+with(dd,leveneTest(resid(mglf),as.factor(paste(ESPECIE,COMPOST))))
+
+qqnorm(resid(mglf))
+qqline(resid(mglf))
+```
+
+#### c) Si féssim el mlg amb interacció, comproveu que obtindríem les mateixes prediccions i comparacions múltiples, tant si utilitzem el link identity com si utilitzem el log, i que seria diferent tot el que fa referència als predictors lineals 
+
+
+```{r}
+(emgf<-emmeans(mgf,~ESPECIE*COMPOST,ty="response"))
+emglf
+(emgf<-emmeans(mglf,~ESPECIE*COMPOST))
+summary(mglf)
+summary(mgl)
+```
+

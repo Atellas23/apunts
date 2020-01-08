@@ -1,1 +1,47 @@
 \chapter{Treball i energia}
+De la 2a llei de Newton, $\vec{a}(t)=\dfrac{\vec{F}(t)}{m}$.
+\section{Treball d'una força.}
+Sobre el camí $C$, el treball d'$\vec{F}$ es calcula com
+\[
+W_{AB}=\int_A^B\vec{F}\cdot d\vec{r}.
+\]
+Si la força total és suma de diverses forces,
+\[
+W_{AB}=\int_A^B\sum_i\vec{F_i}d\vec{r}=\sum_i\int_A^B\vec{F_i}d\vec{r}=\sum_iW_i.
+\]
+La potència es defineix com la velocitat a la que es fa el treball
+\[
+P=\dfrac{dW}{dt}=\vec{F}\cdot\vec{v}.
+\]
+L'energia cinètica és la capacitat d'un cos per a realitzar treball. El treball és:
+\[
+W_{AB}=\int_A^B\vec{F}\cdot d\vec{r}=\int_{t_A}^{t_B}\vec{F}\cdot\vec{v}dt=\int_{t_A}^{t_B}m\vec{a}\cdot\vec{v}dt=\\
+\int_{t_A}^{t_B}m\dfrac{d\vec{v}}{dt}\cdot\vec{v}dt=\dfrac{1}{2}m\int_{t_A}^{t_B}\dfrac{d}{dt}(\vec{v}\cdot\vec{v})dt=\\
+\dfrac{1}{2}m\int_{t_A}^{t_B}2v dv=\dfrac{1}{2}m(v_B^2-v_A^2)=E_C^A-E_C^B.
+\]
+
+\section{Camps de forces. Forces conservatives.}
+El treball en general depèn de la trajectòria, excepte quan $\oint\vec{F}d\vec{r}=0$. Aleshores, es diu que $\vec{F}$ és conservativa. Un cas important són les forces centrals.
+\subsection{Energia potencial.}
+Suposem que tenim un camp conservatiu. Aleshores,
+\[
+W_{AB}=\int_A^B\vec{F}\cdot d\vec{r}=-(E_p(B)-E_p(A))\equiv-\Delta E_p.
+\]
+L'energia potencial es defineix de manera que el treball realitzat pel camp la fa disminuïr. Únicament té sentit físic la diferència d'energia potencial, però si fixem l'energia potencial d'un punt, aleshores
+\[
+E_p(B)=E_p(A)-\int_A^B\vec{F}\cdot d\vec{r}=E_p(\infty)-\int_{\infty}^B\vec{F}\cdot d\vec{r}.
+\]
+Si $E_p(\infty)=0$,
+\[
+E_p(\vec{r})=-\int_{\infty}^{r_B}\vec{F}\cdot d\vec{r}=\int_{r_B}^{\infty}\vec{F}\cdot d\vec{r}.
+\]
+Per un desplaçament infinitesimal, $dE_p=-\vec{F}\cdot d\vec{r}\implies\vec{F}=-\vec{\nabla}E_p.$ Per una força central, si està expressada en polars, tenim que la energia potencial depèn únicament del radi (és a dir, $\dfrac{\partial E_p}{\partial\theta}=0$).
+\subsection{Conservació de l'energia mecànica}
+A falta de temps,
+\[\Delta E_c+\Delta E_p=0,\quad E_p+E_c=E_M.\]
+En una dimensió, totes les forces són conservatives.
+\subsection{Forces que depenen del temps.}
+Sigui $\vec{F}=\vec{F}(\vec{r}, t)$ conservativa ($\vec{\nabla}\times\vec{F}=0$). L'energia potencial és
+\[E_p(\vec r, t)=-\int_{\infty}^{\vec r}\vec{F}(\vec{r}, t)d\vec{r},\quad \vec{F}(\vec{r}, t)=-\vec{\nabla}E_p.\]
+Sembla que es manté l'energia mecànica, tanmateix,
+\[-\Delta E_p\neq W_{AB}:\quad W_{AB}=\int_A^B\vec{F}(\vec{r}, t)\cdot d\vec r.\]

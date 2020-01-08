@@ -59,5 +59,18 @@
 \begin{teo}[Teorema d'Stokes]
 	\[
 	\int_S(\vec{\nabla}\times\vec{A})d\vec{s}=\oint_C\vec{A}\cdot d\vec{l}.\]
-	Si $\vec{A}$ és un camp conservatiu, $\vec{\nabla}\times\vec{A}$. Si $\vec{A}=\vec{\nabla}\Phi$, aleshores $\vec{\nabla}\times(\vec{\nabla}\Phi)=0$
+	Si $\vec{A}$ és un camp conservatiu, $\vec{\nabla}\times\vec{A}=0$. Si $\vec{A}=\vec{\nabla}\Phi$, aleshores $\vec{\nabla}\times(\vec{\nabla}\Phi)=0$
 \end{teo}
+\subsection{Potencial associat a una força conservativa}
+Si tenim $\vec{F}$ una força conservativa ($\vec{\nabla}\times\vec{F}=0$), aleshores es té \[\vec{F}=-\vec{\nabla}E_p.\] Això dóna lloc al sistema d'equacions $-\nabla E_p=\vec{F}$,
+\[
+\begin{cases}
+F_x=-\dfrac{\partial E_p}{\partial x},\\
+F_y=-\dfrac{\partial E_p}{\partial y},\\
+F_z=-\dfrac{\partial E_p}{\partial z}.
+\end{cases}
+\]
+Integrant, podem trobar $E_p(x,y,z)$. També, utilitzant truquis de Càlcul Integral (primer quatri de segon), podem calcular el potencial (escalar) d'$\vec{F}$ com
+\[
+E_p(\mathbf{x})=\int_0^1\left<\vec{F}(t\mathbf{x}),\vec{r}(\mathbf{x})\right>dt.
+\]

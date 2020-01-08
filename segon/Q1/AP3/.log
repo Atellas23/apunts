@@ -1,0 +1,48 @@
+Ordre: 1 2 3 4
+Total value: 14500
+Ordre: 1 2 4 3
+Total value: 9300
+Ordre: 1 3 2 4
+Total value: 13900
+Ordre: 1 3 4 2
+Total value: 5700
+Ordre: 1 4 2 3
+Total value: 7900
+Ordre: 1 4 3 2
+Total value: 4900
+Ordre: 2 1 3 4
+Total value: 14400
+Ordre: 2 1 4 3
+Total value: 9200
+Ordre: 2 3 1 4
+Total value: 13400
+Ordre: 2 3 4 1
+Total value: 3800
+Ordre: 2 4 1 3
+Total value: 7400
+Ordre: 2 4 3 1
+Total value: 3000
+Ordre: 3 1 2 4
+Total value: 13700
+Ordre: 3 1 4 2
+Total value: 5500
+Ordre: 3 2 1 4
+Total value: 13300
+Ordre: 3 2 4 1
+Total value: 3700
+Ordre: 3 4 1 2
+Total value: 3700
+Ordre: 3 4 2 1
+Total value: 2300
+Ordre: 4 1 2 3
+Total value: 7600
+Ordre: 4 1 3 2
+Total value: 4600
+Ordre: 4 2 1 3
+Total value: 7200
+Ordre: 4 2 3 1
+Total value: 2800
+Ordre: 4 3 1 2
+Total value: 3600
+Ordre: 4 3 2 1
+Total value: 2200

@@ -1,0 +1,155 @@
+---
+title: "Ex30 GMD+IC"
+author: "PIE2"
+date: "Tardor 2019-2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+options(encoding="UTF-8")
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+####Com l'exercici 17) 
+####Para veure si afegir edulcorant millora l'engreix de garrins s'ha fet una experiència en la que s'ha mesurat l'índex de conversió, IC, de garrins en les mateixes condicions però afegint edulcorant. S'han provat les 5 dosis: D00, D08, D15, D20 i D30, incloent la dosi D00 que de fet és la dieta sense edulcorant, i cada dieta s'ha provat en 5 garrins. Els resultats experimentals obtinguts són al fitxer “gmd.csv”. Tractant la dosis com els nivells d'un factor i \alpha=0.05, calculeu:
+
+*Llegir dades i paquests*
+
+```{r}
+#setwd("...")
+#options(contrasts = c("contr.sum", "contr.treatment"))
+library(car)
+library(emmeans)
+
+library(tables)
+library(RcmdrMisc)
+dd<-read.csv2("../data/gmd.csv")
+head(dd)
+```
+
+####a) Amb la variable GMD compareu el resultats obtinguts com a model lineal i com a model lineal generalitzat.
+
+*Descriptiva*
+
+```{r}
+print(tabular(DOSI~GMD*((Dades=1)+(Mitjana=mean)+(Desv.Tipus=sd)),dd),justification="r")
+
+with(dd,plotMeans(GMD,DOSI,error.bars = "sd"))
+```
+
+*Models i resums*
+
+```{r}
+summary(m<-lm(GMD~DOSI,dd))
+m0<-lm(GMD~1,dd)
+summary(mg<-glm(GMD~DOSI,family=gaussian,dd))
+mg0<-glm(GMD~1,family=gaussian,dd)
+
+emmip(m,~DOSI,CIs=T)
+emmip(mg,~DOSI,CIs=T)
+
+```
+
+*Tests Anova Omnibus*
+
+```{r}
+anova(m0,m)
+anova(mg0,mg,test="F")
+```
+
+*Tests Anova*
+
+```{r}
+Anova(m)
+Anova(mg,test.statistic = "F")
+
+#Suma de quadrats residual i deviància són iguals
+mg$deviance
+
+#Suma de quadrats dosi i diferència null.deviance-deviance són iguals
+mg$null.deviance-mg$deviance
+
+#Mitjana de quadrats de l'error i parametre de dispersió són iguals
+c("MDE"=summary(m)$sigma^2,"Disp."=summary(mg)$dispersion,"càlcul"=mg$deviance/mg$df.residual)
+```
+
+*Estimació esperances marginals i comparacions múltiples*
+
+```{r}
+#L'única diferència són els graus de llibertat, a mg df=inf equivalent a asimptòticament normal
+(em<-emmeans(m,~DOSI))
+(emg<-emmeans(mg,~DOSI))
+
+#Degut als graus de llibertat, lleugeres diferències en els p-valors
+pairs(em)
+pairs(emg)
+
+CLD(em)
+CLD(emg)
+```
+
+####b) Ara en lloc de GMD, amb la variable IC, que és la relació entre “la quantitat de pinso consumit” i “l'augment de pes”:
+
+####Les variables que són relació entre dues variables, com l'índex de canvi entre dues divises, o l'índex de conversió del pinso, es poden definir també amb la relació inversa. Sovint es considera que aquest tipus de variable segueix una distribució Inversa Gaussiana.
+
+####Ajusteu un model inversa gaussiana amb el link canònic 1/mu^2:
+
+*Descriptiva i models*
+
+```{r}
+print(tabular(DOSI~IC*((Dades=1)+(Mitjana=mean)+(Desv.Tipus=sd)),dd),justification="r")
+
+with(dd,plotMeans(IC,DOSI,error.bars = "sd"))
+
+mig<-glm(IC~DOSI,family=inverse.gaussian,dd)
+emmip(mig,~DOSI,CIs=T)
+emmip(mig,~DOSI,CIs=T,ty="response")
+
+```
+
+
+**• Per cada nivell de dosi, estimeu els valors esperats del IC i el seu interval de confiança.**
+
+```{r}
+(emig<-emmeans(mig,~DOSI,ty="response"))
+```
+
+• Feu les comparacions de totes les dosis entre elles. Dieu quines parelles de nivell de dosi, donen un IC esperat diferent.
+
+```{r}
+pairs(emig)
+```
+
+• Expresseu el resultat anterior de forma compacta.
+
+```{r}
+CLD(emig)
+```
+
+**• Com afecta als resultats si canvieu el link? Per exemple link=identity**
+*Quan només hi ha un factor, o només factors amb totes les interaccions, el link no afecta a les deviàncies ni a les estimacions de les esperances marginals*
+
+```{r}
+summary(mig)
+summary(migi<-glm(IC~DOSI,family=inverse.gaussian(link=identity),dd))
+
+emig
+(emigi<-emmeans(migi,~DOSI,ty="response"))
+
+pairs(emig)
+pairs(emigi)
+```
+
+
+**• Es compleixen les condicions dels models lineals generalitzats?**
+
+```{r}
+plot(predict(mig,y="response"),resid(mig))
+abline(h=0,lt=2)
+
+qqnorm(resid(mig))
+qqline(resid(mig))
+
+leveneTest(resid(mig)~DOSI,dd)
+```
+
