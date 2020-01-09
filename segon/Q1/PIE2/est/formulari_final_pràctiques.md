@@ -174,6 +174,5 @@ plot(mg,1)
 residualPlot(mg)
 ```
 
+Residus de Pearson d'un model: `resid(mg,ty="pearson")`.
 
-
-Residus d'un model: `resid(mg,ty="pearson")`
