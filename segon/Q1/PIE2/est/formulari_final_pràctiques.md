@@ -162,3 +162,18 @@ emm <- emmeans(mg,~X)
 pairs(emg)
 CLD(emg)
 ```
+
+### Residuals
+
+`residuals vs. predicted`:
+
+```R
+plot(resid(mg,ty="pearson")~X)
+abline(h=0,lt=2)
+plot(mg,1)
+residualPlot(mg)
+```
+
+
+
+Residus d'un model: `resid(mg,ty="pearson")`
