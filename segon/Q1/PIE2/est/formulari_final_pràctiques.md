@@ -176,3 +176,15 @@ residualPlot(mg)
 
 Residus de Pearson d'un model: `resid(mg,ty="pearson")`.
 
+### Bandes de predicció
+
+```R
+lsup<-predit+qdistribucio(0.975)
+linf<-predit-qdistribucio(0.975)
+
+plot(mu~X,dd,ylim=c(min(linf),max(lsup)))
+lines(predit~X,col="blue",dd)
+lines(lsup~X,col="red",lt=2,dd)
+lines(linf~X,col="red",lt=2,dd)
+```
+
