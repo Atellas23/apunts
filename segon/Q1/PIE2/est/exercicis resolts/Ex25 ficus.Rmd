@@ -29,7 +29,7 @@ $\alpha=0.05$
 
 ```{r}
 #setwd("...")
-dd<-read.csv2("../Dades/ficus.csv")
+dd<-read.csv2("../data/ficus.csv")
 library(RcmdrMisc)
 library(tables)
 
