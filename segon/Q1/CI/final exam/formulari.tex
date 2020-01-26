@@ -1,0 +1,454 @@
+\documentclass[10pt]{article}
+
+% Canvia l'interlineat a 1.2. Per defecte és 1
+\renewcommand{\baselinestretch}{1.1}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{float}
+
+\usepackage{fp}
+\def\rate{1.045}
+
+\FPeval{\he}{297 * \rate}
+\FPeval{\wi}{210 * \rate}
+
+\usepackage[landscape,paperheight=\he mm,paperwidth=\wi mm,margin=0.2in,top=0.2in,bottom=0.2in]{geometry}
+
+\usepackage[pdftex]{hyperref}
+\usepackage{amsmath,amsthm,amssymb,graphicx,mathtools,tikz,hyperref,enumerate}
+\usepackage{mdframed,cleveref,cancel,stackengine,mathrsfs,thmtools}
+\usepackage{xfrac,stmaryrd,commath,units,titlesec,multicol}
+\usepackage[catalan]{babel}
+
+\titlespacing{\section}{0pt}{4pt}{0pt}
+\titlespacing{\subsection}{0pt}{4pt}{0pt}
+\titlespacing{\subsubsection}{0pt}{4pt}{0pt}
+\setlength{\parindent}{0pt}
+\pagenumbering{gobble}
+\titleformat*{\section}{\bfseries\textcolor{black}}
+\titleformat*{\subsection}{\bfseries\textcolor{blue}}
+\setlength{\columnseprule}{0.5pt}
+
+\newcommand{\bimplies}{\fbx{$\Rightarrow$}}
+\newcommand{\bimpliedby}{\fbx{$\Leftrightarrow$}}
+
+\newcommand{\mdef}{\textbf{\textcolor{black}{Def. }}}  % Command for Definition
+\newcommand{\mth}{\textbf{\textcolor{red}{Th. }}}  % Command for Theorem
+\newcommand{\mprop}{\textbf{\textcolor{blue}{Prop. }}}  % Command for Proposition
+\newcommand{\mlema}{\textbf{\textcolor{olive}{Lema. }}}  % Command for Lemma
+\newcommand{\mobs}{\textbf{\textcolor{teal}{Obs. }}}  % Command for Observation
+\newcommand{\mcor}{\textbf{\textcolor{brown}{Cor. }}}  % Command for Corollary
+
+\newcommand{\n}{\mathbb{N}}
+\newcommand{\z}{\mathbb{Z}}
+\newcommand{\q}{\mathbb{Q}}
+\newcommand{\cx}{\mathbb{C}}
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\C}{\mathscr{C}}
+\newcommand{\Pa}{\mathcal{P}}
+\newcommand{\Es}{\mathcal{E}}
+\newcommand{\V}{\mathcal{V}}
+\newcommand{\bb}[1]{\mathbb{#1}}
+\let\u\relax
+\newcommand{\u}[1]{\underline{#1}}
+\newcommand{\pdv}[3][]{\frac{\partial^{#1} #2}{\partial #3^{#1}}}
+\newcommand{\dv}[3][]{\frac{\dif^{#1} #2}{\dif #3^{#1}}}
+\let\k\relax
+\newcommand{\k}{\Bbbk}
+\newcommand{\ita}[1]{\textit{#1}}
+\newcommand\inv[1]{#1^{-1}}
+\newcommand\setb[1]{\left\{#1\right\}}
+\newcommand{\vbrack}[1]{\langle #1\rangle}
+\newcommand{\determinant}[1]{\begin{vmatrix}#1\end{vmatrix}}
+\newcommand{\Po}{\mathbb{P}}
+\newcommand{\lp}{\left(}
+\newcommand{\rp}{\right)}
+\newcommand{\ci}{\textbullet\;}
+\DeclareMathOperator{\fr}{Fr}
+\DeclareMathOperator{\Id}{Id}
+\DeclareMathOperator{\ext}{Ext}
+\DeclareMathOperator{\inte}{Int}
+\DeclareMathOperator{\rie}{Rie}
+\DeclareMathOperator{\rg}{rg}
+\DeclareMathOperator{\gr}{gr}
+\DeclareMathOperator{\nuc}{Nuc}
+\DeclareMathOperator{\car}{car}
+\DeclareMathOperator{\im}{Im}
+\DeclareMathOperator{\re}{Re}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\vol}{vol}
+\DeclareMathOperator{\grad}{grad}
+\DeclareMathOperator{\rot}{rot}
+\DeclareMathOperator{\diver}{div}
+\DeclareMathOperator{\sinc}{sinc}
+\DeclareMathOperator{\graf}{graf}
+\DeclareMathOperator{\tq}{\;t.q.\;}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\Int}{Int}
+\DeclareMathOperator{\diag}{diag}
+\let\emptyset\varnothing
+\renewcommand{\thesubsubsection}{\Alph{subsubsection}}
+\setcounter{secnumdepth}{4}
+
+\hypersetup{
+    colorlinks,
+    linkcolor=blue
+}
+\def\upint{\mathchoice%
+    {\mkern13mu\overline{\vphantom{\intop}\mkern7mu}\mkern-20mu}%
+    {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+    {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+    {\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+  \int}
+\def\lowint{\mkern3mu\underline{\vphantom{\intop}\mkern7mu}\mkern-10mu\int}
+
+\setlength\parindent{0pt}
+
+\begin{document}
+\raggedright
+\begin{multicols}{4}
+
+%--------------------------------------
+\section*{Tema 1a: Sèries}
+\textbf{-} $(a_n)$ monòtona $\implies \exists \displaystyle\lim_{n\to\infty}{(a_n)}\in\real \cup \{\pm\infty\}$\\
+\textbf{-} $(a_n)$ fitada \implies $\exists$ subsucc conv.\\
+\textbf{-} $(a_n)$ no fitada \implies $\exists$ subsucc div.\\
+\textbf{-} $(a_n)$ conv $\iff (a_n)$ succ de Cauchy. \\
+$\bullet$ \u{\textcolor{violet}{infinitèssim}}: $(a_n)$ tq $\lim_(a_n) = 0$.\\
+\textbf{-} si $(a_n)$ infinitèssim \implies $log(1+a_n), sin(a_n), 1-cos(a_n), e^{a_n}-1, tg(a_n), |a_n|^\alpha$ on $\alpha > 0$ tmb.\\
+\textbf{-} si $(a_n)$ infinitèssim \implies $log(1+a_n)\sim a_n,$ $sin(a_n)\sim a_n$, $1-cos(a_n)\sim\frac{(a_n)^2}{2}$, $e^{a_n}-1\sim a_n$, $tg(a_n)\sim a_n$.\\
+\textbf{-} $lg(lg(n))\prec lg(n)\prec n^c \prec n \prec n^a \prec n^{lg(n)} \prec b^n \prec n! \prec n^n \prec b^{n^a}$ on $b>1, 0<c<1<a$.\\
+
+\textbf{-} $\sum a_n$ conv \implies $\displaystyle\lim_{n\to\infty}a_n = 0$.\\
+$\bullet$ \u{\textcolor{violet}{sèries telesòpiques}}: $\sum a_n$ tq $a_n = b_n-b_{n+1} \forall n\in\n \implies S_n = b_0 - b_{n+1}$.\\
+$\bullet$ \u{\textcolor{violet}{sèries aritmetico-geomètriques}}: $\sum a_n$ tq $a_n = (dn+s)r^n$ on $d,r,s\in\real, |d|+|s|>0$\\
+\textbf{-} $\displaystyle\lim_{n\to\infty}{|dn+s||r|^n)} = 0 \iff |r|<1$ \implies $\sum (dn+s)r^n = \frac{s}{1-r}+\frac{dr}{(1-r)^2}$.\\
+
+\subsection*{Criteris}
+$\blacktriangleright$ \u{\textbf{Dirichlet}}: $\sum\limits_{n=1}^{\infty}{a_n b_n}$ conv si:\\
+\ \ \ i)$s_n = \sum\limits_{k=1}^{n}{b_k}$ fitada\\
+\ \ \ ii)$(a_n)$ monòtona i $\lim (a_n) = 0$\\
+$\blacktriangleright$ \u{\textbf{Leibnitz}}: $\sum\limits_{n=0}^{\infty}{(-1)^n a_n}$ conv si $(a_n)$ monòtona decreixent i $\lim (a_n) = 0$\\
+
+\subsection*{Criteris per a sèries positius}
+$\blacktriangleright$ \u{\textbf{Comparació}}: $\exists n_0$ tq $\forall n \ge n_0, a_n \le b_n$\\
+\ \ \ i)si $\sum b_n < \infty \implies \sum a_n < \infty$\\
+\ \ \ ii)si $\sum a_n = \infty \implies \sum b_n = \infty$\\
+$\blacktriangleright$ \u{\textbf{Comparació al límit}}: $\forall n \ge n_0, a_n \le b_n, \exists \lim\frac{a_n}{b_n} = l\in [0,\infty]$\\
+\ \ \ i)si $l\in (0,\infty) \implies (a_n),(b_n)$ mateix caràcter\\
+\ \ \ ii) + iii) si $l = 0$ ó $l = \infty$ \implies C.Comparació\\
+$\blacktriangleright$ \u{\textbf{Quocient}}: si $\exists \lim\frac{a_{n+1}}{a_n} = \alpha\in [0,\infty]$ \implies si $\alpha > 1$ div i si $\alpha < 1$ conv.\\
+$\blacktriangleright$ \u{\textbf{Raabe}}: si $\exists \lim n(1-\frac{a_{n+1}}{a_n}) = l\in [0,\infty]$ \implies si $l < 1$ div i si $l > 1$ conv.\\
+$\blacktriangleright$ \u{\textbf{Logarítmic}}: si $\exists \lim\frac{log(\frac{1}{a_n})}{log(n)} = l\in [0,\infty]$ \implies si $l < 1$ div i si $l > 1$ conv.\\
+$\blacktriangleright$ \u{\textbf{Condensació}}: si $a_n$ decreix. i $\lim a_n = 0$ \implies $\sum a_n$ i $\sum{2^n a_{2^n}}$ mateix caràcter.\\
+\ \ \ \textbf{-}$\frac{1}{2}\sum{2^n a_{2^n}} \le \sum a_n \le \sum{2^n a_{2^n}}$.\\
+$\blacktriangleright$ \u{\textbf{Arrel}}: si $\exists \lim (a_n)^{\frac{1}{n}} = \alpha\in [0,\infty]$ \implies si $\alpha > 1$ div i si $\alpha < 1$ conv.\\
+$\blacktriangleright$ \u{\textbf{Integral}}: si $f:[m_{\ge 0},\infty)\to\real$ tq $f\ge 0, \lim f(x) = 0$ i $f$ decreix. Llavors:\\
+\ \ \ i)+ii)si $\lim\limits_{n\to\infty}\int_m^n{f} < \text{ ó } = \infty\implies\sum\limits_{n=m}^{\infty} f(n)$ c ó d\\
+\ \ \ \textbf{-} $\lim\limits_{n\to\infty}\int_m^n{f} \le \sum\limits_{n=m}^{\infty} f(n) \le f(m) + \lim\limits_{n\to\infty}\int_m^n{f}$\\
+\textbf{-} si $F$ primitiva de $f$. Llavors:\\
+\ \ \ i)+ii)si $\lim F(n) < \text{ ó } = \infty\implies\sum\limits_{n=m}^{\infty} f(n)$ c ó d\\
+\ \ \ \textbf{-} $\lim F(n) - F(k) + \sum\limits_{n=m}^{k-1} f(n) \le \sum\limits_{n=m}^{\infty} f(n) \le \lim F(n) -F(k) + \sum\limits_{n=m}^{k} f(n)$\\
+$\bullet$ \u{\textcolor{violet}{sèrie harmònica}}: $\sum\limits_{n\ge 1} \frac{1}{n^{\alpha}}, \alpha\in\real$; c sii $\alpha>1$ i d sii $\alpha\le1$.\\
+
+
+\section*{Tema 1b: Integrals impròpies}
+
+$\bullet$ \u{\textcolor{violet}{funció localm. integ}}: $f\in\mathcal{L}_{loc}(I)$ si $f:I\to\real \in\mathcal{R}(J) \forall J \in I$ interval tancat i fitat.\\
+\textbf{-} $f\C$ ó monòtona \implies $f\in\mathcal{L}_{loc}(I)$.\\
+$\bullet$ \u{\textcolor{violet}{integral impròpia}} de $f:[a,b)\to\real \in\mathcal{L}_{loc}(I)$ és $\int_a^b{f} = \displaystyle\lim_{x\to b^{-}}\int_a^x{f}$\\
+\ \ \ i)\textcolor{violet}{de 1a espècie} si $b =\infty$ i $f$ fitada\\
+\ \ \ ii)\textcolor{violet}{de 2a espècie} si $b <\infty$ i $f$ no fitada\\
+\ \ \ iii)\textcolor{violet}{de 3a espècie} si $b =\infty$ i $f$ no fitada\\
+\textbf{-} $f\mathcal{L}_{loc}(I)$, $\int_{-\infty}^{\infty}f$ c \implies $\exists\displaystyle\lim_{R\to\infty}\int_{-R}^{R}{f}$ $= \int_{-\infty}^{\infty}f$.\\
+\textbf{-} si $f\in\mathcal{L}_{loc}(I)$, $\int_{a}^{\infty}f$ conv i $\exists\displaystyle\lim_{x\to\infty}f(x)$ \implies $\displaystyle\lim_{x\to\infty}f(x) = 0$.\\
+$\blacktriangleright$ \u{\textbf{C.Cauchy}}: $\int_a^b f$ conv $\iff \forall\varepsilon>0,$ $\exists a\le c_0<b$ tq $|\int_c^{\Tilde{c}}f| \le\varepsilon,\ \forall c,\Tilde{c}\in[c_0,b)$.\\
+$\bullet$ \u{\textcolor{violet}{integral imp. abs. conv}}: si $|f|$ té integ imp conv.\\
+\textbf{-} f abs conv \implies f conv.\\
+\textbf{-} Comparació, Comparació al límit i Dirichlet.\\
+
+\subsection*{Funcions Gamma i Beta}
+$\bullet$ \u{\textcolor{violet}{Gamma}}: $\Gamma:(0,\infty)\to\real$ tq $\Gamma(x) = \int_0^\infty t^{x-1}e^{-t}dt > 0$\\
+\textbf{-} $\Gamma$ conv $\forall\alpha>-1$ \space \space \space \textbf{-} $\Gamma(x+1) = x\Gamma(x)$\\
+\textbf{-} $\Gamma(n+1) = n!$ \space \space \space \space \space \space \textbf{-} $\Gamma(n+1) = n!$\\
+\textbf{-} $\Gamma(n+\frac{1}{2}) = \frac{\sqrt{\pi}(2n)!}{n!2^{2n}}$ \textbf{-} $\Gamma(\frac{1}{2}) = 2\int_0^\infty{e^{-s^2}} = \sqrt{\pi}$\\
+
+$\bullet$ \u{\textcolor{violet}{Beta}}: $B:(0,\infty)^2\to\real$ tq $B(x,y) = \int_0^1 t^{x-1}(1-t)^{y-1}dt$, funció simètrica\\
+\textbf{-} $B(x,y) = 2\int_0^\infty{(sin(\theta))^{2x-1}(cos(\theta))^{2y-1}} d\theta$\\
+\textbf{-} $B(x,y) = \int_0^\infty{\frac{s^{x-1}}{(1+s)^{x+y}}} = \frac{\Gamma(x)\Gamma(y)}{\Gamma(x+y)}$\\
+
+%---------------------------------------------------
+
+\section*{Tema 2: Integració a $\real^n$}
+\subsection*{Intervals, Rectangles i Particions}
+$\bullet$ \u{\textcolor{violet}{interval}}: conv connex $\in\real$.\\
+$\bullet$ \u{\textcolor{violet}{longitud}}: $l(I) = b-a$.\\
+\textbf{-} $l(I) = l(I^\mathrm{o}) = l(\Tilde(I))$.\\
+$\bullet$ \u{\textcolor{violet}{rectangle}}: $R = I_1 ${\small x}$...${\small x}$ I_n$ on $I_j$ interval $\forall j$. És degenerat si $\exists j \in \{1,...,n\}$ tq $l(I_j) = 0$.\\
+$\bullet$ \u{\textcolor{violet}{volum}}: $v(R) = l(I_1) ${\small x}$...${\small x}$ l(I_n)$.\\
+$\bullet$ \u{\textcolor{violet}{diàmetre}}: $\delta(R) = \sqrt{l(I_1)^2 ${\small x}$...${\small x}$ l(I_n)^2}$.\\
+\textbf{-} $\max\limits_j \{l(I_j)\} \le \delta(R) \le \sqrt{n}\max\limits_j \{l(I_j)\}$ \implies $v(R) \le \delta(R^n)$.\\
+\textbf{-} $v(Q) = l^n$ \implies $\delta(Q) = l\sqrt{n}$.\\
+
+$\bullet$ \u{\textcolor{violet}{partició}}: $P = \{x_0,...,x_n\}$  de $[a,b]$ tq $a = x_0 < ... < x_n = b$. Un \textcolor{violet}{subinterval} és $I_i = [x_i,x_{i+1}]$. Obs $I_{i}^\circ \cap I_{j}^\circ = \emptyset, \forall i \ne j$ \implies $[a,b] = \bigcup\limits_{i=0}^{k-1} I_i$ \implies
+$b-a = \sum\limits_{i=0}^{k-1} l(I_i)$.\\
+$\bullet$ \u{\textcolor{violet}{diàmetre}}: $\delta(P) = \max\limits_{j}\{l(I_j)\}$.\\
+$\bullet$ \u{\textcolor{violet}{partició més fina: $P'$}} que $P$ si $P\subset P'$.\\
+\textbf{-} si $P\subset P'$ \implies $\delta(P') \le \delta(P)$.\\
+\textbf{-} $\forall P, P'$ particions de $[a,b]$, $\exists \Tilde{P}$ partició de $[a,b]$ tq $P, P' \subset \Tilde{P}$.\\
+$\bullet$ \u{\textcolor{violet}{diàmetre}}: $\delta(P) = \sqrt{\delta(P_1)^2 ${\small x}$...${\small x}$ \delta(P_n)^2}$.\\
+\textbf{-} $\max\limits_j \{\delta(P_j)\} \le \delta(P) \le \sqrt{n}\max\limits_j \{\delta(P_j)\}$ \implies $v(R) \le \delta(P)^n$.\\
+\textbf{-} $\forall \varepsilon, \exists P$ tq $\delta(P) \le \varepsilon$.\\
+
+\subsection*{Integració de funcions fitades}
+$R = [a_1,b_1]${\small x}$...${\small x}$[a_n,b_n]$,  $f:R\to\real$ fitada.\\
+
+$\bullet$ \u{\textcolor{violet}{$M_{ij}$}} = $ \sup\limits_{x\in R_{ij}} \{f(x)\}$; \u{\textcolor{violet}{$m_{ij}$}} = $ \inf\limits_{x\in R_{ij}} \{f(x)\}$.\\
+$\bullet$ \u{\textcolor{violet}{suma superior}}: $S(f,P) = \sum\limits_{R}{M_R v(R)}$.\\
+$\bullet$ \u{\textcolor{violet}{suma inferior}}: $s(f,P) = \sum\limits_{R}{m_R v(R)}$.\\
+\textbf{-} si $P\subset P'$, $s(f,P) \le s(f,P') \le S(f,P') \le S(f,P)$.\\
+$\bullet$ \u{\textcolor{violet}{integral superior}}: $\upint_R f = \inf\limits_{P} S(f,P)$.\\
+$\bullet$ \u{\textcolor{violet}{integral inferior}}: $\lowint_R f = \sup\limits_{P} s(f,P)$.\\
+\textbf{-} $m_R v(R) \le s(f,P) \le \lowint_R f \le \upint_R f \le S(f,P) \le M_R v(R)$.\\
+$\bullet$ \u{\textcolor{violet}{integrable Riemman}}: si $\lowint_R f =\upint_R f$.\\
+\textbf{-} $\int_{\Bar{R}} f = \int_{\partial R} f + \int_{R^{\circ}} f$; $\space\space$ \textbf{-} $\int_{\partial R} f = 0$.\\
+\textbf{-} $\forall \Tilde{R}$ tq $R^\circ \subset \Tilde{R} \subset R$; $f\in\R(R)$ sii $f\in\R(\Tilde{R})$.\\
+$\blacktriangleright$ \u{\textbf{C.Darboux}}: $f$ fitada; $f\in\R(R)$ sii $\forall\varepsilon>0,\exists P$ tq $S(f,P)-s(f,P) \le \varepsilon$. Llavors $\int_R f = \displaystyle\lim_{k\to\infty}{S(f,P_k)} = \displaystyle\lim_{k\to\infty}{s(f,P_k)}$.\\
+\textbf{-} si $v(R) = 0$, $\forall f$ fitada és integ i té $\int_R f = 0$.\\
+\textbf{-} si $f(x) = c$ ct \implies $f\in\R(R)$ i $\int_R f = c v(R)$.\\
+\textbf{-} $f\in\C(R) \implies f\in\R(R)$.\\
+$\bullet$ \u{\textcolor{violet}{funció de Dirichlet}}: $d_{\alpha,\beta}:\real^n\to\real$ tq $d_{\alpha,\beta} = \left\{ \begin{array}{rcl}
+\alpha \text{ si } x\in\q.\\ 
+\beta \text{ si } x\not\in\q.
+\end{array}\right.$. (fitada no integ.)\\
+$\bullet$ \u{\textcolor{violet}{suma de Riemman}} associada a $f,P,\{\xi_{i_j}\}\limits_{j=1}^{n}$: $R(f,P,\{\xi_{i_j}\}_j) = \sum\limits_j f(\xi_{i_j})v(R)$.\\
+\textbf{-} $\displaystyle\lim_{\delta(R)\to 0} R(f,P,\{\xi_{i_j}\}_j) = k\in\real$ si $\forall\varepsilon, \exists P$ amb $\delta(P) \le\varepsilon$ tq $\forall P\subset P', |R(f,P,\{\xi_{i_j}\}_j) - k| \le\varepsilon$.\\
+$\blacktriangleright$ \u{\textbf{C.Riemman d'integrabilitat}}: $f\in\R(R)$ sii $\exists \displaystyle\lim_{\delta(R)\to 0} R(f,P,\{\xi_{i_j}\}_j)$. Llavors és $=\int_R f$.\\
+\textbf{-} si $f\in\C(R)$ \implies $\int_R f = \displaystyle\lim_{\delta(R)\to 0} R(f,P,\{\xi_{i_j}\}_j)$.\\
+
+\subsection*{Criteri de Lebesgue}
+$\bullet$ \u{\textcolor{violet}{oscil·l. de $f$ en $A$}}: $w(f,A) = \sup\limits_{x,y\in A}\{|f(x)-f(y)|\}$.\\
+\textbf{-} $w(f,A) = 0$ sii $f$ ct; $w(f,A) \in\real$ sii $f$ fitada.\\
+$\bullet$ \u{\textcolor{violet}{oscil·l. de $f$ en $a$}}: $w(f,a) = \displaystyle\lim_{r\to 0}w(f,A\cap B_{(a,r)}) = \inf\limits_{r>0} w(f,A\cap B_{(a,r)})$.\\
+\textbf{-} $f$ fitada; $\forall\varepsilon, \{x\in A | w(f,x) < \varepsilon\}$ és ob de $A$.\\
+\textbf{-} $f$ fitada, A tancat; $\forall\varepsilon, \{x\in A | w(f,x) \ge \varepsilon\}$ és tancat de $A$.\\
+\textbf{-} $f$ fitada, R tancat; si $\exists\varepsilon$ tq $w(f,x) < \varepsilon\forall x\in\real$ \implies $\exists P$ tq $S(f,P)-s(f,P)<\varepsilon v(R)$.\\
+$\bullet$ \u{\textcolor{violet}{contingut nul}}: si $\forall\epsilon\exists$ subrecubriment finit de A per rectangles tq $\sum\limits_{j=1}^m v(R_j) \le\epsilon$.\\
+$\bullet$ \u{\textcolor{violet}{mesura nul·la}}: si $\forall\epsilon\exists$ subrecubriment numm de A per rectangles tq $\sum\limits_{j=1}^\infty v(R_j) \le\epsilon$.\\
+$\blacktriangleright$ \u{\textbf{C.Lebesgue}}: $f:R\to\real$ fitada, $R$ tancat; $f\in\R(R) \iff f\in\C(R)\  cs$.\\
+\textbf{-} $A\ cn \implies A\text{ fitat i } mn$; $\space$ $A \text{ cpt i } mn\implies A\ cn$.\\
+\textbf{-} $A\ cn$ \implies $\Bar{A} cn; \space A mn \implies A^\circ = \emptyset$.\\
+\textbf{-} $A\ cn, B \text{ fitat}\implies A${\small x}$B, B${\small x}$A cn$.\\
+\textbf{-} $A\ mn \implies A$x$\real^k, \real^k${\small x}$A$ mn.\\
+\textbf{-} $f,g:R\to\real, D = \{x\in\real|f(x)\ne g(x)\}$cn \implies $f\in\R(R)$ sii $g\in\R(R)$. Llavors $\int_R f = \int_R g$.\\
+$\bullet$ \u{\textcolor{violet}{funció Lipschitziana}}: si $\exists L\in (0,1]$ tq $|f(x)-f(y)|\le L|x-y|,\  \forall x,y\in A$.\\
+\textbf{-} $f$ Lip. sii $f'<\infty$ \implies f Lip. $\forall$ \overline{subint} d'$A$.\\
+\textbf{-} si $A, f$ Lip. en $A$\implies $f$ diferenciable $cs$ en $A$.\\
+$\bullet$ \u{\textcolor{violet}{funció localm. Lip}} en $\Omega$: si $\forall x \in\Omega, \exists B_x\subset\Omega$ bola ob tq $f$ Lip en $B_x$.\\
+\textbf{-} $f$ loc.Lip. \implies $f\in\C(\Omega)$; $\f\in\C^1(\Omega)$ \implies f loc.Lip.\\
+\textbf{-} $f$ loc.Lip.$(\Omega), K$ cpt $\subset\Omega$ \implies $f$ Lip. en $K$.\\
+\textbf{-} si $m\ge n, f:A\subset\real^n\to\real^m$ Lip:\\
+\ \ \ i)si $B\subset A mn//cn \implies f(B) mn//cn$.\\
+\ \ \ ii)si $n<m$ \implies $f(A) mn$. I si $A$ fitat \implies $f(A) cn$.\\
+\textbf{-} si $m\ge n, f:A\subset\real^n\to\real^m \C^1$:\\
+\ \ \ i)si $ A\ mn \implies f(A) mn$.\\
+\ \ \ ii)si $\Bar{B}\subset A \text{ i }B\ cn \implies f(B) cn$.\\
+\ \ \ iii)si $n<m$ \implies $f(A)\ mn$. I si $\Bar{B}\subset A \text{ i } B$ fitat \implies $f(B) cn$.\\
+
+\subsection*{Fubini}
+$\blacktriangleright$ \u{\textbf{T.Fubini}}: $R\subset\real^k, \Tilde{R}\subset\real^m, f \in\R(R${\small x}$\Tilde{R})$; si $\phi:R\to\real, \psi:\Tilde{R}\to\real$ tq $\forall x\in R, y\in\Tilde{R}$, $\lowint_{\Tilde{R}}f_x \le\phi(s)\le\upint_{\Tilde{R}}f_x$ i $\lowint_{R}f_y \le\psi(y)\le\upint_{R}f_y$ \implies $\phi\in\R(R), \psi\in\R(\Tilde{R})$ i $\int_R \phi = \int_{R${\small x}$\Tilde{R}} f = \int_{\Tilde{R}}\psi$.\\
+\textbf{-} $A = \{x\in R|f_x\not\in\R(\Tilde{R})\}$ mn en $\real^k$.\\
+
+\subsection*{Integració en conj. mJ}
+\textbf{-} $\chi_{A\cap B} = \chi_A\chi_B$.\\
+\textbf{-} $\chi_{A\cup B} = \max\{\chi_A,\chi_B\} = \chi_A + \chi_B - \chi_{AB}$.\\
+$\bullet$ \u{\textcolor{violet}{conjunt mesurable Jordan}}: $A$ fitat i $\partial A \ mn$.\\
+\textbf{-} $A\ mJ$ sii $A$ fitat i $\forall R\supset A$ cpt, $\exists\int_R \chi_A$.\\
+\textbf{-} $A\ mJ; v(A) = \int_R \chi_A,\ \forall R\supset A$ tancat.\\
+\textbf{-} $cn$ \implies $mJ$. $\space\space$\textbf{-} si $A$ mJ ó cpt: $cn$ sii $mn$.\\
+\textbf{-} $A\ mJ$ \implies $A^\circ, \Bar{A}, \partial A \ mJ$. I si $A^\circ \subset B\subset A$ \implies $B\ mJ$.\\
+$\bullet$ \u{\textcolor{violet}{extensió}} de $f$ fitada en $A$ fitat: $f^*(x) = f(x)$ si $x\in A$ i 0 si $x\not\in A$.\\
+\textbf{-} $f^*\in\R(R)$ sii $f\in\R(A)$. Llavors són iguals.\\
+\textbf{-} $f\in\R(R)$ \implies $\Gamma(f)$ cn.\\
+$\blacktriangleright$ \u{\textbf{C.Lebesgue}}: $f:A\to\real$ fitada, $A\ mJ$; $f\in\R(A) \iff f\in\C(A)\  cs$.\\
+\textbf{-} $f$ fitada i $\C$ en $A\ mJ \implies f\in\R(A)$.\\
+\textbf{-} $m_f v(A) \le\int_A f \le M_f v(A)$.\\
+$\bullet$ \u{\textcolor{violet}{conjunt elemental}}: $E = \{x\in A|\phi(x)\le\psi(x)\}$ on $A\ mJ$ i $\phi, \psi\in\C$.\\
+\textbf{-} $\Tilde{E}\setminus\Bar{E} = \Gamma(\phi)\cup\Gamma(\psi)\ cn$; \implies $\Tilde{E}\ mJ$ sii $\Bar{E}\ mJ$; \implies $v(\Tilde{E}) = v(\Bar{E}) = \int_A \phi-\psi$.\\
+\textbf{-} unió finita de rectangles és conj elem.\\
+
+\subsection*{Integració impròpia}
+$\bullet$ \u{\textcolor{violet}{exhaustió}} de $E\subset\real^{n+1}$: $\{E_k\} mJ$ tq $E_k\subset E_{k+1}\subset E$ i $E = \bigcup\limits_{k=1}^\infty E_k$.\\
+\textbf{-} $E\ mJ, \{E_k\}$ exh, $f\in\R(E)$\implies $f|_{E_k}\in\R(E_k)$ i $\int_E f = \displaystyle\lim_{k\to\infty}\int_{E_k}f$.\\
+$\bullet$ f té \u{\textcolor{violet}{integral impròpia}} en $E$: si $\exists\{E_k\}$ exh $mJ$ tq $f|_{E_k}\in\R(E_k)$ i $\forall \{\Tilde{E}_k\}$ exh,$\displaystyle\lim_{k\to\infty}\int_{E_k}f = \displaystyle\lim_{k\to\infty}\int_{\Tilde{E}}f$.\\
+$\bullet$ f \u{\textcolor{violet}{loc fitada}} en $A$ ob: si $\forall x\in A, \exists R_x$ rect no deg tq $x\in R^{\irc}_x$ i $f$ fitada en $R_x$.\\
+$\bullet$ f \u{\textcolor{violet}{loc fitada}} en $A$ ob: si $\forall x\in A, \exists R_x$ rect no deg tq $x\in R^{\circ}_x$ i $f|_{R_x}\in\R(R_x)$.\\
+\textbf{-} loc.Int \implies loc.Fitada.\\
+\textbf{-} $f:A_{ob}\to\real$ són equiv:\\
+\ \ \ i)$f$ loc. Integ.\\
+\ \ \ ii)$f|_K\in\R(K), \forall K\text{ cpt mJ }\subset A$.\\
+\ \ \ iii)$f$ loc. Fitada i $\C\ cs$ en $A$.\\
+\textbf{-} $f:A_{ob}\to\real, \ge 0$ loc.Integ \implies $f$ té integ.Imp. en $A$.\\
+\textbf{-} $f:A_{ob}\to\real$ loc.Integ; $f$ té integ.Imp. conv sii $|f|$ té integ.Imp. conv; \implies $|\int_A f|\le\int_A |f|$.\\
+
+\subsection*{Canvi de Variable}
+
+$\bullet$ \u{\textcolor{violet}{difeomorfisme $\C^1(\Omega)$}}: $F:\Omega_{ob}\subset\real^n\to\real^n$ tq inj i $\det D_F \ne 0$.\\
+\textbf{-} $F:\Omega\to\real$ difeo $\C^1$, $A\ mJ$ tq $\Bar{A}\subset\Omega$ \implies $F(A)\ mJ$ i $f\in\R(F(A))$ sii $(f\circ F)|\det D_F|\in\R(A)$.\\
+$\blacktriangleright$ \u{\textbf{T.Canvi Variable}}: $F:\Omega_{ob}\subset\real^n\to\real^n$ difeo \implies $\forall A\ mJ$ tq $\Bar{A}\subset\Omega$ i $\forall f\in\R(F(A))$, $\int_{F(A)} f = \int_A (f\circ F)|\det D_F|\in\R(A)$.\\
+
+%-------------------------------------------------
+
+\section*{Tema 3: Integració en línia i superf.}
+
+\subsection*{Corbes}
+
+$\bullet$ \u{\textcolor{violet}{camí/corba}}: $\alpha:I\subset\real\to\real^n \C$ tq $\alpha(t) = (\alpha_1(t),...,\alpha_n(t))$.\\
+$\bullet$ \u{\textcolor{violet}{suport/traça}}: $C_\alpha$, l'imatge d'$\alpha$.\\
+\textbf{-} si $\alpha$ inj \implies $C_\alpha \equiv$ corba.\\
+\textbf{-} $\alpha:I\to\real^2, \alpha(t) = (\alpha_1(t),\alpha_2(t))$ \implies $\Bar{\alpha}:I\to\real^3, \alpha(t) = (\alpha_1(t),\alpha_2(t),0)$.\\
+$\bullet$ \u{\textcolor{violet}{corba tancada}}: si $\alpha(a) = \alpha(b)$.\\
+$\bullet$ \u{\textcolor{violet}{corba simple}}: si tancada i inj en $[a,b)$.\\
+$\bullet$ \u{\textcolor{violet}{corbes equiv.}}: $\alpha:I\to\real^n, \beta:J\to\real^n$ si $\exists\varphi:J\to I$ homeo tq $\beta = \alpha\circ\varphi$.\\
+\textbf{-} $\alpha$ inj sii $\forall$ corba equiv és inj.\\
+\textbf{-} si $\alpha, \beta$ equiv \implies $C_\alpha = C_\beta$.\\
+$\bullet$ \u{\textcolor{violet}{composició}}: $\alpha:[a,b]\to\real^n, \beta:[b,c]\to\real^n, \alpha(b) = \beta(b)$; $\alpha * \beta:[a,c]\to\real^n$ tq $\alpha * \beta = \alpha(t)$ si $t\in[a,b]$ i $\alpha * \beta = \beta(t)$ si $t\in(b,c]$.\\
+\textbf{-} $\alpha,\beta \in\C\implies \alpha * \beta \in\C$; $\space$ \textbf{-} $C_{\alpha * \beta} = C_\alpha \cup C_\beta$.\\
+\textbf{-} si $\alpha,\beta$ inj i $C_\alpha \cap C_\beta = \{\alpha(b)\} \implies \alpha * \beta$ inj.\\
+\textbf{-} $\alpha:I\to\real^n$; si $\alpha_j\in\C^{k(I)} \forall j$ \implies $\alpha\in\C^k$ \implies $\alpha'\C^{k-1}(I)$ i $\alpha(t)' = (\alpha_1'(t),.,\alpha_n'(t))$ \textcolor{violet}{tg d'$\alpha$}.\\
+\textbf{-} el tg d'$\alpha$ pot canviar de sgn segons param.\\
+\textbf{-} $\alpha:I\to\real^n$; si $\alpha_j\in\C_{s}^{k(I)} \forall j$ \implies $\alpha\in\C_{s}^{k(I)}$ \implies $\alpha\in\C$ i $\alpha'$ def en $I\setminus\text{nº finit de pts}$.\\
+$\bullet$ \u{\textcolor{violet}{$\alpha$ regular}} si $\forall$ pt és \u{\textcolor{violet}{pt regular}}:  si $\alpha'(t)\ne 0$ (iParam).\\
+\textbf{-} $\alpha_j\in\R[a,b], \forall j$ \implies $\alpha\in\R[a,b]$ \implies $\int_a^b\alpha = (\int_a^b\alpha_1,.,\int_a^b\alpha_n)$.\\
+\textbf{-} $\alpha\in\C_s^k$ \implies $\int_{\Tilde{a}}^{\Tilde{b}} \alpha' = \alpha(\Tilde{a})-\alpha(\Tilde{b}), \forall \Tilde{a}, \Tilde{b} \in [a,b]$ .\\
+\textbf{-} $\alpha\in\R[a,b]$ \implies $|\alpha|\in\R[a,b]$ i $|\int_a^b\alpha|\le\int_a^b|\alpha|
+$.\\
+
+\subsection*{Longitud de corbes}
+
+$\bullet$ \u{\textcolor{violet}{long.}} polig.: $l(\alpha,P) = \sum\limits_{j=1}^m |\alpha(t_j)-\alpha(t_{j-1})|$.\\
+\textbf{-} $P\subset P'\implies l(\alpha,P)\le l(\alpha,P')$.\\
+$\bullet$ \u{\textcolor{violet}{long.}} d'$\alpha$. = $l(\alpha) = \sup\limits_P \{l(\alpha,P)\}$ (iParam).\\
+$\bullet$ \u{\textcolor{violet}{corba rectificable}}: si $l(\alpha)$ finita.\\
+\textbf{-} $l(\alpha_j) \le l(\alpha) \le l(\alpha_1) +...+l(\alpha_n)$.\\
+\textbf{-} $\C\nRightarrow$ rectif.\\
+\textbf{-} $\C^1$ ó $\C_s^1$\implies $\alpha$ Lip \implies $\alpha$ rectif. i $l(\alpha)\le L(b-a)$.\\
+\textbf{-} si $\alpha\in\C_s^1 [a,b]$\implies $l(\alpha) = \int_a^b |\alpha'(t)|dt$.\\
+
+\subsection*{Integració en línia}
+$\bullet$ \u{\textcolor{violet}{camp escalar}} en $\Omega$: $f:\Omega\subset\real^n\to\real, \C^k$.\\
+$\bullet$ \u{\textcolor{violet}{camp vectorial}} en $\Omega$: $F:\Omega\subset\real^n\to\real^n, \C^k$.\\
+\textbf{-} si $\alpha\in\C_x^1[a,b], C_\alpha\subset\Omega, f:\Omega\to\real\ \C^k$, $\int_\alpha f dl = \int_a^b f(\alpha(t))|\alpha'(t)|dt$: \u{int. línia de f}.\\
+\textbf{-} $|\int_\alpha f dl| \le \int_\alpha |f| dl \le l(\alpha)\max\limits_{x\in C_\alpha} \{f(x)\}$.\\
+\textbf{-} si $\alpha\in\C_x^1[a,b], C_\alpha\subset\Omega, F:\Omega\to\real\ \C^k$, $\int_\alpha Fdl = \int_a^b <F(\alpha(t)),\alpha'(t)>dt$: \u{int. línia/circulació de F} (q el sgn dParam).\\
+\textbf{-} $\int_\alpha f dl = \int_\alpha<f,t>dl = \int_\alpha f_t dl$.\\
+
+\subsection*{Integració en superfície}
+$\bullet$ \u{\textcolor{violet}{superf. regular}} $\sigma$: si $D_\sigma$ té rang 2.\\
+$\bullet$ \u{\textcolor{violet}{àrea de S}} $a(S) = \int_\Omega|\sigma_u${\small x}$\sigma_v|dudv$.\\
+\textbf{-} $\ast = \{\Omega\ mJ,\Bar{\Omega}\ \text{cpt}, \sigma\in\C^k(\Bar{\Omega}) \text{i inj}\}$; si $f:S\subset\Bar{\Omega}\to\real, \C$, la \u{int. de superf de f} és $\int_S f dS = \int_\Omega f(\sigma(u,v))|\sigma(u)${\small x}$\sigma(v)|dudv$.\\
+\textbf{-} $|\int_S f dS| \le \int_S |f| dS \le a(S)\max\limits_{x\in\Bar{S}} \{f(x)\}$.\\
+\textbf{-} $\ast$; si $F:S\to\real^3, \C, S=\sigma(\Omega)$ orientada, la \u{int. de superf de F} (q el sgn dParam) és $\int_S FdS = \int_\Omega <F(\sigma(u,v)),\sigma(u)${\small x}$\sigma(v)>dudv$.\\
+\textbf{-} $\int_S fdS = \int_S$<$f,n$>$dS = \int_Sf_n$: \u{flux de f//F}.\\
+
+\section*{Tema 4: Teoremes integrals}
+$u:\Omega\subset\real^n\to\real, f:\Omega\subset\real^n\to\real^N$.\\
+\subsection*{Camps i pot. escalars i vectorials}
+$\bullet$ \u{\textcolor{violet}{gradient}}: $\nabla u = (\frac{\partial u}{\partial x_1},...,\frac{\partial u}{\partial x_n})$.\\
+$\bullet$ \u{\textcolor{violet}{rotacional}}: $rot(f) = \nabla$\small{x}$f$.\\
+$\bullet$ \u{\textcolor{violet}{divergència}}: $div(f) = \frac{\partial f}{\partial x_1}+...+\frac{\partial f}{\partial x_n}$.\\
+$\bullet$ \u{\textcolor{violet}{laplacià}}: $div(\nabla f)$.\\
+$\bullet$ \u{\textcolor{violet}{camp gradient}}: $f$ si $\exists u\in\C^1$\u{\textcolor{violet}{pot. escalar}}: $f = \nabla u$.\\
+$\bullet$ \u{\textcolor{violet}{camp irrotacional}}: $f$ si $rot(f) = 0$.\\
+$\bullet$ \u{\textcolor{violet}{camp solenoidal}}: $f$ si $div(f) = 0$.\\
+$\bullet$ \u{\textcolor{violet}{pot. vector}}: $g$ si $\exists f\in\C^1$ tq $rot(g) = f$.\\
+$\blacktriangleright$ \u{\textbf{R.Leibnitz}}: $\nabla uv = u\nabla v + v\nabla u$ i $div(uf) = u div(f)+<\nabla u,f>$.\\
+$\bullet$ \u{\textcolor{violet}{camp conservatiu}}: $f$ si $f\in\C$ i $\forall\alpha\in\C_s^1[a,b]$ tq $C_\alpha \subset\Omega$, $\int_{C_\alpha} f dl = u(\alpha(b))-u(\alpha(a))$.\\
+\textbf{-} $f$ conservatiu sii $\oint fdl = 0$ sii $f$ gradient.\\
+\textbf{-} $f$ conservatiu i $f\in\C^1$ \implies $\frac{\partial f_i}{\partial x_j}=\frac{\partial f_j}{\partial x_i}, \forall i,j$.\\
+\textbf{-} $f\in\C^1(\Omega,\real^2)$ \implies $f = (f_1,f_2,0)$, $rot(f) = (0,0,\frac{\partial f_2}{\partial x}-\frac{\partial f_1}{\partial y})$.\\
+\textbf{-} $f$ gradient \implies $f$ irrot $(rot(\nabla) = 0)$.\\
+\textbf{-} $f$ rotacional \implies $f$ solenoidal $(div(rot) = 0)$.\\
+$\bullet$ \u{\textcolor{violet}{obert estrellat}} $\Omega$: si $\exists x_$ tq $(1-t)x_0+tx\in\Omega$, $\forall x\in\Omega, t\in[0,1]$.\\
+$\blacktriangleright$ \u{\textbf{L.Poincaré}}: $\Omega$ ob estrellat $\subset\real^3, f\in\C^1$; si $f$ solen. \implies $f$ rotacional i si $f$ irrot \implies $f$ conservatiu.\\
+\textbf{-} $f$ irrot en ob estrellat \implies $u(x) = \int_0^1 <f(t$\textbf{x}$+(1-t)x_0,r($\textbf{x}$-x_0)>dt$.\\
+\textbf{-} $f$ solen en ob estrellat \implies $g(x,y,z) = \int_0^1 (tf(t$\textbf{x}$+(1-t)x_0$ \small{x} $r($\textbf{x}$-x_0))dt$.\\
+
+\subsection*{Green, Stoke, Gauss}
+$\bullet$ \u{\textcolor{violet}{corba de Jordan}}: traça corba param simple.\\
+$\blacktriangleright$ \u{\textbf{T.Corba Jordan}}: si $\alpha$ corba Jordan \implies $\real^2\setminus C_\alpha = \Omega_1 \cup \Omega_2$ on $\Omega_1$ acotat i $\Omega_2$ no.\\
+$\blacktriangleright$ \u{\textbf{T.Green}}: $\Omega\subset\real^2$ domini elem, $f:\Bar{\Omega}\to\real^2\C^1$ \implies $\int_{\partial \Omega} fdl = \int_\Omega \frac{\partial f_2}{\partial x}-\frac{\partial f_1}{\partial y} dxdy = \int_\Omega rot(f)dS$.\\
+\textbf{-} Green sii $\{\oint_{\partial \Omega} f_1dl = -\int_\Omega \frac{\partial f_1}{\partial y} dxdy$ i $\oint_{\partial \Omega} f_2dl =\int_\Omega \frac{\partial f_2}{\partial x}dS\}$.\\
+$\blacktriangleright$ \u{\textbf{T.Stokes}}: $(S\cup\partial S)\subset\Omega\subset\real^3$ domini elem, $f:\Bar{\Omega}\to\real^3\C^1$ \implies $\oint_{\partial S} fdl= \int_S rot(f)dS$.\\
+$\blacktriangleright$ \u{\textbf{T.Gauss}}: $V\subset\Omega\subset\real^3$ domini elem, $f:\Bar{\Omega}\to\real^3\C^1$ \implies $\oint_{\partial V} fdS = \int_V div(f)dV$.\\
+\textbf{-} Gauss sii $\{\int_{\partial \Omega} f_idl = \int_\Omega \frac{\partial f_i}{\partial x_i} dV,\forall i$.\\
+\textbf{-} $vol(V) = \frac{1}{3}\int_{\partial V}fdS = \frac{1}{3}\int_{\partial V} (x,0,0)dS$.\\
+\textbf{-} $a(S) = \frac{1}{2}\int_{\partial S}(-y,x)dS$.\\
+
+\section*{Tema 5: Formes diferencials}
+$\bullet$ \u{\textcolor{violet}{forma d'ordre k en $\Omega$}}: $w:\Omega\to\bigwedge^k(\Omega)$ tq $w=\sum\limits_{1\le i_1<...<i_k\le n}{\alpha_{i_1,...,i_k} dx^{i_1}\wedge...\wedge dx^{i_k}}$.\\
+$\bullet$ \u{\textcolor{violet}{producte exterior}}: $(w_1\wedge w_2)(x) = w_1 (x) \wedge w_2(x)$ (p+q)-forma $\C^m$ bilineal, anticomm i associativa.\\
+$\bullet$ \u{\textcolor{violet}{pull-back de F}}: $F^{\ast}(u) = (D_f(u))^\ast$ tq $F^\ast(fdx^{i_1}\wedge...\wedge dx^{i_k}) = F^\ast(f)F^\ast(dx^{i_1}\wedge...\wedge dx^{i_k})$.\\
+$\bullet$ \u{\textcolor{violet}{diferencial exterior}}: de $w$ k-forma $\C^p$, és $d(w) = \sum\limits_{1\le i_1<...<i_k\le n}{d\alpha_{i_1,...,i_k}\wedge dx^{i_1}\wedge...\wedge dx^{i_k}}$ (k+1)-forma $\C^{p-1}$.\\
+\textbf{-} $dy^{1}\wedge...\wedge dy^{n} = (det D_\psi) dx^{1}\wedge...\wedge dx^{n}$.\\
+\textbf{-} $d(w\wedge\Tilde{w}) = d(x)\wedge\Tilde{w} + (-1)^k w\wedge d(\Tilde{w})$.\\
+\textbf{-} $d^2 = d\circ d = 0$.\\
+\textbf{-} $F^\ast \circ d = d\circ F^\ast \implies F^\ast (dw) = d(F^\ast (w))$.\\
+$\bullet$ \u{\textcolor{violet}{forma tancada}}: si $dw = 0$.\\
+$\bullet$ \u{\textcolor{violet}{forma exacta}}: si $w = d\Tilde{w}$.\\
+\textbf{-} exacta \implies tancada.\\
+$\blacktriangleright$ \u{\textbf{L.Poincaré}}: $\Omega\subset\real^n$ ob estrellat, $w$ k-forma $\C^1(\Omega)$ \implies $w=K(dw)+d(K(w))$.\\
+$\bullet$ \u{\textcolor{violet}{integral n-forma}}: $w=fdx^{1}\wedge...\wedge dx^{n}$ \implies $\int_\Omega w = \int_\Omega fdx^{1}\wedge...\wedge dx^{n} = \int_\Omega fdx^{1}...dx^{n} = \int_\Omega f$.\\
+\textbf{-} $\int_\Omega w = \pm\int_{\Tilde{\Omega}} F^\ast (w)$.\\
+\textbf{-} $\sigma:\Tilde{\Omega}\to\Omega,\C^1\implies \int_\sigma w = \int_{\Tilde{\Omega}} \sigma^\ast (w)$.\\
+$\blacktriangleright$ \u{\textbf{T.Stokes}}: $\sigma (\Tilde{\Omega}}) = M\cup \partial M$, $w$ k-forma $\C^1$ \implies $\int_{\partial M} w = \int_M dw$ (cal $\partial M$ sigui corba tancada).\\
+\section*{Altres}
+\subsection*{Taylor}
+ $e^x = \sum_{n\geq 0} \frac{x^n}{n!}$. \\
+ $\cos x = \sum_{n\geq 0} (-1)^n \frac{x^{2n}}{(2n)!}$. \\
+ $\sin x = \sum_{n\geq 0} (-1)^n \frac{x^{2n+1}}{(2n+1)!}$. \\
+ $\log (1+x) = \sum_{n\geq 1} (-1)^{n+1} \frac{x^n}{n}$. \\
+ $(1+x)^p = \sum_{n\geq 0} \binom{p}{n} x^n$. \\
+ $(1+x)^{-1} = \sum_{n\geq 0} (-1)^n x^n$. \\
+ $\cosh x = \sum_{n\geq 0} \frac{x^{2n}}{(2n)!}$. \\
+ $\sinh x = \sum_{n\geq 0} \frac{x^{2n+1}}{(2n+1)!}$. \\ 
+ $\arctan x = \sum_{n\geq 0} (-1)^n \frac{x^{2n+1}}{2n+1}$. \\ 
+
+\subsection*{Trigonometria}
+ $\sin(a \pm b) = \sin(a)\cos(b) \pm \cos(a)\sin(b)$. \\
+ $\cos(a \pm b) = \cos(a)\cos(b) \mp \sin(a)\sin(b)$. \\
+ $\tan(a \pm b) = \frac{\tan(a) \pm \tan(b)}{1 \mp \tan(a)\tan(b)}$
+ $\sin(a) + \sin(b) = 2\sin(\frac{a+b}{2})\cos(\frac{a-b}{2})$. \\
+ $\cos(a) + \cos(b) = 2\cos(\frac{a+b}{2})\cos(\frac{a-b}{2})$.
+ $2\cos(a)\cos(b) = \cos(a - b) + \cos(a + b)$
+ $2\sin(a)\sin(b) = \cos(a - b) - \cos(a + b)$
+ $2\sin(a)\cos(b) = \cos(a + b) + \cos(a - b)$
+ $2\cos(a)\sin(b) = \cos(a + b) - \cos(a - b)$
+ $\cos^2(a) = \frac{1 + \cos(2a)}{2}$ \\
+ $\sin^2(a) = \frac{1 - \cos(2a)}{2}$\\
+ $\sin(\pi/2 - x) = \cos(x) $\\
+ $\cos(\pi/2 - x) = \sin(x) $\\
+
+\subsection*{Integrals útils}
+ $\int_1^{+\infty}\frac{1}{x^\alpha}dx$ conv $\iff\alpha>1$, i val $\frac{1}{\alpha-1}$. \\
+ $\int_0^1\frac{1}{x^\alpha}dx$ conv $\iff\alpha<1$, i val $\frac{1}{1-\alpha}$. \\
+ $\int_0^{+\infty}e^{-\alpha t}dt$ conv $\iff\alpha>0$, i val $\frac{1}{\alpha}$. \\
+ $\int_1^{+\infty}\frac{1}{x^\alpha}dx$ conv $\iff\alpha>1$, i val $\frac{1}{\alpha-1}$. \\
+
+\subsection*{Criteris per límits}
+ $\bullet$\u{Stolz}: $(b_n)$ est. monòtona, \{$\lim{b_n}=\pm\infty$ o bé \lim{a_n}=\lim{b_n}=0\} i \lim{\frac{a_{n+1}-a_n}{b_{n+1}-b_n}}=L\in[-\infty,+\infty]\implies\lim{\frac{a_n}{b_n}}=L. \\
+ $\bullet$\u{Arrel-Quocient}: $(a_n)$ no nul·la $\forallm\geq n_0$.$\exists\lim{\abs{\frac{a_{n+1}}{a_n}}}=L\implies\lim\sqrt[n]{\abs{a_n}}=L$
+\vspace{3pt}
+\raggedleft
+
+\end{multicols}
+\end{document}
+
+
