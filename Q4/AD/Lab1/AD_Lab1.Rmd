@@ -1,0 +1,66 @@
+---
+title: "Pre-processament i anàlisi de dades."
+output:
+  html_document:
+    df_print: paged
+---
+## (a)
+```{r}
+setwd('.')
+X <- read.table("PovertyStudy.dat",header = TRUE)
+head(X)
+```
+## (b)
+```{r}
+pairs(X)
+```
+
+## (c)
+```{r}
+# són menys noranta-nous
+sum(X$GNP[X$GNP==-99])/(-99)
+```
+## (d)
+```{r}
+X$GNP[X$GNP ==-99] <- NA
+```
+
+## (e)
+```{r}
+boxplot(X$GNP, main = "Boxplot de GNP")
+qqnorm(X$GNP, main = "Normal probability plot de GNP")
+# plot(X$GNP)
+```
+## (f)
+```{r}
+library(MASS)
+b <- boxcox(X$GNP~1,lambda = seq(-1, 1, by = 0.1))
+```
+```{r}
+```
+
+
+## (g)
+```{r}
+plot(X$Pesmare,X$Alcmare)
+```
+```{r}
+s <- sum(is.na(X$Pesmare) | is.na(X$Alcmare))
+sprintf("Hi ha %i estudiants que tenen dades mancants per alguna d'aquestes variables.", s)
+```
+
+## (h)
+```{r}
+L <- cor(X$Pesmare, X$Alcmare, use='complete.obs')
+```
+
+```{r}
+mod <- lm(X$Pesmare ~ X$Alcmare, X)
+summary(mod)$adj.r.squared
+```
+
+
+### (i)
+
+
+
