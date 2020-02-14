@@ -3,6 +3,9 @@
 using namespace std;
 
 int main() {
-	system("echo \"all:\ngit add --all\ngit commit -m update\ngit push\" > teeeeeeest");
+	ofstream out("Makefile");
+	out << "all:\n\tgit add --all\n\tgit commit -m update\n\tgit push\n";
+	out.close();
 	system("make");
+	system("rm Makefile");
 }
