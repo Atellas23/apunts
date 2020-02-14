@@ -1,0 +1,643 @@
+---
+title: 'LAB 1: Data pre-processing'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "February 2020"
+output:
+  html_notebook: default
+  pdf_document: default
+---
+
+<style>
+p.comment {
+background-color: #DBDBDB;
+padding: 10px;
+border: 1px solid black;
+border-radius: 5px;
+font-style: italic;
+}
+</style>
+
+
+Pre-processing is a necessary step prior to any analytical work that prepares and shapes a new dataset for further analysis. Each dataset is different and therefore it requires a different approach in what concerns data cleaning and preparation.
+This pre-process is crucial because it can have a deep impact on future performance and results. Moreover, it can take a significant part of your time. As an informal guide, you shall pay attention to the following aspects (not necessarily in this order):
+
+1. treatment of lost values (missing values)
+2. treatment of anomalous values (outliers)
+3. treatment of incoherent or incorrect values
+4. elimination of irrelevant variables
+5. (possible) elimination of redundant variables
+6. coding of non-continuous or non-ordered variables (nominal or binary)
+7. extraction of new variables that can be useful
+8. normalization of the variables (e.g. standardization)
+9. transformation of the variables (e.g. correction of skewness and/or kurtosis)
+
+In this guide, we present examples of these pre-processing steps with the example dataset `credsco.csv` provided to you along with this notebook.
+
+
+```{r}
+# we will be using routines in the accompanying script:
+source("auxiliary.R")
+```
+
+***
+
+#### SECTION 1: Reading the data file `credsco.csv`
+
+Reading properly a data set is non-trivial because you need to know how the data is formatted.
+Things to look at are: what is the decimal separator, what is the column separator, is there a
+header?, how are strings quoted, how (if any) are missing values encoded?, should character vectors be converted to factors?, should white spaces be stripped?, etc.
+
+It is a good idea to consult the help on the reading command `?read.csv` and play with useful control parameters, like
+
+```
+# header=TRUE
+# na.strings="?"
+# dec = "."
+# sep = ";"
+# quote = "\"
+```
+
+After opening the file `credsco.csv` and inspecting it with any text editor, we decide on the following settings for the `read.csv` command:
+
+```{r}
+Credit = read.csv("credsco.csv", header = TRUE, quote = "\"", dec = ".", check.names=TRUE)
+```
+
+The dimensions of the data set are 4,455 examples described by 14 variables, which you can figure out with the `dim` command:
+
+```{r}
+dim(Credit)
+```
+
+
+This dataset contains data for clients of a bank, in particular regarding whether they have been assessed positively or negatively for a credit loan. This dataset is typically used to train classifiers that predict whether a client will be granted a loan or not (so, the target variable is `Assessment`; it has two possible values -- however we observe a strange row with a 3rd possible value).
+
+```{r}
+# what are the variables?
+names(Credit)
+```
+
+
+```{r}
+# count frequence of values for target variable
+table(Credit$Assessment)
+```
+
+
+
+```{r}
+# inspect the first 4 examples
+Credit[1:4,]
+```
+
+```{r}
+# inspect predictive variables 4, 5, 6 and 7 for the first example
+Credit[1,5:8]
+```
+
+***
+
+#### SECTION 2: Basic inspection of the dataset
+
+Have a look at the minimum and maximum values for each variable; find possible errors and abnormal values (outliers); find possible missing values; decide which variables are continuous and which are categorical; if there are mixed types, we have three options: recode continuous to categorical, recode categorical to continuous or leave them as they are. Try to get a first idea of the best decision for each issue.
+
+```{r}
+# always have a look at basic statistics of each variable in your data
+summary(Credit)
+```
+
+From the summary, we observe the following:
+
+* `Assessment`,`Housing`,`MaritalStatus`,`Records`,`TypeOfJob` are categorical and need to be treated properly. In particular, `Assessment` is the target variable; we need to identify correct values
+
+* `Capital`, `ChargesOnCapital` and `Income` present abnormally high maximums (99999999)
+
+* there are also suspicious zeros, in both types of variables, which we identify with missing values
+
+***
+
+#### SECTION 3: Dealing with **_missing values_**
+
+Make a decision on a sensible treatment for the missing values and apply it; it is wise to write down the possible consequences of this decision and the alternatives that could be considered in case the final results are not satisfactory
+
+The easiest way is of course to eliminate the involved rows or columns; this can be done partially. For example, we could decide to eliminate the variables with the highest proportion of missing values. Deleting instances and/or variables containing missing values results in loss of relevant data and is also frustrating because of the effort in collecting the sacrificed information.
+
+**CAREFUL!** R does not know magically which entries are missing values
+
+```{r}
+# this does not do anything, because there are no explicitly declared NA's
+Credit.complete = na.omit(Credit)
+dim(Credit.complete)
+```
+
+The previous code does nothing, because missing values are not encoded as NA in our data.
+
+In the present case we have decided to perform a step-by-step treatment, separate for the categorical and continuous information.
+
+First, we decide to remove those rows with with missing values in the categorical variables (there are few), which in our data are encoded with a `0`.
+
+```{r}
+table(Credit[,"Assessment"]==0)
+table(Credit[,"Housing"]==0)
+table(Credit[,"MaritalStatus"]==0)
+table(Credit[,"TypeOfJob"]==0)
+```
+
+Since there aren't too many, we remove those rows with a 0 in these variables:
+```{r}
+Credit = Credit[Credit[,"Assessment"] != 0 & Credit[,"Housing"] != 0 & 
+                 Credit[,"MaritalStatus"] != 0 & Credit[,"TypeOfJob"] != 0,]
+
+dim(Credit)
+```
+
+This process removed `r 4455 - 4446` rows.
+
+Now we process rows with missing values in the continuous variables (code 99999999). To avoid having to write each time the `Credit$...` part, we use the `attach` command. 
+
+```{r}
+attach(Credit)
+```
+
+However, beware:
+
+<p class="comment">
+**WARNING!**  `attach` allows access to the values of columns of a data frame for reading (access) only, and as they were when attached, but does not modify the dataframe
+</p>
+
+```{r}
+hist(Income)
+hist(Income[Income != 99999999])
+hist(Income[Income != 99999999 & Income != 0], breaks=15)
+```
+
+
+These values are clearly incorrect!
+
+```{r}
+table(Income == 99999999)
+table(Income == 0)
+table(Capital == 99999999)
+table(ChargesOnCapital == 99999999)
+```
+
+What do we do with this one? well, let's assume it is correct ...
+
+```{r}
+table(YearsInJob == 0)
+```
+
+Continuous variables have too many missing values, we can not eliminate them just like that: we must devise a treatment for these missing values (we will **impute** the missing values, see below).
+
+First, we declare them as `NA`, including those from no `Income`
+
+```{r}
+Income[Income == 99999999 | Income == 0] = NA
+Capital[Capital == 99999999] = NA
+ChargesOnCapital[ChargesOnCapital == 99999999] = NA
+```
+
+```{r}
+# see the difference
+summary(Income)
+summary(Credit$Income)
+```
+
+##### Imputation of NA's for continuous variables
+
+Imputation by **nearest neighbour**: for every observation with a missing `Income`, we look for the most similar observation (according to the remaining variables) and copy its `Income` value.
+
+```{r}
+# Imputation of 'Income', 'Capital' and 'ChargesOnCapital'
+Income = knn.imputation (Income, "Income")
+Capital = knn.imputation (Capital, "Capital")
+ChargesOnCapital = knn.imputation (ChargesOnCapital, "ChargesOnCapital")
+
+ChargesOnCapital[Capital==0] = 0
+```
+
+<p class="comment">
+Don't forget to assign back to the dataframe
+</p>
+
+```{r}
+Credit[,"Income"] = Income
+Credit[,"Capital"] = Capital
+Credit[,"ChargesOnCapital"] = ChargesOnCapital
+```
+
+Inspect again the result, especially the new statistics
+
+```{r}
+dim(Credit)
+summary(Credit)
+```
+
+***
+
+#### SECTION 4: Treatment of mixed data types
+
+First we explicitly declare some variables as categorical ('factor' in R)
+
+```{r}
+Assessment = as.factor(Assessment)
+Housing = as.factor(Housing)
+MaritalStatus = as.factor(MaritalStatus)
+Records = as.factor(Records)
+TypeOfJob = as.factor(TypeOfJob)
+
+levels(Assessment)
+levels(Housing)
+levels(MaritalStatus)
+levels(Records)
+levels(TypeOfJob)
+```
+
+These level codes are not very nice (not very meaningful), let's recode:
+
+```{r}
+levels(Assessment) = c("positive","negative")
+levels(Housing) = c("rent","owner","private","ignore","parents","other")
+levels(MaritalStatus) = c("single","married","widower","split","divorced")
+levels(Records) = c("no","yes")
+levels(TypeOfJob) = c("indefinite","temporal","self-employed","other")
+```
+
+
+As a reminder of dataframe access (i.e., behaviour with `attach`):
+
+```{r}
+is.factor(Assessment)
+is.factor(Credit[,"Assessment"])
+```
+
+***
+
+#### SECTION 5: Derivation of new variables (a.k.a. feature extraction)
+
+Decide whether it can be sensible to derive new variables; we decide to extract two new continuous and one new categorical variable (for the sake of illustration):
+
+```{r}
+# Financing ratio (continuous)
+FinancingRatio = 100*AmountRequested/MarketPrice
+hist(FinancingRatio)
+```
+
+```{r}
+# Saving capacity (continuous)
+SavingCapacity = (Income-Expenses-(ChargesOnCapital/100))/(AmountRequested/Deadline)
+hist(SavingCapacity, breaks=16)
+```
+
+
+```{r}
+# Amount Requested greater than 1.2 times the median by people 1.5 times older than the mean (categorical):
+Dubious = rep("No", nrow(Credit))
+Dubious[AmountRequested > 1.2*median(AmountRequested, na.rm = TRUE) & Age > 1.5*mean (Age, na.rm = TRUE)] = "Yes"
+Dubious = as.factor(Dubious)
+
+table(Dubious,Assessment)
+```
+
+
+***
+
+#### SECTION 6: Putting together what we have done so far
+
+```{r}
+# create a new dataframe that gathers everything and inspect it again
+
+Credit.new = data.frame(Assessment,YearsInJob,Housing,Deadline,Age,MaritalStatus,Records,TypeOfJob,Expenses,Income,Capital,ChargesOnCapital,AmountRequested,MarketPrice,FinancingRatio,SavingCapacity,Dubious)
+                   
+summary(Credit.new)
+dim(Credit.new)
+
+detach(Credit)
+attach(Credit.new)
+```
+
+Sanity check:
+
+```{r}
+is.factor(Credit.new[,"Assessment"])
+```
+
+***
+
+#### SECTION 7: Gaussianity and transformations
+
+It is useful to have an idea of the empirical distribution of the dataset's variables. One can visualize a graphical summary of some of the variables (both categorical and continuous), using the `boxplot()` and `hist()` procedures.
+
+##### For **continuous** data: histograms and boxplots
+
+
+```{r}
+hist(Income, col=2)
+```
+
+```{r}
+par(mfrow=c(1,2))
+hist(Capital)
+hist(log10(Capital), breaks=20)
+```
+
+```{r}
+boxplot(Deadline)
+title ("These are the deadlines")
+```
+
+```{r}
+boxplot(Age, col="lightgray")
+title ("and these are the ages")
+```
+
+```{r}
+boxplot(Credit.new[,9:16], outline=TRUE) 
+boxplot(Credit.new[,9:16], outline=FALSE) # much better, but would be nicer one by one, to avoid flat boxplots
+```
+
+The previous plots suggest to take logs on some variables: `Capital` and `ChargesOnCapital` (we'll do it later)
+
+##### For categorical data: Frequency tables, Contingency tables, Bar charts, Pie charts
+
+Now, should we treat Age as categorical? probably not ... but if we wanted to do so, we can use `cut`:
+
+```{r}
+table(Age)                            
+summary(Age)
+(Age.cat = cut(Age, breaks = seq(30, 90, 10))) # WARNING! we are generating NAs
+```
+
+```{r}
+Age.cat = cut(Age, breaks = seq(15, 75, 10))   
+(Age.tab = table(Age.cat))
+```
+
+
+```{r}
+barplot(Age.tab)    # bar chart
+pie(Age.tab)        # pie chart
+```
+
+Incidentally, this is how we could generate another new variable based on Age:
+
+```{r}
+Age2.cat = factor(as.integer(Age < 55))        
+levels(Age2.cat) = c("over55","under55")
+```
+
+
+With the `table` commands we can generate contingency tables for categorical variables in different flavors:
+
+```{r}
+(TypeOfJob.Age = table(TypeOfJob, Age.cat)) # contingency table
+margin.table(TypeOfJob.Age, 1)              # row sums
+margin.table(TypeOfJob.Age, 2)              # column sums
+
+round(prop.table(TypeOfJob.Age), digits=3)  # relative freqencies, rounded to 3 digits 
+round(prop.table(TypeOfJob.Age) * 100, digits=1)  # total percentages
+
+round(prop.table(TypeOfJob.Age, 1), digits=3) # table of relative frequencies (row-wise)
+(TypeOfJob.Age.rel = round(prop.table(TypeOfJob.Age, 2), digits=3)) # table of relative frequencies (column-wise)
+```
+
+Other graphical representations of the distributions:
+
+```{r}
+barplot(TypeOfJob.Age)  # basic stacked bar chart
+```
+
+```{r}
+barplot(TypeOfJob.Age.rel, yaxt="n", xlab="Age", ylab="proportion", 
+        col = c("white", "grey80", "grey40", "black"), 
+        main = "TypeOfJob by Age", xlim=c(0,9))   # stacked bar chart
+
+legend("bottomleft", legend=rownames(TypeOfJob.Age.rel), col="black", 
+      fill = c("white", "grey80", "grey40", "black"), cex=0.65)
+```
+
+```{r}
+barplot(TypeOfJob.Age.rel, beside = TRUE)   # grouped bar chart
+axis(2, at=seq(0, 1, 0.2))
+```
+
+#### Pair-wise comparisons of variables
+
+We can also perform graphical comparisons between some pairs of variables (both categorical and continuous), using the plot(),  pairs() and identify() procedures
+
+```{r}
+par(mfrow=c(1,2))
+plot (AmountRequested, Capital, main = "Amount req. vs. Market price", 
+      cex = .5, col = "dark red")
+
+plot (log10(AmountRequested), log10(Capital+1), main = "Amount req. vs. Market price (better)", cex = .5, col = "dark red")
+
+# adding a center (dashed) and a regression line (blue)
+abline(v = mean(log10(AmountRequested)), lty = 2, col = "grey40")
+abline(h = mean(log10(Capital+1)), lty = 2, col = "grey40")
+abline(lm(log10(Capital+1) ~ log10(AmountRequested)), col = "blue")
+```
+
+Note that log10(x+1)=0 for x=0, so our transformation keeps the zeros. On the other hand, these same zeros spoil the regression
+
+```{r}
+par(mfrow=c(1,1))
+
+plot (TypeOfJob, AmountRequested)
+
+plot (Age,Assessment, col="red") # WARNING!
+plot (Assessment, Age, col="red") # better
+
+plot (Assessment, TypeOfJob,col="blue", xlab="Assessment",ylab="TypeOfJob")
+
+pairs(~ AmountRequested + Capital + Age)
+```
+
+```{r}
+# Plotting a variable against the normal pdf in red
+hist.with.normal(Expenses, "Expenses")
+```
+
+Density plots for other variables:
+
+```{r}
+par(mfrow=c(2,4))
+for (i in 0:7) 
+  { plot(density(Credit.new[,i+9]), xlab="", main=names(Credit.new)[i+9]) }
+```
+
+Do any of the continuous variables "look" Gaussian? 
+Features to look for in comparing to a Gaussian: outliers, asymmetries, long tails
+
+A useful tool for "Gaussianization" is the Box-Cox power transformation
+
+```{r}
+library(MASS)
+
+par(mfrow=c(1,3))
+
+hist(Capital, main="Look at that ...")
+
+bx = boxcox(I(Capital+1) ~ . - Assessment, data = Credit.new,
+             lambda = seq(-0.25, 0.25, length = 10))
+
+lambda = bx$x[which.max(bx$y)]
+
+Capital.BC = (Capital^lambda - 1)/lambda
+
+hist(Capital.BC, main="Look at that now!")
+
+par (mfrow=c(1,1))
+```
+
+***
+
+#### SECTION 8: Dealing with mixed types of variables (revisited)
+
+##### Recoding categorical variables (dummy binary coding a,k.a. one-hot encoding)
+
+Most R functions for modelling accept factors mixed with numeric data; the factors are recoded using a dummy binary code, so there is no need to handle this explicitly
+
+##### Recoding continuous variables (a.k.a. discretization or categorization or factorization)
+
+```{r}
+YearsInJob.CAT         = cut(YearsInJob, breaks=c(-1,1,3,8,14,99))
+Deadline.CAT           = cut(Deadline, breaks=c(0,12,24,36,48,99))
+Age.CAT                = cut(Age, breaks=c(0,25,30,40,50,99))
+Expenses.CAT           = cut(Expenses, breaks=c(0,40,50,60,80,9999))
+Income.CAT             = cut(Income, breaks=c(0,80,110,140,190,9999))
+Capital.CAT            = cut(Capital, breaks=c(-1,0,3000,5000,8000,999999))
+ChargesOnCapital.CAT   = cut(ChargesOnCapital, breaks=c(-1,0,500,1500,2500,999999))
+AmountRequested.CAT    = cut(AmountRequested, breaks=c(0,600,900,1100,1400,99999))
+MarketPrice.CAT        = cut(MarketPrice, breaks=c(0,1000,1300,1500,1800,99999))
+FinancingRatio.CAT     = cut(FinancingRatio, breaks=c(0,50,70,80,90,100))
+SavingCapacity.CAT     = cut(SavingCapacity, breaks=c(-99,0,2,4,6,99))
+
+levels(YearsInJob.CAT)         = paste("YearsInJob",levels(YearsInJob.CAT))
+levels(Deadline.CAT)           = paste("Deadline",levels(Deadline.CAT))
+levels(Age.CAT)                = paste("Age",levels(Age.CAT))
+levels(Expenses.CAT)           = paste("Expenses",levels(Expenses.CAT))
+levels(Income.CAT)             = paste("Income",levels(Income.CAT))
+levels(Capital.CAT)            = paste("Capital",levels(Capital.CAT))
+levels(ChargesOnCapital.CAT)   = paste("ChargesOnCapital",levels(ChargesOnCapital.CAT))
+levels(AmountRequested.CAT)    = paste("AmountRequested",levels(AmountRequested.CAT))
+levels(MarketPrice.CAT)        = paste("MarketPrice",levels(MarketPrice.CAT))
+levels(FinancingRatio.CAT)     = paste("FinancingRatio",levels(FinancingRatio.CAT))
+levels(SavingCapacity.CAT)     = paste("SavingCapacity",levels(SavingCapacity.CAT))
+```
+
+```{r}
+Credit.new.CAT = data.frame(Assessment,YearsInJob.CAT,Housing,Deadline.CAT,Age.CAT,MaritalStatus,Records,TypeOfJob,Expenses.CAT,Income.CAT,Capital.CAT,ChargesOnCapital.CAT,AmountRequested.CAT,MarketPrice.CAT,FinancingRatio.CAT,SavingCapacity.CAT,Dubious)
+```
+
+Notice the difference:
+
+```{r}
+names(Credit.new)
+Credit.new[1,]
+dim(Credit.new)
+
+names(Credit.new.CAT)
+Credit.new.CAT[1,]
+dim(Credit.new.CAT)
+```
+
+***
+
+#### SECTION 9: Statistical analysis
+
+```{r}
+summary(Credit.new) # yet again
+```
+
+##### Basic summary statistics by groups
+
+Plot variable statistics for each class using `describeBy`:
+
+```{r}
+library(psych) # describeBy
+
+range.cont = c(2,4,5,9:16)
+
+describeBy(Credit.new[,range.cont], Credit.new$Assessment)
+```
+
+Plot of all pairs of some continuous variables according to the class:
+
+```{r}
+# (this plot shows how difficult this problem is)
+pairs(Credit.new[,c(2,5,9,16)], main = "Credit Scoring DataBase", col = (1:length(levels(Credit.new$Assessment)))[unclass(Credit.new$Assessment)])
+```
+                        
+##### Feature selection for continuous variables using Fisher's F
+
+
+```{r}
+names(Credit.new)[range.cont]
+
+pvalcon = NULL
+
+varc = list(YearsInJob, Deadline, Age, Expenses, Income, Capital, ChargesOnCapital, AmountRequested, MarketPrice, FinancingRatio, SavingCapacity)
+
+for (i in 1:length(varc)) 
+  pvalcon[i] = (oneway.test(varc[[i]]~Credit.new$Assessment))$p.value
+
+pvalcon = matrix(pvalcon)
+row.names(pvalcon) = colnames(Credit.new)[range.cont]
+
+# Ordered list of continuous variables according to their association to Assessment (more to less association)
+
+as.matrix(sort(pvalcon[,1]))
+
+# Graphical representation of Assessment
+
+ncon = nrow(pvalcon)
+
+par (mfrow=c(3,4))
+
+for (i in 1:ncon) 
+{
+  barplot (tapply(varc[[i]], Credit.new$Assessment, mean),main=paste("Means by",row.names(pvalcon)[i]), las=2, cex.names=1.25)
+  abline (h=mean(varc[[i]]))
+  legend (0,mean(varc[[i]]),"Global mean",bty="n") 
+}
+
+```
+
+##### Feature selection using pair-wise Pearson correlations
+
+```{r}
+# Compute and show the 10 most mosthighly correlated variables
+mosthighlycorrelated(Credit.new[,range.cont], 10)
+```
+
+*** 
+
+#### SECTION 9: Miscellaneous issues
+
+Shuffle the data (to avoid possible biases)
+
+```{r}
+set.seed (104)
+Credit.new = Credit.new[sample.int(nrow(Credit.new)),]
+``` 
+
+***
+
+#### SECTION 10: Save the preprocessed data into a file for future use
+
+```{r}
+# WARNING! This is a binary file, unless 'ascii' is TRUE
+save(Credit.new, file = "Credsco-processed.Rdata")
+```
+
+Cleanup:
+
+```{r}
+# remove (almost) everything in the working environment
+rm(list = ls())
+
+load("Credsco-processed.Rdata")
+objects()
+```
+

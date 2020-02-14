@@ -1,0 +1,193 @@
+---
+title: 'LAB 1: Data pre-processing exercise'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "February 2020"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+<style>
+p.comment {
+background-color: #DBDBDB;
+padding: 10px;
+border: 1px solid black;
+border-radius: 5px;
+font-style: italic;
+}
+</style>
+
+
+This exercise involves the use of the 'Auto' data set, which can be found in the file `Auto.data`. The file contains a number of variables for different cars.
+
+In the following script you will find some steps that we have done for you, and at the end we list a series of tasks you should accomplish as practice for the pre-processing stage.
+
+
+### Load data:
+
+```{r}
+graphics.off()      # reset/close all graphical devices 
+
+# read the file 'Auto.data' (data on cars)
+Auto <- read.table("Auto.data", header=TRUE, na.strings="?")
+summary(Auto)
+```
+
+### Fix some stuff first:
+
+```{r}
+# put proper country of origin
+Auto[,"origin"] <- factor(c("USA","EU","Japan")[Auto[,"origin"]])
+
+# convert "miles per gallon" to "liters per km"
+Auto[,"mpg"] <- 235.4/Auto[,"mpg"]
+colnames(Auto)[which(colnames(Auto)=="mpg")] <- "l.100km"
+
+summary(Auto)
+```
+
+### Car names:
+
+The car name is not useful for modelling, but it may be handy to keep it as the row name
+
+<p class="comment">
+**WARNING!**  surprisingly, car names are not unique, so we first prefix them by their row number
+</p>
+
+```{r}
+Auto$name <- paste (1:nrow(Auto), Auto$name)
+rownames(Auto) <- Auto$name
+Auto <- subset (Auto, select=-name)
+head(Auto)
+```
+
+### Now we go for the cylinders
+
+```{r}
+table(Auto$cylinders)
+```
+
+That's strange, some cars have an odd number of cylinders (are these errors?)
+
+```{r}
+subset(Auto,cylinders==3)
+```
+
+These Mazdas wear a Wankel engine, so this is correct
+
+```{r}
+subset(Auto,cylinders==5)
+```
+
+Yes, these Audis displayed five-cylinder engines, so the data is correct
+
+### Horsepower:
+From `summary(Auto)` above we see that horsepower has 5 NA's that we'll need to take care of later ...
+
+### So, this is your departing data set:
+
+```{r}
+summary(Auto)
+```
+
+### A plot from Lecture 1 ...
+
+```{r}
+with (Auto, Auto.lm <<- lm(l.100km ~ horsepower, Auto))
+
+plot(Auto[,"horsepower"],Auto[,"l.100km"],
+     pch=20,
+     xlab="horsepower",ylab="fuel consumption (l/100km)",
+     main="Linear regression")
+
+# add regression line
+a <- Auto.lm$coefficients["(Intercept)"]
+b <- Auto.lm$coefficients["horsepower"]
+abline(a=a,b=b,col="blue")
+text(50,25,sprintf("y(x)=%.3fx+%.2f",b,a),col="red",pos=4)
+```
+
+
+### In order to create quick LaTeX code, try this:
+  
+```{r}
+library(xtable)
+
+xtable(Auto[1:4,])
+xtable(Auto.lm)
+```
+
+Wasn't that nice? 
+
+```{r}
+# this is a list of R objects that can be embedded into a LaTeX table code:
+methods(xtable)
+```
+
+***
+
+### Exercise for the lab session:
+
+1. Print the dimensions of the data set 
+
+2. Identify possible target variables according to classification or regression problems
+
+3. Inspect the first 4 examples and the predictive variables 6 and 7 for the tenth example
+
+4. Perform a basic inspection of the dataset. Have a look at the minimum and maximum values for each variable; find possible errors and abnormal values (outliers); find possible missing values; decide which variables are really continuous and which are really categorical and convert them
+
+5. Make a decision on a sensible treatment for the missing values and apply it; 
+
+<p class="comment">
+**WARNING!** `origin` is categorical and cannot be used for knn imputation, unless you make it binary temporarily
+</p>
+
+6. Derive one new continuous variable: weight/horsepower; derive one new categorical variable: sports_car, satisfying horsepower > 1.2*mean(horsepower) AND acceleration < median(acceleration); do you think this new variable is helpful in predicting 'origin' ?
+
+7. Create a new dataframe that gathers everything and inspect it again
+
+8. Perform a graphical summary of some of the variables (both categorical and continuous)
+
+9. Perform a graphical comparison between some pairs of variables (both categorical and continuous)
+
+10. Do any of the continuous variables "look" Gaussian? can you transform some variable so that it looks more so?
+
+11. Create a new dataframe that gathers everything and inspect it again; consider 'origin' as the target variable; perform a basic statistical analysis as indicated in Section 9 of the example script
+
+12. Shuffle the final dataset and save it into a file for future use
+
+### Your code starts here ...
+
+1. Print the dimensions of the data set.
+
+```{r}
+dim(Auto)
+```
+
+2. Identify possible target variables according to classification or regression problems.
+
+```{r}
+names(Auto)
+```
+
+We could target l.100km for regression, and year or origin for classification.
+
+3. Inspect the first 4 examples and the predictive variables 6 and 7 for the tenth example.
+
+```{r}
+Auto[1:4,]
+Auto[10,6:7]
+```
+
+4. Perform a basic inspection of the dataset. Have a look at the minimum and maximum values for each variable; find possible errors and abnormal values (outliers); find possible missing values; decide which variables are really continuous and which are really categorical and convert them.
+
+```{r}
+summary(Auto)
+```
+There are some outliers but they could be true values.
+```{r}
+Auto
+```
+
