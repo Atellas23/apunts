@@ -4,7 +4,7 @@ output:
   html_document:
     df_print: paged
 ---
-
+# Exercici 2
 ## (a)
 ```{r}
 setwd('.')
@@ -17,14 +17,14 @@ summary(X)
 pairs(X)
 ```
 
-Hi ha relació lineal entre `LifeEF` i `LifeEM`.
-
 ## (c)
 ```{r}
 summary(X$GNP)
 # són menys noranta-nous
 sum(X$GNP == -99)
 ```
+Com podem veure en el `summary(X$GNP)`, hi ha valors codificats amb -99, que assumirem que són valors mancants. Així doncs, hi ha `r sum(X$GNP == -99)` països sense dades al GNP.
+
 ## (d)
 ```{r}
 X$GNP[X$GNP ==-99] <- NA
@@ -37,24 +37,34 @@ boxplot(X$GNP, main = "Boxplot de GNP")
 qqnorm(X$GNP, main = "Normal probability plot de GNP")
 hist(X$GNP)
 ```
-gnp no es normal
+
+Observem que la variable GNP no segueix una distribució normal, i que té diversos valors estranys (outliers). A més, el `qqnorm` no és lineal, ni tan sols s'hi apropa.
+
 ## (f)
 ```{r}
 library(MASS)
 b <- boxcox(X$GNP~1,lambda = seq(-1, 1, by = 0.1))
 (lambda <- b$x[which.max(b$y)])
 ```
-
+Cal fer una transformació de Box-Cox amb el paràmetre $\lambda\approx0$, que és pràcticament una transformació logarítmica.
 
 ## (g)
+Primer transformem la variable per la transformació de Box-Cox:
 ```{r}
 transformed.GNP <- (X$GNP^lambda - 1) / lambda
 boxplot(transformed.GNP)
 plot(transformed.GNP)
 hist(transformed.GNP)
 ```
-La seva distribucio s'ha aproximat a una normal per la transformacio de box-cox
-mes simetrica que abans i amb menys valors randoms estranys what the fuck
+La seva distribucio s'ha aproximat a una normal. Ara és una mica més simètrica que abans, i té menys valors estranys.
+Si ara ho provem pel logaritme,
+```{r}
+log.GNP <- log(X$GNP)
+boxplot(log.GNP)
+plot(log.GNP)
+hist(log.GNP)
+```
+observant l'histograma observem que aquesta transformació s'assembla molt més a una normal.
 
 ## (h)
 ```{r}
@@ -64,7 +74,7 @@ mod <- lm(GNPT ~ Birth + Death + Infant + LifeEM + LifeEF, X2)
 
 summary(mod)
 ```
-El model explica un `r summary(mod)$r.squared*100`% de les dades.
+El model explica un `r summary(mod)$r.squared*100`% de les dades del GNP.
 
 ## (i)
 
@@ -72,22 +82,23 @@ El model explica un `r summary(mod)$r.squared*100`% de les dades.
 X3 <- X[is.na(X$GNP),]
 P <- predict(mod, newdata=X3)
 X$GNPT[is.na(X$GNPT)] <- P
-X
+X[is.na(X$GNP),]
 ```
 
 ## (j)
-
+La variància dels residus del model és la suma de quadrats residual dividida entre els seus graus de llibertat. Aleshores,
 ```{r}
 m0 <- lm(GNPT~1,X2)
-(test <- anova(mod))
-s <- test[6,2]/test[6,1]
+(anv <- anova(mod))
+s <- anv[6,2]/anv[6,1]
 ```
-
+la variància dels residus del model val `r s`.
 ## (k)
+Les prediccions amb soroll afegit queden:
 ```{r}
 set.seed(123)
-e <- rnorm(6, mean = 0, sd = sqrt(s))
-P + e
+(e <- rnorm(6, mean = 0, sd = sqrt(s)))
+#P + e
+X$GNPT[is.na(X$GNP)] <- P + e
+X[is.na(X$GNP),]
 ```
-
-
