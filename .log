@@ -1,1 +1,10 @@
 git add --all
+git commit -m update
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+	modified:   .log
+
+no changes added to commit
+Makefile:2: recipe for target 'all' failed

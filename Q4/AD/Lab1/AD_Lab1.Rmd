@@ -4,63 +4,90 @@ output:
   html_document:
     df_print: paged
 ---
+
 ## (a)
 ```{r}
 setwd('.')
 X <- read.table("PovertyStudy.dat",header = TRUE)
 head(X)
+summary(X)
 ```
 ## (b)
 ```{r}
 pairs(X)
 ```
 
+Hi ha relació lineal entre `LifeEF` i `LifeEM`.
+
 ## (c)
 ```{r}
+summary(X$GNP)
 # són menys noranta-nous
-sum(X$GNP[X$GNP==-99])/(-99)
+sum(X$GNP == -99)
 ```
 ## (d)
 ```{r}
 X$GNP[X$GNP ==-99] <- NA
+summary(X$GNP)
 ```
 
 ## (e)
 ```{r}
 boxplot(X$GNP, main = "Boxplot de GNP")
 qqnorm(X$GNP, main = "Normal probability plot de GNP")
-# plot(X$GNP)
+hist(X$GNP)
 ```
+gnp no es normal
 ## (f)
 ```{r}
 library(MASS)
 b <- boxcox(X$GNP~1,lambda = seq(-1, 1, by = 0.1))
-```
-```{r}
+(lambda <- b$x[which.max(b$y)])
 ```
 
 
 ## (g)
 ```{r}
-plot(X$Pesmare,X$Alcmare)
+transformed.GNP <- (X$GNP^lambda - 1) / lambda
+boxplot(transformed.GNP)
+plot(transformed.GNP)
+hist(transformed.GNP)
 ```
-```{r}
-s <- sum(is.na(X$Pesmare) | is.na(X$Alcmare))
-sprintf("Hi ha %i estudiants que tenen dades mancants per alguna d'aquestes variables.", s)
-```
+La seva distribucio s'ha aproximat a una normal per la transformacio de box-cox
+mes simetrica que abans i amb menys valors randoms estranys what the fuck
 
 ## (h)
 ```{r}
-L <- cor(X$Pesmare, X$Alcmare, use='complete.obs')
+X$GNPT <- transformed.GNP
+X2 <- X[!is.na(X$GNPT),]
+mod <- lm(GNPT ~ Birth + Death + Infant + LifeEM + LifeEF, X2)
+
+summary(mod)
 ```
+El model explica un `r summary(mod)$r.squared*100`% de les dades.
+
+## (i)
 
 ```{r}
-mod <- lm(X$Pesmare ~ X$Alcmare, X)
-summary(mod)$adj.r.squared
+X3 <- X[is.na(X$GNP),]
+P <- predict(mod, newdata=X3)
+X$GNPT[is.na(X$GNPT)] <- P
+X
 ```
 
+## (j)
 
-### (i)
+```{r}
+m0 <- lm(GNPT~1,X2)
+(test <- anova(mod))
+s <- test[6,2]/test[6,1]
+```
 
+## (k)
+```{r}
+set.seed(123)
+e <- rnorm(6, mean = 0, sd = sqrt(s))
+P + e
+```
 
 

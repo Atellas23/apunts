@@ -1,0 +1,63 @@
+---
+title: "Exercici 5"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## (a)
+```{r}
+dd <- read.table("http://www-eio.upc.es/~jan/Data/MVA/kernels.dat", header = T)
+head(dd)
+summary(dd)
+```
+## (b)
+```{r}
+colnames(dd)
+(n <- nrow(dd))
+(m <- apply(dd, 2, mean)) #si fos 1 seria per files
+```
+
+## (c)
+```{r}
+Xc <- scale(dd, scale = F)
+head(Xc)
+```
+
+## (d)
+```{r}
+(MVC <- cov(dd))
+which.max(diag(MVC))
+max(diag(MVC))
+```
+No son comparables perque no tenen les mateixes unitats
+
+## (e)
+```{r}
+library(car)
+MC <- cor(dd)
+scatterplotMatrix(dd)
+```
+No tenen relacio lineal forta les variables amb assimetry i compactness. Les altres si.
+
+## (f)
+```{r}
+Xs <- scale(dd)
+head(Xs)
+```
+
+## (g)
+```{r}
+(cov(Xs))
+```
+Hi ha 1 a la diagonal perquè hem estandaritzat les variables i l'autocovariància és igual a la variància.
+
+## (h)
+
+
+## (i)
+
+
+
