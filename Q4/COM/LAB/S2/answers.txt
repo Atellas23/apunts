@@ -1,0 +1,85 @@
+Exercise 1
+
+Executing 'alias' in a PowerShel, Windows lists all the alias used in the Powershell command interpreter.
+The translations are:
+- ls: Get-ChildItem
+- dir: Get-ChildItem
+- cd: Set-Location
+- copy: Copy-Item
+- history: Get-History
+- start: 
+Start-Process
+----------
+
+Exercise 2
+
+The outputs are the following:
+> Get-Item alias:ls
+CommandType     Name                                               Version    Source       
+-----------     ----                                               -------    ------       
+Alias           ls -> Get-ChildItem                                                        
+
+This command looks for the translation of the alias 'ls'. In fact, when executed with 'alias:start', for example,
+or any of the above translations, it spits out their translation.
+
+> Get-Item “.”
+    Directorio: C:\Users\alex.batlle
+
+
+Mode                LastWriteTime         Length Name                                      
+----                -------------         ------ ----                                      
+d-r---       18/02/2020     10:19                Documents                                 
+
+This command outputs the name and some properties of the current directory.
+
+> Get-ChildItem “.”
+    Directorio: C:\Users\alex.batlle\Documents
+
+
+Mode                LastWriteTime         Length Name                                      
+----                -------------         ------ ----                                      
+-a----       18/02/2020     10:19              0 answers.txt                     
+
+This command outputs the name of the files and folders inside the current directory.
+
+> Get-ChildItem “.” -Recurse -Include “answers.txt”
+    Directorio: C:\Users\alex.batlle\Documents
+
+
+Mode                LastWriteTime         Length Name                                      
+----                -------------         ------ ----                                      
+-a----       18/02/2020     10:19              0 answers.txt                     
+
+> Select-String history answers.txt
+answers.txt:9:- history: Get-History
+answers.txt:46:> Select-String history answers.txt
+
+This command looks for a string in a file (similar to grep in linux).
+----------
+
+Exercise 3
+
+The command is $env:Path = "$Home\bin\;$env:Path"
+----------
+
+Exercise 4
+
+Windows edition: Windows 10 Enterprise
+Processor: Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz  3.41GHz
+Installed memory (RAM): 16,0 GB
+System type: 64 bits Operative System, x64 processor
+Computer Name: c6s302pc22
+Workgroup: stark.fib.upc.es
+----------
+
+Exercise 5
+
+TEMP: C:\Users\ALEX~1.BAT\AppData\Local\Temp
+ComSpec: C:\windows\system32\cmd.exe
+NUMBER_OF_PROCESSORS: 8
+OS: Windows_NT
+----------
+
+Exercise 6
+
+Issuing 'cmd' starts an instance of the Windows Command Prompt directly in the PowerShell window, while issuing 'start cmd' opens a Command Prompt in a new window.
