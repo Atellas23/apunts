@@ -82,4 +82,4 @@ OS: Windows_NT
 
 Exercise 6
 
-Issuing 'cmd' starts an instance of the Windows Command Prompt directly in the PowerShell window, while issuing 'start cmd' opens a Command Prompt in a new window.
+Issuing 'cmd' starts an instance of the Windows Command Prompt directly in the PowerShell window, while issuing 'start cmd' opens a Command Prompt in a new window. If we run 'start cmd -NoNewWindow' things get bugged; commands are not well interpreted or written. But, if we run the same command with the flag '-Wait', this is, 'start cmd -NoNewWindow -Wait', PowerShell waits for the cmd process to stop before reading anything, so the two processes run smoothly.
