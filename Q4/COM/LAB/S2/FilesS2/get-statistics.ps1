@@ -21,8 +21,8 @@ $DayData >data.tmp.csv
 $temperatures = (Import-CSV data.tmp.csv).temp
 if ( $temperatures.Count -ne 0 ) {
    $celsius = ($temperatures) | % {([float]$_-32.0)*5.0/9.0}
-   ($stats = ($temperatures | Measure-object -Minimum -Maximum | Select-object -property Minimum,Maximum))
-   ($celsius_stats = ($celsius | Measure-object -Minimum -Maximum | Select-object -property Minimum,Maximum))
+   ($temperatures | Measure-object -Minimum -Maximum | Select-object -property Minimum,Maximum)
+   ($celsius | Measure-object -Minimum -Maximum | Select-object -property Minimum,Maximum)
    rm data.tmp.csv
 }
 else {
