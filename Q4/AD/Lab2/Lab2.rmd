@@ -1,0 +1,96 @@
+---
+title: "P2_ex1"
+author: "Àlex Batlle Casellas i Aleix Torres Camps"
+date: "24/2/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(car)
+```
+
+
+```{r}
+X <- read.table("Einsiedeln.dat", header = TRUE)
+head(X)
+
+colnames(X)
+```
+
+```{r}
+Y <- X[, c("Year", "Speed", "Dist", "DP", "A", "B", "C", "D", "E", "JP")]
+
+Total <- X$Total
+
+rownames(Y) <- paste(X$Surname, X$Name, sep="-")
+
+head(Y)
+```
+
+```{r}
+Y$Age <- 2020 - Y$Year
+```
+
+```{r}
+Y <- Y[,-1]
+cor(Y)
+summary(Y)
+```
+```{r}
+pairs(Y)
+```
+
+a)
+```{r}
+nrow(Y)
+```
+```{r}
+apply(Y, 2, boxplot)
+```
+```{r}
+boxplot(Y)
+```
+```{r}
+scatterplotMatrix(Y)
+```
+```{r}
+cor(Y)
+```
+b)
+```{r}
+# library(matlib)
+Xc <- scale(Y, scale=FALSE)
+A <- eigen(cor(Y))$vectors
+
+Fp <- Xc %*% A
+
+Fp
+```
+```{r}
+PCA <- princomp(Y)
+
+screeplot(PCA)
+```
+c)
+```{r}
+b <- eigen(cor(Y))$values
+```
+d)
+```{r}
+biplot(PCA)
+```
+e)
+```{r}
+apply(Y, 2, boxplot)
+```
+```{r}
+YY <- Y[Y$DP > min(Y$DP),]
+YY <- YY[Y$A > min(Y$A),]
+YY <- YY[Y$B > min(Y$B),]
+```
+
+```{r}
+apply(YY, 2, boxplot)
+boxplot(YY)
+```

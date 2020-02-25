@@ -1,0 +1,23 @@
+Exercise 1
+
+To make the code run properly, we have to include the libraries `stdio.h` for the function `sprintf` and `unistd.h` for the function `write`. The numbers in the `man` calls are the manual page that we want if the instruction asked for has for multiple entries in the Linux manual.
+----------
+
+Exercise 2
+
+The modified `Makefile` is:
+```
+all: hello hello2u
+
+hello: hello.cc
+	g++ -o hello hello.cc
+
+hello2u:
+	g++ -o hello2u hello2u.cc
+
+clean:
+	rm -f hello hello2u
+```
+----------
+
+Exercise 3
