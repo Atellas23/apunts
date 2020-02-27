@@ -190,6 +190,9 @@ $$
 \cos\theta=\frac{\|p_i\|}{\|f_i\|}=\frac{f_i^Tg_j}{\|f_i\|\cdot\|g_i\|},\quad \|p_i\|=\frac{f_i^Tg_j}{\|g_j\|},\quad x_{ij}\approx f_i^Tg_j=\|p_i\|\cdot\|g_j\|.
 $$
 
+#### *Biplots* a la PCA
+
+La PCA dóna un *biplot* de la matriu de dades centrades.
 
 Amb aquestes instruccions representem
 
