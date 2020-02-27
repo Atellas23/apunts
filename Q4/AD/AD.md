@@ -99,7 +99,7 @@ En estadística s'utilitzen molt les transformacions de les variables aleatòrie
 
 - $y=\ln(x)$ (zeros no permesos).
 - $y=\sqrt{x}$ (zeros permesos).
-- Transformació logit per probabilitats $y=\ln\left(\frac{p}{1-p}\right).$
+- Transformació *logit* per probabilitats $y=\ln\left(\frac{p}{1-p}\right).$
 - Substituir les observacions pel seu rang (?) /// la seva posició (?).
 - Transformació de la potència $y=x^a$.
 - Transformació de Box-Cox.
@@ -114,3 +114,89 @@ El valor òptim de $\lambda$ s'aconsegueix per màxima versemblança.
 
 ## 2. Àlgebra de matrius aplicada a l'anàlisi multivariant
 
+Tio, si no sabeu tot això abandoneu la carrera.
+
+## 3. Anàlisi de components principals (PCA)
+
+Els objectius principals de l'**Anàlisi de components principals (PCA)** són:
+
+- Reduir el nombre de variables.
+- Una visualització de la matriu de dades a través d'un *biplot*.
+
+### Teoria de la PCA
+
+Busquem combinacions lineals de les variables originals,
+$$
+F_1=a_{11}X_1+a_{12}X_2+\cdots+a_{1p}X_p\\
+F_2=a_{21}X_1+a_{22}X_2+\cdots+a_{2p}X_p\\
+\vdots\\
+F_p=a_{p1}X_1+a_{p2}X_2+\cdots+a_{pp}X_p\\
+$$
+tals que satisfacin:
+
+- $F_1,F_2,\ldots,F_p$ no correlades.
+- $\text{Var}(F_1)$ màxima.
+- $\text{Var}(F_1)\geq\text{Var}(F_2)\geq\cdots\geq\text{Var}(F_p)$.
+- $a_{i1}^2+a_{i2}^2+\cdots+a_{ip}^2=1.\qquad(-1\leq a_{ij}\leq1)$
+
+Tots els coeficients i valors propis es poden obtenir de la **descomposició espectral** de la matriu de covariàncies, $S=AD_\lambda A^T$. Les **components principals** s'obtenen calculant
+$$
+\begin{matrix}
+F_p & = & X_c & A.\\
+(n\times p) & & (n\times p) & (p\times p)
+\end{matrix}
+$$
+Els valors propis corresponen a les variàncies de les components principals perquè
+$$
+\frac{1}{n-1}F_p^TF_p=\frac{1}{n-1}(X_cA)^TX_cA=\frac{1}{n-1}A^TX_c^TX_cA=A^TSA=A^TAD_\lambda A^TA=D_\lambda.
+$$
+Una manera alternativa de fer PCA és utilitzant la **descomposició en valors singulars (SVD)** de la matriu de dades centrada, $X_c=UDA^T$. Les components principals aleshores es calculen amb $F_p=X_cA=UD$. Els valors singulars al quadrat es relacionen amb la variància dels components principals perquè
+$$
+\frac{1}{n-1}F_p^TF_p=\frac{1}{n-1}(UD)^TUD=\frac{1}{n-1}D^2=D_\lambda.
+$$
+Aquesta aproximació és molt convenient per construir *biplots*.
+
+### *Biplots*
+
+Un *biplot* és una eina molt útil per explorar gràficament dades multivariants. És una generalització multivariant de l'*scatterplot*, però difereix d'aquest en alguns aspectes:
+
+- Típicament té més de dos eixos.
+- Els eixos no són perpendiculars, sinó que tendeixen a ser oblics.
+- La matriu de dades es representa de manera aproximada, no exacta.
+
+Un *biplot* és una visualització de les files i columnes d'una matriu que és òptima en termes de mínims quadrats.
+
+Per fer un *biplot* d'una matriu, primer l'hem de factoritzar
+$$
+X_{n\times p}=F_{n\times r}G_{r\times p}^T\qquad(1)
+$$
+en el producte d'una matriu de **marcadors de files**, $F$, i una matriu de **marcadors de columnes**, $G$. Aquesta factorització també existeix en un scatterplot ordinari,
+$$
+X_{n\times2}=X_{n\times2}I_{2\times2}.
+$$
+La factorització $(1)$ no és única; amb qualsevol aplicació lineal invertible $T$ tenim
+$$
+X_{n\times p}=F_{n\times r}TT^{-1}G_{r\times p}^T=\tilde F_{n\times r}\tilde G_{r\times p}^T.\qquad(2)
+$$
+
+#### *Biplots* i el producte escalar
+
+En un *biplot*, els valors de les dades s'aproximen amb el **producte escalar ordinari** entre dos vectors:
+
+<img src="AD.assets/image-20200227095710124.png" alt="image-20200227095710124" style="zoom:80%;" />
+
+Veiem que, efectivament,
+$$
+\cos\theta=\frac{\|p_i\|}{\|f_i\|}=\frac{f_i^Tg_j}{\|f_i\|\cdot\|g_i\|},\quad \|p_i\|=\frac{f_i^Tg_j}{\|g_j\|},\quad x_{ij}\approx f_i^Tg_j=\|p_i\|\cdot\|g_j\|.
+$$
+
+
+Amb aquestes instruccions representem
+
+`plot(F[, 1], F[, 2], pch = 19)`
+
+`point(G[, 1], G[, 2], pch = 2, col = "blue")`
+
+`arrows(0, 0, G[, 1], G[, 2])`
+
+<img src="AD.assets/image-20200227093108970.png" alt="image-20200227093108970" style="zoom:80%;" />
