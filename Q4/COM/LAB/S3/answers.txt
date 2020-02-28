@@ -10,10 +10,10 @@ The modified `Makefile` is:
 all: hello hello2u
 
 hello: hello.cc
-	g++ -o hello hello.cc
+	g++ -Wall -o hello hello.cc
 
 hello2u:
-	g++ -o hello2u hello2u.cc
+	g++ -Wall -o hello2u hello2u.cc
 
 clean:
 	rm -f hello hello2u
@@ -21,3 +21,65 @@ clean:
 ----------
 
 Exercise 3
+
+The file `hello2uchars.cc` is included in the zipped file.
+----------
+
+Exercise 4
+
+The `utf16` executable shows in the standard output all the Unicode characters that the machine can write and recognize. But, some of these are à¡ž, blank characters.
+`utf16-in-c` shows the same table, and also the sizes of the types `UChar` and `UChar32`.
+`is` prints information about every character in the Unicode standard: in particular, it has information about if a character is defined, if it can be printed, if it is a control character, if it is blank, it it is a digit and if it is graphical.
+----------
+
+Exercise 5
+
+The file `integers.cc` is included in the zipped file.
+----------
+
+Exercise 6
+
+When, for example, we run `./integers 16 > num.dat && xxd num.dat` the output line is
+```
+00000000: 1000 0000                                ....
+```
+Knowing, as we do, that 16 in hexadecimal is 0010, this system must be little-endian.
+----------
+
+Exercise 7
+
+Running `./integers $((0x0a0aa0c3))`, we can see that the output of the program is a character; in particular, the program writes the character 'à' to the terminal.
+----------
+
+Exercise 8
+
+When we run `inttrunc` with the different values, we get
+```
+./inttrunc 27   ---> b
+./inttrunc 250  ---> , fa
+./inttrunc 258  ---> , 102
+./inttrunc 1234 ---> , 4d2
+```
+----------
+
+Exercise 9
+
+The file `floatdiv.cc` is included in the zipped file. If we run `./floatdiv 1 10 > num.dat && xxd num.dat`, the result is
+```
+00000000: cdcc cc3d                                ...=
+```
+----------
+
+Exercise 10
+
+When we run `./ages Alex 21 Manel 41 Pep 23`, the output is
+```
+person 0:  Alex  21
+person 1:  Manel  41
+person 2:  Pep  23
+```
+----------
+
+Exercise 11
+
+When we run `./valsfp32`, the output is very similar to slide 20 of the second lesson of the course. In fact, here we have the decimal representation (or the name) of every number that appears in slide 20, and its binary representation as well. Running `./valsfp64`, a similar output appears; the difference between `valsfp32` and `valsfp64` is just the number of bits used to represent numbers, 32 and 64 respectively.
