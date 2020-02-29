@@ -17,9 +17,9 @@ Threads = cores --> direm que és un procés **paral·lel**
 - Tasca: feina (algoritme, bucle, el que sigui) que no subdividirem. Idealment van a 1 core. Executar un programa és executar **totes** les tasques.
 
 - Temps seqüencial ($T(1)$): suma del cost de totes les tasques.
-- Temps paral·lel (amb $P$ CPUs): depèn de com d'intel·ligent sigui l'schedule.
+- Temps paral·lel (amb $p$ cores, $T(p)$): depèn de com d'intel·ligent sigui l'schedule.
 
-- Temps infinit: temps amb infinits recursos.
+- Temps infinit: temps amb infinits recursos. Cost del camí crític.
 
 - Overhead: fer massa paral·lelisme i que el programa vagi més lent
 
@@ -38,9 +38,45 @@ Threads = cores --> direm que és un procés **paral·lel**
 
 ### Anàlisi teòrica d'algorismes paral·lels
 
-### Grafs de processos
+### Grafs de tasques
 
 ### Anàlisi d'aplicacions
+
+Per planificar, és típic de posar tot el camí crític en un mateix core.
+
+#### *Speedup* ($\sigma$)
+
+L'acceleració que aconsegueix una aplicació. S'expressa en funció del nombre $p$ de processadors:
+$$
+\sigma(p)=\frac{T(1)}{T(p)}.
+$$
+
+#### Eficiència ($\eta$)
+
+L'eficiència ens dona una mesura de com aprofitem els recursos que tenim.
+$$
+\eta(p)=\frac{\text{Speedup(p)}}{p}.
+$$
+Si l'eficiencia es mes gran que 0.7, es poden utilitzar mes recursos.
+
+#### Llei d'Amdhal
+
+La llei d'Amdhal dóna un límit sobre la màxima acceleració que es pot aconseguir en un programa paral·lelitzant-lo. Utilitza el percentatge de programa paral·lelitzable i no paral·lelitzable, anomenat *parallel fraction*, $\phi$.
+
+**Idea:** si tenim una fracció $\phi$ del programa que podem accelerar, $(1-\phi)T(1)$ serà el mínim temps d'execució del nostre programa. Això és correspon a un cas no real, on acceleraríem la resta (la fracció $\phi$ del programa) fins a l'infinit.
+
+El temps total, $T(p)$, el podem posar com a suma del temps no accelerat i el temps accelerat:
+$$
+T(p)=\text{temps_no_accelerat}+\text{temps_accelerat}(p).
+$$
+Tenim, doncs, $\text{temps_no_accelerat}=(1-\phi)T(1)$, i $\text{temps_accelerat}(p)=\frac{\phi}{p}T(1)$. Aleshores, en general,
+$$
+\sigma(p)=\frac{T(1)}{(1-\phi)T(1)+\frac{\phi T(1)}{p}}=\boxed{\frac{1}{1-\phi+\frac{\phi}{p}}.}
+$$
+Si es vol estimar el màxim *speedup*, fem
+$$
+\lim_{p\to+\infty}\sigma(p)=\frac{1}{1-\phi}.
+$$
 
 ### Estratègies de paral·lelització
 
