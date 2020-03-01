@@ -203,3 +203,4 @@ Amb aquestes instruccions representem
 `arrows(0, 0, G[, 1], G[, 2])`
 
 <img src="AD.assets/image-20200227093108970.png" alt="image-20200227093108970" style="zoom:80%;" />
+
