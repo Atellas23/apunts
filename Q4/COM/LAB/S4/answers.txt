@@ -1,0 +1,53 @@
+se 1
+
+We can get the information we need both from executing `lscpu` or `cat /proc/cpuinfo`, but it is easier to read in the former. The information we are asked for is:
+- Model of the processor: Intel(R) Core(TM) i7-6700
+- Number of cores: 4
+- Number of threads/core: 2
+- Frequency of the processor: 3.40 GHz
+- Byte order: Little Endian
+----------
+
+Exercise 2
+
+The computer controls the PCI ports with an Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor PCIe Controller (x16). It has 3 PCI slots, and these are:
+- PCI 10de:1287: NVIDIA Corporation GK208B [GeForce GT 730]
+- PCI 8086:a282: Intel Corporation 200 Series PCH SATA controller [AHCI mode]
+- PCI 8086:15e3: Intel Corporation Ethernet Connection (5) I219-LM
+----------
+
+Exercise 3
+
+I have found these levels:
+- L1: this is memory per core, and is divided into two separate types:
+	- L1i: only-instruction memory (32kB)
+	- L1d: only-data memory (32kB)
+- L2: this is also memory per core, and it is not divided. It has 256kB of memory, devoted both to data and instructions.
+- L3: this is memory shared between all cores, and it is not divided. It has 8192kB of memory, devoted both to data and instructions.
+----------
+
+Exercise 4
+
+If we run `numactl -H`, the output is
+```
+available: 1 nodes (0)
+node 0 cpus: 0 1 2 3 4 5 6 7
+node 0 size: 15952 MB
+node 0 free: 12494 MB
+node distances:
+node   0 
+  0:  10 
+```
+This system has one sole memory node, with a size of 15952MB. Of this memory, 12494MB are free.
+----------
+
+Exercise 5
+
+This system has the following USB devices:
+- Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+- Bus 001 Device 003: ID 04f2:1469 Chicony Electronics Co., Ltd 
+- Bus 001 Device 002: ID 03f0:094a Hewlett-Packard Optical Mouse [672662-001]
+- Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+----------
+
+Exercise 6

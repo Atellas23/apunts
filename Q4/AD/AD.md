@@ -114,7 +114,44 @@ El valor òptim de $\lambda$ s'aconsegueix per màxima versemblança.
 
 ## 2. Àlgebra de matrius aplicada a l'anàlisi multivariant
 
-Tio, si no sabeu tot això abandoneu la carrera.
+### Resum de vectors i matrius
+
+- **Norma-2:** $\|x\|_2=\sqrt{x^Tx}=\sqrt{\sum_{i=1}^dx_i^2};\|\alpha x\|_2=|\alpha|\cdot\|x\|_2.$
+- **Producte escalar:** $<x,y>_2=x^Ty=x_1y_1+\cdots+x_dy_d;<x,y>=0\iff x\perp y.$
+- **Angle:** $\cos{\theta}=\frac{<x,y>_2}{\|x\|_2\cdot\|y\|_2}.$
+- **Descomposició espectral i SVD:**
+
+### Matrius bàsiques a l'anàlisi multivariant
+
+- **Matriu de dades:** $X_{n\times p}.$
+- **Vector de mitjana mostral:** $\boldsymbol m_{p\times1}=\left(\frac{1}{d}\boldsymbol 1^TX\right)^T.$
+- **Matriu de dades centrades:** $X_c=X-\boldsymbol 1_{n\times1}\boldsymbol m^T=\left(I-\frac{1}{n}\boldsymbol1\boldsymbol1^T\right)X.$
+- **Matriu centradora:** $H=I-\frac{1}{n}\boldsymbol1\boldsymbol1^T\implies X_c=HX.$
+- **Matriu de dades estandaritzades:** $X_s=X_cD^{-1}$, on $D_s=\text{diag}(s_1,\ldots,s_p)$ és la matriu de les desviacions típiques de les columnes de $X$. Per tant, $X_s=HXD_s^{-1}.$
+- **Matriu de covariàncies mostrals:** $S=\frac{1}{n-1}X_c^TX_c.$
+- **Matriu de correlacions mostrals:** $R=D_s^{-1}SD_s^{-1}=\frac{1}{n-1}D_s^{-1}X^TH^THXD_s^{-1}=\frac{1}{n-1}X_s^TX_s.$
+
+#### Distàncies importants a l'anàlisi multivariant
+
+- **Euclidiana:**
+
+$$
+\delta_{rs}=\sqrt{(x_s-x_s)^T(x_r-x_s)}=\left(\sum_{i=1}^p|x_{ri}-x_{si}|^2\right)^\frac{1}{2}.
+$$
+
+
+
+- **Distància de Mahalanobis:**
+
+$$
+\delta_{rs}=\left((x_r-x_s)^TS^{-1}(x_r-x_s)\right)^\frac{1}{2}.
+$$
+
+- **Distància de Minkowski:**
+
+$$
+\delta_{rs}=\left(\sum_{i=1}^p|x_{ri}-x_{si}|^\lambda\right)^\frac{1}{\lambda}.
+$$
 
 ## 3. Anàlisi de components principals (PCA)
 
@@ -192,7 +229,7 @@ $$
 
 #### *Biplots* a la PCA
 
-La PCA dóna un *biplot* de la matriu de dades centrades.
+La PCA dóna un *biplot* de la matriu de dades centrades. S'obté representant+
 
 Amb aquestes instruccions representem
 

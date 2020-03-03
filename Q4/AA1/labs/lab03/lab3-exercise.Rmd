@@ -1,0 +1,53 @@
+---
+title: 'LAB 3: Bias/Variance -- Exercise'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "February 2020"
+output:
+  html_notebook: default
+  pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+## Exercise: Bias/Variance analysis on simulated data
+
+```{r}
+set.seed(5345)
+par(mfrow=c(1, 1))
+library(polynom)
+```
+
+
+Consider the (unknown) target function $f$ (and best solution to out problem):
+```{r}
+f <- function(x) sin(x-5)/(x-5)
+```
+
+
+From which we can sample datasets:
+
+```{r}
+N <- 150
+x <- runif(N,0,15)           # generate the x according to a uniform distribution p(x)
+t <- f(x) + rnorm(N, sd=0.1) # generate the t according to a gaussian conditional distribution p(t|x)
+```
+
+
+Plot the generated sample along with the (typically unknown) $f$
+```{r}
+plot(data.frame(x, t))
+curve(f, type="l", col="blue", add=TRUE)
+```
+
+***
+
+### Exercise for this lab session:
+
+
+The exercise consists in estimating bias and variance (and hence bias^2+variance) for different models, and deduce which (polynomial) model is better for this problem.
+
+To this end, you must generate many (thousands?) datasets of size $N$, choose one point $x \in [0,15]$ (I suggest $x=10$) and estimate bias and variance for it. Notice that you do not need to store the datasets. Remember that you can estimate these quantities using the Monte-Carlo method.
+
+The models are going to be polynomials of degrees of your choice (I suggest 1,2,3,4,5,8).
+
