@@ -1,8 +1,8 @@
 # Machine Learning 1
 
-## 1. Introduction to Machine Learning
-
 [TOC]
+
+## 1. Introduction to Machine Learning
 
 Machine learning is a field that lies at the intersection of statistics, probability, computer science, and optimization. The main goal is to explore **automatic methods for inferring models from data** (for example: finding structure, making predictions).
 
@@ -248,7 +248,7 @@ $$
 $$
 However, the distance between the projected means is not a very good measure since it does not take into account the dispersion (**scatter**) within the classes. The problem is that the covariance matrices for each class are far from being diagonal. We actually want to look for the projection where examples from the same class are projected very close to one another and the projected means are as far apart as possible:
 
-<img src="1. Introduction to Machine Learning.assets/image-20200220172900080.png" alt="image-20200220172900080" style="zoom:50%;" />
+<img src="ML1.assets/image-20200220172900080.png" alt="image-20200220172900080" style="zoom:50%;" />
 
 The solution (proposed by R. Fisher) is to maximize a function that represents the difference between the means, normalized by a measure of the within-class scatter:
 
@@ -292,11 +292,11 @@ FDA generalizes very gracefully for $K$ class problems: the only restriction is 
 
 **When will FDA presumably fail?** If the classes are far from Gaussian, the FDA projections will not be able to preserve any complex structure; for an example, this image:
 
-<img src="1. Introduction to Machine Learning.assets/image-20200220171928773.png" alt="image-20200220171928773" style="zoom:70%;" />
+<img src="ML1.assets/image-20200220171928773.png" alt="image-20200220171928773" style="zoom:70%;" />
 
 FDA will also fail when the discriminatory information is not in the mean but rather in the *variance* of the data (e.g., if $J(w)=0$); for example,
 
-<img src="1. Introduction to Machine Learning.assets/image-20200220172136456.png" alt="image-20200220172136456" style="zoom:50%;" />
+<img src="ML1.assets/image-20200220172136456.png" alt="image-20200220172136456" style="zoom:50%;" />
 
 ## 3. Theory for regression and linear models.
 
