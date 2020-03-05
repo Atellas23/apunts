@@ -1,5 +1,9 @@
 # Anàlisi de Dades
 
+[TOC]
+
+
+
 ## 1. Introducció i pre-processament de dades
 
 ### 1.1. Introducció
@@ -229,15 +233,77 @@ $$
 
 #### *Biplots* a la PCA
 
-La PCA dóna un *biplot* de la matriu de dades centrades. S'obté representant+
+La PCA dóna un *biplot* de la matriu de dades centrades. S'obté representant conjuntament les dues primeres components principals (les primeres dues columnes de $F_p$) i els dos primers vectors propis (primeres dues columnes de $G_s$). Les files de $F_p$ es representen normalment amb punts, i les files de $G_s$ amb fletxes. Les coordenades $F_p$ s'anomenen <span style='color:blue'>coordenades principals</span>, i les coordenades $G_s$ s'anomenen <span style='color:blue'>coordenades estàndar</span>. Aquestes últimes compleixen $G_s^TG_s=I$.
 
-Amb aquestes instruccions representem
+Es pot fer un escalat alternatiu del *biplot*. Utilitzant $D_s$ la matriu diagonal amb les desviacions típiques de les components principals,
+$$
+X_c=F_pD_s^{-1}D_sG_s^T=F_sD_sG_s^T=F_sG_p^T,\\ G_p=G_sD_s.
+$$
+Aquest *biplot* representa les <span style='color:blue'>components principals estandaritzades</span>, $F_s=F_pD_s^{-1}$. Tenim, per tant, dos *biplots*:
 
-`plot(F[, 1], F[, 2], pch = 19)`
+- $X_c=F_pG_s^T$ (*biplot* de <span style='color:blue'>forma</span>)
+- $X_c=F_sG_p^T$ (*biplot* de <span style='color:blue'>covariància</span>)
 
-`point(G[, 1], G[, 2], pch = 2, col = "blue")`
+En general, els *biplots* de forma es centren en la **representació de distàncies**, mentre que els *biplots* de covariància es centren en representar la **estructura de correlació**.
 
-`arrows(0, 0, G[, 1], G[, 2])`
+#### Propietats dels *biplots*
+
+- En el *biplot* de forma, les distàncies euclidianes entre punts aproximen les distàncies euclidianes entre files de la matriu de dades.
+- En el *biplot* de covariància:
+  - Les distàncies euclidianes entre punts aproximen les distàncies de Mahalanobis entre files de la matriu de dades.
+  - La longitud d'una fletxa aproxima la desviació típica de la variable corresponent.
+  - L'angle entre dues fletxes aproxima la correlació entre les variables corresponents.
+
+#### *Biplots* a R
+
+Amb aquestes instruccions
+
+```R
+plot(F[, 1], F[, 2], pch = 19)
+point(G[, 1], G[, 2], pch = 2, col = "blue")
+arrows(0, 0, G[, 1], G[, 2])
+```
+
+podem representar el següent *biplot*:
 
 <img src="AD.assets/image-20200227093108970.png" alt="image-20200227093108970" style="zoom:80%;" />
 
+### Quantes components utilitzem?
+
+Els criteris a considerar són els següents:
+
+- El **percentatge de variància explicada**; volem que sigui $>80\%$.
+- El **mòdul del valor propi corresponent**; volem valors propis $>\bar\lambda$.
+- L'**scree-plot**; ens dona una visualització gràfica dels valors propis, és a dir, de quanta variància explica cada component.
+- Tests de significància amb els valors propis.
+
+Si ho plantegem matemàticament,
+$$
+\text{tr}(S)=\text{tr}(AD_\lambda A^T)=\text{tr}(D_\lambda),\\
+\sum_{i=1}^p\text{Var}(X_i)=\sum_{i=1}^p\text{Var}(F_i)=\sum_{i=1}^p\lambda_i,
+$$
+
+| Component             | $F_1$                     | $F_2$                                 | $\cdots$ | $F_p$                         |
+| --------------------- | ------------------------- | ------------------------------------- | -------- | ----------------------------- |
+| **Variància**         | $\lambda_1$               | $\lambda_2$                           | $\cdots$ | $\lambda_p$                   |
+| **Fracció**           | $\lambda_1/\sum\lambda_i$ | $\lambda_2/\sum\lambda_i$             | $\cdots$ | $\lambda_p/\sum\lambda_i$     |
+| **Fracció acumulada** | $\lambda_1/\sum\lambda_i$ | $(\lambda_1+\lambda_2)/\sum\lambda_i$ | $\cdots$ | $\sum\lambda_i/\sum\lambda_i$ |
+
+#### Tipus de PCA
+
+Hi ha dos tipus de PCA. Els càlculs es poden basar en
+
+- La **matriu de covariàncies** $S$:
+  - No és invariant respecte l'escala de mesura.
+  - La variable amb variància més gran domina.
+- La **matriu de correlacions** $R$:
+  - És invariant respecte l'escala de mesura.
+  - Totes les variables contribueixen de la mateixa manera.
+
+#### Interpretació
+
+Les components es poden interpretar amb l'ajuda dels coeficients de les variables, de les correlacions entre variables i components, i amb el *biplot*. Si l'objectiu és tenir una imatge de la matriu de dades, aleshores la interpretació de les components podria no ser necessària.
+
+### Sobre la bondat d'ajust
+
+Dels valors propis de l'anàlisi, es pot calcular la bondat d'ajust total d'una solució $k$-dimensional. També es pot calcular la bondat d'ajust per cada fila i columna de la matriu de dades. La bondat d'ajust de les variables també es pot calcular com l'$R^2$ en una regressió sobre les components principals.
