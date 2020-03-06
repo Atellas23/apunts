@@ -83,3 +83,23 @@ $$
 - Només processos: MPI
 - Només threads: OpenMP (o semblant) (1 node)
 - Híbrid: MPI+OpenMP
+
+## Entorns d'HPC
+
+### Sistemes de cues
+
+Els sistemes de cues gestionen els recursos computacionals disponibles en un entorn d'HPC. Per poder executar qualsevol programa aquí, hem de
+
+1. Demanar recursos (dins dels nostres límits).
+2. Executar els nostres programes utilitzant aquests recursos.
+   - Podem executar un nombre qualsevol de programes associats a una única petició de recursos.
+
+$\text{SLURM}$ és un sistema de cues *open source*. Depenent de la instal·lació, l'administrador defineix **particions** o **QoS**:
+
+- Les **particions** són grups de nodes que tenen associats uns límits:
+  - Nombre màxim de nodes.
+  - Temps màxim d'execució.
+- **QoS** (Quality of Service) és un concepte més nou. Defineix límits associats a la petició:
+  - La seva prioritat.
+  - Els límits.
+  - Una partició associada.
