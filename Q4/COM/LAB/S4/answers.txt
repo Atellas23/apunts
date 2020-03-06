@@ -1,4 +1,4 @@
-se 1
+Exercise 1
 
 We can get the information we need both from executing `lscpu` or `cat /proc/cpuinfo`, but it is easier to read in the former. The information we are asked for is:
 - Model of the processor: Intel(R) Core(TM) i7-6700
@@ -48,6 +48,78 @@ This system has the following USB devices:
 - Bus 001 Device 003: ID 04f2:1469 Chicony Electronics Co., Ltd 
 - Bus 001 Device 002: ID 03f0:094a Hewlett-Packard Optical Mouse [672662-001]
 - Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+The two "root hub" devices are internal USB ports that serve as a hub for all the other ports. If we run `lsusb -v` and go to their entry, we can see that in the `bInterfaceClass` there is the word "Hub".
 ----------
 
 Exercise 6
+
+The lab systems have the following filesystems
+```
+Filesystem                          Size  Used Avail Use% Mounted on
+devtmpfs                            8.4G     0  8.4G   0% /dev
+tmpfs                               8.4G     0  8.4G   0% /dev/shm
+tmpfs                               8.4G   14M  8.4G   1% /run
+tmpfs                               8.4G     0  8.4G   0% /sys/fs/cgroup
+/dev/sda7                           159G  119G   33G  79% /
+tmpfs                               8.4G   53M  8.4G   1% /tmp
+libra:/soft/raiz/linux              106G   89G   17G  84% /home/soft
+tmpfs                               1.7G   58k  1.7G   1% /run/user/32731
+libra:/home2/users/alumnes/1238268  186G   78G  108G  43% /home2/users/alumnes/1238268
+//pax/dades/alex.batlle             1.2G  5.1M  1.2G   1% /dades/alex.batlle
+//pax/assig                         8.2k     0  8.2k   0% /assig
+```
+----------
+
+Exercise 7
+
+The command to compile all of them at once is `make`.
+----------
+
+Exercise 8
+a) `./launch.sh i ./integers`, where `i` is any numer from 0 to the number of processors (not included).
+b) The elapsed time is 12.96s, and it has used 99%CPU.
+c) `./launch.sh i ./floats`, where `i` is any numer from 0 to the number of processors (not included).
+d) The elapsed time is 12.89s, and it has used 99%CPU.
+e) `./launch.sh i ./mems`, where `i` is any numer from 0 to the number of processors (not included).
+f) The elapsed time is 23.93s, and it has used 99%CPU.
+----------
+
+From this exercise on, the exercises where run in my personal laptop, with 6 cores with 2 threads each.
+
+Exercise 9
+
+- `./integers`
+a) `./launch.sh 0 ./integers 2 ./integers`.
+b) The average elapsed time is 45.625s and the average %CPU used is 97.5%.
+
+-`./floats`
+a) `./launch.sh 0 ./floats 2 ./floats`.
+b) The average elapsed time is 43.695s and the average %CPU used is 99%.
+
+-`./mems`
+a) `./launch.sh 0 ./mems 2 ./mems`.
+b) The average elapsed time is 1min 11.395s and the average %CPU used is 99%.
+
+Running the same process in different PUs obviously has some impact on the elapsed time. It is far greater in this case than before. But, the %CPU used is almost the same.
+----------
+
+Exercise 10
+
+- `./integers`
+a) `./launch.sh 0 ./integers 1 ./integers`.
+b) The average elapsed time is 43.09s and the average %CPU used is 97.5%.
+
+-`./floats`
+a) `./launch.sh 0 ./floats 1 ./floats`.
+b) The average elapsed time is 43.695s and the average %CPU used is 99%.
+
+-`./mems`
+a) `./launch.sh 0 ./mems 1 ./mems`.
+b) The average elapsed time is 1min 11.395s and the average %CPU used is 99%.
+
+Running the same process in different PUs obviously has some impact on the elapsed time. It is far greater in this case than before. But, the %CPU used is almost the same.
+----------
+
+Exercise 11
+
+Exercise 12
