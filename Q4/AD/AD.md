@@ -307,3 +307,154 @@ Les components es poden interpretar amb l'ajuda dels coeficients de les variable
 ### Sobre la bondat d'ajust
 
 Dels valors propis de l'anàlisi, es pot calcular la bondat d'ajust total d'una solució $k$-dimensional. També es pot calcular la bondat d'ajust per cada fila i columna de la matriu de dades. La bondat d'ajust de les variables també es pot calcular com l'$R^2$ en una regressió sobre les components principals.
+
+## 4. Escalament Multidimensional (MDS)
+
+### Introducció
+
+**Objectiu:** en base a certa informació respecte les **distàncies** (o similituds) entre $n$ objectes, volem construir una configuració d'$n$ punts en un espai de dimensió baixa (un <span style='color:blue'>mapa</span>).
+
+#### Terminologia
+
+- Proximitat
+- Similaritat ($s_{rs}$)
+- dissimilaritat/dissimilitud o **distància** ($d_{rs}$)
+
+Una mesura de **similaritat** $s$ satisfà les següent propietats:
+
+- $s(A,B)=s(B,A).$
+- $s(A,B)>0.$
+- $s(A,B)$ augmenta quan $A$ i $B$ s'assemblen més.
+
+Una mesura de **distància** $\delta$ satisfà les següents propietats:
+
+- $\delta(A,B)=\delta(B,A).$
+- $\delta(A,B)\geq0.$
+- $A=B\implies\delta(A,B)=0.$
+
+Una funció de distància $\delta$ s'anomena una **mètrica** si, a més de les propietats de distància, satisfà les següents propietats addicionals:
+
+- $A=B\impliedby\delta(A,B)=0.$
+- La desigualtat triangular: $\delta(A,B)\leq\delta(A,C)+\delta(C,B).$
+
+### Mesures de dissimilaritat
+
+S'utilitzen bastant les distàncies introduïdes amb anterioritat a l'apartat 2, que són les següents:
+
+- **Euclidiana:**
+
+$$
+\delta_{rs}=\sqrt{(x_s-x_s)^T(x_r-x_s)}=\left(\sum_{i=1}^p|x_{ri}-x_{si}|^2\right)^\frac{1}{2}.
+$$
+
+​		Cal notar que la distància Euclidiana generalitza fàcilment a $p$ variables, sent la distància de Minkowski per $\lambda=p$.
+
+- **Distància de Mahalanobis:**
+
+$$
+\delta_{rs}=\left((x_r-x_s)^TS^{-1}(x_r-x_s)\right)^\frac{1}{2}.
+$$
+
+- **Distància de Minkowski:**
+
+$$
+\delta_{rs}=\left(\sum_{i=1}^p|x_{ri}-x_{si}|^\lambda\right)^\frac{1}{\lambda}.
+$$
+
+A l'escalat multidimensional mètric, la configuració dels punts s'obté **directament** de les distàncies. Al MDS no-mètric, només és important l'ordre de les distàncies. Tenim diverses opcions per escalar les distàncies i intentar representar les dades:
+
+- $d_{rs}\approx\delta_{rs}:$ escalament clàssic.
+- $\delta_{rs}\approx f(\delta_{rs})$ amb $f(\delta_{rs})=\alpha+\beta\delta_{rs}:$ escalament mètric.
+- $\delta_{rs}=f(\delta_{rs})$ amb $f(\delta{rs})$ monòtona qualsevol: escalament no-mètric.
+
+### MDS mètric
+
+També es coneix com **escalament clàssic** o **anàlisi de les coordenades principals (PCO)**. Donats $n$ objectes amb dissimilaritats $\delta_{rs}$ volem trobar punts a l'espai euclidià tals que $d_{rs}\approx\delta_{rs}$. L'aplicació més clàssica és, donada una matriu de distàncies entre ciutats, construïr un mapa de la seva disposició.
+
+Sigui $X$ la matriu de coordenades amb la solució, i $x_r,x_s$ dues files de $X$. Fem $\delta^2_{rs}=(x_r-x_s)^T(x_r-x_s)$. Sigui $B$ una matriu de producte interior, amb
+$$
+b_{rs}=x_r^Tx_s.
+$$
+Assumirem que la solució està centrada a l'origen, és a dir, que
+$$
+\sum_{r=1}^nx_{ri}=0.
+$$
+Si fem
+$$
+d^2_{rs}=x_r^Tx_r+x_s^Tx_s-2x_r^Tx_s,\\
+b_{rs}=x_r^Tx_s=-\frac{1}{2}\left(d^2_{rs}-x_r^Tx_r-x_s^Tx_s\right),\\
+b_{rs}=-\frac{1}{2}\left(d^2_{rs}-\frac{1}{n}\sum_{s=1}^nd^2_{rs}-\frac{1}{n}\sum_{r=1}^nd^2_{rs}+\frac{1}{n^2}\sum_{r=1}^n\sum_{s=1}^nd^2_{rs}\right).
+$$
+Definim $a_{rs}=-\frac{1}{2}d^2_{rs}$, és a dir que $b_{rs}=a_{rs}-a_{r*}-a_{*s}+a_{**}$, i això forma una matriu $A$ tal que
+$$
+B=HAH,\ H=I-\frac{1}{n}\boldsymbol1\boldsymbol1^T,
+$$
+i també $B=XX^T$. Volem aproximar $B$ en un espai de dimensió baixa, i ho farem indirectament, via la matriu de productes escalars.
+
+- Sigui $B$ una matriu qualsevol $n\times n$ simètrica que volem aproximar, pel teorema espectral real diagonalitza en una base de vectors propis ortogonals amb valors propis reals,
+
+$$
+B=VD_\lambda V^T=\sum_{i=1}^n\lambda_iv_iv_i^T,
+$$
+
+​		amb $D_\lambda=\text{diag}(\lambda_1,\ldots,\lambda_n)$ i $V=(v_1,\ldots,v_n)$. Si aproximem $B$ per
+$$
+\tilde B:=V_{(*,1:k)}D_{\lambda(1:k,1:k)}\left(V_{*,1:k}\right)^T,
+$$
+​		tenim l'aproximació de rang $k$ per mínims quadrats de $B$.
+
+- Teníem $B=XX^T=VD_\lambda V^T$. Aleshores, les coordenades de la solució són $\boxed{X=VD_\lambda^\frac{1}{2}.}$
+- ***IMPORTANT!*** Sempre hi haurà un valor propi nul, i la solució està aniuada en les solucions de dimensió superior.
+
+#### Algorisme per l'escalament clàssic
+
+1. Calculem la matriu de distàncies.
+2. Calculem $a_{rs}=-\frac{1}{2}\delta^2_{rs}.$
+3. Centrem dues vegades $A$ per obtenir $B=HAH.$
+4. Calculem la descomposició espectral de $B$.
+5. La solució és $X=VD_\lambda^\frac{1}{2}$.
+
+**Bondat d'ajust:** com de bé aproximem la matriu de distàncies?
+$$
+\frac{\sum_{i=1}^P\lambda_i}{\sum_{i=1}^{n-1}\lambda_i}.
+$$
+Si $B$ no és positiva semi-definida,
+$$
+\frac{\sum_{i=1}^P\lambda_i}{\sum_{i=1}^{n-1}\vert\lambda_i\vert},\qquad\text{ o }\qquad\frac{\sum_{i=1}^P\lambda_i}{\sum_{\lambda_i>0}\lambda_i}.
+$$
+**Definició:** una matriu de distàncies s'anomena **euclidiana** si existeix una configuració de punts a l'espai euclidià tals que les seves distàncies vénen donades per $D$. És a dir, per alguna $p$ existeixen punts $x_1,x_2,\ldots,x_n$ tals que $d_{rs}^2=(x_r-x_s)^T(x_r-x_s)$.
+
+**Teorema:** una matriu de distàncies $D$ és euclidiana si i només si $B$ ($=HAH$, com s'ha definit prèviament) és positiva semi-definida.
+
+#### Similitud de les dades
+
+A vegades, les dades es donen en forma de **similituds** $c_{rs}$. En una matriu de similitud $C$ es compleix $c_{rs}=c_{sr}$ i $c_{rs}\leq c_{rr}$. Aquestes es poden convertir en distàncies fent $\delta_{rs}=\sqrt{c_{rr}-2c_{rs}+c_{ss}}$. Si $C$ és positiva semi-definida, aleshores la matriu de distàncies obtinguda serà euclidiana.
+
+### MDS no-mètric
+
+Definim el factor d'**estrés** de l'escalament com
+$$
+\text{STRESS}(\delta,X)=\sqrt{\frac{\sum_{r\neq s}^n(f(\delta_{rs})-d_{rs})^2}{\sum_{r\neq s}d^2_{rs}}},
+$$
+i la minimització d'aquest factor com
+$$
+\text{stress}(\Delta,\hat X)=\min_{\text{all }X}\text{STRESS}(\Delta,X).
+$$
+Minimitzem la funció objectiu numèricament, començant des de certa configuració inicial.
+
+#### Procediment
+
+1. Triem una mesura de la distància.
+2. Triem una transformació monòtona $f$.
+3. Escollim un algorisme per minimitzar el factor d'estrés.
+
+Per no quedar atrapats en òptims locals, experimentem amb diverses configuracions inicials, i comparem el factor d'estrés entre solucions $1,2,3,\ldots,k-$dimensionals.
+
+Per saber si l'escalament és adient, podem mirar diverses coses:
+
+- Diagrama bivariant de $\delta_{rs}$ vs. $d_{rs}$.
+- Representació del factor d'estrés contra el nombre de dimensions.
+- Degeneració; quants punts hi ha amb les mateixes $d_{rs}$.
+- Càlcul dels residus $d_{rs}-f(\delta_{rs})$.
+
+### Exemples
