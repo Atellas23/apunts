@@ -458,3 +458,50 @@ Per saber si l'escalament és adient, podem mirar diverses coses:
 - Càlcul dels residus $d_{rs}-f(\delta_{rs})$.
 
 ### Exemples
+
+## 5. Anàlisi de correspondències
+
+### Introducció
+
+**Objectiu:** estudiar les relacions entre variables categòriques, i donar-ne una visualització útil.
+
+Existeixen dos tipus d'anàlisi de correspondències:
+
+- <span style='color:blue'>Anàlisi de correspondències simple</span> (CA): dues variables categòriques.
+- <span style='color:blue'>Anàlisi de correspondències múltiple</span> (MCA): diverses variables categòriques.
+
+### Perfils
+
+Utilitzarem la següent notació:
+
+- $N$ serà la **taula de contingència** $I\times J$.
+- $P=\frac{N}{n}$, amb $n=\boldsymbol1^TN\boldsymbol1$. Notem que $\boldsymbol1^TP\boldsymbol1=1.$
+- $P$ és, per tant, una matriu de probabilitats (la **matriu de correspondència**).
+- Les **masses de les files** són:
+
+$$
+r_i=\sum_{j=1}^Jp_{ij},\quad\boldsymbol r=P\boldsymbol1,\quad D_r=\text{diag}(\boldsymbol r).
+$$
+
+- Les **masses de les columnes** són:
+
+$$
+c_j=\sum_{i=1}^Ip_{ij},\quad\boldsymbol c=P^T\boldsymbol1,\quad D_c=\text{diag}(\boldsymbol c).
+$$
+
+**Definició:** un perfil és un vector d'elements no-negatius que sumen 1.
+
+### Inèrcia
+
+### *Biplots*
+
+### MCA
+
+#### Indicador
+
+#### MCA *Burt*
+
+
+
+
+
