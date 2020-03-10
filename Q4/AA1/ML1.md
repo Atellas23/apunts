@@ -549,3 +549,30 @@ This is known as **Tikhonov** or $L_2$ **regularization** in ML. Perhaps it's be
 
 - Pushing the length of the parameter vector $\|\boldsymbol w\|$ to $0$ allows the fit to be under explicit control with the regularization parameter $\lambda$.
 - The matrix $\boldsymbol\varphi^t\boldsymbol\varphi$ is positive semi-definite; therefore $\boldsymbol\varphi^T\boldsymbol\varphi+\lambda I$ is guaranteed to be positive definite (hence non-singular), for all $\lambda>0$.
+
+$$
+\boxed{
+\textbf{Bayesian derivation:}\\
+\begin{matrix}
+D\text{ data}\\
+\boldsymbol\theta\text{ parameter vector}
+\end{matrix}
+\Bigg\} \text{ arg}\max_{\theta\in\Theta}P(\theta\vert D)=\frac{P(D\vert\theta)P(\theta)}{P(D)}
+\sim\text{arg}\max_{\theta\in\Theta}P(D\vert\theta)P(\theta)\sim\\
+\sim\text{arg}\max_{\theta\in\Theta}\ln(P(D\vert\theta)P(\theta))\sim\text{arg}\max_{\theta\in\Theta}\left\{\ln P(D\vert\theta)+\ln P(\theta)\right\}\sim\\
+
+\sim\text{arg}\min_{\theta\in\Theta}\left\{-\ln P(D\vert\theta)-\ln P(\theta)\right\}
+}
+$$
+
+We change names of $\theta=w$, for it is fancier. If we assume that the $w\sim\mathcal N\left(0,\sigma^2\text{Id}\right)$, then $-\ln P(w)=\frac{\|w\|^2}{2\sigma^2_w}$ and then, observe that $-\ln\mathcal L$ is the mean square error,
+$$
+\text{arg}\min_{w\in W}\left\{-\ln\mathcal L-\ln P(w)\right\}=\text{arg}\min_{w\in W}\left\{\|t-\varphi w\|^2+\frac{\|w\|^2}{2\sigma^2_w}+C\left(d,\sigma_w^2\right)\right\}\sim\\
+\sim\text{arg}\min_{w\in W}\left\{\|t-\varphi w\|^2+\lambda\|w\|^2\right\},\ \lambda>0.
+$$
+This is all nice, but how do we control the fit explicitly?
+
+- Regularization allows the specification of models that are more complex than needed because it limits the effective complexity.
+- Instead of trial-and-error on complexity, we can set a large complexitr and adjust the $\lambda$.
+
+And how do we set the value of $\lambda$? 
