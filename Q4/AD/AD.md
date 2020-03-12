@@ -260,7 +260,7 @@ Amb aquestes instruccions
 
 ```R
 plot(F[, 1], F[, 2], pch = 19)
-point(G[, 1], G[, 2], pch = 2, col = "blue")
+points(G[, 1], G[, 2], pch = 2, col = "blue")
 arrows(0, 0, G[, 1], G[, 2])
 ```
 
