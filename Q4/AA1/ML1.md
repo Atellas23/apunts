@@ -353,7 +353,9 @@ R_{\text{emp}}(y):=\frac{1}{N}\sum_{n=1}^N(t_n-y(\boldsymbol x_n))^2.
 $$
 This quantity is also known as the **apparent error**. The **Empirical Risk Minimization (ERM)** principle stats that a learning algorithm should choose a hypothesis (model) $\hat y$ which minimizes the empirical risk among a predefined class of functions $\mathcal Y$:
 $$
-\hat y:=\arg\min_{y\in\mathcal Y}R_{\text{emp}}(y).
+\DeclareMathOperator*{\argmax}{arg max}
+\DeclareMathOperator*{\argmin}{arg min}
+\hat y:=\argmin_{y\in\mathcal Y}R_{\text{emp}}(y).
 $$
 The quantity $R_{\text{emp}}(\hat y)$ is known as the **training error**. In theoretical ML, we are very much interested in:
 
@@ -545,7 +547,7 @@ $$
 \boldsymbol{\hat w}=(\boldsymbol\varphi^T\boldsymbol\varphi+\lambda I)^{-1}\boldsymbol\varphi^T\boldsymbol t.
 }
 $$
-This is known as **Tikhonov** or $L_2$ **regularization** in ML. Perhaps it's best known as **ridge regression** in statistics, where it's usually explained as a "penalized log-likelihood". This can also be derived from Bayesian statistics arguments. Tikhonov regularization has some advantages:
+This is known as **Tikhonov** or $L^2$ **regularization** in ML. Perhaps it's best known as **ridge regression** in statistics, where it's usually explained as a "penalized log-likelihood". This can also be derived from Bayesian statistics arguments. Tikhonov regularization has some advantages:
 
 - Pushing the length of the parameter vector $\|\boldsymbol w\|$ to $0$ allows the fit to be under explicit control with the regularization parameter $\lambda$.
 - The matrix $\boldsymbol\varphi^t\boldsymbol\varphi$ is positive semi-definite; therefore $\boldsymbol\varphi^T\boldsymbol\varphi+\lambda I$ is guaranteed to be positive definite (hence non-singular), for all $\lambda>0$.
@@ -557,22 +559,255 @@ $$
 D\text{ data}\\
 \boldsymbol\theta\text{ parameter vector}
 \end{matrix}
-\Bigg\} \text{ arg}\max_{\theta\in\Theta}P(\theta\vert D)=\frac{P(D\vert\theta)P(\theta)}{P(D)}
-\sim\text{arg}\max_{\theta\in\Theta}P(D\vert\theta)P(\theta)\sim\\
-\sim\text{arg}\max_{\theta\in\Theta}\ln(P(D\vert\theta)P(\theta))\sim\text{arg}\max_{\theta\in\Theta}\left\{\ln P(D\vert\theta)+\ln P(\theta)\right\}\sim\\
+\Bigg\} \argmax_{\theta\in\Theta}P(\theta\vert D)=\frac{P(D\vert\theta)P(\theta)}{P(D)}
+\sim\argmax_{\theta\in\Theta}P(D\vert\theta)P(\theta)\sim\\
+\sim\argmax_{\theta\in\Theta}\ln(P(D\vert\theta)P(\theta))\sim\argmax_{\theta\in\Theta}\left\{\ln P(D\vert\theta)+\ln P(\theta)\right\}\sim\\
 
-\sim\text{arg}\min_{\theta\in\Theta}\left\{-\ln P(D\vert\theta)-\ln P(\theta)\right\}
+\sim\argmin_{\theta\in\Theta}\left\{-\ln P(D\vert\theta)-\ln P(\theta)\right\}
 }
 $$
 
 We change names of $\theta=w$, for it is fancier. If we assume that the $w\sim\mathcal N\left(0,\sigma^2\text{Id}\right)$, then $-\ln P(w)=\frac{\|w\|^2}{2\sigma^2_w}$ and then, observe that $-\ln\mathcal L$ is the mean square error,
 $$
-\text{arg}\min_{w\in W}\left\{-\ln\mathcal L-\ln P(w)\right\}=\text{arg}\min_{w\in W}\left\{\|t-\varphi w\|^2+\frac{\|w\|^2}{2\sigma^2_w}+C\left(d,\sigma_w^2\right)\right\}\sim\\
-\sim\text{arg}\min_{w\in W}\left\{\|t-\varphi w\|^2+\lambda\|w\|^2\right\},\ \lambda>0.
+\boxed{
+\ldots\argmin_{w\in W}\left\{-\ln\mathcal L-\ln P(w)\right\}=\argmin_{w\in W}\left\{\|t-\varphi w\|^2+\frac{\|w\|^2}{2\sigma^2_w}+C\left(d,\sigma_w^2\right)\right\}\sim\\
+\sim\argmin_{w\in W}\left\{\|t-\varphi w\|^2+\lambda\|w\|^2\right\},\ \lambda>0.
+}
 $$
 This is all nice, but how do we control the fit explicitly?
 
 - Regularization allows the specification of models that are more complex than needed because it limits the effective complexity.
 - Instead of trial-and-error on complexity, we can set a large complexitr and adjust the $\lambda$.
 
-And how do we set the value of $\lambda$? 
+And how do we set the value of $\lambda$? Using a technique called **Leaving-one-out cross validation (LOOCV)**, because
+
+- In this case, $\lambda$ is a very forgiving parameter; we usually perform a log search.
+- There is a closed efficient formula for the LOOCV for **linear models**.
+
+To get to the best model we can, we follow this steps:
+
+1. Choose a (large) set of values $\Lambda$.
+2. For every $\lambda\in\Lambda$,
+   1. Solve for $\hat w=\left(\boldsymbol\varphi^T\boldsymbol\varphi+\lambda I\right)^{-1}\boldsymbol\varphi^T\boldsymbol t$.
+   2. Compute the **hat matrix** $H:=\boldsymbol\varphi\boldsymbol\varphi^+\equiv\boldsymbol\varphi\left(\boldsymbol\varphi^T\boldsymbol\varphi+\lambda I\right)^{-1}\boldsymbol\varphi^T$.
+   3. Compute the LOOCV of $y(\cdot)=\hat{\boldsymbol w}^T\boldsymbol\varphi(\cdot)$ in $D$ as
+
+$$
+\texttt{LOOCV}(y)=\frac{1}{N}\sum_{n=1}^N \left(\frac{t_n-\hat{\boldsymbol w}^T\boldsymbol\varphi(x_n)}{1-h_{nn}}\right)^2.
+$$
+
+3. Choose the model with the lowest LOOCV.
+
+A very popular method is **Generalized Cross-Validation (GCV)**:
+$$
+\DeclareMathOperator{\tr}{tr}
+\texttt{GCV}(y)=\frac{1}{N}\frac{\sum_{n=1}^N\left(t_n-\hat{\boldsymbol w}^T\boldsymbol\varphi(x_n)\right)^2}{\left(1-\frac{\tr(H)}{N}\right)^2},
+$$
+which is a more stable computation for the LOOCV. Note that $\lambda$ is needed to compute both $\hat{\boldsymbol w}$ and $H$.
+
+### LASSO Regression
+
+The LASSO (**Least Absolute Shrinkage and Selection Operator**) regression is $L^1-$regularized linear regression. The choice for the regularizer is $\|\boldsymbol w\|_1$ and we get:
+$$
+\renewcommand{\mbs}{\boldsymbol}
+R_{\text{emp}}(y(\cdot;\mbs w))=\|\mbs t-\mbs\varphi\mbs w\|^2+\tau\|\mbs w\|_1,\quad\tau>0.
+$$
+This turns out to be equivalent to
+$$
+R_{\text{emp}}(y(\cdot;\mbs w))=\|\mbs t-\mbs\varphi\mbs w\|^2,\quad\text{subject to }\|\mbs w\|_1\leq\tau.
+$$
+In ridge regression, as the penalty $\lambda$ is increased, all coefficients are reduced while still remaining non-zero. In the LASSO regression, increasing the $\tau$ penalty causes more and more of the coefficients to be driven to zero. As the dimension $d$ increases, the multidimensional $L^1-$spheres have an increasing number of corners, and so it is highly likely that some coefficients will be set equal to zero. Hence, the LASSO regression model performs **shrinkage** and therefore, **feature selection**.
+
+The LASSO loss function is no longer quadratic, but it is still convex. The **minimization problem** tied to LASSO regression is a special **quadratic programming (QP)** problem, for which the **Least Angle Regression (LARS)** procedure is used. It exploits the special structure of the problem, and provides an efficient way to compute the solutions for all possible values of $\tau>0$ (the **regularization path**).
+
+### Conclusions
+
+We have introduced **linear models** as linear combinations of non-linear **basis functions (BF)**:
+
+<span style='color:lime'>ADVANTAGES:</span>
+
+- We can represent non-linear functions of the data using linear fitting techniques; we have the freedom to choose the form of the BFs.
+- The fit can be under tight explicit control by regularization.
+- The computations can be very efficient, no need to refit for LOOCV.
+- Interpretability of the model is rather high.
+
+<span style='color:red'>LIMITATIONS:</span> the most important weak point is the BFs.
+
+- Many interesting BFs scale very poorly with dimension (polynomials, Fourier series, splines, ...)
+- Our BFs are not flexible; they are data-independent.
+- As a consequence, their number may be very high, which in turn leads to unstability (because of low significance of the coefficients).
+
+The solution is to **develop basis functions with parameters** such that:
+
+- This BFs scale well with dimension (inner products, distances, ...)
+- They are **data-dependent**, because of the parameters.
+- As a consequence, their number might be much lower, and the coefficients will be significant.
+- Unfortunately, the new parameters will play a **non-linear role** in the model: their optimization is plagued with local optima.
+
+## 5. Classification theory and linear classification models (I). Bayesian decision theory.
+
+### Introduction: Bayes' formula
+
+**Discrete Random Variables.** Let $A$ be a discrete r.v. with probability mass function (*pmf*) $P_A$. We use the shorthand notation $P(a)$ to mean $P_A(A=a)$. Similarly, we write $P(b\vert a)$ to mean $P_{B\vert A}(B=b\vert A=a)$, etc, where
+$$
+P(b\vert a)=\frac{P(b,a)}{P(a)},\ P(a)>0.
+$$
+Let $\mathcal A=\{a_1,\ldots,a_n\},\mathcal B=\{b_1,\ldots,b_m\}$ be the possible values that $A$ and $B$ can take, respectively. Then, $\forall a\in\mathcal A$,
+$$
+P(a)=\sum_{i=1}^m P(a,b_i)=\sum_{i=1}^m P(a\vert b_i)P(b_i).
+$$
+Since $P(a,b)=P(b,a)$, it follows that, for any $a\in\mathcal A,b\in\mathcal B$
+$$
+P(b\vert a)=\frac{P(a\vert b)P(b)}{\sum_{b'\in\mathcal B} P(a\vert b')P(b')},\quad\text{with }\sum_{b'\in\mathcal B}P(b\vert a)=1.
+$$
+**Continuous Random Variables.** Let $X,Y$ two continuous r.v. with pdfs $p_X,p_Y$ and joint density $p_{XY}$. We use the shorthand notation $p(x)$ to mean $p_X(X=x)$, etc.
+$$
+p(x)=\int_{\mathbb R}p(x,y)\ dy;\quad p(y)=\int_{\mathbb R}p(x,y)\ dx.
+$$
+Therefore,
+$$
+p(y\vert x)=\frac{p(x\vert y)p(y)}{\int_{\mathbb R}p(x\vert y)p(y)\ dy},\quad\text{with }\int_{\mathbb R}p(y\vert x)\ dy=1.
+$$
+**Observation.** *Mixed random variables.*
+
+Suppose $X$ is a continuous r.v. and $Y$ is a discrete r.v. with values in $\{y_1,\ldots,y_m\}$. In this case, $p(\cdot\vert y_i)$ is a continuous r.v. and $P(\cdot\vert x)$ is a discrete r.v. Moreover,
+$$
+P(y_j\vert x)=\frac{p(x\vert y_j)P(y_j)}{\sum_{i=1}^m p(x\vert y_j)P(y_j)},\qquad\text{ with }\sum_{j=1}^m P(y_j\vert x)=1.
+$$
+
+### Decision rules
+
+We are interested in determining the class or category of objects of nature according to $\Omega$, a discrete r.v. with values $\{\omega_1,\omega_2\}$ that represent the two possible classes. The prior probabilities are $P(\omega_1),P(\omega_2)$. How should we classify objects?
+
+**Decision Rule 1.** We don't measure any variable. We have no information other than "a new object comes".
+$$
+\boxed{\texttt{If }P(\omega_1)>P(\omega_2)\texttt{ then class of object is }\omega_1\texttt{ else class is }\omega_2.}
+$$
+This rule classifies all objects into the same class; therefore, it will eventually classify an object into the wrong class. Thus, the **probability of error** of this rule is
+$$
+P_e(\texttt{rule1})=\min\{P(\omega_1),P(\omega_2)\}.
+$$
+This rule is useful only if $P(\omega_1)<<P(\omega_2)$ or if $P(\omega_2)<<P(\omega_1)$. This is the optimum rule when no information is measured.
+
+**Discrete feature measuring.** Suppose now that $X$ is a discrete r.v. taking values in $\mathcal X=\{x_1,\ldots,x_d\}$ that measures a **feature** of objects. Now, $P(\omega_i\vert x)=\frac{P(x\vert\omega_i)P(\omega_i)}{P(x)}$ is the **posterior** probability that an object with measured feature $x$ belongs to class $\omega_i,\ i\in\{1,2\}$. Moreover, $P(x)=P(x\vert\omega_1)P(\omega_1)+P(x\vert\omega_2)P(\omega_2)$.
+
+Upon observing $x$, the Bayes formula converts **prior** class probabilities $P(\omega_i)$ into **posterior** probabilities $P(\omega_i\vert x)$. How should we classify objects now?
+
+**Decision Rule 2.** We now measure a feature $x$ of the object coming forth.
+$$
+\boxed{\texttt{If }P(\omega_1\vert x)>P(\omega_2\vert x)\texttt{ then class of object is }\omega_1\texttt{ else class is }\omega_2.}
+$$
+The probability of error for this rule is
+$$
+P_e(\texttt{rule2})=\sum_{i=1}^d \min\{P(\omega_1\vert x_i),P(\omega_2\vert x_i)\}P(x_i).
+$$
+This rule is known as the **Bayes rule** or **classifier**.
+
+**Lemma.** For all $a,b,c,d\in\mathbb R$, $\min(a,b)+\min(c,d)\leq\min(a+c,b+d)$.
+
+**Proposition.** $P_e(\texttt{rule2})\leq P_e(\texttt{rule1}).$
+
+*Proof:*
+$$
+\begin{split}
+\sum_{i=1}^d \min\{P(\omega_1\vert x_i),P(\omega_2\vert x_i)\}P(x_i)=\\
+=\sum_{x\in\mathcal X}\min\{P(\omega_1\vert x)P(x),P(\omega_2\vert x)P(x)\}=\\
+=\sum_{x\in\mathcal X}\min\{P(x\vert\omega_1)P(\omega_1),P(x\vert\omega_2)P(\omega_2)\}\leq\\
+\leq \min\left\{\sum_{x\in\mathcal X}P(x\vert\omega_1)P(\omega_1),\sum_{x\in\mathcal X}P(x\vert\omega_2)P(\omega_2)\right\}=\\
+= \min\left\{P(\omega_1)\sum_{x\in\mathcal X}P(x\vert\omega_1),P(\omega_2)\sum_{x\in\mathcal X}P(x\vert\omega_2)\right\}=\\
+=\min\left\{P(\omega_1),P(\omega_2)\right\}\square
+\end{split}
+$$
+Equality holds only if $P(x\vert\omega_1)=P(x\vert\omega_2),\ \forall x\in\mathcal X$.
+
+**Continuous feature measuring.** The next step is to consider a r.v. $X$ with pdf $p(x)$ that measures a *continuous* feature of an object. Let $\mathcal P$ be the support of $p$, i.e. $\mathcal P=\{x\in\mathbb R\vert p(x)>0\}$. In this setting, $p(x\vert\omega_i),\ i\in\{1,2\}$ are the conditional densities of $x$ for every class.
+
+**Proposition.** $P_e(\texttt{rule2})\leq P_e(\texttt{rule1}).$
+
+*Proof:*
+$$
+\begin{split}
+\int_\mathcal{P} \min\{P(\omega_1\vert x),P(\omega_2\vert x)\}p(x)\ dx=\\
+\int_\mathcal{P}\min\{P(\omega_1\vert x)p(x),P(\omega_2\vert x)p(x)\}\ dx=\\
+\int_\mathcal{P}\min\{p(x\vert\omega_1)P(\omega_1),p(x\vert\omega_2)P(\omega_2)\}\ dx\leq\\
+\min\left\{\int_\mathcal{P}p(x\vert\omega_1)P(\omega_1)\ dx,\int_\mathcal{P}p(x\vert\omega_2)P(\omega_2)\ dx\right\}=\\
+\min\left\{P(\omega_1)\int_\mathcal{P}p(x\vert\omega_1)\ dx,P(\omega_2)\int_\mathcal{P}p(x\vert\omega_2)\ dx\right\}=\\
+\min\left\{P(\omega_1),P(\omega_2)\right\}\square
+\end{split}
+$$
+Equality holds only if $p(\cdot\vert\omega_1)=p(\cdot\vert\omega_2)$.
+
+#### The Bayes classifier
+
+The Bayes classifier can be extended in two ways:
+
+1. Consider a vector $X=(X_1,\ldots,X_d)^T$ of continuous r.v. with pdf $p(\boldsymbol x)=p(x_1,\ldots,x_d)$ that measures $d$ continuous features.
+2. Consider a finite set of classes $\Omega$, a discrete r.v. with values $\omega_1,\ldots,\omega_K$, that represent the possible classes ($K\geq2$).
+
+Therefore, we have new probabilities $p(\boldsymbol x\vert\omega_i),P(\omega_i\vert\boldsymbol x),1\leq i\leq K$. The new Bayes rule says:
+
+**Decision rule.**
+$$
+\boxed{\texttt{The class }\hat\omega(\boldsymbol x)\texttt{ of object }\boldsymbol x\texttt{ is }\omega_k\texttt{ when }k=\argmax_{i=1,\ldots,K}P(\omega_i\vert\boldsymbol x).}
+$$
+The sets $\mathcal R_k=\{\boldsymbol x\vert\hat\omega(\boldsymbol x)=k\}$ are called **regions**, and depend on the specific classifier. It is worth noting they form a partition of the total space, which is in general thought of as $\mathbb R$ or, in the vector setting, $\mathbb R^d$.
+
+We now want to see that the Bayes classifier is **optimal** in terms of probability of error. To do this, let us assume a classifier with regions $\mathcal{R_1,R_2}$. Then,
+$$
+\begin{split}
+P_e=P(\boldsymbol x\in\mathcal R_2,\omega_1)+P(\boldsymbol x\in\mathcal R_1,\omega_2)=\\P(\boldsymbol x\in\mathcal R_2\vert\omega_1)P(\omega_1)+P(\boldsymbol x\in\mathcal R_1\vert\omega_2)P(\omega_2)=\\
+\int_\mathcal{R_2}p(\boldsymbol x\vert\omega_1)P(\omega_1)\ d\boldsymbol x+\int_\mathcal{R_1}p(\boldsymbol x\vert\omega_2)P(\omega_2)\ d\boldsymbol x\geq\\
+\int_\mathcal{P}\min\left\{p(\boldsymbol x\vert\omega_1)P(\omega_1),p(\boldsymbol x\vert\omega_2)P(\omega_2)\right\}\ d\boldsymbol x=\\
+P_e(\texttt{Bayes})\square
+\end{split}
+$$
+So, if any other classifier has a smaller error, the Bayes classifier is optimal.
+
+The Bayes classifier can also have a **rejection class** (illustrated here for two classes); fix $\varepsilon\in(0,1)$:
+$$
+\begin{split}
+\texttt{if }P(\omega_1\vert\boldsymbol x)-P(\omega_2\vert\boldsymbol x)>\varepsilon\texttt{ then class of object }\boldsymbol x\texttt{ is }\omega_1\\
+\texttt{else if }P(\omega_1\vert\boldsymbol x)-P(\omega_2\vert\boldsymbol x)<\varepsilon\texttt{ then class of object }\boldsymbol x\texttt{ is }\omega_2\\
+\texttt{else do not classify.}\hspace{9.82cm}
+\end{split}
+$$
+For every feature vector $\boldsymbol x$ we take one of three possible **actions**.
+
+Consider a finite set of actions $A=\{a_1,\ldots,a_m\}$. For each $a_i\in A$, denote by $l(a_i\vert\omega_j)$ the **loss** for choosing $a_i$ when $\boldsymbol x$ is known to be in $\omega_j$. This is a simplified setting in which this loss does not depend on $\boldsymbol x$.
+
+<span style='color:blue'>Example:</span> Let $m=K+1$ and let $a_i$ stand for *"classify $\boldsymbol x$ into class $\omega_i$"* for $1\leq i\leq K$; let $a_{K+1}$ stand for *"do not classify $\boldsymbol x$"*. A possible set of losses is:
+$$
+l(a_i\vert\omega_j)=\begin{cases}
+1,\quad\text{for }1\leq i,j\leq K,\ i\neq j;\\
+0,\quad\text{for }1\leq i\leq K,\ i=j;\\
+\frac{1}{2},\ \ \ \text{for }i=K+1,\ 1\leq j\leq K.
+\end{cases}
+$$
+This example suggests that a decision not to classify is less costly than a misclassification.
+
+#### The notion of risk
+
+**Definition.** *Conditional risk.* For a given feature vector $\boldsymbol x$, define the conditional risk of an action as:
+$$
+r(a_i\vert\boldsymbol x):=\sum_{j=1}^K l(a_i\vert\omega_j)P(\omega_j\vert\boldsymbol x).
+$$
+**Definition.** *Decision rule, Total risk.* A decision rule is any function $a:\mathcal P\to A$ that assigns an action $a(\boldsymbol x)$ to every $\boldsymbol x$ such that $p(\boldsymbol x)>0$. The total risk of a decision rule is
+$$
+R(a):=\int_\mathcal{P} r(a(\boldsymbol x)\vert\boldsymbol x)p(\boldsymbol x)\ d\boldsymbol x.
+$$
+We are interested in the decision rule that minimizes the total risk. Consider the rule
+$$
+\hat a(\boldsymbol x)=\argmin_{1\leq j\leq m} r(a_j\vert\boldsymbol x).
+$$
+You may recognize it as the Bayes rule. Given that this rule minimizes the argument of the integral for every possible $\boldsymbol x$, it follows that the Bayes rule has the lowest possible risk. The value $R(\hat a)$ is called the **Bayes risk**.
+
+#### 0/1 losses
+
+In many applications the 0/1 loss is used, usually in absence of more precise information:
+$$
+l_{ij}=\begin{cases}
+0,\quad\text{if }i=j;\\
+1,\quad\text{if }i\neq j.
+\end{cases}
+$$
+Consider $K$ classes and actions
