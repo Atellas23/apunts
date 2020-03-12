@@ -491,7 +491,43 @@ $$
 
 **Definició:** un perfil és un vector d'elements no-negatius que sumen 1.
 
+Una taula de contingència es pot convertir en una matriu de perfils (perfils fila i perfils columna). Els perfils fila $R$ (resp. columna $C$) s'obtenen sumant els elements d'una fila de $P$ i dividint entre el total:
+$$
+R=D_r^{-1}P,\quad C=D_c^{-1}P^T.
+$$
+Les masses de columnes i files resulten ser, doncs, mitjanes ponderades dels perfils:
+$$
+\boldsymbol r^TD_r^{-1}P=\boldsymbol1^TP=\boldsymbol c^T,\quad
+\boldsymbol c^TD_c^{-1}P^T=\boldsymbol1^TP^T=\boldsymbol r^T.
+$$
+Els perfils es poden centrar:
+
+- Perfils fila centrats: $D_r^{-1}P-\boldsymbol1\boldsymbol c^T$.
+- Perfils columna centrats: $D_c^{-1}P^T-\boldsymbol1\boldsymbol r^T$.
+
+#### Dimensionalitat
+
+El rang per columnes de la matriu de perfils fila és com a molt $J-1$, i el rang per files de la matriu de perfils columna és com a molt $I-1$. El rang, doncs, de la matriu, és $\min(I-1,J-1)$.
+
 ### Inèrcia
+
+**Definició.** *Estadístic de $\chi^2$.*
+$$
+\boxed{
+\mathsf X^2=\sum_{i=1}^I\sum_{j=1}^J\frac{(n_{ij}-e_{ij})^2}{e_{ij}}.
+}
+$$
+Podem calcular l'estadístic de $\chi^2$ amb els perfils també:
+$$
+\mathsf X^2=\sum_{i,j}\frac{(n_{ij}-e_{ij})^2}{e_{ij}}=
+\sum_{i,j}\frac{(np_{ij}-nr_ic_j)^2}{nr_ic_j}=
+n\sum_{i,j}\frac{(p_{ij}-r_ic_j)^2}{r_ic_j}.
+$$
+**Definició.** *Inèrcia total.* La inèrcia total d'una taula de contingència és el valor de l'estadístic de $\chi^2$ dividit entre $n$,
+$$
+\frac{\mathsf X^2}{n}=\sum_{i,j}\frac{(p_{ij}-r_ic_j)^2}{r_ic_j}.
+$$
+Notem que 
 
 ### *Biplots*
 
