@@ -2,8 +2,6 @@
 
 [TOC]
 
-
-
 ## 1. Introducció i pre-processament de dades
 
 ### 1.1. Introducció
@@ -527,17 +525,97 @@ $$
 $$
 \frac{\mathsf X^2}{n}=\sum_{i,j}\frac{(p_{ij}-r_ic_j)^2}{r_ic_j}.
 $$
-Notem que 
+Notem que $\sum_j \left(\frac{p_{ij}}{r_i}-c_j\right)^2$ és la distància euclidiana al quadrat entre el perfil $i$ i el perfil fila mitjà, i que $\sum_j\frac{1}{c_j}\left(\frac{p_{ij}}{r_i}-c_j\right)^2$ és la distància euclidiana ponderada al quadrat entre el perfil $i$ i el perfil fila mitjà (anomenada la distància $\chi^2$).
+
+La inèrcia és una mitjana ponderada de les distàncies euclidianes ponderades al quadrat. També es pot interpretar com una mesura de la dispersió dels perfils respecte la seva mitjana. Hi ha dues situacions límit:
+
+- **Independència perfecta:** inèrcia mínima $=0$, $\chi^2=0$.
+- **Associació perfecta:** inèrcia màxima $=\min(I-1,J-1)$.
+
+Els perfils de taules de contingència $I\times J$ es poden representar exactament en espais $\min(I-1,J-1)-$dimensionals. Busquem una aproximació dels perfils en **una**, **dues** o com a molt **tres dimensions**. El criteri que seguirem serà minimitzar errors en l'aproximació dels perfils, el que és equivalent a maximitzar la inèrcia dels perfils en un subespai de dimensió $k$. 
+
+Equivalentment, podem aproximar per mínims quadrats la matriu de desviacions de la independència. La solució òptima s'obté solucionant una equació de valors i vectors propis, o fent una descomposició en valors singulars.
 
 ### *Biplots*
 
+En CA fem la SVD de la matriu de residus estandaritzats,
+$$
+\newcommand{\bsm}{\boldsymbol}
+D_r^{-\frac{1}{2}}\left(P-\bsm r\bsm c^T\right)D_c^{-\frac{1}{2}}=UDV^T.
+$$
+Aproximem els resultats en un espai de dimensió baixa utilitzant només els dos primers valors i vectors singulars. Les coordenades del *biplot* són les que coneixíem fins ara,
+
+- Coordenades principals: $F_p=D_r^{-\frac{1}{2}}UD$
+- Coordenades estàndar de columnes: $G_s=D_c^{-\frac{1}{2}}V$
+
+Les coordenades principals i les coordenades estandaritzades estan relacionades,
+$$
+G_p=G_sD^\frac{1}{2}_\lambda,\quad F_p=F_sD^\frac{1}{2}_\lambda.
+$$
+L'anàlisi de correspondències té els següents *outputs* gràfics:
+
+- Hi ha una representació conjunta de les files d'$F_s$ i $G_p$ (el *biplot* dels perfils fila).
+- Hi ha una representació conjunta de les files d'$F_p$ i $G_s$ (el *biplot* dels perfils columna).
+- Tenim
+
+$$
+F_sG_p^T=\left(D_r^{-1}P-\bsm1\bsm c^T\right)D_c^{-1},\\
+G_sF_p^T=\left(D_c^{-1}P^T-\bsm1\bsm r^T\right)D_r^{-1}.
+$$
+
+#### Relacions de transició i relacions baricèntriques.
+
+Dels resultats anteriors es deriven les següents **relacions de transició**:
+$$
+F_p=D_r^{-1}PG_s,\quad G_p=D_c^{-1}P^TF_s.
+$$
+Les coordenades principals de les files són mitjanes ponderades de les coordenades estàndar de les columnes. Aquestes relacions són molt útils per calcular coordenades de **punts suplementaris**.
+
+#### Punts suplementaris
+
+Els punts suplementaris són files (columnes) de la matriu de dades, que han estat recollides (normalment) en **condicions diferents a la resta de dades**, i que no intervenen en el càlcul de la solució. Tot i això, la seva representació en el *biplot*, posterior a l'anàlisi, pot ser útil per a la interpretació. Els punts suplementaris es poden situar en *biplots* de CA **expressant-los com a perfils** i utilitzant les **relacions de transició**.
+
+#### Contribució a la inèrcia
+
+A la PCA hem vist que la variància total de la matriu de dades es pot descomposar en contribucions de cada dimensió (les components principals), en variables i finalment per cada observació. A la CA **és possible una descomposició semblant**, on la inèrcia total d'una taula de contingència es pot descomposar en contribucions de cada dimensió (eixos principals), contribucions de files i columnes, i finalment de cada cel·la de la taula. Aquesta descomposició és útil per observar punts influents a l'anàlisi.
+
+Teníem
+$$
+\frac{\chi^2}{n}=\sum_i r_i\sum_j \frac{\left(\frac{p_{ij}}{r_i}-c_j\right)^2}{c_j}=\sum_j c_j\sum_i \frac{\left(\frac{p_{ij}}{c_j}-r_i\right)^2}{r_i}.
+$$
+Cada fila (i columna) fa una contribució a la inèrcia total: aquestes s'anomenen <span style='color:blue'>inèrcies de fila</span> i <span style='color:blue'>de columna</span>. Noti's que
+$$
+\DeclareMathOperator{\tr}{tr}
+\frac{\chi^2}{n}=\sum_{i,j}\frac{\left(p_{ij}-r_ic_j\right)^2} {r_ic_j}=\tr\left(D_r^{-1}\left(P-\bsm r\bsm c^T\right)D_c^{-1}\left(P-\bsm r\bsm c^T\right)^T\right)=\tr\left(D_\lambda\right).
+$$
+
+Els valors propis s'anomenen <span style='color:blue'>inèrcies principals</span> i constitueixen la contribució de cada dimensió de la solució a la inèrcia total. Les inèrcies de cada fila (resp. columna) es poden descomposar en contribucions fetes per l'eix principal. Això ens permet jutjar quanta de la inèrcia de cada fila (resp. columna) aporta cada eix, i també ens permet calcular estadístics de la bondat d'ajust per cada punt.
+
 ### MCA
 
-#### Indicador
+Hi ha diverses maneres d'aproximar-se al cas de diverses variables categòriques:
 
-#### MCA *Burt*
+- Codificació interactiva de les variables categòriques.
+- Concatenació de taules per files o per columnes i anàlisi de la matriu *ampla* o la *llarga*.
+- <span style='color:blue'>Anàlisi de correspondències múltiple</span>.
 
+L'anàlisi de correspondències múltiple és l'aplicació de la CA a dues matrius diferents: la **matriu indicadora** i la **matriu de Burt**.
 
+#### Matriu indicadora
 
+Les variables categòriques es codifiquen en variables binàries. Calcularem la **inèrcia** de la matriu indicadora:
+$$
+\DeclareMathOperator{\inertia}{In}
+\bsm Z=\left[Z_1,Z_2,\ldots, Z_Q\right]\in\mathcal M_{n\times J}\\
+\begin{matrix}
+Q & = & \text{nombre de variables categoriques}\\
+J_q & = & \text{nombre de categories per la variable }q\\
+\inertia(\cdot) & = & \text{inercia}
+\end{matrix}\\\ \\\ \\
+J = \sum_{q=1}^Q J_q,\quad\inertia(Z_q)=J_q-1\implies\inertia(\bsm Z)=\frac{\sum_q \inertia\left(Z_q\right)}{Q}=\frac{J-Q}{Q}\\
+\small{\text{Nota: la inercia d'una taula concatenada es la mitjana de les inercies de totes les subtaules.}}\\
+\text{Inercia per dimensio: }\frac{1}{Q}.
+$$
 
+#### Matriu de Burt
 
