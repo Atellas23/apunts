@@ -619,3 +619,43 @@ $$
 
 #### Matriu de Burt
 
+La matriu de Burt és una matriu simètrica $J\times J$ que conté totes les taules possibles dos-a-dos de les $Q$ variables categòriques,
+$$
+B=\bsm Z^T\bsm Z=\begin{bmatrix}
+Z_1^TZ_1 & Z_1^TZ_2 & Z_1^TZ_3 & \cdots & Z_1^TZ_Q \\
+Z_2^TZ_1 & Z_2^TZ_2 & Z_2^TZ_3 & \cdots & Z_2^TZ_Q \\
+Z_3^TZ_1 & Z_3^TZ_2 & Z_3^TZ_3 & \cdots & Z_3^TZ_Q \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+Z_Q^TZ_1 & Z_Q^TZ_2 & Z_Q^TZ_3 & \cdots & Z_Q^TZ_Q 
+\end{bmatrix}.
+$$
+Totes les taules dos-a-dos tenen els mateixos marges (no hi ha dades mancants a cap variable), llavors la **inèrcia de la matriu de Burt** és la mitjana de les inèrcies de totes les taules dos-a-dos. Si hi ha dades mancants, això serà *aproximadament* cert.
+
+##### Ajustament de la inèrcia
+
+Ara volem ajustar la inèrcia de la matriu de Burt; les matrius de la diagonal tenen inèrcia màxima, $J_q-1$ cadascuna. Volem ignorar la seva contribució a la inèrcia total, i tenir en compte només la inèrcia de fora de la diagonal. La inèrcia total de la matriu de Burt és $Q^2\inertia(B)$.
+$$
+\inertia(B)=\frac{1}{Q^2}\left(\sum_{q\neq 
+s}\inertia\left(B_{qs}\right)+\sum_{q=1}^Q\inertia\left(B_{qq}\right)\right)=\frac{1}{Q^2}\left(\sum_{q\neq s}\inertia\left(B_{qs}\right)+\sum_{q=1}^Q\left(J_q-1\right)\right)=\\
+=\frac{1}{Q^2}\left(\sum_{q\neq s}\inertia\left(B_{qs}\right)+(J-Q)\right).
+$$
+Per tant, la inèrcia total fora de la diagonal és $Q^2\inertia(B)-(J-Q)$. Per ajustar millor la inèrcia de fora de la diagonal, reescalem la solució:
+$$
+\inertia_\text{adj}(B)\equiv\text{scale}\left(\sum_{q\neq s}\inertia\left(B_{qs}\right)\right)=\text{scale}\left(Q^2\inertia(B)-(J-Q)\right)=\\
+=\frac{Q}{Q-1}\left(\inertia(B)-\frac{J-Q}{Q^2}\right)=\frac{1}{Q(Q-1)}\sum_{q\neq s}\inertia\left(B_{qs}\right).
+$$
+
+##### Ajustament de les inèrcies principals
+
+A l'anàlisi basada en la matriu de Burt, les inèrcies principals també s'han d'ajustar. Les inèrcies principals objectiu sumen la inèrcia de fora de la diagonal de la matriu de Burt. en concret, si fem
+$$
+\lambda_{k,adj}=\left(\frac{Q}{Q-1}\left(\sqrt{\lambda_k}-\frac{1}{Q}\right)\right)^2,\quad\text{per a }\sqrt{\lambda_k}>\frac{1}{Q},
+$$
+obtenim el resultat. En [aquest link](http://www.econ.upf.edu/~michael/METU/caipA.pdf) i [aquest altre](http://statmath.wu.ac.at/courses/CAandRelMeth/CARME5.pdf) hi ha més informació al respecte.
+
+**Com decidim si fer MCA amb $\bsm Z$ o amb $B$?**
+
+- Les coordenades estàndar de la MCA amb $\bsm Z$ o amb $B$ són les mateixes.
+- Els valors propis de la matriu de Burt són els quadrats dels valors propis de $\bsm Z$.
+- Els percentatges d'inèrcia explicada són, per tant, més grans si utilitzem $B$ (tot i que no sumaran mai el $100\%$, ja que no els agafem tots quan els ajustem).
+- Les coordenades principals de la MCA amb $B$ són disminuïdes respecte la MCA amb $\bsm Z$.
