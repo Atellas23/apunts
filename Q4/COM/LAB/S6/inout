@@ -1,0 +1,2 @@
+void outmsg(const char *str, int *num);
+void input(int *integer);

@@ -1,0 +1,85 @@
+
+progex2:     file format elf64-x86-64
+
+SYMBOL TABLE:
+0000000000000238 l    d  .interp	0000000000000000              .interp
+0000000000000254 l    d  .note.ABI-tag	0000000000000000              .note.ABI-tag
+0000000000000274 l    d  .note.gnu.build-id	0000000000000000              .note.gnu.build-id
+0000000000000298 l    d  .gnu.hash	0000000000000000              .gnu.hash
+00000000000002c0 l    d  .dynsym	0000000000000000              .dynsym
+0000000000000428 l    d  .dynstr	0000000000000000              .dynstr
+0000000000000578 l    d  .gnu.version	0000000000000000              .gnu.version
+0000000000000598 l    d  .gnu.version_r	0000000000000000              .gnu.version_r
+00000000000005e8 l    d  .rela.dyn	0000000000000000              .rela.dyn
+0000000000000708 l    d  .rela.plt	0000000000000000              .rela.plt
+0000000000000798 l    d  .init	0000000000000000              .init
+00000000000007b0 l    d  .plt	0000000000000000              .plt
+0000000000000820 l    d  .plt.got	0000000000000000              .plt.got
+0000000000000830 l    d  .text	0000000000000000              .text
+0000000000000bb4 l    d  .fini	0000000000000000              .fini
+0000000000000bc0 l    d  .rodata	0000000000000000              .rodata
+0000000000000c1c l    d  .eh_frame_hdr	0000000000000000              .eh_frame_hdr
+0000000000000c80 l    d  .eh_frame	0000000000000000              .eh_frame
+0000000000201d70 l    d  .init_array	0000000000000000              .init_array
+0000000000201d80 l    d  .fini_array	0000000000000000              .fini_array
+0000000000201d88 l    d  .dynamic	0000000000000000              .dynamic
+0000000000201f88 l    d  .got	0000000000000000              .got
+0000000000202000 l    d  .data	0000000000000000              .data
+0000000000202020 l    d  .bss	0000000000000000              .bss
+0000000000000000 l    d  .comment	0000000000000000              .comment
+0000000000000000 l    df *ABS*	0000000000000000              crtstuff.c
+0000000000000860 l     F .text	0000000000000000              deregister_tm_clones
+00000000000008a0 l     F .text	0000000000000000              register_tm_clones
+00000000000008f0 l     F .text	0000000000000000              __do_global_dtors_aux
+0000000000202258 l     O .bss	0000000000000001              completed.7697
+0000000000201d80 l     O .fini_array	0000000000000000              __do_global_dtors_aux_fini_array_entry
+0000000000000930 l     F .text	0000000000000000              frame_dummy
+0000000000201d70 l     O .init_array	0000000000000000              __frame_dummy_init_array_entry
+0000000000000000 l    df *ABS*	0000000000000000              program.cc
+0000000000000000 l    df *ABS*	0000000000000000              maths.cc
+0000000000000000 l    df *ABS*	0000000000000000              inout.cc
+0000000000000c18 l     O .rodata	0000000000000001              std::piecewise_construct
+0000000000202259 l     O .bss	0000000000000001              std::__ioinit
+0000000000000ae1 l     F .text	0000000000000049              __static_initialization_and_destruction_0(int, int)
+0000000000000b2a l     F .text	0000000000000015              _GLOBAL__sub_I__Z6outmsgPKcPi
+0000000000000000 l    df *ABS*	0000000000000000              crtstuff.c
+0000000000000e24 l     O .eh_frame	0000000000000000              __FRAME_END__
+0000000000000000 l    df *ABS*	0000000000000000              
+0000000000000c1c l       .eh_frame_hdr	0000000000000000              __GNU_EH_FRAME_HDR
+0000000000201d88 l     O .dynamic	0000000000000000              _DYNAMIC
+0000000000201d80 l       .init_array	0000000000000000              __init_array_end
+0000000000201d70 l       .init_array	0000000000000000              __init_array_start
+0000000000201f88 l     O .got	0000000000000000              _GLOBAL_OFFSET_TABLE_
+0000000000202010 g       .data	0000000000000000              _edata
+0000000000202000  w      .data	0000000000000000              data_start
+0000000000000bc0 g     O .rodata	0000000000000004              _IO_stdin_used
+0000000000000000  w    F *UND*	0000000000000000              __cxa_finalize@@GLIBC_2.2.5
+000000000000093a g     F .text	00000000000000b8              main
+0000000000202008 g     O .data	0000000000000000              .hidden __dso_handle
+0000000000000abf g     F .text	0000000000000022              input(int*)
+0000000000000000       F *UND*	0000000000000000              std::istream::operator>>(int&)@@GLIBCXX_3.4
+0000000000000bb4 g     F .fini	0000000000000000              _fini
+0000000000000000       F *UND*	0000000000000000              __cxa_atexit@@GLIBC_2.2.5
+0000000000000830 g     F .text	000000000000002b              _start
+0000000000000000       F *UND*	0000000000000000              std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*)@@GLIBCXX_3.4
+0000000000000000       F *UND*	0000000000000000              __stack_chk_fail@@GLIBC_2.4
+0000000000000798 g     F .init	0000000000000000              _init
+0000000000202010 g     O .data	0000000000000000              .hidden __TMC_END__
+00000000000009f2 g     F .text	0000000000000069              mathloop(int, int, int)
+0000000000202020 g     O .bss	0000000000000110              std::cout@@GLIBCXX_3.4
+0000000000202000 g       .data	0000000000000000              __data_start
+0000000000202260 g       .bss	0000000000000000              _end
+0000000000202010 g       .bss	0000000000000000              __bss_start
+0000000000000000       F *UND*	0000000000000000              std::ios_base::Init::Init()@@GLIBCXX_3.4
+0000000000000b40 g     F .text	0000000000000065              __libc_csu_init
+0000000000000000       F *UND*	0000000000000000              std::ostream::operator<<(int)@@GLIBCXX_3.4
+0000000000000000  w      *UND*	0000000000000000              _ITM_deregisterTMCloneTable
+0000000000000bb0 g     F .text	0000000000000002              __libc_csu_fini
+0000000000202140 g     O .bss	0000000000000118              std::cin@@GLIBCXX_3.4
+0000000000000000       F *UND*	0000000000000000              __libc_start_main@@GLIBC_2.2.5
+0000000000000000  w      *UND*	0000000000000000              __gmon_start__
+0000000000000000  w      *UND*	0000000000000000              _ITM_registerTMCloneTable
+0000000000000a5b g     F .text	0000000000000064              outmsg(char const*, int*)
+0000000000000000       F *UND*	0000000000000000              std::ios_base::Init::~Init()@@GLIBCXX_3.4
+
+

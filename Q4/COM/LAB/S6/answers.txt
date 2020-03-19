@@ -1,0 +1,323 @@
+Exercise 1
+
+The lines to compile the object files for `maths.cc` and `inout.cc` are
+```
+> g++ -Wall -c inout.cc
+> g++ -Wall -c maths.cc
+```
+To create `progex1`, we use
+```
+> g++ -Wall -o progex1 program.cc maths.o inout.o
+```
+----------
+
+Exercise 2
+
+The size of both executables is the same (13240B), and if we take a look at the output of 
+```
+> objdump -tC progex1 > taula_ex1.txt
+> objdump -tC progex2 > taula_ex2.txt
+> diff taula_ex1.txt taula_ex2.txt
+```
+The `diff` command shows the following output:
+```
+< progex1:     file format elf64-x86-64
+---
+> progex2:     file format elf64-x86-64
+```
+So, both the symbol table and the size of the files is the same.
+----------
+
+Exercise 3
+
+1) We create the object files like this
+```
+> g++ -Wall -c maths.cc -fpic
+> g++ -Wall -c inout.cc -fpic
+```
+
+2) We now execute
+```
+> g++ -Wall -o libCOMdyn.so --shared maths.o inout.o
+```
+
+3) To compile `progex3`, we run the following command:
+```
+> g++ -Wall -o progex3 program.cc -L$PWD -lCOMdyn
+```
+----------
+
+Exercise 4
+
+If we run `ldd progex2`, the output is the following:
+```
+>	nux-vdso.so.1 (0x00007fffc5ca3000)
+        libstdc++.so.6 => /usr/lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f035e4f0000)
+        libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f035e0f0000)
+        libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f035dd50000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007f035ec00000)
+        libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f035db30000)
+```
+If we run `ldd progex3`, the output is the following:
+```
+>	nux-vdso.so.1 (0x00007ffff319c000)
+        libCOMdyn.so => not found
+        libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fe16e580000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007fe16ec00000)
+```
+We know both binaries depend on our libraries, but using `ldd` only one of these shows the dependence (`progex3`) because it was linked as a dynamic library.
+----------
+
+Exercise 5
+
+The binary `progex3` can not be compiled using the `--static` option. In fact, when using this option, the shell output is the following:
+```
+> g++ -Wall --static -o progex3_static program.cc -L$PWD -lCOMdyn
+> /usr/bin/ld: attempted static link of dynamic object `libCOMdyn.so'
+  collect2: error: ld returned 1 exit status 
+```
+When using `ls -l | grep progex` in the current folder, we can see the following output:
+```
+> -rwxrwxrwx 1 alex alex   13240 Mar 17 13:50 progex1
+  -rwxrwxrwx 1 alex alex 2254936 Mar 17 16:27 progex1_static
+  -rwxrwxrwx 1 alex alex   13240 Mar 17 16:28 progex2
+  -rwxrwxrwx 1 alex alex 2254936 Mar 17 16:28 progex2_static
+  -rwxrwxrwx 1 alex alex    8424 Mar 17 16:30 progex3
+```
+We observe that the difference in file size is huge. The static versions of `progex1` and `progex2` weigh somewhere around 2200KB, while their dynamic versions weigh 13KB. If we now check the symbol tables,
+```
+> objdump -tC progex1_static > taula_simbols_progex1_static.txt
+> objdump -tC progex2_static > taula_simbols_progex2_static.txt
+> diff taula_simbols_progex1_static.txt taula_ex1.txt
+> diff taula_simbols_progex2_static.txt taula_ex2.txt
+```
+The `diff` output is huge, so we will have to inspect the tables ourselves. In fact, when taking a look at the tables, we can see that the static ones are 100 times heavier in file size alone. This is because the static tables include also the symbol table references to the header files.
+----------
+
+Exercise 6
+
+We run
+```
+g++ -o progOi -Oi program.cc maths.cc inout.cc
+```
+for i=0,1,2,3 and the we run `ls -l | grep O` the output is
+```
+> -rwxrwxrwx 1 alex alex   17327 Mar 19 17:27 outO0.asm
+  -rwxrwxrwx 1 alex alex   17386 Mar 19 17:27 outO1.asm
+  -rwxrwxrwx 1 alex alex   17783 Mar 19 17:27 outO2.asm
+  -rwxrwxrwx 1 alex alex   20876 Mar 19 17:27 outO3.asm
+  -rwxrwxrwx 1 alex alex   13240 Mar 19 17:26 progO0
+  -rwxrwxrwx 1 alex alex   13240 Mar 19 17:27 progO1
+  -rwxrwxrwx 1 alex alex   13288 Mar 19 17:27 progO2
+  -rwxrwxrwx 1 alex alex   13288 Mar 19 17:27 progO3
+```
+We can see that the disassembled files and the binaries have a similar order of magnitude size (13-20KB). Now, we investigate the implementation of the `_Z8mathloopiii` function:
+This is the implementation for `outO0.asm`:
+```
+00000000000009f2 <mathloop(int, int, int)>:
+ 9f2:   55                      push   %rbp
+ 9f3:   48 89 e5                mov    %rsp,%rbp
+ 9f6:   89 7d ec                mov    %edi,-0x14(%rbp)
+ 9f9:   89 75 e8                mov    %esi,-0x18(%rbp)
+ 9fc:   89 55 e4                mov    %edx,-0x1c(%rbp)
+ 9ff:   c7 45 fc 00 00 00 00    movl   $0x0,-0x4(%rbp)
+ a06:   c7 45 f0 00 00 00 00    movl   $0x0,-0x10(%rbp)
+ a0d:   8b 45 f0                mov    -0x10(%rbp),%eax
+ a10:   3b 45 ec                cmp    -0x14(%rbp),%eax
+ a13:   7d 41                   jge    a56 <mathloop(int, int, int)+0x64>
+ a15:   c7 45 f4 00 00 00 00    movl   $0x0,-0xc(%rbp)
+ a1c:   8b 45 f4                mov    -0xc(%rbp),%eax
+ a1f:   3b 45 e8                cmp    -0x18(%rbp),%eax
+ a22:   7d 2c                   jge    a50 <mathloop(int, int, int)+0x5e>
+ a24:   c7 45 f8 00 00 00 00    movl   $0x0,-0x8(%rbp)
+ a2b:   8b 45 f8                mov    -0x8(%rbp),%eax
+ a2e:   3b 45 e4                cmp    -0x1c(%rbp),%eax
+ a31:   7d 17                   jge    a4a <mathloop(int, int, int)+0x58>
+ a33:   8b 45 f0                mov    -0x10(%rbp),%eax
+ a36:   0f af 45 f4             imul   -0xc(%rbp),%eax
+ a3a:   89 c2                   mov    %eax,%edx
+ a3c:   8b 45 f8                mov    -0x8(%rbp),%eax
+ a3f:   01 d0                   add    %edx,%eax
+ a41:   01 45 fc                add    %eax,-0x4(%rbp)
+ a44:   83 45 f8 01             addl   $0x1,-0x8(%rbp)
+ a48:   eb e1                   jmp    a2b <mathloop(int, int, int)+0x39>
+ a4a:   83 45 f4 01             addl   $0x1,-0xc(%rbp)
+ a4e:   eb cc                   jmp    a1c <mathloop(int, int, int)+0x2a>
+ a50:   83 45 f0 01             addl   $0x1,-0x10(%rbp)
+ a54:   eb b7                   jmp    a0d <mathloop(int, int, int)+0x1b>
+ a56:   8b 45 fc                mov    -0x4(%rbp),%eax
+ a59:   5d                      pop    %rbp
+ a5a:   c3                      retq
+```
+For `outO1.asm`:
+```
+0000000000000a94 <mathloop(int, int, int)>:
+ a94:	85 ff                	test   %edi,%edi
+ a96:	7e 48                	jle    ae0 <mathloop(int, int, int)+0x4c>
+ a98:	53                   	push   %rbx
+ a99:	b8 00 00 00 00       	mov    $0x0,%eax
+ a9e:	bb 00 00 00 00       	mov    $0x0,%ebx
+ aa3:	85 f6                	test   %esi,%esi
+ aa5:	7e 30                	jle    ad7 <mathloop(int, int, int)+0x43>
+ aa7:	41 89 db             	mov    %ebx,%r11d
+ aaa:	41 b9 00 00 00 00    	mov    $0x0,%r9d
+ ab0:	41 ba 00 00 00 00    	mov    $0x0,%r10d
+ ab6:	85 d2                	test   %edx,%edx
+ ab8:	7e 11                	jle    acb <mathloop(int, int, int)+0x37>
+ aba:	46 8d 04 0a          	lea    (%rdx,%r9,1),%r8d
+ abe:	44 89 c9             	mov    %r9d,%ecx
+ ac1:	01 c8                	add    %ecx,%eax
+ ac3:	83 c1 01             	add    $0x1,%ecx
+ ac6:	44 39 c1             	cmp    %r8d,%ecx
+ ac9:	75 f6                	jne    ac1 <mathloop(int, int, int)+0x2d>
+ acb:	41 83 c2 01          	add    $0x1,%r10d
+ acf:	45 01 d9             	add    %r11d,%r9d
+ ad2:	44 39 d6             	cmp    %r10d,%esi
+ ad5:	75 df                	jne    ab6 <mathloop(int, int, int)+0x22>
+ ad7:	83 c3 01             	add    $0x1,%ebx
+ ada:	39 df                	cmp    %ebx,%edi
+ adc:	75 c5                	jne    aa3 <mathloop(int, int, int)+0xf>
+ ade:	5b                   	pop    %rbx
+ adf:	c3                   	retq   
+ ae0:	b8 00 00 00 00       	mov    $0x0,%eax
+ ae5:	c3                   	retq
+```
+For `outO2.asm`:
+```
+0000000000000b10 <mathloop(int, int, int)>:
+ b10:	31 c0                	xor    %eax,%eax
+ b12:	85 ff                	test   %edi,%edi
+ b14:	7e 4b                	jle    b61 <mathloop(int, int, int)+0x51>
+ b16:	45 31 db             	xor    %r11d,%r11d
+ b19:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+ b20:	85 f6                	test   %esi,%esi
+ b22:	7e 32                	jle    b56 <mathloop(int, int, int)+0x46>
+ b24:	45 31 c9             	xor    %r9d,%r9d
+ b27:	45 31 d2             	xor    %r10d,%r10d
+ b2a:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
+ b30:	85 d2                	test   %edx,%edx
+ b32:	7e 16                	jle    b4a <mathloop(int, int, int)+0x3a>
+ b34:	46 8d 04 0a          	lea    (%rdx,%r9,1),%r8d
+ b38:	44 89 c9             	mov    %r9d,%ecx
+ b3b:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+ b40:	01 c8                	add    %ecx,%eax
+ b42:	83 c1 01             	add    $0x1,%ecx
+ b45:	44 39 c1             	cmp    %r8d,%ecx
+ b48:	75 f6                	jne    b40 <mathloop(int, int, int)+0x30>
+ b4a:	41 83 c2 01          	add    $0x1,%r10d
+ b4e:	45 01 d9             	add    %r11d,%r9d
+ b51:	44 39 d6             	cmp    %r10d,%esi
+ b54:	75 da                	jne    b30 <mathloop(int, int, int)+0x20>
+ b56:	41 83 c3 01          	add    $0x1,%r11d
+ b5a:	44 39 df             	cmp    %r11d,%edi
+ b5d:	75 c1                	jne    b20 <mathloop(int, int, int)+0x10>
+ b5f:	f3 c3                	repz retq 
+ b61:	f3 c3                	repz retq 
+ b63:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)
+ b6a:	00 00 00 
+ b6d:	0f 1f 00             	nopl   (%rax)
+```
+For `outO3.asm`:
+```
+0000000000000b10 <mathloop(int, int, int)>:
+ b10:	85 ff                	test   %edi,%edi
+ b12:	0f 8e 24 01 00 00    	jle    c3c <mathloop(int, int, int)+0x12c>
+ b18:	41 54                	push   %r12
+ b1a:	41 89 d1             	mov    %edx,%r9d
+ b1d:	55                   	push   %rbp
+ b1e:	44 8d 62 ff          	lea    -0x1(%rdx),%r12d
+ b22:	89 d5                	mov    %edx,%ebp
+ b24:	53                   	push   %rbx
+ b25:	66 0f 6f 2d e3 02 00 	movdqa 0x2e3(%rip),%xmm5        # e10 <_IO_stdin_used+0x60>
+ b2c:	00 
+ b2d:	41 c1 e9 02          	shr    $0x2,%r9d
+ b31:	83 e5 fc             	and    $0xfffffffc,%ebp
+ b34:	31 c0                	xor    %eax,%eax
+ b36:	31 db                	xor    %ebx,%ebx
+ b38:	66 0f 6f 25 e0 02 00 	movdqa 0x2e0(%rip),%xmm4        # e20 <_IO_stdin_used+0x70>
+ b3f:	00 
+ b40:	85 f6                	test   %esi,%esi
+ b42:	0f 8e d9 00 00 00    	jle    c21 <mathloop(int, int, int)+0x111>
+ b48:	45 31 c0             	xor    %r8d,%r8d
+ b4b:	45 31 d2             	xor    %r10d,%r10d
+ b4e:	66 90                	xchg   %ax,%ax
+ b50:	85 d2                	test   %edx,%edx
+ b52:	0f 8e b9 00 00 00    	jle    c11 <mathloop(int, int, int)+0x101>
+ b58:	41 83 fc 05          	cmp    $0x5,%r12d
+ b5c:	0f 86 d6 00 00 00    	jbe    c38 <mathloop(int, int, int)+0x128>
+ b62:	44 89 44 24 fc       	mov    %r8d,-0x4(%rsp)
+ b67:	66 0f ef c0          	pxor   %xmm0,%xmm0
+ b6b:	66 0f 6e 74 24 fc    	movd   -0x4(%rsp),%xmm6
+ b71:	66 0f 6f cd          	movdqa %xmm5,%xmm1
+ b75:	31 c9                	xor    %ecx,%ecx
+ b77:	66 0f 70 de 00       	pshufd $0x0,%xmm6,%xmm3
+ b7c:	0f 1f 40 00          	nopl   0x0(%rax)
+ b80:	66 0f 6f d1          	movdqa %xmm1,%xmm2
+ b84:	83 c1 01             	add    $0x1,%ecx
+ b87:	66 0f fe cc          	paddd  %xmm4,%xmm1
+ b8b:	44 39 c9             	cmp    %r9d,%ecx
+ b8e:	66 0f fe d3          	paddd  %xmm3,%xmm2
+ b92:	66 0f fe c2          	paddd  %xmm2,%xmm0
+ b96:	72 e8                	jb     b80 <mathloop(int, int, int)+0x70>
+ b98:	66 0f 6f c8          	movdqa %xmm0,%xmm1
+ b9c:	66 0f 73 d9 08       	psrldq $0x8,%xmm1
+ ba1:	66 0f fe c1          	paddd  %xmm1,%xmm0
+ ba5:	66 0f 6f c8          	movdqa %xmm0,%xmm1
+ ba9:	66 0f 73 d9 04       	psrldq $0x4,%xmm1
+ bae:	66 0f fe c1          	paddd  %xmm1,%xmm0
+ bb2:	66 0f 7e c1          	movd   %xmm0,%ecx
+ bb6:	01 c8                	add    %ecx,%eax
+ bb8:	39 ea                	cmp    %ebp,%edx
+ bba:	89 e9                	mov    %ebp,%ecx
+ bbc:	74 53                	je     c11 <mathloop(int, int, int)+0x101>
+ bbe:	45 8d 1c 08          	lea    (%r8,%rcx,1),%r11d
+ bc2:	44 01 d8             	add    %r11d,%eax
+ bc5:	44 8d 59 01          	lea    0x1(%rcx),%r11d
+ bc9:	41 39 d3             	cmp    %edx,%r11d
+ bcc:	7d 43                	jge    c11 <mathloop(int, int, int)+0x101>
+ bce:	45 01 c3             	add    %r8d,%r11d
+ bd1:	44 01 d8             	add    %r11d,%eax
+ bd4:	44 8d 59 02          	lea    0x2(%rcx),%r11d
+ bd8:	44 39 da             	cmp    %r11d,%edx
+ bdb:	7e 34                	jle    c11 <mathloop(int, int, int)+0x101>
+ bdd:	45 01 c3             	add    %r8d,%r11d
+ be0:	44 01 d8             	add    %r11d,%eax
+ be3:	44 8d 59 03          	lea    0x3(%rcx),%r11d
+ be7:	44 39 da             	cmp    %r11d,%edx
+ bea:	7e 25                	jle    c11 <mathloop(int, int, int)+0x101>
+ bec:	45 01 c3             	add    %r8d,%r11d
+ bef:	44 01 d8             	add    %r11d,%eax
+ bf2:	44 8d 59 04          	lea    0x4(%rcx),%r11d
+ bf6:	44 39 da             	cmp    %r11d,%edx
+ bf9:	7e 16                	jle    c11 <mathloop(int, int, int)+0x101>
+ bfb:	45 01 c3             	add    %r8d,%r11d
+ bfe:	83 c1 05             	add    $0x5,%ecx
+ c01:	44 01 d8             	add    %r11d,%eax
+ c04:	45 8d 1c 08          	lea    (%r8,%rcx,1),%r11d
+ c08:	41 01 c3             	add    %eax,%r11d
+ c0b:	39 ca                	cmp    %ecx,%edx
+ c0d:	41 0f 4f c3          	cmovg  %r11d,%eax
+ c11:	41 83 c2 01          	add    $0x1,%r10d
+ c15:	41 01 d8             	add    %ebx,%r8d
+ c18:	44 39 d6             	cmp    %r10d,%esi
+ c1b:	0f 85 2f ff ff ff    	jne    b50 <mathloop(int, int, int)+0x40>
+ c21:	83 c3 01             	add    $0x1,%ebx
+ c24:	39 df                	cmp    %ebx,%edi
+ c26:	0f 85 14 ff ff ff    	jne    b40 <mathloop(int, int, int)+0x30>
+ c2c:	5b                   	pop    %rbx
+ c2d:	5d                   	pop    %rbp
+ c2e:	41 5c                	pop    %r12
+ c30:	c3                   	retq   
+ c31:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+ c38:	31 c9                	xor    %ecx,%ecx
+ c3a:	eb 82                	jmp    bbe <mathloop(int, int, int)+0xae>
+ c3c:	31 c0                	xor    %eax,%eax
+ c3e:	c3                   	retq   
+ c3f:	90                   	nop
+```
+We can see that `-O3` generates a far larger implementation.
+----------
+
+Exercise 7
+
+The binary files compiled before are basically machine code. This means they are executed faster than this interpreted Python code. Also, the binaries come from their respective object files, whereas the `hello.py` file does not.
