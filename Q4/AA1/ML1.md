@@ -791,15 +791,16 @@ This example suggests that a decision not to classify is less costly than a misc
 $$
 r(a_i\vert\boldsymbol x):=\sum_{j=1}^K l(a_i\vert\omega_j)P(\omega_j\vert\boldsymbol x).
 $$
-**Definition.** *Decision rule, Total risk.* A decision rule is any function $a:\mathcal P\to A$ that assigns an action $a(\boldsymbol x)$ to every $\boldsymbol x$ such that $p(\boldsymbol x)>0$. The total risk of a decision rule is
+**Definition.** *Decision rule, Total risk.* A decision rule is any function $a:\mathcal P\to A$ from the support of the probability density function $\mathcal P$ to the action set $A$ that assigns an action $a(\boldsymbol x)$ to every $\boldsymbol x$ such that $p(\boldsymbol x)>0$. The total risk of a decision rule is
 $$
-R(a):=\int_\mathcal{P} r(a(\boldsymbol x)\vert\boldsymbol x)p(\boldsymbol x)\ d\boldsymbol x.
+\newcommand{\b}{\boldsymbol}
+R(a):=\mathbb E_{\b X}[r(a(\b x)\vert\b x)]=\int_\mathcal{P} r(a(\b x)\vert\b x)p(\b x)\ d\b x.
 $$
 We are interested in the decision rule that minimizes the total risk. Consider the rule
 $$
 \hat a(\boldsymbol x)=\argmin_{1\leq j\leq m} r(a_j\vert\boldsymbol x).
 $$
-You may recognize it as the Bayes rule. Given that this rule minimizes the argument of the integral for every possible $\boldsymbol x$, it follows that the Bayes rule has the lowest possible risk. The value $R(\hat a)$ is called the **Bayes risk**.
+You may recognize it as the Bayes rule. Given that this rule minimizes the argument of the integral for every possible $\boldsymbol x$, it follows that the Bayes rule has the lowest possible risk. The value $R(\hat a)$ is called the **Bayes risk** and is the minimum risk possible in global terms.
 
 #### 0/1 losses
 
@@ -810,4 +811,122 @@ l_{ij}=\begin{cases}
 1,\quad\text{if }i\neq j.
 \end{cases}
 $$
-Consider $K$ classes and actions
+Consider $K$ classes, and actions $a_i:\texttt{classify }\b x\texttt{ into }\omega_i$. Then, the conditional risk for each action is
+$$
+r\left(a_i\vert\b x\right)=\sum_{j=1}^K l_{ij}P\left(\omega_j\vert\b x\right)=\sum_{j=1,i\neq j}^K P\left(\omega_j\vert\b x\right)=
+1-P\left(\omega_i\vert\b x\right).
+$$
+
+#### Discriminant functions
+
+Functions of the form $g_k:\mathcal P\to\mathbb R$ are a useful tool to build an abstract classifier. An object $\b x$ is assigned to class $\omega_i$ when $g_i(\b x)$ is the highest among the values $g_1(\b x),\ldots,g_K(\b x)$. For example,
+
+- $g_k(\b x)=P(\omega_k\vert\b x).$
+- $g_k(\b x)=P(\omega_k)p(\b x\vert\omega_k).$
+- $g_k(\b x)=-r(a_k\vert\b x).$
+
+If $g_k$ is a discriminant function, then so is $h\circ g_k$, for any strictly monotonic function $h$. For two classes, we can use a single discriminant function, called a **dichotomizer**:
+
+1. Define $g(\b x):=g_1(\b x)-g_2(\b x).$
+2. Assign $\b x$ to class $\omega_1$ if $g(\b x)>0$ and to class $\omega_2$ if $g(\b x)<0$.
+
+#### The Gaussian Distribution
+
+A normally distributed $d-$variate random vector $X=\left(X_1,\ldots,X_d\right)^T$ has a pdf like
+$$
+\DeclareMathOperator{\cov}{Cov}
+\DeclareMathOperator{\var}{Var}
+p(\b x)=\frac{1}{(2\pi)^\frac{d}{2}\|\Sigma\|^\frac{1}{2}}\exp\left(-\frac{1}{2}(\b x-\b\mu)^T\Sigma^{-1}(\b x-\b\mu)\right),
+$$
+where $\b\mu$ is the **mean vector** and $\Sigma_{d\times d}=\left(\sigma_{ij}^2\right)$ is the real symmetric and positive definite **covariance matrix**.
+
+- $\mathbb E[X]=\b\mu$ and $\mathbb E\left[(X-\b\mu)(X-\b\mu)^T\right]=\Sigma$.
+- $\cov\left[X_i,X_j\right]=\sigma_{ij}^2$ and $\var\left[X_i\right]=\sigma_{ii}^2$.
+
+As $X\sim\mathcal N\left(\b\mu,\Sigma\right)$, then $X_i,X_j$ are statistically independent $\iff\cov\left[X_i,X_j\right]=0$. In general, only $\implies$ holds.
+
+The quantity $d(\b x,\b\mu)=\sqrt{(\b x-\b\mu)^T\Sigma^{-1}(\b x-\b\mu)}$ is called the **Mahalanobis distance**. What is behind the choice of a multivariate Gaussian distribution for a class?
+
+- We want to have a **prototype object**, which is modeled by the mean vector.
+- Also, the **noise modeling** is easy because in a multivariate Gaussian, this is modeled by the covariance matrix.
+- Even though, it is very important to take into account that the number of parameters of the multivariate Gaussian is $\frac{d(d+1)}{2}+d$, for dimension $d$.
+
+The surfaces of equal probability, $d(\b x,\b\mu)=\text{const}$ are **hyperellipsoids**. The principal directions or components (PC) of the hyperellipsoids are given by the eigenvectors $u_i$ of $\Sigma$, which satisfy $\Sigma u_i=\lambda_iu_i$, for $\lambda_i>0$. The lengths of the hyperellipsoids along these axes are proportional to $\sqrt{\lambda_i}$, the **singular values** associated with $u_i$. Note that as $\Sigma$ is positive definite, all $\lambda_i>0$.
+
+##### Properties
+
+- **Simplified forms:** if the $X_i$ are statistically independent, then $p(\b x)=\prod_{i=1}^dp(x_i)$, $\Sigma$ is diagonal and the PCs are axis-aligned.
+- **Analytical properties**, for example, any moment $\mathbb E\left[X^p\right]$ can be expressed as a function of $\b\mu$ and $\Sigma$.
+- **Central limit theorem**, the mean of $d$ i.i.d. random variables tends to a normal distribution, as $d\to\infty$.
+- **Linear transformation invariance**, the distribution of a linear transformation of the coordinate system remains normal.
+
+## 6. Classification theory and linear classification models (II).
+
+### Generative Bayesian classifiers
+
+#### Discriminant functions for the Gaussian density
+
+We showed that the Bayes rule minimizing the probability of error could be formulated in terms of a family of **discriminant functions**:
+$$
+\boxed{
+\texttt{assign the feature vector }\b x\texttt{ to class }\omega_k\texttt{ whenever }g_k(\b x)\texttt{ is the largest, }1\leq k\leq K.
+}
+$$
+When $X_{\vert\Omega=\omega_k}\sim\mathcal N\left(\b\mu_k,\Sigma_k\right)$, this family can be reduced to very simple expressions. Using Bayes rule and the natural logarithm, the discriminant function for class $\omega_k$ becomes
+$$
+g_k(\b x)=\ln\left[P\left(\omega_k\right)p\left(\b x\vert\omega_k\right)\right]=\ln{P\left(\omega_k\right)}-\ln\left[(2\pi)^\frac{d}{2}\|\Sigma_k\|^\frac{1}{2}\right]-\frac{1}{2}(\b x-\b\mu_k)^T\Sigma_k^{-1}(\b x-\b\mu_k).
+$$
+Erasing constant terms,
+$$
+g_k(\b x)=\ln{P(\omega_k)}-\frac{1}{2}\left(\ln\|\Sigma_k\|-(\b x-\b\mu_k)^T\Sigma_k^{-1}(\b x-\b\mu_k)\right).
+$$
+This expression is called a **quadratic discriminant function**, and the **decision boundaries** $g_i(\b x)=g_j(\b x)$ are general hyper-quadrics in $d-$dimensional space. The resulting classifier out of the class of discriminant functions together with the decision rule is called **Quadratic Discriminant Analysis (QDA)**.
+
+- If we assume that <span style='color:red'>all class-conditional distributions $p(\b x\vert\omega_k)$ have the **same covariance** matrix $\Sigma$</span>, after removing all terms that do not depend on $k$ or $\b x$ we get:
+
+$$
+g_k(\b x)=\ln{P(\omega_k)}+\b\mu_k^T\Sigma^{-1}\b x-\frac{1}{2}\b\mu_k^T\Sigma^{-1}\b\mu_k.
+$$
+Reorganizing terms we obtain $g_k(\b x)=\b w_k^T\b x+w_{k0}$, where
+$$
+\begin{matrix}
+\b w_k & = & \Sigma^{-1}\b\mu_k,\\
+w_{k0} & = & -\frac{1}{2}\b\mu_k^T\Sigma^{-1}\b\mu_k+\ln{P(\omega_k)}.
+\end{matrix}
+$$
+This is because $\Sigma^{-1}$ is a symmetric matrix for being the inverse of a symmetric matrix. These are **linear discriminant functions** (linear in $\b x$) and the **decision boundaries** are hyperplanes if $d-$dimensional space.
+
+- If we further assume that <span style='color:red'>all $X_i,X_j$ pairs are **statistically independent**</span>, that is, $\Sigma$ is a diagonal matrix, we get:
+
+$$
+g_k(\b x)=\ln{P(\omega_k)}-\frac{1}{2}\sum_{i=1}^d\frac{(\mu_{ki}-x_i)^2}{\sigma_i^2}.
+$$
+- If we further assume that <span style='color:red'>all $X_i$ have the **same variance** $\sigma^2$</span> (for example, standardizing all variables), that is $\Sigma=\sigma^2I_d$, we get:
+
+$$
+g_k(\b x)=\ln{P(\omega_k)}-\frac{1}{2\sigma^2}\|\b\mu_k-\b x\|^2.
+$$
+- If we further assume that <span style='color:red'>all classes have the **same prior distribution**</span>, $P(\omega_k)=\frac{1}{K}$, we get:
+
+$$
+g_k(\b x)=-\|\b\mu_k-\b x\|^2.
+$$
+
+In all cases, we have a **minimum-distance** classifier in $\mathbb R^d$: 
+
+- In the general case (some covariance matrices are different), the classifier uses a different Mahalanobis distance (a fully-weighted Euclidean distance) from $\b x$ to each class. This is called **Quadratic Discriminant Analysis (QDA)**.
+- In case all covariance matrices are equal, the classifier uses the same Mahalanobis distance from $\b x$ to all classes. This is called **Linear Discriminant Analysis (LDA)**.
+- In case all covariance matrices are diagonal, the classifier uses a simply-weighted Euclidean distance from $\b x$ to all classes.
+- In case all covarianve matrices are a multiple of the identity matrix, the classifier uses an unweighted Euclidean distance from $\b x$ to all classes.
+
+#### <span style='color:blue'>A numerical example</span>
+
+#### Computations in practice
+
+#### Discussionse
+
+#### Regularized Discriminant Analysis
+
+#### Pros & cons
+
+### The Naive-Bayes classifier
