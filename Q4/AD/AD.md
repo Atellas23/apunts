@@ -1,4 +1,4 @@
-# Anàlisi de Dades
+**Anàlisi** de Dades
 
 [TOC]
 
@@ -659,3 +659,208 @@ obtenim el resultat. En [aquest link](http://www.econ.upf.edu/~michael/METU/caip
 - Els valors propis de la matriu de Burt són els quadrats dels valors propis de $\bsm Z$.
 - Els percentatges d'inèrcia explicada són, per tant, més grans si utilitzem $B$ (tot i que no sumaran mai el $100\%$, ja que no els agafem tots quan els ajustem).
 - Les coordenades principals de la MCA amb $B$ són disminuïdes respecte la MCA amb $\bsm Z$.
+
+## Distribució Normal Multivariada & Inferència Multivariada
+
+### Normal univariada
+
+La normal univariada és una distribució que descriu molt bé diverses variables aleatòries. Si $X\sim\mathcal N\left(\mu,\sigma\right)$ aleshores
+$$
+\newcommand{\var}[1]{\text{Var}\left(#1\right)}
+f_X(x\vert\mu,\sigma)=\frac{1}{\sqrt{2\pi}\sigma}\exp\left[-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2\right].
+$$
+Les seves esperança i variància valen $\mathbb E[X]=\mu,\var{X}=\sigma^2$.
+
+### Normal bivariada
+
+Quan volem descriure un vector de dos variables aleatòries $X_1,X_2$ amb una distribució normal bivariant, la seva funció de densitat de probabilitat és
+
+### Normal multivariada
+
+Sigui $X=\left[X_1,\ldots,X_p\right]$ una variable aleatòria normal. Aleshores la distribució és
+$$
+f_X(\bsm x)=\frac{1}{(2\pi)^\frac{p}{2}(\det\Sigma)^\frac{1}{2}}\exp\left[-\frac{1}{2}(\bsm x-\bsm\mu)^T\Sigma^{-1}(\bsm x-\bsm\mu)\right].
+$$
+Els paràmetres són
+
+- Vector de mitjana poblacional: $\bsm\mu=\left(\mu_1,\ldots,\mu_p\right)$.
+- Matriu de variàncies i covariàncies poblacionals:
+
+$$
+\newcommand{\cov}[1]{\text{Cov}\left(#1\right)}
+\cov{X}=\Sigma_{p\times p}=\mathbb E\left[(X-\bsm\mu)(X-\bsm\mu)^T\right]=
+\begin{bmatrix}
+\sigma_{11} & \sigma_{12} & \cdots & \sigma_{1p} \\
+\sigma_{21} & \sigma_{22} & \cdots & \sigma_{2p} \\
+\vdots & \vdots & \ddots & \vdots \\
+\sigma_{p1} & \sigma_{p2} & \cdots & \sigma_{pp} \\
+\end{bmatrix}.
+$$
+
+#### Estimació de paràmetres
+
+Tenim els següents estimadors de màxima versemblança pels paràmetres $\bsm\mu$ i $\Sigma$:
+$$
+\hat{\bsm\mu}=\bsm{\overline x}=\left(\overline x_1,\ldots,\overline x_p\right),\\
+\hat\Sigma=\frac{1}{n}\sum_{i=1}^n (\bsm x_i-\bsm{\overline x})(\bsm x_i-\bsm{\overline x})^T=\bsm S_n.
+$$
+A la pràctica, sovint s'utilitza $\bsm S_{n-1}$ per estimar $\Sigma$, $\bsm S_{n-1}=\frac{n}{n-1}\bsm S_n$. Aquest estimador és **no biaixat**.
+
+**Propietats.**
+
+- Les combinacions lineals de components de $X$ segueixen també una distribució normal (univariada).
+- Si $A\in\mathcal M_{q\times p}$, aleshores $AX\sim\mathcal N\left(A\bsm\mu,A\Sigma A^T\right)$.
+- Els subconjunts de components segueixen també una distribució normal (multivariada).
+- $\cov{X_i,X_j}=0\iff$les components $X_i,X_j$ són independents.
+- Les distribucions condicionades de les components són normals multivariades.
+
+**Com saber si unes dades segueixen una normal multivariada?** Seguim algunes idees bàsiques:
+
+- Les variables individuals i les respectives distribucions amrginals haurien de tenir histogrames en forma de campana (semblant a una normal univariada).
+- Els diagrames bivariants haurien de tenir núvols de punts en forma (aproximadament) d'el·lipse.
+- Pot haver-hi alguns *outliers*; en particular, sobretot en mostres grans.
+
+#### Representació $\chi^2$ per normalitat multivariada
+
+Es té que
+$$
+(\bsm x-\bsm\mu)^T\Sigma^{-1}(\bsm x-\bsm\mu)\sim\chi_p^2.
+$$
+L'el·lipsoide traçat per $\bsm x$ descrit per
+$$
+(\bsm x-\bsm\mu)^T\Sigma^{-1}(\bsm x-\bsm\mu)\leq\chi_p^2(1-\alpha)
+$$
+hauria de contenir el $100\cdot(1-\alpha)\%$ de les observacions. Per una mostra de dades,
+
+1. Calculem $d_i^2=(\bsm x_i-\bsm{\overline x})^T\bsm S^{-1}(\bsm x_i-\bsm{\overline x})$.
+2. Ordenem les distàncies creixentment.
+3. Calculem el rang $\frac{i-\frac{1}{2}}{n}$.
+4. Calculem els quantils corresponents $q_i$ d'acord amb una distribució $\chi^2_p$.
+5. Representem els punts $\left(d_i^2,q_i\right)$.
+6. Comparem amb una línia de referència amb pendent $1$ i intersecció amb l'eix de les $y$ igual a $0$ ($y=x$). Si les dades segueixen una normal multivariant, s'hi ajustaran força.
+
+### Inferència
+
+Pel cas univariat, els tests d'hipòtesi sobre la mitjana poblacional es fan com:
+
+- Es plantejen les hipòtesis: $H_0:\mu=\mu_0$ vs $H_1:\mu\neq\mu_0$.
+- Es calcula l'estadístic $t=\frac{\overline x-\mu_0}{s/\sqrt{n}}\sim t_{n-1}$.
+- L'<span style='color:blue'>interval de confiança</span> de probabilitat $(1-\alpha)$ és $CI_{1-\alpha}(\mu)=\overline x\pm \frac{s\cdot t_{n-1,\alpha/2}}{\sqrt{n}}$.
+
+Noti's que
+$$
+t^2=\frac{\left(\overline x-\mu_0\right)^2}{s^2/n}=n\left(\overline x-\mu_0\right)\left(s^2\right)^{-1}\left(\overline x-\mu_0\right).
+$$
+Per analogia, pel **cas multivariat** obtenim la <span style='color:blue'>$T^2$ de Hotelling</span>:
+$$
+T^2=n(\bsm{\overline x}-\bsm\mu_0)^T\bsm S^{-1}(\bsm{\overline x}-\bsm\mu_0).
+$$
+Els tests d'hipòtesi multivariats en un vector de mitjanes poblacionals es plantegen així:
+
+- $H_0:\bsm\mu=\bsm\mu_0$ vs $H_1:\bsm\mu\neq\bsm\mu_0$.
+
+- Calculem l'estadístic $\frac{n-p}{p(n-1)}T^2\sim F_{p,n-p}$.
+- La <span style='color:blue'>regió de confiança</span> de probabilitat $(1-\alpha)$ és l'el·lipse traçada per $\bsm\mu$ descrita per:
+
+$$
+n(\bsm{\overline x}-\bsm\mu)^T\bsm S^{-1}(\bsm{\overline x}-\bsm\mu)\leq c^2=\frac{(n-1)p}{n-p}F_{p,n-p}(\alpha).
+$$
+
+### Comparació de dos grups
+
+Pel cas univariat, fèiem per exemple un test d'hipòtesi amb la $t$ d'Student de la següent manera: volem comparar dues mostres independents, assumint homoscedasticitat.
+
+- $H_0:\mu_1=\mu_2$ vs $H_1:\mu_1\neq\mu_2$.
+- Calculem l'estadístic de contrast,
+
+$$
+T=\frac{\overline x_m-\overline x_n-(\mu_1-\mu_2)}{s_p\sqrt{\frac{1}{m}+\frac{1}{n}}},\\
+s_p^2=\frac{(m-1)s_X^2+(n-1)s_Y^2}{n+m-2}.
+$$
+
+​		Sota la hipòtesi nul·la, $T\sim t_{n+m-2}$.
+
+Pel **cas multivariat** farem el següent: assumirem
+
+- que les dues poblacions són normals multivariades.
+- que les dues matrius de covariàncies són iguals, $\Sigma_1=\Sigma_2$.
+
+Els resultats d'assumir això són:
+
+- $T^2=\left[\bsm{\overline x}_1-\bsm{\overline x}_2-(\bsm\mu_1-\bsm\mu_2)\right]^T\left[\left(\frac{1}{n_1}+\frac{1}{n_2}\right)\bsm S_p\right]^{-1}\left[\bsm{\overline x}_1-\bsm{\overline x}_2-(\bsm\mu_1-\bsm\mu_2)\right].$
+- Sota la hipòtesi nul·la, $T^2\sim\frac{(n_1+n_2-2)p}{n_1+n_2-p-1}F_{p,n_1+n_3-p-1}.$
+- La matriu $\bsm S_p=\frac{(n_1-1)\bsm S_1+(n_2-1)\bsm S_2}{n_1+n_2-2}$ és la **matriu de covariàncies ponderada**.
+
+Si enlloc d'assumir $\Sigma_1=\Sigma_2$, **assumim el contrari**, és a dir, que $\Sigma_1\neq\Sigma_2$, aleshores
+$$
+T^2=\left[\bsm{\overline x}_1-\bsm{\overline x}_2-(\bsm\mu_1-\bsm\mu_2)\right]^T\left(\frac{1}{n_1}\bsm S_1+\frac{1}{n_2}\bsm S_2\right)^{-1}\left[\bsm{\overline x}_1-\bsm{\overline x}_2-(\bsm\mu_1-\bsm\mu_2)\right],
+$$
+i $T^2\sim\chi^2_p$.
+
+**Com podem comprovar si les matrius de covariància són iguals?** Les dades que tenim són
+
+- $\bsm S_i:$ la matriu de covariàncies mostral del grup $i$.
+- $\bsm S_p:$ la matriu de covariàncies ponderada.
+- $N$ el tamany total de la mostra, $g$ el nombre de grups, i $n_i$ el tamany de la mostra del grup $i$.
+
+Plantejem el següent test d'hipòtesi, anomenat **test de Box M**:
+$$
+H_0:\Sigma_1=\Sigma_2=\cdots=\Sigma_g\quad\text{vs}\quad H_1:\exist i,j\text{ tals que }\Sigma_i\neq\Sigma_j
+$$
+L'estadístic de contrast és
+$$
+M=(N-g)\ln\left(\det\bsm S_p\right)-\sum_{i=1}^g (n_i-1)\ln\left(\det\bsm S_i\right).
+$$
+Assimptòticament sota la hipòtesi nul·la la distribució d'aquest estadístic és
+$$
+\mathsf X^2=-2(1-c)\ln{M}\approx\chi^2_{(g-1)p(p+1)/2},
+$$
+on $c$ és una constant per corregir el biaix. Aquest test:
+
+- És molt sensible a les desviacions de la normalitat multivariada.
+- No és gens útil per mostres petites.
+- És massa liberal amb mostres molt grans (rebutja la nul·la massa sovint).
+
+### Comparació de diversos grups
+
+Per comparar més de dos grups introduim el test MANOVA (**M**ultivariate **An**alysis **O**f **Va**riance), una extensió de la $T^2$ de Hotelling quan hi ha més de dos grups. Aquesta anàlisi consisteix en escriure un model estadístic per les dades. Es modela una fila de la matriu de dades (un vector d'observacions) així:
+$$
+\bsm x_{lj}=\bsm\mu+\bsm\tau_l+\mathbf e_{lj}=\bsm\mu_l+\mathbf e_l,\quad j=1,2,\ldots,n_l,\quad l=1,2,\ldots,g,\quad \mathbf e_{lj}\sim\mathcal N\left(\bsm0,\bsm\Sigma\right).
+$$
+Les $\bsm\tau_l$ són els efectes del grup $l$. Les hipòtesis d'aquest test són
+$$
+H_0:\bsm\mu_1=\bsm\mu_2=\cdots=\bsm\mu_g\quad\text{vs}\quad H_1:\exist i,j\text{ tals que }\bsm\mu_i\neq\bsm\mu_j.
+$$
+Equivalentment, com que $\bsm\mu_i=\bsm\mu+\bsm\tau_i$,
+$$
+H_0:\bsm\tau_1=\bsm\tau_2=\cdots=\bsm\tau_g=\bsm0\quad\text{vs}\quad H_1:\exist i\text{ tal que }\bsm\tau_i\neq\bsm0.
+$$
+Estimem els paràmetres de la següent manera:
+
+- $\bsm\mu$ l'estimem pel vector de mitjanes mostral global $\bsm{\overline x}$.
+- $\bsm\tau$ l'estimem pels vectors de diferències $\left(\bsm{\overline x}_l-\bsm{\overline x}\right)$.
+- $\mathbf e$ l'estimem pels vectors de diferències $\left(\bsm x_{lj}-\bsm{\overline x}_l\right)$.
+
+L'anàlisi de la variància clàssica (ANOVA) consisteix en una descomposició de la suma total de quadrats en una part **entre els grups (*Between*)** i una part **dins dels grups (*Within*)**. En la MANOVA aquesta descomposició es fa amb les següents matrius:
+$$
+\bsm T=\sum_{l=1}^g\sum_{j=1}^{n_l}\left(\bsm x_{lj}-\bsm{\overline x}\right)\left(\bsm x_{lj}-\bsm{\overline x}\right)^T,\\
+\bsm B=\sum_{l=1}^g\left(\bsm{\overline x}_l-\bsm{\overline x}\right)\left(\bsm{\overline x}_l-\bsm{\overline x}\right)^T,\\
+\bsm W=\sum_{l=1}^g\sum_{j=1}^{n_l}\left(\bsm x_{lj}-\bsm{\overline x}_l\right)\left(\bsm x_{lj}-\bsm{\overline x}_l\right)^T.
+$$
+i es compleix que $\bsm T_{p\times p}=\bsm B_{p\times p}+\bsm W_{p\times p}$. Això dóna lloc a la taula
+
+| Font           | Sumes de quadrats | Graus de llibertat    |
+| -------------- | ----------------- | --------------------- |
+| **Tractament** | $\bsm B$          | $g-1$                 |
+| **Residual**   | $\bsm W$          | $-g+\sum_{l=1}^g n_l$ |
+| **Total**      | $\bsm T$          | $-1+\sum_{l=1}^g n_l$ |
+
+Per fer el test sobre la hipòtesi nul·la, utilitzem la **Lambda de Wilks**:
+$$
+\Lambda=\frac{\det(\bsm W)}{\det(\bsm B+\bsm W)}.
+$$
+Per mostres grans i sota la nul·la, transformem la Lambda de Wilks i aquesta transformació segueix una distribució de $\chi^2$ amb $p(g-1)$ graus de llibertat:
+$$
+-\left(n-1-\frac{p+g}{2}\right)\ln(\Lambda)\sim\chi^2_{p(g-1)}.
+$$
+També s'usen sovint estadístics de contrast alternatius, com la **traça de Pillai**, o **l'arrel més gran de Roy**. Per mostres grans, són equivalents a la Lambda de Wilks.

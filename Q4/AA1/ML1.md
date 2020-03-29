@@ -109,25 +109,13 @@ $$
 \text{true error}(f)\leq\text{training error}(f)+\text{complexity of }f.
 $$
 
+<div style="page-break-after: always;"></div>
+
 ### Formulation of ML
 
 ![image-20200214212648087](C:\Users\alexb\AppData\Roaming\Typora\typora-user-images\image-20200214212648087.png)
 
-$X$ are the measured variables, $Z$ are the unmeasured ones, $y$ is the true function and $y'$, which would be $\hat y$, is the modeled function. There are some important translations from Statistics to ML and vice-versa:
-
-|                       Machine Learning                       |                          Statistics                          |
-| :----------------------------------------------------------: | :----------------------------------------------------------: |
-|                            model                             |                            model                             |
-|                       parameter/weight                       |                    parameter/coefficient                     |
-|                            train                             |                             fit                              |
-|                            learn                             |                        infer/estimate                        |
-|                          regression                          |                          regression                          |
-|                        classification                        |                        discrimination                        |
-|                          clustering                          |                  clustering/classification                   |
-|                  inputs/features/variables                   |   independent variables, explanatory variables, predictors   |
-|                        ouputs/targets                        |                 dependent/response variables                 |
-|                      instances/examples                      |                   individuals/observatiobs                   |
-| error/loss function, training/empirical error, true/generalization error | fit criterion, deviance resubstitution/in-sample error, predictive, out-sample error |
+$X$ are the measured variables, $Z$ are the unmeasured ones, $y$ is the true function and $y'$, which would be $\hat y$, is the modeled function.
 
 #### Prediction vs. inference
 
@@ -213,6 +201,8 @@ Each problem requires a different approach in what concerns data cleaning and pr
 
 Non-standard data (images, audio, text...) may need completely *ad hoc* treatments.
 
+<div style="page-break-after: always;"></div>
+
 ## 2. Linear Data Visualization
 
 ### Dimensionality reduction
@@ -230,7 +220,7 @@ Unfortunately, there is no systematic way to generate non-linear transforms, so 
 
 ### Principal Components Analysis
 
-<span style='color:red'>**ho farem a AD en principi**</span>
+This feature extraction method is explained in the `../AD/AD.pdf`.
 
 ### Fisher's Discriminant Analysis
 
@@ -288,6 +278,8 @@ FDA generalizes very gracefully for $K$ class problems: the only restriction is 
 
 ***WARNING!*** FDA is able to extract a maximum of $K-1$ projection directions, maybe insufficient for complex data. PCA is able to extract $d$ projection directions, but it is not clear how many are necessary.
 
+<div style="page-break-after: always;"></div>
+
 #### Counterparts
 
 **When will FDA presumably fail?** If the classes are far from Gaussian, the FDA projections will not be able to preserve any complex structure; for an example, this image:
@@ -297,6 +289,8 @@ FDA generalizes very gracefully for $K$ class problems: the only restriction is 
 FDA will also fail when the discriminatory information is not in the mean but rather in the *variance* of the data (e.g., if $J(w)=0$); for example,
 
 <img src="ML1.assets/image-20200220172136456.png" alt="image-20200220172136456" style="zoom:50%;" />
+
+<div style="page-break-after: always;"></div>
 
 ## 3. Theory for regression and linear models (I).
 
@@ -395,6 +389,8 @@ $$
 $$
 
 In general, an **underfit** model will have a big bias, while an **overfit** model will have a high variance. The *abilityi to fit* has a name: it's called the **complexity** of the function class. Both models that are more or less complex than needed will tend to have large prediction errors. In the former, this will be dominated by the variance term, while in the latter, it will be dominated by the (square) bias term.
+
+<div style="page-break-after: always;"></div>
 
 ## 4. Regression theory and linear regression models (II)
 
@@ -637,12 +633,16 @@ We have introduced **linear models** as linear combinations of non-linear **basi
 - Our BFs are not flexible; they are data-independent.
 - As a consequence, their number may be very high, which in turn leads to unstability (because of low significance of the coefficients).
 
+<div style="page-break-after: always;"></div>
+
 The solution is to **develop basis functions with parameters** such that:
 
 - This BFs scale well with dimension (inner products, distances, ...)
 - They are **data-dependent**, because of the parameters.
 - As a consequence, their number might be much lower, and the coefficients will be significant.
 - Unfortunately, the new parameters will play a **non-linear role** in the model: their optimization is plagued with local optima.
+
+<div style="page-break-after: always;"></div>
 
 ## 5. Classification theory and linear classification models (I). Bayesian decision theory.
 
@@ -720,6 +720,8 @@ $$
 $$
 Equality holds only if $P(x\vert\omega_1)=P(x\vert\omega_2),\ \forall x\in\mathcal X$.
 
+<div style="page-break-after: always;"></div>
+
 **Continuous feature measuring.** The next step is to consider a r.v. $X$ with pdf $p(x)$ that measures a *continuous* feature of an object. Let $\mathcal P$ be the support of $p$, i.e. $\mathcal P=\{x\in\mathbb R\vert p(x)>0\}$. In this setting, $p(x\vert\omega_i),\ i\in\{1,2\}$ are the conditional densities of $x$ for every class.
 
 **Proposition.** $P_e(\texttt{rule2})\leq P_e(\texttt{rule1}).$
@@ -763,7 +765,9 @@ P_e(\texttt{Bayes})\square
 $$
 So, if any other classifier has a smaller error, the Bayes classifier is optimal.
 
-The Bayes classifier can also have a **rejection class** (illustrated here for two classes); fix $\varepsilon\in(0,1)$:
+<div style="page-break-after: always;"></div>
+
+The Bayes classifier can also have a **rejection class** (illustrated here for two classes); if we fix $\varepsilon\in(0,1)$,
 $$
 \begin{split}
 \texttt{if }P(\omega_1\vert\boldsymbol x)-P(\omega_2\vert\boldsymbol x)>\varepsilon\texttt{ then class of object }\boldsymbol x\texttt{ is }\omega_1\\
@@ -994,3 +998,33 @@ where $\hat\Sigma_k(\lambda)=(1-\lambda)\hat\Sigma_k+\lambda\hat\Sigma_{\text{po
 - Requires matrix inversions (costly or numerically delicate).
 
 ### The Naive-Bayes classifier
+
+We showed that the 0/1 loss Bayes rule minimizing the probability of error could be formulated in terms of discriminant functions $g_k(\b x)=P(\omega_k)P(\b x\vert\omega_k)$, for $k=1,\ldots,K$. We can expand the conditional probability to be
+$$
+P(\omega_k)P(\b x\vert\omega_k)=P(\omega_k)P(X_1=x_1\wedge X_2=x_2\wedge\ldots\wedge X_d=x_d\vert\omega_k)=\\
+=P(\omega_k)P(X_1=x_q\vert\omega_k)\prod_{j=2}^d P(X_j=x_j\vert\omega_k,X_1=x_1\wedge\ldots\wedge X_{j-1}=x_{j-1}),
+$$
+and if we assume $X_1,\ldots,X_d$ are pairwise independent *given the class*, this is equal to
+$$
+\DeclareMathOperator*{\supequiv}{\equiv}
+\ldots=P(\omega_k)P(X_1=x_1\vert\omega_k)\prod_{j=2}^d P(X_j=x_j\vert\omega_k)=P(\omega_k)\prod_{j=1}^d P(X_j=x_j\vert\omega_k)\supequiv^{\text{def}}\boxed{\text{NB}_k(\b x)}.
+$$
+
+#### Extensions
+
+We can numerically extend (and ease) the classifier by taking logarithms as such
+$$
+\text{NB}_k(\b x)=\ln{P(\omega_k)}+\sum_{j=1}^d \ln{P(X_j=x_j\vert\omega_k)}
+$$
+**How do we deal with continuous variables?** We have two options:
+
+1. Assume a particular pdf for the variable and estimate its parameters from the data.
+2. Discretize the variable and treat is as discrete.
+
+#### Null empirical probabilities
+
+In test examples $\b x^*$ it may happen that some variable $X_j$ has a value $x_j^*$ **not present in the sample** used to create the classifier, hence $\hat P(X_j=x_j\vert\omega_k)=0$ and we are in trouble. One way to avoid this kind of situations is to use the **Laplace correction**:
+$$
+\newcommand{\card}[1]{\text{card}(#1)}
+\hat P_L(X_j=x_j\vert\omega_k)=\frac{\card{\{\b x\in S_k: X_j=x_j\}}+p}{\card{S_k}+p},\ p\in\mathbb N.
+$$
