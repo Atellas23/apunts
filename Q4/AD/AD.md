@@ -1,4 +1,4 @@
-**Anàlisi** de Dades
+# Anàlisi de Dades
 
 [TOC]
 
@@ -475,13 +475,13 @@ Utilitzarem la següent notació:
 - $N$ serà la **taula de contingència** $I\times J$.
 - $P=\frac{N}{n}$, amb $n=\boldsymbol1^TN\boldsymbol1$. Notem que $\boldsymbol1^TP\boldsymbol1=1.$
 - $P$ és, per tant, una matriu de probabilitats (la **matriu de correspondència**).
-- Les **masses de les files** són:
+- Els **pesos de les files** són:
 
 $$
 r_i=\sum_{j=1}^Jp_{ij},\quad\boldsymbol r=P\boldsymbol1,\quad D_r=\text{diag}(\boldsymbol r).
 $$
 
-- Les **masses de les columnes** són:
+- Els **pesos de les columnes** són:
 
 $$
 c_j=\sum_{i=1}^Ip_{ij},\quad\boldsymbol c=P^T\boldsymbol1,\quad D_c=\text{diag}(\boldsymbol c).
@@ -493,7 +493,7 @@ Una taula de contingència es pot convertir en una matriu de perfils (perfils fi
 $$
 R=D_r^{-1}P,\quad C=D_c^{-1}P^T.
 $$
-Les masses de columnes i files resulten ser, doncs, mitjanes ponderades dels perfils:
+Els pesos de columnes i files resulten ser, doncs, mitjanes ponderades dels perfils:
 $$
 \boldsymbol r^TD_r^{-1}P=\boldsymbol1^TP=\boldsymbol c^T,\quad
 \boldsymbol c^TD_c^{-1}P^T=\boldsymbol1^TP^T=\boldsymbol r^T.
@@ -505,7 +505,7 @@ Els perfils es poden centrar:
 
 #### Dimensionalitat
 
-El rang per columnes de la matriu de perfils fila és com a molt $J-1$, i el rang per files de la matriu de perfils columna és com a molt $I-1$. El rang, doncs, de la matriu, és $\min(I-1,J-1)$.
+El rang per columnes de la matriu de perfils fila és com a molt $J-1$, i el rang per files de la matriu de perfils columna és com a molt $I-1$. El rang de la matriu, doncs, és $\min(I-1,J-1)$.
 
 ### Inèrcia
 
@@ -660,7 +660,7 @@ obtenim el resultat. En [aquest link](http://www.econ.upf.edu/~michael/METU/caip
 - Els percentatges d'inèrcia explicada són, per tant, més grans si utilitzem $B$ (tot i que no sumaran mai el $100\%$, ja que no els agafem tots quan els ajustem).
 - Les coordenades principals de la MCA amb $B$ són disminuïdes respecte la MCA amb $\bsm Z$.
 
-## Distribució Normal Multivariada & Inferència Multivariada
+## 6. Distribució Normal Multivariada & Inferència Multivariada
 
 ### Normal univariada
 
@@ -864,3 +864,220 @@ $$
 -\left(n-1-\frac{p+g}{2}\right)\ln(\Lambda)\sim\chi^2_{p(g-1)}.
 $$
 També s'usen sovint estadístics de contrast alternatius, com la **traça de Pillai**, o **l'arrel més gran de Roy**. Per mostres grans, són equivalents a la Lambda de Wilks.
+
+## 7. Anàlisi *Cluster*
+
+### Introducció
+
+L'**anàlisi *cluster*** té com a objectiu **descobrir grups "naturals"** en les dades (o variables). Per tant, implica una reducció de les dades: de $n$ casos o observacions a $m<<n$ clusters (grups). El nombre de clusters pot ser desconegut a priori, i el mètode pren com a consideració prèvia que no hi ha cap variable categòrica que defineixi un agrupament. L'anàlisi cluster és una eina exploratòria que dóna una única resposta, una idea de com poden ser els grups de les dades.
+
+Evidentment, per trobar grups en les dades (o entre les variables) necessitem una mesura de la **proximitat** entre cadascuna de les observacions. No podem ni volem considerar totes les agrupacions possibles (el nombre d'agrupacions diferents creix exponencialment amb la quantitat de dades); per tant, utiltizarem algorismes per produïr els grups de manera raonable.
+
+Aquests algorismes es separen en quatre grups:
+
+- **Mètodes jeràrquics:** en general són mètodes aglomeratius. Parteixen d'una situació inicial on cada individu és un cluster, i es van formant els clusters més grans a mida que l'algorisme avança. Les observacions no canvien de grup durant el procés de formació: un cop una observació entra en un grup, s'hi manté fins el final de l'algorisme.
+- **Mètodes de partició:** es comença amb una separació aleatòria i es va millorant l'aproximació considerant el centre de cada grup. En general són mètodes iteratius.
+- **Mètodes basats en models estadístics:** es basen en un model per les dades i una distribució de probabilitat, i per màxima versemblança s'intenta discernir quin cluster és el millor per cada observació.
+- **Altres mètodes.**
+
+### Mesures de la distància
+
+**Distàncies per variables quantitatives:** aquestes són algunes distàncies utiltizades amb freqüència a l'anàlisi cluster:
+
+- Euclidiana
+
+$$
+d(x,y)=\sqrt{(x-y)^T(x-y)}
+$$
+
+- Euclidiana ponderada
+
+$$
+d(x,y)=\sqrt{(x-y)^TA(x-y)}
+$$
+
+- Mahalanobis
+
+$$
+d(x,y)=\sqrt{(x-y)^TS^{-1}(x-y)}
+$$
+
+- Minkowski
+
+$$
+d(x,y,\lambda)=\left(\sum_{i=1}^p\vert x_i-y_i\vert^\lambda\right)^\frac{1}{\lambda}
+$$
+
+- Canberra
+
+$$
+d(x,y)=\sum_{i=1}^p\frac{\vert x_i-y_i\vert}{x_i+y_i}
+$$
+
+- Bray-Curtis
+
+$$
+d(x,y)=\frac{1}{p}\frac{\sum_{i=1}^p\vert x_i-y_i\vert}{\sum_{i=1}^p(x_i+y_i)}
+$$
+
+**Distàncies per variables qualitatives:** per calcular la distància entre dues observacions de la matriu de dades amb variables qualitatives, es crea una taula com la següent:
+
+|             |      | Cas $j$ |       |             |
+| ----------- | ---- | ------- | ----- | ----------- |
+|             |      | 1       | 0     |             |
+| **Cas** $i$ | 1    | $a$     | $b$   | $a+b$       |
+|             | 0    | $c$     | $d$   | $c+d$       |
+|             |      | $a+c$   | $b+d$ | $p=a+b+c+d$ |
+
+i es fan servir els següents coeficients per calcular la distància entre les observacions:
+
+- Coeficient de *simple matching*: $\frac{a+d}{p}$
+- *Matches* un a un: $\frac{a}{p}$
+- Coeficient de Jaccard: $\frac{a}{a+b+c}$ (no considera els 0-0)
+
+**Distàncies entre clusters:** per calcular la distància entre dues agrupacions o clusters s'utilitzen les següents distàncies, que depenen de la mètrica que s'utilitzi entre punts:
+
+- Distància entre els veïns més propers (*single linkage*)
+- Distància entre els veïns més llunyans (*complete linkage*)
+- Mitjana de totes les distàncies possibles entre els punts de dades (*average linkage*)
+
+#### Criteris per ajuntar clusters
+
+Per ajuntar clusters, es tenen en compte un o més dels següents criteris:
+
+- El *single linkage*.
+- El *complete linkage*.
+- L'*average linkage*.
+- La distància entre centroides, $d^2_{rs}=\sum_{j=1}^p(\bar x_{rj}-\bar x_{sj})^2$ (coneguda també com UPGMA, de l'anglès *Unweighted Pair Group Method using Averages*)
+- La suma de quadrats incremental de Ward.
+
+### Mètodes Jeràrquics
+
+Qualsevol mètode jeràrquic comença considerant tots els punts com un cluster, i utilitzant una de les mesures de la distància entre clusters vistes anteriorment, decideixen ajuntar clusters. Després de l'execució d'un algorisme d'aquest tipus, podem dibuixar un tipus de gràfica molt informativa sobre com ha anat el procés de clustering. Aquesta gràfica s'anomena **dendrograma**, i té el següent aspecte:
+
+<center>
+    <figure>
+        <img src="AD.assets/image-20200413175836945.png" style="zoom:80%;" />
+    </figure>
+</center>
+
+#### Suma de quadrats de Ward
+
+La suma de quadrats de Ward és una mesura de com d'homogeni és un cluster. Donats dos clusters $r$ i $s$, tenim les sumes de quadrats de dins dels grups
+$$
+WSS_r=\sum_{j=1}^p\sum_{i=1}^{n_r}(x_{ij}-\bar x_j)^2,\quad WSS_s=\sum_{j=1}^p\sum_{i=1}^{n_s}(x_{ij}-\bar x_j)^2
+$$
+En ajuntar-los, obtenim un nou cluster $t$, amb una WSS nova igual a
+$$
+WSS_t=\sum_{j=1}^p\sum_{i=1}^{n_r+n_s}(x_{ij}-\bar x_j)^2
+$$
+Això dona un increment en la WSS de
+$$
+\Delta=WSS_t-(WSS_r+WSS_s)=\frac{n_rn_s}{n_r+n_s}d^2_{rs}
+$$
+I ajuntem els dos clusters amb $\Delta$ mínima.
+
+#### Dades composicionals
+
+Si unes dades tenen alguna restricció de tipus sumar alguna constant, s'anomenen composicionals. En aquesta mena de dades, no té gaire sentit calcular les correlacions entre columnes ja que aquestes estan restringides a sumar sempre el mateix. Així doncs, una aproximació millor (i més habitual) per calcular les distàncies entre les files de la matriu de dades és la que proposa John Aitchison (dècada dels 1980):
+
+- Primer dividim cada fila per la seva suma.
+- Transformem les dades amb el logaritme.
+- Calculem la matriu de distàncies euclidianes de les dades transformades (la **distància d'Aitchison**)
+- Fem clusters amb aquesta matriu de distàncies nova.
+
+#### Consideracions sobre les distàncies entre clusters
+
+Podem resumir els avantatges i inconvenients de cadascun dels criteris de la distància entre clusters:
+
+- *Single linkage*: els outliers arriben tard als clusters, però és molt sensible a aquests.
+- *Complete linkage*: els outliers s'identifiquen i s'ajunten als clusters força ràpid. També és molt sensible als outliers.
+- *Average linkage, Centroid distance*: poc sensibles als outliers.
+- Criteri de Ward: poc sensible a outliers, tendeix a formar clusters de mides similars.
+
+### Mètodes no jeràrquics: Mètode de K-means
+
+L'algorisme que segueix aquest mètode és el següent:
+
+1. Escollim un valor pel nombre de clusters $K$.
+2. Particionem tots els items en $K$ clusters inicials (aleatòriament o utilitzant seeds).
+3. Calculem els centroides (baricentres) de cada cluster.
+4. Assignem cada element al cluster del baricentre que hi sigui més proper.
+5. Tornem a 3, fins que no hi hagi reassignacions.
+
+Després de la convergència, és recomanable
+
+- Provar clusters inicials diferents, i comparar els clusters finals obtinguts.
+- Provar un nombre de clusters $K$ diferent.
+- Comparar les mitjanes i les variàncies de cada cluster.
+
+### Mètodes basats en models
+
+Els mètodes que hem vist anteriorment no fan cap supòsit sobre la distribució de les dades. Ara, assumirem models probabilistics per les dades. Es fa servir un model de mixtura finita,
+$$
+g(x\vert\bsm\pi,\bsm\theta)=\pi_1f_1(x\vert\bsm\theta_1)+\cdots+\pi_kf_k(x\vert\bsm\theta_k),
+$$
+amb $\pi_i>0$ i $\sum_{i=1}^k\pi_i=1$. Cada $f_i$ és una distribució de probabilitat pel cluster $i-$èssim, i freqüentment són distribucions normals, però no necessàriament ho han de ser. La probabilitat a posteriori de que la observació $x_j$ pertanyi al cluster $i-$èssim és
+$$
+\frac{\pi_if_i(x_j\vert\bsm\theta_i)}{\sum_{n=1}^k\pi_nf_n(x_j\vert\bsm\theta_i)}.
+$$
+Els mètodes basats en models requereixen un valor o una estimació del valor del nombre de clusters $k$. El model de mixtura finita s'estima per màxima versemblança, i es calculen les probabilitats a posteriori per a cada observació i per tots els clusters. Cada observació, llavors, s'assigna al cluster pel qual té la *posterior* més gran.
+
+### Validació dels agrupaments generats
+
+Volem tenir un nombre de clusters òptim respecte algun criteri numèric, i hi ha diversos criteris d'aquest estil que s'usen popularment:
+
+- L'estadístic pseudo-$F$ (Calinski-Harabasz, 1974)
+- Els coeficients de silueta.
+- ...
+
+#### Estadístic pseudo-$F$
+
+Es defineix l'estadístic pseudo-$F$ com
+$$
+F=\frac{\frac{GSS}{K-1}}{\frac{WSS}{N-1}}=\frac{GSS\cdot(N-1)}{WSS\cdot(K-1)},
+$$
+amb
+
+- $K=$ nombre de clusters
+- $N=$ nombre d'observacions/mida de la mostra
+- $GSS=$ suma de quadrats entre els clusters
+- $WSS=$ suma de quadrats dins els clusters
+
+Aleshores, es tria la $K$ que maximitza $F$.
+
+#### Coeficients de silueta
+
+Siguin $C_i$ els clusters, amb $i=1,\ldots,k$. Definim
+
+- $a_j$: la distància mitjana entre la observació $j-$èssima i totes les altres observacions del seu mateix cluster.
+- $b_j$: la mínima distància mitjana entre la observació $j-$èssima i totes les observacions d'altres clusters.
+- La puntuació de silueta,
+
+$$
+s_j=\frac{b_j-a_j}{\max{(a_j,b_j)}}\in[-1,1],\ j=1,\ldots,N.
+$$
+
+Aquesta puntuació mesura com de bé una observació es troba en el seu cluster. Si fem la mitjana de les $s_j$ sobre totes les observacions de la base de dades,
+$$
+\bar s=\frac{1}{N}\sum_{j=1}^N s_j,
+$$
+agafarem la $K$ que maximitzi aquesta mitjana $\bar s$.
+
+#### Comentaris finals
+
+Després d'obtenir els clusters, encara queden algunes preguntes:
+
+- Els clusters obtinguts són realment diferents, o se'n poden ajuntar alguns? Això ho podem investigar amb ANOVA/MANOVA.
+- Com d'homogeni és cada cluster?
+- Quines variables discriminen els clusters? Podem fer estadística descriptiva per cada cluster, o fer LDA/QDA.
+
+Hem vist que l'analista, en fer anàlisi cluster, ha de prendre diverses decisions importants:
+
+- Les variables que incloem en l'anàlisi.
+- Possibles transformacions de les dades (per exemple, composicionals).
+- L'algorisme a utilitzar: jeràrquic, divisori (no jeràrquic), basat en models, ...
+- La mètrica a utilitzar: Euclidiana, Manhattan, Mahalanobis, ...
+- La mesura de la distància entre clusters: *single linkage, complete linkage, average linkage,* ...
+- ...
+

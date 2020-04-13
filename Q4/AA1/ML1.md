@@ -220,7 +220,7 @@ Unfortunately, there is no systematic way to generate non-linear transforms, so 
 
 ### Principal Components Analysis
 
-This feature extraction method is explained in the `../AD/AD.pdf`.
+This feature extraction method is explained in the file `../AD/AD.pdf`.
 
 ### Fisher's Discriminant Analysis
 
@@ -347,8 +347,8 @@ R_{\text{emp}}(y):=\frac{1}{N}\sum_{n=1}^N(t_n-y(\boldsymbol x_n))^2.
 $$
 This quantity is also known as the **apparent error**. The **Empirical Risk Minimization (ERM)** principle stats that a learning algorithm should choose a hypothesis (model) $\hat y$ which minimizes the empirical risk among a predefined class of functions $\mathcal Y$:
 $$
-\DeclareMathOperator*{\argmax}{arg max}
-\DeclareMathOperator*{\argmin}{arg min}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
 \hat y:=\argmin_{y\in\mathcal Y}R_{\text{emp}}(y).
 $$
 The quantity $R_{\text{emp}}(\hat y)$ is known as the **training error**. In theoretical ML, we are very much interested in:
@@ -1012,7 +1012,7 @@ $$
 
 #### Extensions
 
-We can numerically extend (and ease) the classifier by taking logarithms as such
+Multiplying numbers smaller than 1, we can easily get numeric errors in a computer, so we want to ease the computations. To do this, we can numerically extend (and ease) the classifier by taking logarithms as such
 $$
 \text{NB}_k(\b x)=\ln{P(\omega_k)}+\sum_{j=1}^d \ln{P(X_j=x_j\vert\omega_k)}
 $$
@@ -1028,3 +1028,145 @@ $$
 \newcommand{\card}[1]{\text{card}(#1)}
 \hat P_L(X_j=x_j\vert\omega_k)=\frac{\card{\{\b x\in S_k: X_j=x_j\}}+p}{\card{S_k}+p},\ p\in\mathbb N.
 $$
+
+Here $p$ is the "weight" assigned to the prior probability and $V_k$ is the number of differents values of variable $k$.
+
+### The kNN classifier
+
+**Definition.** *Metric.* Let $X$ be a set. A metric in $X$ is a two-parameter function $d:X\times X\to\mathbb R^+\cup\{0\}$ satisfying the following properties $\forall x,y,z\in X$:
+
+1. $d(x,y)=0\iff x=y$
+2. $d(x,y)=d(y,x)$
+3. $d(x,y)\leq d(x,z)+d(z,y)$
+
+A pair $(X,d)$ is a metric space.
+
+**Decision rule.** *The 1NN technique.* The 1NN technique classifies any $x\in X$ in the same class of the "nearest neighbour" of $x$ in $S$, that is
+$$
+\boxed{
+\textsf{The class of }x\textsf{ is the class of }\argmin_{x'\in S\setminus\{x\}}d(x,x').
+}
+$$
+
+**Decision rule.** *The kNN technique.* The kNN technique considers the $k\geq1$ "nearest neighbours" of $x$ in $S$ and votes for the most represented class:
+$$
+\boxed{
+\textsf{The class of }x\textsf{ is the majority class among its }k\textsf{ closest elements in }S.
+}
+$$
+In this rule, ties may happen. These are broken randomly. There are no ties for two-class problems and odd $k$.
+
+**Theorem (Cover & Hart, 1965).** *Asymptotic analysis of the 1NN technique.* Call $\varepsilon_\text{1NN}$ the probability of error of 1NN and $\varepsilon_B$ be the Bayes error. Then, as $N\to\infty$,
+$$
+\varepsilon_B\leq\varepsilon_\text{1NN}\leq\varepsilon_B\left(2-\varepsilon_B\frac{K}{K-1}\right)\leq2\varepsilon_B.
+$$
+In particular, for two-class problems,
+$$
+\varepsilon_B\leq\varepsilon_\text{1NN}\leq2\varepsilon_B(1-\varepsilon_B).
+$$
+
+## 7. Classification theory and linear classification models (III).
+
+### Discriminative classifiers
+
+#### Maximum Likelihood (ML) framework (I)
+
+#### Generalized Linear Methods
+
+Generalized linear models are a very general and classical technique for fitting **linear models**. They are the genuine representatives of **discriminative methods**. The main difference between discriminative and generative methods is that using generative methods, we can generate new data from the parameter estimation we have previously done, while in discriminative methods we neither can't or are interested in doing so.
+
+These methods work for many **target types**:
+
+- Binary (two-class) and nominal (multi-class).
+- Proportions and counts.
+- Ordinal (ordered classes).
+- Continuous target variables.
+
+They admit very **general predictors**. Categorical variables are binarized.
+
+**Definition.** *Generalized linear model.* A GLM is a linear predictor of a convenient function $h$ of the conditional expected value of the target variable. Mathematically,
+$$
+h(\mathbb E[T_n\vert X_n])=\b\beta^TX_n+\beta_0.
+$$
+This function $h$ is typically smooth (of class $\mathcal C^k$ for some $k\geq2$) and globally invertible. It's called the **link function**. We optimize the $\b\beta$ and $\beta_0$ parameters directly, without any assumptions of the distribution of the $\b x$. The target variable rows $T_n$ are taken as independent and drawn from a distribution of the **exponential family**: Poisson, Gaussian, Bernoulli, Gamma, ...
+
+The modeler chooses a suitable distribution for $T_n$ given $X_n$:
+
+1. If we are predicting a real continuous value, we will usually use the Gaussian distribution; hence, $h$ is the identity function. This is called **linear regression**.
+2. If we are in a two-class problem, we will use the Bernoulli distribution, with link function $h=\logit$. This method is called **logistic regression**.
+3. If we want to predict a counter, we will usually use the Poisson distribution, with link function $h=\ln$. This is called **Poisson regression**.
+
+This generality comes at a cost: in general we need an iterative procedure for the optimization of the $\b\beta$ and $\beta_0$ parameters. A popular procedure is to set it up as a Maximum Likelihood problem and use a preferred numerical optimization method (e.g. Newton-Rhapson).
+
+##### Logistic regression
+
+We are in the case of binary classification ($K=2$). We **model** the posterior probability for class $\omega_1$ as:
+$$
+P(\omega_1\vert\b x)=g\left(\b\beta^T\b x+\beta_0\right),
+$$
+where $g(z)=\frac{\exp(z)}{1+\exp(z)}=\frac{1}{1+\exp(-z)}$ is the **logistic function**. Obviously, $P(\omega_2\vert\b x)=1-P(\omega_1\vert\b x)=1-g\left(\b\beta^T\b x+\beta_0\right)$.
+
+The logistic function is a $\mathcal C^\infty$ function $g:\mathbb R\to(0,1)$. This function is a bijection, with inverse
+$$
+\DeclareMathOperator{\logit}{\text{logit}}
+g^{-1}(z)=\ln{\left(\frac{z}{1-z}\right)}\supequiv^\text{def}\logit(z)
+$$
+for $z\in(0,1)$. This is called the **logit function**, and looks like this:
+
+<center>
+    <figure>
+        <img src="ML1.assets/image-20200408183756913.png" style="zoom:80%;" />
+    </figure>
+</center>
+
+Each $T_n\sim B(p_n)$, where $p_n=g\left(\b\beta^TX_n+\beta_0\right)$,
+$$
+\implies P(T_n\vert X_n,\b\beta)=\begin{cases}p_n,\quad T_n=1\ (X_n\in\omega_1)\\
+1-p_n,\quad T_n=0\ (X_n\in\omega_2)\end{cases}=p_n^{T_n}(1-p_n)^{(1-T_n)}.
+$$
+Notice that $g\left(\b\beta^T X_n+\beta_0\right)=\mathbb E[T_n]=p_n$. Hence, we are identifying $p_n$ with $P(\omega_1\vert X_n)$.
+
+###### Interpretation of the model
+
+The main thing to remember about logistic regression is that "The log of the odds is a linear function of the predictors". Since $P(\omega_1\vert X)=g\left(\b\beta^T X+\beta_0\right)$, we have
+$$
+\ln{\left(\frac{P(\omega_1\vert X)}{P(\omega_2\vert X)}\right)}=\ln{\left(\frac{P(\omega_1\vert X)}{1-P(\omega_1\vert X)}\right)}=\logit{(P(\omega_1\vert X))}=\b\beta^T X+\beta_0.
+$$
+
+###### Parameter obtaining
+
+Suppose we have an i.i.d. sample of $N$ labeled observations $S=\{(\b x_n,t_n)\}_{n=1,\ldots,N}$, where $\b x_n\in\mathbb R^n,t_n\in\{0,1\}$.
+
+The first thing we notice is that we have $d+1$ parameters to fit. In the "equivalent" case of  generative methods (LDA), we had $\frac{d(d+1)}{2}+2d$ parameters. So, this cases scales better (linearly) than LDA did (quadratically). We re-write $P(\omega_1\vert X)=g(\b\beta^T X)$, with
+$$
+X=(1,X_1,\ldots,X_d)^T,\quad\b\beta=(\beta_0,\beta_1,\ldots,\beta_d)^T.
+$$
+Now we see the obtaining of the parameters from a Maximum Likelihood perspective:
+$$
+\newcommand{\bbeta}{\b\beta}
+\newcommand{\bx}{\b x}
+\begin{split}
+l(\bbeta)=\ln{\mathcal L(\bbeta)}=\ln{P(\{t_n\}_{n=1}^N\vert\{\bx_n\}_{n=1}^N,\bbeta)}=\\
+
+\ln{\prod_{n=1}^N P(t_n\vert\bx_n,\bbeta)}=\sum_{n=1}^N\ln P(t_n\vert\bx_n,\bbeta)=\\
+
+\sum_{n=1}^N\ln{\left(g\left(\bbeta^T\bx_n\right)^{t_n}\left(1-g\left(\bbeta^T\bx_n\right)\right)^{(1-t_n)}\right)}=\\
+
+\sum_{n=1}^N\ln{\left((p_n)^{t_n}(1-p_n)^{(1-t_n)}\right)},\quad p_n=g\left(\bbeta^T\bx_n\right).
+\end{split}
+$$
+
+Now,
+$$
+\begin{split}
+(p_n)^{t_n}(1-p_n)^{(1-t_n)}=\left(\frac{p_n}{1-p_n}\right)^{t_n}(1-p_n)=\\
+\left(\exp{\left(\bbeta^T\bx_n\right)}\right)^{t_n}\left(1+\exp{\left(\bbeta^T\bx_n\right)}\right)^{-1}.
+\end{split}
+$$
+Therefore,
+$$
+\boxed{l(\bbeta)=\sum_{n=1}^N\left[t_n\bbeta^T\bx_n-\ln{\left(1+\exp\left(\bbeta^T\bx_n\right)\right)}\right].}
+$$
+
+#### Maximum Likelihood framework (II)
+
