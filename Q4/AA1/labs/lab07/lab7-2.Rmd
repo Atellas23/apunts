@@ -1,0 +1,76 @@
+---
+title: 'LAB 7: GLMs - Logistic Regression and beyond'
+subtitle: 'Example 2: Poisson Regression with artificial data'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "April 2020"
+output:
+  html_notebook: default
+  pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+Let us switch to *Poisson regression*: now $\log()$ is the link function
+
+We firts invent a possible situation potentially modelled as a Poisson process. In our example, this is the amount of time spent travelling to work as a function of the distance from home:
+
+- Let $x$ represent the distance to workplace (in km).
+- Let $t$ represent the amount of time spent in travelling from home to work and back (in hours per week -- let us suppose this is measured as an integer quantity); 0 here means "I work at home, but sometimes I have to go to another place".
+
+With these assumptions, we now generate artificial "realistic" data from a Poisson process:
+
+```{r}
+set.seed(1234)
+
+N <- 500
+x <- runif(n=N,0.1,12)            # generate the x_n (note x is a vector)
+beta_1 <- 0.35 ; beta_0 <- -1     # this is the ground truth, which is unknown
+l <- exp(beta_1*x + beta_0)       # generate the lambdas (note l is a vector)
+t <- rpois(n=N, lambda = l)       # generate the targets t_n according to parameter l_n for each x_n
+```
+
+
+Let us see what we have generated:
+```{r}
+plot(x, t, xlab="Distance to workplace (km)", ylab="Time wasted (h/week)")
+```
+
+
+Now we proceed to fit the parameters of the Poisson regression with `glm`
+
+```{r}
+mydata <- data.frame(h.week=t, dist=x)
+glm.res <- glm(h.week ~ dist, family = poisson(link="log"), data = mydata)
+summary(glm.res)
+```
+
+From the summary, one can see that the estimated model is $\log(l_n) = 0.34*dist_n - 0.91$, which is fairly close to the ground truth (remember we set $\beta_1 = 0.35$ and $\beta_0 = -1$).
+
+### Interpretation of the coefficients:
+
+For a 1 unit increase in distance (that is, 1 km), the expected number of hours wasted in travelling from home to work and back increases by a factor of `r exp(coef(glm.res)[2])` ... a 40.5% on average!
+
+*** 
+
+We finally gather everything together and plot it:
+
+```{r}
+new.d <- seq(0,30,length.out=100)
+fv <- predict (glm.res, data.frame(dist=new.d), se=TRUE)
+
+plot (x, t, xlab="Distance to workplace (km)", ylab="Time wasted (h/week)")
+lines(new.d,exp(fv$fit), col='red')
+```
+
+
+We can even add a confidence interval at the 95%level
+
+```{r}
+plot (x, t, xlab="Distance to workplace (km)", ylab="Time wasted (h/week)")
+lines (new.d,exp(fv$fit), col='red')
+lines (new.d,exp(fv$fit+1.967*fv$se.fit), col='red',lty=2)
+lines (new.d,exp(fv$fit-1.967*fv$se.fit), col='red',lty=2)
+```
+
+
+Note that the model is not very precise, but this is because the uncertainty in the problem (and therefore in the generated data) is very high. The model is actually (almost) as good as it can be.

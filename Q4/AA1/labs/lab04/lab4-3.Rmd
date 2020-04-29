@@ -1,0 +1,217 @@
+---
+title: 'LAB 4: Linear regression and beyond'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "March 2020"
+output:
+  html_notebook: default
+pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+### Example 3: Real data modelling with standard, ridge and LASSO regression
+
+The following dataset is from a study by Stamey et al. (1989) about prostate cancer, measuring the correlation between the level of a prostate-specific antigen and some covariates:
+
+- lcavol  : log-cancer volume
+- lweight : log-prostate weight
+- age     : age of patient
+- lbhp    : log-amount of benign hyperplasia
+- svi     : seminal vesicle invasion
+- lcp     : log-capsular penetration
+- gleason : Gleason Score, check http://en.wikipedia.org/wiki/Gleason_Grading_System
+- pgg45   : percent of Gleason scores 4 or 5
+- lpsa is the response variable, in logarithms (log-psa)
+
+First we load the data
+
+```{r}
+pcancer <- read.table("prostate.data", header=TRUE)
+summary(pcancer)
+```
+
+There's a training sub-dataset that we will focus on. Later, we will try to predict the values of the remaining observations (test)
+
+Scale data and prepare train/test split
+```{r}
+pcancer.std <- data.frame(cbind(scale(pcancer[,1:8]),lpsa=pcancer$lpsa))
+train <- pcancer.std[pcancer$train,]
+test <- pcancer.std[!pcancer$train,]
+dim(train)
+dim(test)
+```
+
+The data looks like this
+
+```{r}
+plot(train)
+```
+
+Given that this is a biological dataset, some covariates are correlated
+
+```{r}
+round(cor(train),2)
+```
+
+
+Set a seed for reproducibility
+```{r}
+set.seed(1234)
+```
+
+
+#### 1. Standard linear regression
+
+```{r}
+(model.linreg <- lm(lpsa ~ ., data=train))
+```
+
+We simplify using the AIC (not seen in class): the fact is that we can get rid of some variables, useless for the model
+
+```{r}
+(model.linreg.FINAL <- step(model.linreg))
+```
+
+
+#### 2. Ridge linear regression
+
+
+```{r}
+library(MASS)
+
+model.ridge <- lm.ridge(lpsa ~ ., data=train, lambda = seq(0,10,0.1))
+
+plot(seq(0,10,0.1), model.ridge$GCV, main="GCV of Ridge Regression", type="l", 
+     xlab=expression(lambda), ylab="GCV")
+
+# The optimal lambda is given by
+lambda.ridge <- seq(0,10,0.1)[which.min(model.ridge$GCV)]
+abline (v=lambda.ridge,lty=2)
+```
+
+We can plot the coefficients and see how they vary as a function of lambda:
+```{r}
+colors <- rainbow(8)
+
+matplot (seq(0,10,0.1), coef(model.ridge)[,-1], xlim=c(0,11), type="l",xlab=expression(lambda), 
+        ylab=expression(hat(beta)), col=colors, lty=1, lwd=2, main="Ridge coefficients")
+abline (v=lambda.ridge, lty=2)
+abline (h=0, lty=2)
+arrows (5.5,0.45,5,0.35, length = 0.15)
+text (rep(10, 9), coef(model.ridge)[length(seq(0,10,0.1)),-1], colnames(train)[-9], pos=4, col=colors)
+text(5.5, 0.4, adj=c(0,-1), "best lambda", col="black", cex=0.75)
+```
+
+
+#### 3. LASSO linear regression
+
+In the LASSO the coefficients are penalized by the L1 norm. The optimal value for lambda is again chosen by cross-validation
+
+```{r}
+library(Matrix)
+library(glmnet)
+
+t <- as.numeric(train[,'lpsa'])
+x <- as.matrix(train[,1:8])
+
+model.lasso <- cv.glmnet(x, t, nfolds = 10)
+plot(model.lasso)
+```
+
+
+The '.' correspond to removed variables
+```{r}
+coef(model.lasso)
+```
+
+
+lambda.min is the value of lambda that gives minimum mean cross-validated error
+```{r}
+(lambda.lasso <- model.lasso$lambda.min)
+```
+
+Predictions can be made based on the fitted cv.glmnet object; for instance, this would be the TRAINING error with the "optimal" lambda as chosen by CV
+```{r}
+predict (model.lasso, newx = x, s = "lambda.min")
+```
+
+#### 4. Compare the three techniques in order to select the best one
+
+We have established the optimal hyperparameters (lambdas) for ridge and lasso, in the remaining of the script we will compare the three techniques: ordinary least-squares regression, ridge regression with $\lambda =$ `r lambda.ridge`, and lasso regression with $\lambda =$ `r lambda.lasso`.
+
+To make a fair comparison between the three techniques, we should use the same cross-validation for each problem. Standard and ridge regression allow to compute the LOOCV rather fast, but for the LASSO this is not possible. To select the best model, we now use 10x10-CV in all the methods, using the best hyperparameters (lambdas) found previously.
+
+In the `caret` package there is functionality that does the splitting in folds etc. for you; unfortunately `lm.ridge` is not in caret's built-in library (sadly) this means we need to program everything ourselves (buf!):
+
+
+```{r}
+data <- train # by just in case
+
+K <- 10; TIMES <- 10   # 10x10-cv
+
+res <- replicate (TIMES, {
+  # shuffle the data
+  data <- data[sample(nrow(data)),]
+  # Create K equally sized folds
+  folds <- cut (1:nrow(data), breaks=K, labels=FALSE)
+  sse.standard <- sse.ridge <- sse.lasso <- 0
+
+  # Perform 10 fold cross validation
+  for (i in 1:K)
+  {
+    valid.indexes <- which (folds==i, arr.ind=TRUE)
+    valid.data <- data[valid.indexes, ]
+    train.data <- data[-valid.indexes, ]
+
+    #standard
+    model.standard <- lm (lpsa ~ ., data=train.data)
+    beta.standard <- coef(model.standard)
+    preds.standard <- beta.standard[1] + as.matrix(valid.data[,1:8]) %*% beta.standard[2:9]
+    sse.standard <- sse.standard + crossprod(valid.data[,'lpsa'] - preds.standard)
+
+    #ridge
+    model.ridgereg <- lm.ridge (lpsa ~ ., data=train.data, lambda = lambda.ridge)
+    beta.ridgereg <- coef (model.ridgereg)
+    preds.ridgereg <- beta.ridgereg[1] + as.matrix(valid.data[,1:8]) %*% beta.ridgereg[2:9]
+    sse.ridge <- sse.ridge + crossprod(valid.data[,'lpsa'] - preds.ridgereg)
+
+    #lasso
+    model.lasso <- glmnet(as.matrix(train.data[,1:8]), as.numeric(train.data[,'lpsa']), lambda=lambda.lasso)
+    preds.lasso <- predict(model.lasso, newx = as.matrix(valid.data[,1:8]), s = lambda.lasso)
+    sse.lasso <- sse.lasso + crossprod(valid.data[,'lpsa'] - preds.lasso)
+  }
+  c(sse.standard, sse.ridge, sse.lasso)
+})
+
+normalization <- (nrow(train)-1)*var(train$lpsa) # denominator of NRMSE
+(nmse.train <- rowMeans(res) / normalization)
+```
+
+
+We choose the best model as the one with the lowest CV error which turns out to be **ridge regression**.
+
+We train the final model (ridge regression with $\lambda =$ `r lambda.ridge`) on the whole training set:
+```{r}
+model.ridgereg.FINAL <- lm.ridge(lpsa ~ ., data=train, lambda = lambda.ridge)
+(beta.ridgereg.FINAL <- coef(model.ridgereg.FINAL))
+```
+
+
+What is left now is to estimate the generalization error of our final model (using the **test set**):
+
+```{r}
+## This is the test NMSE:
+normalization.test <- (length(test$lpsa)-1)*var(test$lpsa)
+
+sse <- crossprod (test$lpsa - beta.ridgereg.FINAL[1] 
+           - as.matrix(test[,1:8]) %*% beta.ridgereg.FINAL[2:9])
+(NMSE.ridge <- sse/normalization.test)
+```
+
+
+### Final comments:
+
+1. In this lab you can clearly see how the volume of work increases when one wants to do a thorough analysis, even using a high-level specialized language like R.
+
+2. It is a good exercise to get and compare the final coefficient vectors.
+

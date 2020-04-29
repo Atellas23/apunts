@@ -1,0 +1,291 @@
+---
+title: 'LAB 5: LDA/QDA/RDA, kNN, Naïve Bayes'
+subtitle: 'Example 1: Visualizing and classifying crabs with LDA'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "March 2020"
+output:
+  html_notebook: default
+pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+Campbell studied rock crabs of the genus "Leptograpsus" in 1974. One species, Leptograpsus variegatus, had been split into two new species, previously grouped by colour (orange and blue). Preserved specimens
+lose their colour, so it was hoped that morphological differences would enable museum material to be classified.
+
+Data is available on 50 specimens of each sex of each species (so 200 in total), collected on sight at Fremantle, Western Australia. Each specimen has measurements on: the width of the frontal lobe (FL), the rear width (RW), the length along the carapace midline (CL), the maximum width (CW) of the carapace, and the body depth (BD) in mm, in addition to colour (that is, species) and sex.
+
+In fact, you used this data already in a previous lab session (FDA/PCA), and much of this example should look familiar to you!
+
+The crabs data comes with the `MASS` package:
+
+
+```{r}
+library(MASS)
+data(crabs)
+```
+
+Look at the data using the typical commands:
+```{r}
+?crabs
+summary(crabs)
+head(crabs)
+```
+
+
+The goal is to separate the 200 crabs into four classes, given by the 2x2 configurations for sex (M/F) and species (B/O)
+```{r}
+Crabs.class <- factor(paste(crabs[,1],crabs[,2],sep=""))
+```
+
+
+Now 'BF' stands now for 'Blue Female', and so on
+
+```{r}
+table(Crabs.class)
+```
+
+Using the rest of the variables as predictors (except 'index', which is only an index and therefore carries no relevant information for the classification task)
+
+```{r}
+Crabs <- crabs[,4:8]
+summary(Crabs)
+```
+
+
+
+Various preliminary plots (notice all 5 predictors are continuous)
+
+```{r}
+par(mfrow=c(2,3))
+
+boxplot(Crabs)
+hist(Crabs$FL,col='red',breaks=20,xlab="", main='Frontal Lobe Size (mm)')
+hist(Crabs$RW,col='red',breaks=20,xlab="", main='Rear Width (mm)')
+hist(Crabs$CL,col='red',breaks=20,xlab="", main='Carapace Length (mm)')
+hist(Crabs$CW,col='red',breaks=20,xlab="", main='Carapace Width (mm)')
+hist(Crabs$BD,col='red',breaks=20,xlab="", main='Body Depth (mm)')
+```
+
+
+We would like first to have a look at the data in 2D; the following are scatterplots with color-coded class:
+
+```{r}
+pairs(Crabs, main="Pairs plot for the crabs", pch=21, bg=c('black', 'red', 'green', 'blue')[Crabs.class]) 
+```
+
+
+We can make our own 'pairs plot' by doing:
+
+```{r}
+plot(Crabs,col=unclass(Crabs.class))
+```
+
+
+The `partimat()` function in the `klaR` package can display the results of linear (or quadratic) classification using two variables at a time.
+
+Since there 4 classes, we get 4 regions; notice the "error" at the top of each plot, which is the training (apparent) error
+
+```{r}
+library(klaR)
+partimat (x=Crabs, grouping=Crabs.class, method="lda", plot.matrix = TRUE, imageplot = FALSE)
+```
+
+
+
+
+These plots suggest that FL and RW is the best pair of variables since they obtain the lowest error (but keep in mind this is just the *training error*)
+
+Now let's classify: we fit LDA to the data using all predictors
+
+```{r}
+(lda.model <- lda(x=Crabs, grouping=Crabs.class))
+plot(lda.model)
+```
+
+
+As there are four classes (called 'groups' in LDA), we get three linear discriminants (LDs) for projection.
+We first compute the loadings (the 'loadings' are simply the projected data):
+
+```{r}
+loadings <- as.matrix(Crabs) %*% as.matrix(lda.model$scaling)
+```
+
+
+Now we plot the projected data into the first two LDs (notice that with LDA we are actually performing dimensionality reduction 5D --> 3D (always number of classes minus 1), out of which we are plotting the 2 most important dimensions
+
+We do our own plotting method, with color and legend:
+
+```{r}
+colors.crabs <- c('blue', 'lightblue', 'orange', 'yellow')
+
+crabs.plot <- function (myloadings)
+{
+  plot (myloadings[,1], myloadings[,2], type="n", xlab="LD1", ylab="LD2")
+  text (myloadings[,1], myloadings[,2], labels=crabs$index, col=colors.crabs[unclass(Crabs.class)], cex=.55)
+  legend('topright', c("B-M","B-F","O-M","O-F"), fill=colors.crabs, cex=.55)
+}
+
+crabs.plot (loadings)
+```
+
+
+The result is quite satisfactory, right? We can see that the 5 continuous predictors do indeed represent 4 different crabs. 
+
+We can also see that crabs of the Blue "variety" are less different (regarding males and females) than those in the Orange variety
+
+If you would like to keep this new representation for later use (maybe to build a classifier on it), simply do:
+
+```{r}
+Crabs.new <- data.frame (New.feature = loadings, Target = Crabs.class)
+summary(Crabs.new)
+```
+
+Now let's analyze the numerical output of lda() in more detail:
+
+```{r}
+lda.model
+```
+
+
+`Prior probabilities of groups` is self-explanatory (these are estimated from the data, but can be overriden by the `prior` parameter)
+
+`Group means` is also self-explanatory (these are our $\mu$'s)
+
+`Coefficients of linear discriminants` are the scaling factors we have been using to project data. These have been normalized so that the within-groups covariance matrix is spherical (a multiple of the identity). This means that the larger the coefficient of a predictor, the more important the predictor is for the discrimination:
+
+```{r}
+lda.model$scaling
+```
+
+
+Looking at these factors, we can interpret our plot so that the horizontal axis (LD1) separates the groups mainly by using FL, CW and BD; the vertical axis (LD2) separates the groups mainly by using RW and some CL, etc
+
+The `Proportion of trace` is the proportion of between-class variance that is explained by successive discriminants (LDs)
+
+For instance, in our case LD1 explains 68.6% of the total between-class variance. In fact, the first two LDs account for 98.56% of total between-class variance, fairly close to 100%
+
+This means that the third dimension adds but a little bit of discriminatory information. Let's visualize the crabs in 3D:
+
+```{r}
+library(rgl)
+
+# 3d scatterplot (that can be rotated)
+plot3d(loadings[,1], loadings[,2], loadings[,3], "LD1", "LD2", "LD3",
+       size = 4, col=colors.crabs[unclass(Crabs.class)], main="Crabs Data")
+```
+
+In an attempt to improve our separation of classes, and since the measurements are lengths, it could be sensible to take logarithms; and so we re-do our lda analysis on the log-transformed predictor variables.
+
+```{r}
+(lda.logmodel <- lda (x=log(Crabs), grouping=Crabs.class))
+```
+
+
+The model looks a bit better, given that he first two LDs now account for 99.09% of total between-class variance, very good indeed
+
+As an example, the first (log) LD is given by:
+
+$LD1 = -31.2*\log(FL) - 9.5*\log(RW) - 9.8*\log(CL) + 66*\log(CW) - 18*\log(BD)$
+
+To get the new loadings:
+
+```{r}
+logloadings <- as.matrix(log(Crabs)) %*% as.matrix(lda.logmodel$scaling)
+```
+
+Now, we plot the projected data in the first two LDs:
+
+```{r}
+crabs.plot (logloadings)
+```
+
+
+The first coordinate clearly expresses the difference between species, and the second the difference between sexes!
+
+And finally a 3d scatterplot (that can be rotated)
+```{r}
+plot3d(logloadings[,1], logloadings[,2], logloadings[,3], "LD1", "LD2", "LD3",
+       size = 4, col=colors.crabs[unclass(Crabs.class)], main="Crabs Data (log)")
+```
+
+***
+
+Now let us evaluate the model as a predictor (i.e., as a classifier)
+
+We can obviously compute the training error (also known as "apparent" or "resubstitution" error), which is usually optimistic! (i.e., biased downwards)
+
+The following is the confusion matrix saying, for each individual of each **true class** (row of the matrix) how many have been classified in the four classes. E.g., based on the table, out of the 50 BF crabs, 49 have been classified correctly and 1 has been classified as BM. Notice also based on this table, that the species is always predicted correctly and the only mistakes are done in the gender part. Looking at the plot above, this looks clear since the separation between species (blues against orange-yellow) is much better that separation among sexes, where you can observe overlap.
+
+```{r}
+(ct <- table(Truth=Crabs.class, Pred=predict(lda.logmodel, log(Crabs))$class))
+```
+
+From this table we can obtain several measures, such as the accuracy by class:
+
+```{r}
+diag(prop.table(ct, 1))
+```
+
+or the global accuracy rate (rate of correct predictions):
+
+```{r}
+sum(diag(prop.table(ct)))
+```
+
+
+But as you well know by know, if we want to reallly assess the accuracy of (future) predictions we have to use LOOCV (leave-one-out cross-validation) or related resampling techniques.
+
+In this case, when the argument `CV=TRUE`, the `lda()` method returns interesting results: the predicted classes and posterior probabilities for the LOOCV.
+
+####WARNING: the default is LOOCV=FALSE (we should use it for plotting only)
+
+```{r}
+lda.logmodel <- lda(x=log(Crabs), grouping=Crabs.class, prior = c(1,1,1,1)/4, CV=TRUE)
+```
+
+
+We can access the predictes classes through the list 'class':
+```{r}
+lda.logmodel$class[1:10]
+```
+
+
+The matrix `posterior` gives the predicted posteriors:
+```{r}
+lda.logmodel$posterior[1:10,]
+```
+
+
+Note the prior probabilities can be changed at will; if unspecified, proportions from the supplied data will be used.
+
+The contingency matrix now is:
+```{r}
+(ct <- table(Truth=Crabs.class, Pred=lda.logmodel$class))
+```
+
+And the prediction accuracy rate is now:
+```{r}
+diag(prop.table(ct, 1))
+sum(diag(prop.table(ct)))
+```
+
+
+**This is a much more reliable figure, because it is a predictive error estimated with LOOCV.**
+
+*** 
+
+Pearson's Chi-squared Test is useful for goodness-of-fit tests
+
+```{r}
+chisq.test(lda.logmodel$class, Crabs.class)
+```
+
+This test checks whether two categorical distributions coincide. In our case, we take them to be the class labels and the predicted labels. The lower the value of the $\chi^2$ statistic ("chi-squared" statistic), the better.
+
+The test is accepted (actually, **not rejected**) when the p-value < 0.05. So, in this case there is strong evidence that our predictions are not random.
+
+Final note 1: the argument `na.omit()` in `lda()` omits any rows having one or more missing values (the default action is for the procedure to fail)
+
+Final note 2: sadly there is no provision for costs (losses), as seen in class :-(

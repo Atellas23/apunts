@@ -1,0 +1,204 @@
+---
+title: 'LAB 4: Linear regression and beyond'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "March 2020"
+output:
+  html_notebook: default
+pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+```{r}
+set.seed(2222)
+par(mfrow=c(1, 1))
+```
+
+
+### Example 1: Solution of a linear system with linear regression
+
+First we create a simple data set:
+$t = f(x) + \epsilon$
+where $f(x) = (1 + 1/9)(x-1) + 10$ ($f$ is the unknown target function = the regression function), and $\epsilon \sim N(0,1)$ (this introduces an stochastic dependence between $x$ and $t$)
+
+```{r}
+N <- 10
+X <- matrix(c(rep(1,N), seq(N)),nrow=N)
+t <- seq(10,20,length.out=N) + rnorm(N)
+plot(X[,2],t,lwd=3)
+```
+
+
+#### 1. Solution via the pseudo-inverse 
+
+As a reminder, the closed-form solution to least-squares regression problems of the form $\min_w ||t - Xw||^2$ is given by
+$w = (X^T X)^{-1} X^T t$
+where $(X^T X)^{-1} X^T$ is the _pseudo inverse_ of the matrix X.
+
+```{r}
+(C <- t(X) %*% X)                   # X^T X
+(X.pseudo <- solve(C) %*% t(X))     # (X^T X)^{-1} X^T
+```
+
+
+As a sanity check, the following should be the identity matrix (thus we obtain a left pseudo-inverse of X)
+
+```{r}
+X.pseudo %*% X
+```
+
+And we compute the solution (the coefficient vector) as follows:
+
+```{r}
+(w <- X.pseudo %*% t)
+```
+
+You can compare this with the truth: slope of $10/9 \approx 1.111$ and offset $80/9 \approx 8.889$.
+
+Our model:
+
+```{r}
+plot(X[,2],t,lwd=3)
+lines (X[,2], w[2,1]*X[,2]+w[1,1], type="l")
+```
+
+####  2. Solution via the SVD
+
+We saw an alternative to computing the least-squares solution via the SVD of matrix X. Namely, if $X = U \Sigma V^T$ is the SVD decomposition of X, then we can compute $w = V \Sigma^{-1} U^T t$. Note that since $\Sigma$ is diagonal, finding its inverse involves inverting the elements in its diagonal only.
+
+```{r}
+(s <- svd(X))
+```
+
+
+The two columns of X are linearly independent iff rank(X) = 2 iff we get two singular values different from 0.
+In numbers, rank(X) = 2 = min(10,2), hence X is "full rank".
+
+Now we check that X = U D V^T:
+
+```{r}
+D <- diag(s$d)
+svdX <- s$u %*% D %*% t(s$v)   # this should be equal to X
+all.equal(X, svdX)
+```
+
+We should find that the solution `w.svd` found via the SVD is equal to the previous solution `w` found through the pseudo-inverse:
+
+```{r}
+D <- diag(1/s$d)
+(w.svd <- s$v %*% D %*% t(s$u) %*% t)
+all.equal(w,w.svd)
+```
+
+#### 3. Solution using R's `glm()` method
+
+Now we use R's very powerful `glm()` method to perform linear regression by least squares; we specify numerical regression by choosing the `family = gaussian`
+
+```{r}
+(sample <- data.frame(x=X,t=t))
+```
+
+
+Note that `glm()` always adds an intercept (a constant regressor equal to 1) *by default*
+
+So we have two options:
+
+1. turn this off (the "-1" in the formula below) and use our own column of 1's:
+```{r}
+model1 <- glm (t ~ x.2 + x.1 - 1, data=sample, family = gaussian)
+```
+
+2. use this built-in feature and ignore our own column of 1's (recommended)
+```{r}
+model2 <- glm (t ~ x.2, data=sample, family = gaussian)
+```
+
+You can look at the coefficients (the w vector)
+
+```{r}
+model1$coefficients
+model2$coefficients
+```
+
+Other fields in the `glm()` return value will be explained below
+
+#### 4. Why the SVD?
+
+Why do we prefer the SVD method to direct pseudo-inversion, if both deliver the same results?
+
+.. because in forming the $X^T X$ matrix some information may be lost
+
+
+```{r}
+eps <- 1e-3
+(X.eps <- matrix(c(1,eps,0,1,0,eps),nrow=3))
+(C.eps <- t(X.eps) %*% X.eps)
+solve(C.eps)
+```
+
+The following similar piece of code will break down:
+
+```{r}
+eps <- 1e-10
+(X.eps <- matrix(c(1,eps,0,1,0,eps),nrow=3))
+(C.eps <- t(X.eps) %*% X.eps)
+solve(C.eps) 
+```
+
+This raises an error, because the 2x2 "all-ones" matrix is singular (its determinant is 1·1 - 1·1 = 0)
+
+
+However, this is not the right matrix, we simply lost the epsilon along the way because of lack of numerical precision in forming t(X.eps) %*% X.eps
+
+Intermission ... the condition number of a matrix gives an indication of 
+the accuracy of the result of a matrix inversion.
+
+Values near 1 indicate a well-conditioned matrix, the inversion of which is a very
+reliable process; large values suggest there is trouble ahead.
+
+The condition number of a matrix is the product of the norm of the matrix and the norm of its inverse.
+
+Using the standard 2-norm, the condition number is the ratio between largest and the smallest (non-zero) singular values of the matrix.
+
+The condition number of the matrix $X^T X$ is the square of that of $X$.
+
+```{r}
+X
+kappa(X, exact=TRUE)
+kappa(t(X) %*% X, exact=TRUE)
+```
+
+That wasn't really high, but keep reading ...
+
+Let's see another example:
+
+
+```{r}
+## an innocent-looking matrix
+(A <- matrix(c(rep(1,N), 100+seq(N)),nrow=N))
+kappa(A, exact=TRUE)
+kappa(t(A) %*% A, exact=TRUE)
+```
+
+
+A simple workaround is to center the second column:
+
+```{r}
+A[,2] <- A[,2] - mean(A[,2])
+A
+kappa(A, exact=TRUE)
+kappa(t(A) %*% A, exact=TRUE)
+```
+
+
+Now we could solve for the centered matrix and modify the solution to make it correspond to that of the original system
+
+A little exercise: what is the relationship between the two linear systems? In other words, how can we get the solution to the original one with that of the centered one?
+
+Note: There is a routine that calculates directly the pseudo-inverse (it does so via the SVD):
+
+```{r}
+library(MASS) # ginv()
+ginv(A)
+```

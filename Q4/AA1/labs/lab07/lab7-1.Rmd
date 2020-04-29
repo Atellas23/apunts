@@ -1,0 +1,105 @@
+---
+title: 'LAB 7: GLMs - Logistic Regression and beyond'
+subtitle: 'Example 1: Logistic Regression with artificial data'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "April 2020"
+output:
+  html_notebook: default
+  pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r}
+set.seed(1234)
+```
+
+The purpose of this first example is to get acquainted with the basics of logistic regression and the call to `glm()` (used to fit Generalized Linear Models)
+
+Let $x$ represent a single continuous predictor, let $t$ represent a class ('0' or '1'), with a probability $p_x$ of being 1 for every $x$, which is linearly related to the predictor via the logit funtion. That is, $logit(p) = \beta_1*x + \beta_0$.
+Therefore, $logit()$ is the link function (the inverse of the logistic function, in this case).
+
+The following code generates a sample according to a logistic model:
+```{r}
+N <- 500
+x <- rnorm(n=N, mean=3, sd=2)     # generate the x_n data (note x is a vector)
+beta_1 <- 0.6 ; beta_0 <- -1.5    # this is the ground truth, which is unknown
+
+p <- 1/(1+exp( -(beta_1*x + beta_0) ))  # generate the p_x (note p is a vector)
+
+t <- rbinom (n=N, size=1, prob=p)    # generate the targets (classes) t_n according to the p_n
+t <- as.factor(t)                  # note t is a vector
+```
+
+
+Let us visualize our data samples:
+```{r}
+plot(x, as.numeric(t)-1, xlab="x_n", ylab="t_n")
+```
+
+```{r}
+glm.res <- glm (t~x, family = binomial(link=logit)) # actually link=logit is the default for binomial!
+```
+
+
+Now let us look at the coefficients! 'Intercept' is $\beta_0$, 'x' is $\beta_1$:
+
+```{r}
+summary(glm.res)
+```
+
+
+Obviously $x$ is very significant (the Intercept is almost always significant)
+According to this, our estimated model is:
+$logit(p) = 0.67693*x - 1.61652$
+which is quite close to the ground truth!
+
+In general (I mean, in the multivariate case) you get this as:
+```{r}
+coef(glm.res)
+```
+
+Or, if you want individual coefficients:
+
+```{r}
+glm.res$coefficients["x"]
+glm.res$coefficients["(Intercept)"]
+```
+
+
+### Interpretation of the coefficients:
+
+For a 1 unit increase in $x$, there is an increase in the odds for $t$ by a factor of:
+
+```{r}
+exp(glm.res$coefficients["x"])
+```
+
+
+In plain words, the odds for $t$ increases by a 96.8% for a 1 unit increase in $x$. That is almost doubling the odds in this case
+
+Let us try now a "logistic plot" using `predict()`
+
+First, we are going to generate abscissae in which to compute the model by dividing the interval (m = min(x), M=max(x)) in 200 equally-spaced parts, with 10 points before and 10 after at the same distance in addition.
+
+```{r}
+M <- max(x)
+m <- min(x)
+abscissae <- m + (-10:210)*(M-m)/200 
+```
+
+
+With `type="response"` we get the predicted probabilities:
+```{r}
+preds <- predict(glm.res, data.frame(x=abscissae), type="response")
+```
+
+
+Now we plot the predictions together with data points:
+
+```{r}
+plot(p~x,ylim=c(0,1)) # plot previous data
+lines(abscissae, preds, col="blue") # add our model, quite good!
+```
+
+Mmmh, not bad at all :-)

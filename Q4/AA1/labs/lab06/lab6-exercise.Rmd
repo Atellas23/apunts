@@ -1,0 +1,236 @@
+---
+title: 'LAB 5: LDA/QDA/RDA, kNN, Naïve Bayes'
+subtitle: 'Exercise'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "March 2020"
+output:
+  html_notebook: default
+pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+Here we propose several exercises for you to solve.
+In all cases, you must calculate the missclassification rate (error) for your models in the learn data using LOO cross-validation (LOOCV), both to optimize a hyper-parameter (as 'laplace' in Naïve Bayes or 'k' in kNN) and to choose the best model (as the one with lowest LOOCV error). Then you have to refit your model using the selected parameter in the whole learning data (this time without LOOCV) and finally report the error in the leftout data (test data)
+
+***
+
+### Exercise 1
+
+This exercise involves the use of the 'Glass' data set, a real-world data set about fragments of glass collected in forensic work.
+
+Each record has a measured refractive index for the glass and its composition: percentages by weight of oxides of Na, Mg, Al, Si, K, Ca, Ba and Fe
+
+The fragments were originally classed as seven types, one of which ('sand') was absent in this dataset. The categories which occur are window float glass (70), window non-float glass (76), vehicle window glass (17), containers (13), tableware (9) and vehicle headlamps (29). 
+
+The data frame contains the following columns:
+
+- RI refractive index
+- Na sodium
+- Mg manganese
+- Al aluminium
+- Si silicon
+- K potassium
+- Ca calcium
+- Ba barium
+- Fe iron
+- type of glass (target variable)
+
+```{r}
+library(MASS)
+data (fgl)
+```
+
+
+Warning! 6 classes for only 214 observations overall! Difficult modelling problem ahead ... and some classes are under-represented
+
+This is your departing data set
+
+```{r}
+summary(fgl)
+attach(fgl)
+```
+
+
+We start with some basic visualizations comparing with boxplots the distributions of each variable as a function of the target class:
+
+```{r}
+par(mfrow=c(3,3))
+my.glass.boxplot <- function (var) 
+{ boxplot (var ~ type, data=fgl, col = "bisque"); title(deparse(substitute(var))) }
+
+my.glass.boxplot (RI)
+my.glass.boxplot (Na)
+my.glass.boxplot (Mg)
+
+my.glass.boxplot (Al)
+my.glass.boxplot (Si)
+my.glass.boxplot (K)
+
+my.glass.boxplot (Ca)
+my.glass.boxplot (Ba)
+my.glass.boxplot (Fe)
+```
+
+Some basic discrimination ability is apparent in the following plots: e.g. headlamp glass is high in Barium, Sodium and Aluminium but low in Iron:
+
+
+In this exercise you should do the following (in separate sections):
+
+1. Derive some "hand discrimination" rules by looking at the boxplots (just for fun)
+2. Perform various preliminary plots (notice all predictors are continuous), with histograms
+3. Perform scatter plots (pairs), with glass type overlayed (in color)
+4. Fit LDA to the data using all predictors
+5. Plot the data into the first two LDs; what do you see? What is the proportion of trace?
+   Repeat with the first three LDs in 3D
+6. Compute resubstitution error and leave-one-out cross-validation error (LOOCV)
+7. Perform Pearson's Chi-squared Test to see if your best model is better than random (p-value < 0.05)
+8. Try to fit QDA to the data using all predictors ... what happens? what is the reason? 
+   There are two possible solutions:
+   a) try to remove one of the classes (the less represented one)
+      Hint code for doing this:
+```
+      fgl2 <- fgl[fgl[,10] != "Tabl",]
+      fgl2$type <- factor(fgl2$type, levels=levels(fgl$type)[-5]
+      qda.model <- qda (x=fgl2[,-10],grouping=fgl2$type,CV=FALSE)
+```
+   b) merge the less represented class with another one; which one would you choose? do the merging!
+   c) use RDA (recommended)
+9. Compute resubstitution (i.e. training) error and LOOCV error for your final QDA; does it improve over LDA?
+10. Apply kNN by optimizing the number of nearest neighbors
+11. Apply Naïve Bayes
+12. Choose your final model as the one with lowest LOOCV. Refit it in the learning (or training data) and make it predict the leftout test data. Discuss the results (have a look at the confusion matrix)
+
+***
+
+### Exercise 2
+
+This second exercise involves the use of the 1984 U.S. Congressional Voting Records. Remember that there were some missing values in the data set?
+
+```{r}
+data (HouseVotes84, package="mlbench") 
+dim(HouseVotes84)
+sum(complete.cases(HouseVotes84))
+```
+
+
+There are 435 rows, so more than half of the rows contain at least one missing value!
+
+These are the percentages of missing for each variable:
+```{r}
+sort(round(100*apply(is.na(HouseVotes84), 2, mean),2), decreasing=TRUE)
+```
+
+
+We used Naïve Bayes for predicting the political party. If NAs are found, the default action is not to count them for the computation of the probabilities. These NAs correspond to "undefined vote", which is not necessarily something missing (the person was there, and emitted a vote)
+
+A reasonable alternative here is to recode them and treat them as a further value; this could make sense in this dataset because the Congressmen declared that they did not want to 'announce their vote yet', which in turn could say something about their political position in some cases
+
+
+So, we declare a further modality "u" for "undefined", and recode all missing values to the new value "u":
+```{r}
+HouseVotes84[2:17] <- lapply(HouseVotes84[2:17], function(x) {factor(x,levels = c(levels(x), "u"))})
+HouseVotes84[is.na(HouseVotes84)] <- "u"
+```
+
+This is your departing data set:
+```{r}
+summary(HouseVotes84) 
+```
+
+
+In this exercise you should do the following (in separate sections):
+
+1. Fit a Naïve Bayes classifier to this new data set and compare the results to those in the previous script
+2. If you experience problems with empty empirical probabilities (note there are just a few "u" for some variables), you may use Laplace correction
+3. Decide which is your best model and give a final prediction in the test set. Does it improve over what we had in the previous script?
+
+***
+
+### Exercise 3
+
+This exercise involves the use of the Vowel data set: speaker-independent recognition of the eleven steady-state vowels of British English
+
+As the name implies, the task is to distinguish between 11 types of vowels. The available variables are derived using speech recognition techniques
+
+```{r}
+data (Vowel, package="mlbench") 
+dim(Vowel)
+```
+
+Let's look at the number of observations we find in each class:
+```{r}
+table (Vowel$Class)
+```
+
+And let us look at what our data looks like in summary:
+
+```{r}
+summary(Vowel)
+```
+
+The first variable, V1, corresponds to the speaker was recorded; we remove this information since we want to classify vowels independently of whoever spoke them.
+
+```{r}
+Vowel$V1 <- NULL
+summary(Vowel)
+```
+
+
+We continue visualizing this data. For this, we build a handy plotter:
+
+```{r}
+## Plots data for vowels v1 and v2 together with class means
+plot.vowels <- function (vdata, v1, v2)
+{
+  par(mfrow=c(1,1), mgp=c(1.25,.5,0), mar=c(2.25, 2.1, 1,1))
+  
+  plot(vdata[,v1], vdata[,v2], type="n", xlab=v1, ylab=v2)
+  text(vdata[,v1], vdata[,v2], as.character(vdata$Class), col=mycols2[vdata$Class], cex=0.8)
+  means <- apply(vdata[c(v1,v2)], 2, function(x) tapply(x, vdata$Class, mean, simplify=TRUE))
+  points(means, col=mycols2, pch=16, cex=1.6)
+}
+```
+
+Now, with the help of our function, we can look at pairs of variables, e.g. the 2nd and 3rd variable:
+
+```{r}
+library(RColorBrewer)
+
+mycols2 <- brewer.pal(11, "Paired")
+plot.vowels (Vowel,"V2","V3")
+```
+
+
+Hmmm, some overlap.
+
+Let us do another one:
+```{r}
+plot.vowels(Vowel, "V9","V10")
+```
+Uffff, it looks difficult (no apparent order!)
+
+On what grounds can one pretend to get even so-so results with such a difficult task? 
+
+Let's listen to the masters:
+
+```
+"LDA frequently achieves good performance in the tasks of face and object recognition, even though the assumptions of common covariance matrix among groups and normality are often violated (Duda et al., 2001)"
+```
+
+In this exercise you should do the following (in separate sections):
+
+0. Split your data into train and test sets with proportion 2/3 to 1/3
+1. Play with some initial plots to get an idea of the problem
+2. Perform various preliminary plots (notice all predictors are continuous), with histograms
+3. Fit LDA to the training data using all predictors
+4. Plot the data into the first two LDs; what do you see? What is the proportion of trace? 
+   Repeat with the first three LDs
+6. Compute resubstitution error and LOOCV error
+7. Perform Pearson's Chi-squared Test to see if your best model is better than random (p-value < 0.05)
+8. Try to fit QDA to the training data using all predictors
+9. Compute resubstitution error LOOCV error for your final QDA; does it improve over LDA?
+10. Apply kNN by optimizing the number of nearest neighbors on the training data
+11. Apply Naïve Bayes
+12. Choose your final model as the one with lowest LOOCV. Refit it in the training data and make it predict the leftout test data. Discuss the results (have a look at the confusion matrix)
+

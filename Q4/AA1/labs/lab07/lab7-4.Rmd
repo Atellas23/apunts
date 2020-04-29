@@ -1,0 +1,121 @@
+---
+title: 'LAB 7: GLMs - Logistic Regression and beyond'
+subtitle: 'Example 4: Logistic regression for spam mail'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "April 2020"
+output:
+  html_notebook: default
+  pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+This example will illustrate how to change the 'cut point' for prediction, when there is an interest in minimizing a particular source of errors
+
+We recall here our example of spam mail prediction from a previous lab
+
+```{r}
+library(kernlab)  
+data(spam)
+```
+
+
+We redo our preprocessing
+```{r}
+spam[,55:57] <- as.matrix(log10(spam[,55:57]+1))
+
+spam2 <- spam[spam$george==0,]
+spam2 <- spam2[spam2$num650==0,]
+spam2 <- spam2[spam2$hp==0,]
+spam2 <- spam2[spam2$hpl==0,]
+
+george.vars <- 25:28
+spam2 <- spam2[,-george.vars]
+
+moneys.vars <- c(16,17,20,24)
+spam3 <- data.frame( spam2[,-moneys.vars], spam2[,16]+spam2[,17]+spam2[,20]+spam2[,24])
+
+colnames(spam3)[51] <- "about.money"
+
+dim(spam3)
+```
+
+We split our data into learn + test:
+```{r}
+set.seed (4321)
+N <- nrow(spam3)                                                                                              
+learn <- sample(1:N, round(0.67*N))
+nlearn <- length(learn)
+ntest <- N - nlearn
+```
+
+
+Previously we had obtained a predictive (test) error of 26.26% using Naive Bayes in this same partition of the data. We shall compare this to logistic regression.
+
+Fit a GLM in the learning data:
+```{r}
+spamM1 <- glm(type ~ ., data=spam3[learn,], family=binomial)
+```
+
+
+(do not worry about the warnings: they are fitted probabilities numerically very close to 0 or 1)
+
+We simplify it using the AIC (this may take a while, since there are many variables)
+
+```{r echo=T, results='hide', warnings=FALSE}
+spamM1.AIC <- step (spamM1)
+```
+
+
+We define now a convenience function. In this function the input parameter 'P' is interpreted as a probability threshold:
+whenever our filter assigns spam with probability at least P then we predict spam.
+
+```{r}
+spam.accs <- function (P=0.5)
+{
+  ## Compute accuracy in learning data
+  
+  spamM1.AICpred <- NULL
+  spamM1.AICpred[spamM1.AIC$fitted.values<P] <- 0
+  spamM1.AICpred[spamM1.AIC$fitted.values>=P] <- 1
+  
+  spamM1.AICpred <- factor(spamM1.AICpred, labels=c("nonspam","spam"))
+  
+  print(M1.TRtable <- table(Truth=spam3[learn,]$type,Pred=spamM1.AICpred))
+  
+  print(100*(1-sum(diag(M1.TRtable))/nlearn))
+   
+  ## Compute accuracy in test data
+  
+  gl1t <- predict(spamM1.AIC, newdata=spam3[-learn,],type="response")
+  gl1predt <- NULL
+  gl1predt[gl1t<P] <- 0
+  gl1predt[gl1t>=P] <- 1
+  
+  gl1predt <- factor(gl1predt, labels=c("nonspam","spam"))
+  
+  print(M1.TEtable <- table(Truth=spam3[-learn,]$type,Pred=gl1predt))
+  
+  print(100*(1-sum(diag(M1.TEtable))/ntest))
+}
+```
+
+We run our function with the default $P=0.5$ (which is the normal 'default' behaviour of the logistic regression model):
+```{r}
+spam.accs()
+```
+
+which gives us 6.67% TRAINING ERROR and 7.88% TESTING ERROR.
+
+Although the errors are quite low (and much better than those with Naive Bayes), still one 
+could argue that we should try to lower the probability of predicting spam when it is not -- which makes good emails get lost in the spam folder.
+We can do this (at the expense of increasing the converse probability) by increasing the value of 'P'. Namely, we will require more evidence of being 'spam' in order to classify it as spam:
+
+```{r}
+spam.accs(0.7)
+```
+
+
+gives 8.86% TRAINING ERROR and 9.70% TESTING ERROR.
+
+So, even though the global error is slightly worse than in the previous case, we get a much better spam filter; notice that the filter has a very low probability of predicting spam when it is not (which is the delicate case).

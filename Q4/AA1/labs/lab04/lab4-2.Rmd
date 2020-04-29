@@ -1,0 +1,188 @@
+---
+title: 'LAB 4: Linear regression and beyond'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "March 2020"
+output:
+  html_notebook: default
+pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+### Example 2: Illustration of ridge regression on synthetic data
+
+Maybe you recall from the Lecture 1 the following ideas:
+
+How can we avoid overfitting? (most often the real danger is in overfitting; this
+is because many ML methods tend to be very flexible, i.e., they are able to represent complex models)
+
+There are several ways to do this:
+
+  1. Get more training data (typically out of our grasp)
+  2. Use (that is, sacrifice!) part of the data for validation
+  3. Use an explicit complexity control (aka regularization)
+
+We already covered the first two.
+
+Now we are going to use polynomials again to see the effect of regularization
+
+
+```{r}
+set.seed (7)
+
+N <- 20
+a <- 0
+b <- 1
+sigma.square <- 0.3^2
+
+# Generation of a training sample of size N
+
+x <- seq(a,b,length.out=N)
+t <- sin(2*pi*x) + rnorm(N, mean=0, sd=sqrt(sigma.square))
+sample <- data.frame(x=x,t=t)
+
+plot(x,t, lwd=3, ylim = c(-1.1, 1.1))
+curve (sin(2*pi*x), a, b, add=TRUE, ylim = c(-1.1, 1.1), col="blue")
+abline(0,0, lty=2)
+```
+
+Let us start with polynomials of degree 1 (i.e. lines)
+
+```{r}
+model <- glm(t ~ x, data = sample, family = gaussian)
+prediction <- predict(model)
+plot(x,t, lwd=3, ylim = c(-1.1, 1.1))
+curve (sin(2*pi*x), a, b, add=TRUE, ylim = c(-1.1, 1.1), col="blue")
+abline(model, col="red")
+mean.square.error <- sum((t - prediction)^2)/N
+title(paste("MSE is", mean.square.error))
+```
+
+Among the results of the `glm()` function we find the __deviance__ which is the sum of square errors and so
+
+```{r}
+( mean.square.error <- model$deviance/N )
+```
+
+
+We prefer to convert it to normalized root MSE or NRMSE
+```{r}
+(norm.root.mse <- sqrt(model$deviance/((N-1)*var(t))))
+```
+
+We continue with polynomials of order 2 (we are creating basis functions!):
+$\phi_0(x) = 1, \phi_1(x) = x, \phi_2(x) = x^2$
+
+... for which we compute the coefficients $w_0, w_1, w_2$ using a linear method and we get the model $y(x;w) = w_0 + w_1·\phi_1(x) + w_2·\phi_2(x)$ as seen in class
+
+```{r}
+model <- glm(t ~ poly(x, 2, raw=TRUE), data = sample, family = gaussian)
+summary(model)
+```
+
+`glm()` calls $w_0$ the Intercept, "poly(input, 2, raw = TRUE)1" is $\phi_1(x)$, and so on ...
+
+The coefficients of the polynomial (of the model) are:
+
+```{r}
+model$coefficients
+```
+
+
+And so our model is:
+$y(x;w) = 0.6805 -0.4208·x -0.9854·x^2$
+
+
+Let's plot it in red
+
+```{r}
+plot(x,t, lwd=3, ylim = c(-1.1, 1.1))
+curve (sin(2*pi*x), a, b, add=TRUE, ylim = c(-1.1, 1.1), col="blue")
+abline(0,0, lty=2)
+points(x, predict(model), type="l", col="red", lwd=2)
+
+```
+
+
+Get the training normalized root MSE (note it is a bit smaller, as reasonably expected)
+```{r}
+( norm.root.mse <- sqrt(model$deviance/((N-1)*var(t))) )
+```
+
+
+We create now a large test sample, for future use
+
+```{r}
+N.test <- 1000
+x.test <- seq(a,b,length.out=N.test)
+t.test <- sin(2*pi*x.test) + rnorm(N.test, mean=0, sd=sqrt(sigma.square))
+test.sample <- data.frame(x=x.test,t=t.test)
+plot(test.sample$x, test.sample$t)
+```
+
+Now, let us perform linear regression on polynomials (i.e. *polynomial regression*) with degrees ranging from 1 to N-1.
+
+```{r}
+p <- 1
+q <- N-1
+
+coef <- model <- vector("list",q-p+1)
+norm.root.mse.train <- norm.root.mse.test <- rep(0,q-p+1)
+
+for (i in p:q)
+{
+  model[[i]] <- glm(t ~ poly(x, i, raw=TRUE), data = sample, family = gaussian)
+  
+  # store the model coefficients, as well as training and test errors
+  
+  coef[[i]] <- model[[i]]$coefficients
+  norm.root.mse.train[i] <- sqrt(model[[i]]$deviance/((N-1)*var(t)))
+  
+  predictions <- predict (model[[i]], newdata=test.sample)  
+  norm.root.mse.test[i] <- sqrt(sum((test.sample$t - predictions)^2)/((N.test-1)*var(test.sample$t)))
+}
+```
+
+Gathering everything together:
+
+```{r}
+results <- cbind (Degree=p:q, Coefficients=coef, NRMSE.train=norm.root.mse.train, NRMSE.test=norm.root.mse.test)
+```
+
+We could do plots on the different predictions for the test set, but we already did this on the previous session. Instead, this time we are going to plot the numerical results
+
+```{r}
+plot(results[,1],results[,1], ylim = c(0, 1.1), col="white", xlab="Degree",ylab="errors")
+axis(1, at=p:q)
+points(x=results[,1],y=results[,3], type="l", col="red", lwd=2)
+points(x=results[,1],y=results[,4], type="l", col="blue", lwd=2)
+
+legend ("topleft", legend=c("TRAINING ERROR","TEST ERROR"),    
+        lty=c(1,1), # gives the legend appropriate symbols (lines)
+        lwd=c(2.5,2.5), col=c("red","blue")) # gives the legend lines the correct color and width
+
+abline (v=3, lty=2)
+```
+
+**What do you see in the plot? try to reflect a little bit**
+
+Last but not least, let's inspect the coefficients for the different degrees
+
+We will see that all coefficients of the same degree get large (in magnitude)
+as the *maximum* degree grows (except the coefficient of degree 1)
+
+the column below is the maximum degree of the polynomial
+the row below is the different terms of the polynomial
+
+```{r}
+coefs.table <- matrix (nrow=10, ncol=9)
+
+for (i in 1:10)
+  for (j in 1:9)
+    coefs.table[i,j] <- coef[[j]][i]
+
+coefs.table
+```
+
+
+The conclusion is obvious: **we can limit the effective complexity by preventing this growth** ---> this is what regularization does (instead of limiting the maximum degree, we limit the coefficients of all terms)

@@ -2,6 +2,8 @@
 
 [TOC]
 
+<div style="page-break-after: always;"></div>
+
 ## 1. Introducció i pre-processament de dades
 
 ### 1.1. Introducció
@@ -38,6 +40,8 @@ Generalment no es recomana ajustar models estadístics directament sobre *datase
    - Condicionat a les dades observades, aquesta probabilitat pot no dependre dels valors de la variable.
 3. *Missing Not At Random* (MNAR):
    - La probabilitat d'un valor mancant depèn en els valors de la variable en consideració, inclús després de controlar les relacions amb altres variables rellevants.
+
+<div style="page-break-after: always;"></div>
 
 #### Opcions d'actuació
 
@@ -97,6 +101,8 @@ En estadística s'utilitzen molt les transformacions de les variables aleatòrie
 - Per eliminar una restricció que opera sobre les dades
 - ...
 
+<div style="page-break-after: always;"></div>
+
 **<span style='color:green'>Transformacions comunes</span>:**
 
 - $y=\ln(x)$ (zeros no permesos).
@@ -113,6 +119,8 @@ $$
 y_i^{(\lambda)}=\begin{cases}\frac{y_i^\lambda-1}{\lambda}\ \ \quad\lambda\neq0\\ \ln(y_i)\quad\lambda=0\end{cases}.
 $$
 El valor òptim de $\lambda$ s'aconsegueix per màxima versemblança.
+
+<div style="page-break-after: always;"></div>
 
 ## 2. Àlgebra de matrius aplicada a l'anàlisi multivariant
 
@@ -154,6 +162,8 @@ $$
 $$
 \delta_{rs}=\left(\sum_{i=1}^p|x_{ri}-x_{si}|^\lambda\right)^\frac{1}{\lambda}.
 $$
+
+<div style="page-break-after: always;"></div>
 
 ## 3. Anàlisi de components principals (PCA)
 
@@ -242,7 +252,9 @@ Aquest *biplot* representa les <span style='color:blue'>components principals es
 - $X_c=F_pG_s^T$ (*biplot* de <span style='color:blue'>forma</span>)
 - $X_c=F_sG_p^T$ (*biplot* de <span style='color:blue'>covariància</span>)
 
-En general, els *biplots* de forma es centren en la **representació de distàncies**, mentre que els *biplots* de covariància es centren en representar la **estructura de correlació**.
+En general, els *biplots* de forma es centren en la **representació de distàncies**, mentre que els *biplots* de covariància es centren en representar l'**estructura de correlació**.
+
+<div style="page-break-after: always;"></div>
 
 #### Propietats dels *biplots*
 
@@ -305,6 +317,8 @@ Les components es poden interpretar amb l'ajuda dels coeficients de les variable
 ### Sobre la bondat d'ajust
 
 Dels valors propis de l'anàlisi, es pot calcular la bondat d'ajust total d'una solució $k$-dimensional. També es pot calcular la bondat d'ajust per cada fila i columna de la matriu de dades. La bondat d'ajust de les variables també es pot calcular com l'$R^2$ en una regressió sobre les components principals.
+
+<div style="page-break-after: always;"></div>
 
 ## 4. Escalament Multidimensional (MDS)
 
@@ -455,7 +469,7 @@ Per saber si l'escalament és adient, podem mirar diverses coses:
 - Degeneració; quants punts hi ha amb les mateixes $d_{rs}$.
 - Càlcul dels residus $d_{rs}-f(\delta_{rs})$.
 
-### Exemples
+<div style="page-break-after: always;"></div>
 
 ## 5. Anàlisi de correspondències
 
@@ -660,6 +674,8 @@ obtenim el resultat. En [aquest link](http://www.econ.upf.edu/~michael/METU/caip
 - Els percentatges d'inèrcia explicada són, per tant, més grans si utilitzem $B$ (tot i que no sumaran mai el $100\%$, ja que no els agafem tots quan els ajustem).
 - Les coordenades principals de la MCA amb $B$ són disminuïdes respecte la MCA amb $\bsm Z$.
 
+<div style="page-break-after: always;"></div>
+
 ## 6. Distribució Normal Multivariada & Inferència Multivariada
 
 ### Normal univariada
@@ -765,6 +781,8 @@ Els tests d'hipòtesi multivariats en un vector de mitjanes poblacionals es plan
 $$
 n(\bsm{\overline x}-\bsm\mu)^T\bsm S^{-1}(\bsm{\overline x}-\bsm\mu)\leq c^2=\frac{(n-1)p}{n-p}F_{p,n-p}(\alpha).
 $$
+
+<div style="page-break-after: always;"></div>
 
 ### Comparació de dos grups
 

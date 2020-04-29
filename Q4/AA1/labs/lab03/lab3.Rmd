@@ -3,9 +3,11 @@ title: 'LAB 3: Bias/Variance'
 author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
 date: "February 2020"
 output:
+  html_document:
+    df_print: paged
   html_notebook: default
   pdf_document: default
-editor_options: 
+editor_options:
   chunk_output_type: inline
 ---
 
@@ -164,8 +166,7 @@ To show Variance, let us concentrate on the 6th polynomial: we generate 10 indep
 ```{r}
 par(mfrow=c(2, 5))
 
-for (i in 1:10)
-{
+for (i in 1:10) {
   x <- runif(N)                 
   t <- f(x) + rnorm(N, sd=0.2)
   
@@ -199,8 +200,7 @@ Let's see the effect of more training data first. Let us fit a 9th-polynomial fo
 ```{r}
 par(mfrow=c(2, 2))
 
-for (N in c(10, 25, 50, 100)) 
-{
+for (N in c(10, 25, 50, 100)) {
   x <- runif(N)                 
   t <- f(x) + rnorm(N, sd=0.2)
   

@@ -1,0 +1,94 @@
+---
+title: 'LAB 7: GLMs - Logistic Regression and beyond'
+subtitle: 'Example 3: Logistic Regression from the book by Venables & Ripley'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "March 2020"
+output:
+  html_notebook: default
+  pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+The purpose of this example is to illustrate the power of GLM fitting. 
+We are going to model again a logistic regression with a call to `glm()`. 
+
+This time, however, our simulated data comes in a different form: the goal is to model the fraction of some species of insects killed at different doses of pyrethroids (Pyrethroids are a chemical class of active ingredients found in many of the modern insecticides).
+
+Note that 20 insects are being "used" in all treatments. The data is as follows:
+
+The predictor variable is the logarithm (in base 2) of used doses, repeated twice (for males and for females)
+```{r}
+(logdose <- rep(0:5,2))
+```
+
+
+The number of dead insects at different doses, for each sex:
+```{r}
+(numdead <- c(1,4,9,13,18,20,0,2,6,10,12,16))
+```
+
+
+
+Our little experiment:
+```{r}
+sex <- factor(rep(c("M","F"),each=6))
+(budworm <- data.frame(logdose, numdead, numalive=20-numdead, sex))
+```
+
+
+We now apply logistic regression to predict the fraction of dead insects. You may wonder how it is possible to apply logistic regression -- a technique designed for binary classification -- to our problem here where the target is a "count".
+The reason is that "binary classification data" here is given to us in an aggregated form. You should imagine how each row of our data table contains *20 binary classifications*: one for each insect "used" for that experiment. We can indicate this to the `glm` modelling function as follows.
+
+In this first call to `glm`, we declare the number of "trials" (the fixed 20 insects) with the `weights` parameter:
+```{r}
+(bud.logreg <- glm (numdead/20 ~ logdose + sex, family=binomial, data=budworm, weights=rep(20,length(logdose))))
+```
+
+
+Since the number of insects is constant (20) in all trials, we can use an equivalent command, with a simpler syntax:
+```{r}
+bud.logreg <- glm(cbind(numdead,numalive) ~ logdose + sex, family=binomial, data=budworm)
+summary(bud.logreg)
+```
+
+
+
+In this model, the effect of sex is significant, though less than the log of the dose.
+
+***
+
+We now visualize data:
+
+```{r}
+plot(c(1,32),c(0,1),type="n",xlab="dose",ylab="non-survival probabiblity",log="x") # plots x axis in logarithmic scale  (because of logdose)
+text(2^logdose,numdead/20,labels=as.character(sex),col=as.integer(sex))
+```
+
+
+Let us plot the model on top of the data; in order to do that, we create a grid for the 'logdose' predictor, and use the fitted model to compute the predicted values. We do this for both males and females separately for better visualization in a 2D plot.
+
+```{r}
+plot(c(1,32),c(0,1),type="n",xlab="dose",ylab="non-survival probabiblity",log="x") # plots x axis in logarithmic scale  (because of logdose)
+text(2^logdose,numdead/20,labels=as.character(sex),col=as.integer(sex))
+
+grid <- 1:32
+
+# compute the model for males on grid, using "predict" on the values with log_2(grid)
+model.on.males <- predict(bud.logreg, data.frame(logdose=log2(grid),sex="M"),type="response",se=TRUE)
+lines(grid,model.on.males$fit,col="red")
+lines (grid,model.on.males$fit+1.967*model.on.males$se.fit, col='red',lty=2)
+lines (grid,model.on.males$fit-1.967*model.on.males$se.fit, col='red',lty=2)
+
+# the same with sex = "F"
+model.on.females <- predict(bud.logreg, data.frame(logdose=log2(grid),sex="F"),type="response",se=TRUE)
+lines(grid,model.on.females$fit,col="black")
+lines (grid,model.on.females$fit+1.967*model.on.females$se.fit, col='black',lty=2)
+lines (grid,model.on.females$fit-1.967*model.on.females$se.fit, col='black',lty=2)
+```
+
+
+The plot shows the model works quite fine in modelling the death probability
+as a function of logdose (and sex); may be it is a bit better for males (males are more predictable).
+
+It also shows that the treatment affects differently males and females (the latter being more resistant).

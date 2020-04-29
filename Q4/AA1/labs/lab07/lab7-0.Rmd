@@ -1,0 +1,64 @@
+---
+title: 'LAB 7: GLMs - Logistic Regression and beyond'
+subtitle: 'Starter: Maximum Likelihood'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "April 2020"
+output:
+  html_notebook: default
+pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+First we are going to play with a very simple example of Maximum Likelihood for the binomial distribution. The goal is to estimate the probability $p$ of getting heads in $N$ coin tosses if we get $n1$ heads (exactly as seen in class)
+
+```{r}
+set.seed(1234)
+```
+
+Suppose we toss a coin $N=100$ times and we get $n1=70$ heads
+
+```{r}
+N <- 100
+n1 <- 70
+```
+
+We generate all possible values for $p$ and put them in a vector:
+```{r}
+p <- seq(from=1e-5, to=1, by=0.01)
+```
+
+
+The likelihood function (as a function of p) is:
+```{r}
+L <- choose(N,n1)*p^n1*(1-p)^(N-n1)
+```
+
+Next, let us visualize the likelihood fn:
+
+```{r}
+plot.L <- function (L, text)
+{
+  plot(p, L, type="l", ylab=text,xaxt = "n")
+  grid(nx=10)
+  axis(side = 1, at = seq(0,1,by=0.1), las = 2, hadj = 0.9)
+  abline(v=0.7, col="red")
+}
+
+plot.L (L,"likelihood of p")
+```
+
+Remember that oftentimes instead of maximizing the likelihood function we maximize the *log likelihood* instead. Let us
+visualize this as well:
+
+```{r}
+logL <- log(choose(N,n1)) + n1*log(p) + (N-n1)*log(1-p)
+plot.L (logL, "log-likelihood of p")
+```
+
+Notice that it also tops at 0.7 (it has too since `log` is a strictly monotone function)
+Note also that `log()` is the natural logarithm in `R`.
+
+
+The maximum is attained at n1/N = 0.7 (the proportion of heads)

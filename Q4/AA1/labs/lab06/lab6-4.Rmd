@@ -1,0 +1,117 @@
+---
+title: 'LAB 5: LDA/QDA/RDA, kNN, Naïve Bayes'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "March 2020"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+pdf_document: default
+subtitle: 'Example 4: The Naïve Bayes classifier with real data'
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r}
+library (e1071)
+```
+
+
+Naive Bayes Classifier for discrete predictors; we use the 1984 United States Congressional Voting Records
+
+This data set includes votes for each of the U.S. House of Representatives Congressmen on 16 key votes
+
+In origin they were nine different types of votes: 
+
+1) 'voted for', 'paired for', and 'announced for' (these three simplified to yea or 'y')
+2) 'voted against', 'paired against', and 'announced against' (these three simplified to nay or 'n')
+3) voted 'present', voted 'present to avoid conflict of interest', and 'did not vote or otherwise make a position known' (these three simplified to 'undefined' and marked as NA in the data)
+
+The goal is to classify U.S. Congressmen as either 'Republican' or 'Democrat' based on their voting profiles. This is not immediate, because in the U.S., Congressmen have a large freedom of vote (unlike other democracies)
+
+The vote is obviously linked to their party's directions but ultimately guided by their own feelings, interests and compromises
+
+```{r}
+data(HouseVotes84, package="mlbench") 
+```
+
+
+Let us add meaningful names to the votes
+
+```{r}
+colnames(HouseVotes84) <- 
+      c("Class","handicapped.infants","water.project.sharing","budget.resolution",
+        "physician.fee.freeze","el.salvador.aid","religious.groups.in.schools",
+        "anti.satellite.ban", "aid.to.nicaraguan.contras","mx.missile",
+        "immigration","synfuels.cutback","education.spending","superfund","crime",
+        "duty.free.exports","export.South.Africa")
+
+summary(HouseVotes84)
+```
+
+Notice that there are missing values; in this case they do not bother us because the implementation of Naive Bayes that we are going to use just ignores (does not take them into account) when doing the "counting" to estimate conditional probabilities.
+
+We first split the available data into learning and test sets, selecting randomly 2/3 and 1/3 of the data. As usual we do this for a honest estimation of prediction performance.
+```{r}
+set.seed(1111)
+
+N <- nrow(HouseVotes84)
+learn <- sample(1:N, round(2*N/3))
+nlearn <- length(learn)
+ntest <- N - nlearn
+```
+
+First we build a model using the training data ('learn')
+
+```{r}
+(model <- naiveBayes(Class ~ ., data = HouseVotes84[learn,]))
+```
+
+To predict the outcome of the first 10 Congressmen, based on our model:
+```{r}
+predict(model, HouseVotes84[1:10,-1])
+```
+
+
+We do the same but displaying posterior probabilities instead:
+```{r}
+predict(model, HouseVotes84[1:10,-1], type = "raw") 
+```
+
+
+Compute now the apparent (i.e. training) error:
+```{r}
+pred <- predict(model, HouseVotes84[learn,-1])
+(tab <- table(Truth=HouseVotes84[learn,]$Class, Preds=pred))  # confusion matrix
+1 - sum(tab[row(tab)==col(tab)])/sum(tab)                     # training error
+```
+
+
+
+Compute the test (prediction) error
+
+```{r}
+pred <- predict(model, newdata=HouseVotes84[-learn,-1])
+(tab <- table(Truth=HouseVotes84[-learn,]$Class, Preds=pred) )   # confusion matrix
+1 - sum(tab[row(tab)==col(tab)])/sum(tab)                        # overall test error
+```
+
+
+Weel, it seems that politicians are very predictable ... even American ones!
+
+From the confusion matrix above, we note how most errors (8/12) correspond to democrats wrongly predicted as republicans.
+
+In the event of empty empirical probabilities, this is how we would setup Laplace correction:
+
+```{r}
+model2 <- naiveBayes(Class ~ ., data = HouseVotes84[learn,], laplace = 1)
+```
+
+Just out of curiosity, let's see if predictions change w.r.t. the test data:
+
+```{r}
+pred <- predict(model2, newdata=HouseVotes84[-learn,-1])
+(tab <- table(Truth=HouseVotes84[-learn,]$Class, Preds=pred) )   # confusion matrix
+1 - sum(tab[row(tab)==col(tab)])/sum(tab)                        # overall test error
+```
+ .. slightly worse.

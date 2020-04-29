@@ -1,0 +1,452 @@
+---
+title: 'LAB 5: Resampling methods'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "March 2020"
+output:
+  html_notebook: default
+pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+## A gentle introduction (no code yet!)
+
+Suppose you fit a model to a data sample. How **good** is this solution in reality?
+
+By this we mean several important questions that should worry you very much if you are interested in data analysis/mining, machine learning, statistics ... *the right way*:
+
+1) How good is this solution on average? That is, what systematic error we get if we insist on fitting a specific classifier class (e.g. a linear one) to data samples from our problem?
+
+|          *---> WE STUDIED THIS FOR THE REGRESSION CASE ALREADY: IT IS THE BIAS*
+
+
+2) How much would this solution change should we change the specific data sample we use?
+
+|          *---> WE STUDIED THIS FOR THE REGRESSION CASE ALREADY: IT IS THE VARIANCE*
+
+
+3) What methods do we have to estimate the true error of the model?
+
+In this lab session we will focus on the last question. We know from previous lectures that computing the error on the same data used for fitting the model (i.e. *training or resubstitution error*) is in general wrong, because we can make the error optimistically small (*overfitting*); this phenomenon is aggravated when we have a low-to-medium sized data set, and is very serious for small-sized samples, to the point that it can completely falsify the results.
+
+Instead of a fitting error, we need a **prediction error**.
+
+In practice we have only **one** data sample and we need to do three different tasks, which require different (actually, independent) data samples. These tasks are:
+
+1) fit models to data ("calculation of the model's coefficients/parameters")
+2) if we have more than one candidate model, select one ("model selection")
+3) estimate the error of the selected model as honestly as possible ("error estimation")
+
+We begin with the last question. There is only one universal way:
+**Use a separate data sample (called a TEST SAMPLE)**
+
+For solving 1)+2), there are two basic families of methods:
+
+  A) Use a heuristic that combines the training errors obtained with some measure of the complexity of the model; one finds methods such as AIC and BIC; the former is typically used with GLMs; the latter is used with E-M for clustering, among others.
+There are many drawbacks: it is unclear how they behave for non-linear models, they do not provide with an estimation of the error (just an abstract quantity) and are only crude approximations ... so we won't pursue them further; however, they find their place in some cases
+
+  B) Use a resampling strategy: divide the data into parts for fitting the models (TRAINING) and parts for making them predict (VALIDATION). The general form is called CROSS-VALIDATION (explanation on the blackboard), of which LOOCV is a particular case.
+The AVERAGE CROSS-VALIDATION error is used for 2) above ("model selection") which also include hyper-parameter tuning.
+When we have selected a model, we refit it on the full data available for LEARNING (TRAINING+VALIDATION) and use the final model to predict the TEST set. It is then possible to derive a confidence interval.
+
+Now we'll be using artificial data so we get some nice numbers to better understand the concepts
+
+
+## Practice with a classification problem
+
+The MASS library contains the multivariate Gaussian
+
+```{r}
+library(MASS)
+```
+
+First we fix the seed so we all get the same results
+```{r}
+set.seed(1234567)
+```
+
+
+We are going to design an artificial 2-class problem, where each class is a multivariate gaussian
+
+Let us first generate a symmetric positive-definite (PD) matrix that will constitute the covariance matrix of our Gaussians
+
+We do this by sampling from a Wishart distribution (for more details, see `rWishart {stats}`)
+
+First we generate a matrix S which is our reference matrix (the parameter of the Wishart) and is PD
+```{r}
+(S <- toeplitz((2:1)/2))
+```
+
+
+Now we sample from the Wishart distribution:
+```{r}
+R <- rWishart(1, 4, S)[,,1]
+```
+
+
+We get a feasible random 2x2 covariance matrix
+```{r}
+dim(R)
+R
+```
+
+
+Now we generate the data for the 2 classes; both classes will share the *same* covariance matrix `R` that we just generated. We set 2/3 and 1/3 for the two class priors and $(-1,0), (1,1/2)$ for their means.
+
+```{r}
+# Total desired size of the data set (both classes together)
+N <- 200
+
+# set class sizes according to priors
+prior.1 <- 2/3
+prior.2 <- 1/3
+
+N1 <- round(prior.1*N)
+N2 <- N - N1
+
+# sample from the gaussians
+data1 <- mvrnorm(N1, mu=c(-1,0), Sigma=R)
+data2 <- mvrnorm(N2, mu=c(1,1/2), Sigma=R)
+
+# Now we create a dataframe with all data stacked by rows, plus the target (the class)
+data <- data.frame (rbind(data1,data2),target=as.factor(c(rep('1',N1),rep('2',N2))))
+
+summary(data)
+```
+
+
+Let us look at the data generated:
+```{r}
+par(pty="s")
+plot (data$X1,data$X2,col=data$target)
+```
+
+
+If you recall Bayesian theory on classification, the optimal classifier is a linear one (because the two classes share the same covariance matrix)
+
+Obviously we could compute the optimal model because we know the data generation mechanism  (in plain words, we do not need the data!)... but this is not realistic, so we won't do it. 
+
+However to illustrate the ideas we are going to generate as many data as needed
+
+If we compute this solution using the sample 'data' of size N that we have, we will get ONE solution model that depends on the sample used, and so does every quantity that we measure (in particular, the error of the fitted models)
+
+OK, let us do that ... (we use LDA as learner):
+
+```{r}
+my.lda <- lda(target ~ X1 + X2, data = data)
+```
+
+
+Compute resubstitution (aka apparent, aka training) error in percentage:
+```{r}
+ct <- table(data$target, predict(my.lda)$class)
+(lda.tr.error <- 100*(1-sum(diag(prop.table(ct)))))
+```
+
+
+What if we try now QDA?
+
+```{r}
+my.qda <- qda(target ~ X1 + X2, data = data)
+```
+
+
+Compute resubstitution (aka apparent, aka training) error of QDA:
+```{r}
+ct <- table(data$target, predict(my.qda)$class)
+(qda.tr.error <- 100*(1-sum(diag(prop.table(ct)))))
+```
+
+So, according to this, QDA (a quadratic model) is better (this we know is wrong)
+
+We need to resort to cross-validation to get more meaningful estimation of the error. We will make use of the library `TunePareto` which contains a useful command for generating cross-validation folds.
+
+```{r}
+library(TunePareto) # for generateCVRuns()
+k <- 10
+CV.folds <- generateCVRuns (data$target, ntimes=1, nfold=k, stratified=TRUE)
+```
+
+We will be running cross-validation using the fold structure in `CV.folds` and will store the individual runs' training and validation errors into a matrix which we call `cv.results`
+
+```{r}
+cv.results <- matrix (rep(0,4*k),nrow=k)
+colnames (cv.results) <- c("k","fold","TR error","VA error")
+
+cv.results[,"TR error"] <- 0
+cv.results[,"VA error"] <- 0
+cv.results[,"k"] <- k
+```
+
+
+Let us first compute the 10-fold CV errors
+
+```{r}
+priors <- c(prior.1,prior.2) # for clarity
+
+for (j in 1:k)
+{
+  # get VA data
+  va <- unlist(CV.folds[[1]][[j]])
+
+  # train on TR data
+  my.lda.TR <- lda(target ~ X1 + X2, data = data[-va,], prior=priors, CV=FALSE)
+  
+  # predict TR data
+  pred.va <- predict (my.lda.TR)$class
+  
+  # record training error for this fold
+  tab <- table(data[-va,]$target, pred.va)
+  cv.results[j,"TR error"] <- 1-sum(tab[row(tab)==col(tab)])/sum(tab)
+  
+  # predict VA data
+  pred.va <- predict (my.lda.TR, newdata=data[va,])$class
+  
+  # record validation error for this fold
+  tab <- table(data[va,]$target, pred.va)
+  cv.results[j,"VA error"] <- 1-sum(tab[row(tab)==col(tab)])/sum(tab)
+  
+  cv.results[j,"fold"] <- j
+}
+```
+
+  
+Have a look at the results:
+```{r}
+cv.results
+```
+
+
+We see the large variability across the different VA data!
+
+What one really uses is the average of the last column (a.k.a. the *cross-validation error*):
+```{r}
+(VA.error <- mean(cv.results[,"VA error"]))
+```
+
+You may think that instead the average is quite good, but this need not be the case, as we shall see in a minute
+
+*** 
+
+Now we change the number of folds/experiments $k$. To do this, we embed the previous code into a function; we also prepare it for either LDA or QDA. This function returns the AVERAGE CROSS-VALIDATION error for a given $k$.
+
+```{r}
+DA.CV <- function (k, method)
+{
+  CV.folds <- generateCVRuns(data$target, ntimes=1, nfold=k, stratified=TRUE)
+  
+  cv.results <- matrix (rep(0,4*k),nrow=k)
+  colnames (cv.results) <- c("k","fold","TR error","VA error")
+  
+  cv.results[,"TR error"] <- 0
+  cv.results[,"VA error"] <- 0
+  cv.results[,"k"] <- k
+  
+  priors <- c(prior.1,prior.2) # for clarity
+  
+  for (j in 1:k)
+  {
+    # get VA data
+    va <- unlist(CV.folds[[1]][[j]])
+    
+    # train on TR data
+    if (method == "LDA") { 
+      my.da.TR <- lda(target ~ X1 + X2, data = data[-va,], prior=priors, CV=FALSE) 
+    }
+    else if (method == "QDA") { 
+      my.da.TR <- qda(target ~ X1 + X2, data = data[-va,], prior=priors, CV=FALSE) 
+    }
+    else stop("Wrong method")
+    
+    # predict TR data
+    pred.va <- predict (my.da.TR)$class
+    
+    tab <- table(data[-va,]$target, pred.va)
+    cv.results[j,"TR error"] <- 1-sum(tab[row(tab)==col(tab)])/sum(tab)
+    
+    # predict VA data
+    pred.va <- predict (my.da.TR, newdata=data[va,])$class
+    
+    tab <- table(data[va,]$target, pred.va)
+    cv.results[j,"VA error"] <- 1-sum(tab[row(tab)==col(tab)])/sum(tab)
+    
+    cv.results[j,"fold"] <- j
+  }
+  mean(cv.results[,"VA error"])    # average cross-validation error is output
+}
+```
+
+
+
+
+Armed with this function, we are going to produce a plot by changing $k\in\{2,20\}$ using LDA as learning algorithm:
+
+```{r}
+the.Ks <- 2:20
+res <- vector("numeric",length(the.Ks)+1)
+res[1] <- NA
+for (k in the.Ks) res[k] <- DA.CV(k,"LDA")
+```
+
+
+Let us see the results
+```{r}
+plot(res, type="b",xlab="Value of k",ylab="average 10-fold CV error", ylim=c(0.22,0.3), xaxt="n")
+axis(1, at=1:20,labels=1:20, las=2)
+grid()
+```
+
+
+Now I'll reveal the truth ...
+
+The following function computes the *true* probability of error for two-class normally distributed features with equal covariance matrices and arbitrary means and priors -- the error rate of an optimal classifier for data generated using the generating mechanism we have used! The formula is well-known and can be found in pattern recognition textbooks.
+
+```{r}
+prob.error <- function (Pw1, Pw2, Sigma, Mu1, Mu2)
+{
+  # Numerically correct way for t(x) %*% solve(M) %*% (x), i.e., for x^T M^{-1} x
+  quad.form.inv <- function (M, x)
+  {
+    drop(crossprod(x, solve(M, x)))
+  }
+  
+  stopifnot (Pw2+Pw1==1,Pw2>0,Pw1>0,Pw2<1,Pw1<1)
+  alpha <- log(Pw2/Pw1)
+  D <- quad.form.inv (Sigma, Mu1-Mu2)
+  A1 <- (alpha-D/2)/sqrt(D)
+  A2 <- (alpha+D/2)/sqrt(D)
+  Pw1*pnorm(A1)+Pw2*(1-pnorm(A2))
+}
+```
+
+
+In this case we get:
+```{r}
+(pe <- prob.error(prior.1, prior.2, R, c(-1,0), c(1,1/2)))
+```
+
+
+
+We add it to our previous plot in blue (it may be that if falls outside the plot, in the bottom):
+```{r}
+plot(res, type="b",xlab="Value of k",ylab="average 10-fold CV error", ylim=c(0.22,0.3), xaxt="n")
+axis(1, at=1:20,labels=1:20, las=2)
+grid()
+abline(pe,0, col='blue')
+```
+
+
+We can see that no estimation gives you the correct result, most (if not all) of them over-estimate it (there could be some under-estimation too); and the thing stabilizes gently to a slight over-estimate as k increases.
+
+So there is no "best" value for $k$ to be used in k-CV! it depends largely on the amount of data and computational considerations:
+  - more data allows one to decrease $k$; less and less data forces to use a large $k$
+  - we train as many models as $k$, so if training is expensive then we will need to make $k$ smaller
+
+Aha! but these numbers are random numbers, because they depend on the specific partition that k-CV uses; correct: so a good idea if your computational resources permit is to iterate the process ...
+
+Here we are using 20x10 cross-validation:
+```{r}
+iters <- 20
+
+res <- vector("numeric",length(the.Ks)+1)
+res[1] <- NA
+
+for (k in the.Ks) res[k] <- mean(replicate(iters, DA.CV(k, "LDA")))
+```
+
+We can also compute the loocv error (notice this one cannot be iterated, since it is not stochastic)
+```{r}
+lda.LOOCV <- lda(target ~ X1 + X2, data = data, prior=priors, CV=TRUE)
+ct <- table(data$target, lda.LOOCV$class)
+(lda.LOOCV.error <- 1-sum(diag(prop.table(ct))))
+```
+
+Let us see how the new estimates for the error:
+```{r}
+plot(res,type="b",xlab="Value of k", ylim=c(0.2,0.3), xaxt="n")
+axis(1, at=1:20,labels=1:20, las=2)
+abline(pe,0,col="blue")                 # in blue the true error
+abline(lda.tr.error/100, 0, col="red")  # in red the training error
+abline(lda.LOOCV.error, 0, col="green") # in green the LOOCV error 
+legend("topleft", legend=c("average 20x10 CV error", "true error", "training error", "LOOCV error"),    
+       pch=c(1,1), col=c("black", "blue","red","green"))
+```
+
+
+
+
+In this case training error and LOOCV coincide; this is typical of very stable classifiers as LDA, since they are trained on *almost* the same data; in general the former will be higher
+
+In comparison to the previous results, we can see that now all estimations are over-estimates, and the thing has stabilized quite a lot; and the training error is an optimistic value
+
+Now we'll use these errors for model selection (you will see that this is possible, because they will have lower values for better models)
+
+However, you can realize that if, in addition to model selection, you want to give a more correct estimation of the true error of a model, then the CV error is not correct. **That is why you need a separate TEST sample!**
+
+There is no optimal $k$, but you have to choose one: very often this is a very imprecise function of data sample size and available computational resources (larger values of $k$ entail a heavier computational burden); standard choices are 5CV or 10CV, 10x10 CV and LOOCV
+
+***
+
+Let us choose 10x10 CV ... and use it to choose among LDA and QDA for this problem. (Yes ... we know LDA is the optimal, but this we don't know in practice!)
+
+```{r}
+(lda.10x10.CV <- mean(replicate(10, DA.CV(10,"LDA"))))
+(qda.10x10.CV <- mean(replicate(10, DA.CV(10,"QDA"))))
+```
+
+
+It is a close shave but the result is correct; now we will follow the standard procedure:
+
+We need a test set to estimate the true error of our LDA model. We make it rather large to have a more significant estimation
+
+```{r}
+N.test <- 10000
+
+N1 <- round(prior.1*N.test)
+N2 <- N.test - N1
+
+data1 <- mvrnorm(N1, mu=c(-1,0), Sigma=R)
+data2 <- mvrnorm(N2, mu=c(1,1/2), Sigma=R)
+
+data.test <- data.frame (rbind(data1,data2),target=as.factor(c(rep('1',N1),rep('2',N2))))
+```
+
+First we refit our LDA model to the full sample used for learning (this time without CV):
+```{r}
+my.lda <- lda(target ~ X1 + X2, data = data)
+```
+
+
+And now we make it predict the test set:
+```{r}
+ct <- table(data.test$target, predict(my.lda, newdata=data.test)$class)
+(pe.hat <- 1-sum(diag(prop.table(ct))))
+
+```
+
+Now we place a 95% CI around it:
+```{r}
+dev <- sqrt(pe.hat*(1-pe.hat)/N.test)*1.967
+sprintf("(%f,%f)", pe.hat-dev,pe.hat+dev)
+```
+
+
+The true error of our model was:
+```{r}
+(pe)
+```
+
+so the method works!
+
+Finally, let us put everything together:
+```{r}
+plot(res,type="b",xlab="Value of k", ylim=c(0.2,0.3), xaxt="n")
+axis(1, at=1:20,labels=1:20, las=2)
+abline(pe,0,col="blue")                 # in blue the true error
+abline(lda.tr.error/100, 0, col="red")  # in red the training error
+abline(lda.LOOCV.error, 0, col="green") # in green the LOOCV error 
+abline(pe.hat, 0, col="yellow")         # in yellow the test error
+legend("topleft", legend=c("average k-CV error", "true error", "training error", "LOOCV error", "test error"),
+       pch=c(1,1), col=c("black", "blue","red","green", "yellow"))
+```

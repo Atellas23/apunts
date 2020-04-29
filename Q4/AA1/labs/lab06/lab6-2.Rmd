@@ -1,0 +1,155 @@
+---
+title: 'LAB 5: LDA/QDA/RDA, kNN, Naïve Bayes'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "March 2020"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+pdf_document: default
+subtitle: 'Example 2: Visualizing and classifying wines with LDA and QDA'
+editor_options:
+  chunk_output_type: inline
+---
+
+```{r}
+library(MASS)
+library(klaR)
+```
+
+
+We have the results of an analysis on wines grown in a region in Italy but derived from three different cultivars. The analysis determined the quantities of 13 chemical constituents found in each of the three types of wines. The goal is to separate the three types of wines.
+
+Let us first load the data, give appropriate names and class labels:
+```{r}
+data(wine, package="bootcluster") 
+dim(wine)
+colnames(wine) <- c('Wine.type','Alcohol','Malic.acid','Ash','Alcalinity.of.ash','Magnesium','Total.phenols','Flavanoids','Nonflavanoid.phenols','Proanthocyanins','Color.intensity','Hue','OD280.OD315','Proline')
+wine$Wine.type <- factor(wine$Wine.type, labels=c("Cultivar.1","Cultivar.2","Cultivar.3"))
+summary(wine)
+```
+
+We look at the pair-wise scatterplots with wine types color-coded:
+```{r}
+plot(subset(wine,select=-Wine.type),col=unclass(wine$Wine.type))
+```
+
+
+
+
+For this example let's practice a different call mode to lda(), using a formula; this is most useful when our data is in a dataframe format:
+
+```{r}
+(lda.model <- lda (Wine.type ~ ., data = wine))
+```
+
+
+We can see that neither Magnesium or Proline seem useful to separate the wines; while Flavanoids and Nonflavanoid.phenols do. Ash is mainly used in the LD2.
+
+Next we plot the projected data in the first two LDs; we can see that the discrimination is very good
+
+```{r}
+plot(lda.model)
+```
+
+
+Alternatively, again we can do it ourselves, with more control on color and text (wine number):
+
+```{r}
+wine.pred <- predict(lda.model)
+plot(wine.pred$x,type="n")
+text(wine.pred$x,labels=as.character(rownames(wine.pred$x)),col=as.integer(wine$Wine.type), cex=.75)
+legend('bottomright', c("Cultivar 1","Cultivar 2","Cultivar 3"), lty=1, col=c('black', 'red', 'green'))
+```
+
+
+If need be, we can add the (projected) means to the plot:
+
+```{r}
+plot.mean <- function (mywine)
+{
+  m1 <- mean(subset(wine.pred$x[,1],wine$Wine.type==mywine))
+  m2 <- mean(subset(wine.pred$x[,2],wine$Wine.type==mywine))
+  points(m1,m2,pch=16,cex=1.5,col=as.integer(substr(mywine, 10, 10)))
+}
+
+plot(wine.pred$x,type="n")
+text(wine.pred$x,labels=as.character(rownames(wine.pred$x)),col=as.integer(wine$Wine.type), cex=.75)
+legend('bottomright', c("Cultivar 1","Cultivar 2","Cultivar 3"), lty=1, col=c('black', 'red', 'green'))
+
+plot.mean ('Cultivar.1')
+plot.mean ('Cultivar.2')
+plot.mean ('Cultivar.3')
+```
+
+
+Indeed classification is perfect (ie **training** error is **zero**):
+
+```{r}
+table(Truth=wine$Wine.type, Pred=wine.pred$class)
+```
+
+
+Let us look at the prediction error (as opposed to training error). 
+Let us switch to leave-one-out cross-validation (notice the use of update())
+
+```{r}
+lda.model.loocv <- update(lda.model, CV=TRUE)
+head(lda.model.loocv$posterior)
+```
+
+The **predictive** confusion matrix is:
+```{r}
+(ct <- table(Truth=wine$Wine.type, Pred=lda.model.loocv$class))
+```
+
+
+So: 2 mistakes (on 178 observations): 1.12% error 
+
+```{r}
+chisq.test(ct)
+```
+
+The p-value of the $\chi^2$ test is indeed tiny.
+
+***
+
+Now let us turn to performing the more general Quadratic Discriminant Analysis (QDA); in terms of `R` we just replace `lda` by `qda`. Problems may arise as you saw in class if for some class there are fewer (or equal) observations than dimensions (luckily this is not the case for our wine data), so we proceed with general QDA.
+
+```{r}
+(qda.model <- qda (Wine.type ~ ., data = wine))
+```
+
+
+**There is no projection this time (because projection is a linear operator and the QDA boundaries are quadratic).**
+
+Let's have a look at classification using LOOCV:
+
+```{r}
+qda.model.loocv <- qda (Wine.type ~ ., data = wine, CV=TRUE)
+head(qda.model.loocv$posterior)
+```
+
+The contingency table:
+```{r}
+(ct <- table(Truth=wine$Wine.type, Pred=qda.model.loocv$class))
+```
+
+There is an improvement: 1 mistake (on 178 observations): 0.56% error
+
+```{r}
+chisq.test(ct) # a slightly better model
+```
+
+The $\chi^2$ statistic is slightly better, too.
+
+It would be nice to find out which is the "stubborn" wine: it is a wine of 'Cultivar.2' classified as 'Cultivar.1'. Maybe there is something strange with this wine ... (maybe an expert can tell!)
+
+Finally, for the sake of illustration, let's use RDA (the *regularized* version). The `rda()` function is in the `klaR` package as well. By default, it uses 10-fold cross-validation to determine the values of the hyperparameters $\lambda,\gamma$. We chose to change it to 20-cv to make it closer to LOOCV above.
+
+```{r}
+set.seed(1)
+(rda.model.cv <- rda (Wine.type ~ ., data = wine, fold=20))
+```
+
+What we get is essentially lda in this case ($\lambda=1, \gamma=0$).
