@@ -1165,8 +1165,12 @@ $$
 $$
 Therefore,
 $$
-\boxed{l(\bbeta)=\sum_{n=1}^N\left[t_n\bbeta^T\bx_n-\ln{\left(1+\exp\left(\bbeta^T\bx_n\right)\right)}\right].}
+\newcommand{\parenth}[1]{\left(#1\right)}
+\newcommand{\bracketh}[1]{\left[#1\right]}
+\boxed{l(\bbeta)=\sum_{n=1}^N\bracketh{t_n\bbeta^T\bx_n-\ln{\parenth{1+\exp{\parenth{\bbeta^T\bx_n}}}}}}
 $$
+
+When we set this equal to zero, we are not able to isolate the parameter vector $\bbeta$.
 
 #### Maximum Likelihood framework (II)
 
