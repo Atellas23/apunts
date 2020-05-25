@@ -26,3 +26,40 @@ initmat: initmat.cpp
 
 Exercise 3
 
+I added to the end of the main function, and after the int res_fini = ... line, the following lines of code:
+```
+   printf("User mode time: %f\n", timeval_to_ms(&r.ru_utime));
+   printf("Maximum resident set size: %ld\n", r.ru_maxrss);
+   printf("Number of voluntary context switches: %ld\n", r.ru_nvcsw);
+   printf("Number of involuntary context switches: %ld\n", r.ru_nivcsw);
+```
+The results were the following:
+- User mode time: 328.125 ms
+- Maximum resident set size: 410224 kB
+- Voluntary context switches: 0
+- Involuntary context switches: 0
+----------
+
+Exercise 4
+
+Using exercise4.sh, I gathered the following information:
+- 1 thread:
+User mode time: 390.625000
+Maximum resident set size: 411268
+Number of voluntary context switches: 0
+Number of involuntary context switches: 0
+- 2 threads:
+User mode time: 671.875000
+Maximum resident set size: 411304
+Number of voluntary context switches: 0
+Number of involuntary context switches: 0
+- 4 threads:
+User mode time: 1062.500000
+Maximum resident set size: 411344
+Number of voluntary context switches: 0
+Number of involuntary context switches: 0
+- 8 threads:
+User mode time: 1125.000000
+Maximum resident set size: 411392
+Number of voluntary context switches: 0
+Number of involuntary context switches: 0
