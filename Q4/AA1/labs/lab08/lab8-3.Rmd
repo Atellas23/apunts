@@ -1,0 +1,176 @@
+---
+title: 'LAB 8: Multilayer Perceptrons'
+subtitle: 'Multilayer Perceptron Example 3: mixture of distributions 2D data'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias^[Thanks to Thomas Stibor for the excellent plotting code.]"
+date: "April 2020"
+output:
+  html_notebook: default
+  pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+
+In this third example, we are going to use `nnet()` to model slightly more realistic 2D data, namely, we are going to use a mixture of 6 gaussians as source of examples (3 gaussians for each class).
+
+```{r}
+set.seed (4)
+
+# this function is going to generate 6 gaussians (3 for each class). The sizes are selected randomly;
+# the parameters of the gaussians are: 
+#   red class:  mean (2,1)   with sd. diag(1/2,1/2), size z[1]
+#               mean (6,1)   with sd. diag(1,1/3), size z[2]
+#               mean (3,1.5) with sd. diag(1/2,1/2), size N - sum(z)
+#   blue class: mean (4,2)   with sd. diag(1,1/3), size v[1]
+#               mean (1,2)   with sd. diag(1/3,1/3), size v[2]
+#               mean (8,1.5) with sd. diag(1,1/3), size N2 - sum(v)
+mixture.distributions <- function (N, N2=N)
+{
+  # z and v dictate the sizes of each component of the mixture.. these are selected randomly according to binomial distribution
+  z<- c(rbinom(1, N,1/3))
+  z[2]<-rbinom(1, N-z[1], 1/2)
+  v<- c(rbinom(1, N2, 1/3))
+  v[2]<-rbinom(1, N2-v[1], 1/2)
+  
+  # now we generate the 6 components with sizes given by z and v
+  x <- c(rnorm(z[1])/2+2, 
+         rnorm(z[2])+6, 
+         rnorm(N-z[1]-z[2])/2+3, 
+         rnorm(v[1])/1+4, 
+         rnorm(v[2])/3+1,
+         rnorm(N2-v[1]-v[2])+8)
+  y <- c(rnorm(z[1])/2+1, 
+         rnorm(z[2])/3+1, 
+         rnorm(N-z[1]-z[2])/2+1.5, 
+         rnorm(v[1])/3+2, 
+         rnorm(v[2])/3+2,
+         rnorm(N2-v[1]-v[2])/3+1.5)
+  target <- c(rep("red",N),rep("blue",N2))
+  return(data.frame(x,y,target))
+}
+
+N <- 400
+data <- mixture.distributions (N)
+
+## Let's see what we have done: a 2D binary classification problem ...
+
+par(mfrow=c(1,1))
+plot(data$x, data$y, col=as.character(data$target), asp=1)
+```
+
+
+Notice that in this dataset we generated, the class borders are not as clear as in the previous example, and therefore it is more realistic (you could take this dataset as the projection to 2D of a realistic dataset)
+
+The following code shows the data generation mechanism (since we know the parameters of the gaussians that generated each mixture). It also shows the boundaries of the Bayes optimal classifier (which we can also compute since we know all the parameters).
+
+```{r}
+red.density <- function(x) 
+{
+  1/3*(dnorm(x[1],2,.5)*dnorm(x[2],1,.5)+
+       dnorm(x[1],6,1)*dnorm(x[2],1,1/3)+
+       dnorm(x[1],3,0.5)*dnorm(x[2],1.5,.5))
+}
+
+blue.density <- function(x) 
+{
+  1/3*(dnorm(x[1],4,1)*dnorm(x[2],2,1/3)+
+       dnorm(x[1],1,1/3)*dnorm(x[2],2,1/3)+
+       dnorm(x[1],8,1)*dnorm(x[2],1.5,1/3))
+}
+
+## determine min-max range
+rng <- apply(cbind(data$x,data$y),2,range)
+
+## create tx times ty grid 
+resol <- 200
+tx <- seq(rng[1,1],rng[2,1],length=resol)
+ty <- seq(rng[1,2],rng[2,2],length=resol)
+pnts <- matrix(nrow=length(tx)*length(ty),ncol=2)
+k <- 1
+for(j in 1:length(ty))
+{
+  for(i in 1:length(tx))
+  {
+    pnts[k,] <- c(tx[i],ty[j])
+    k <- k+1
+  }
+}
+
+## set up coordinate system
+plot(data$x, data$y, type = "n", asp=0, xlab = "x", ylab = "y",
+     xlim=c(rng[1,1],rng[2,1]), ylim=c(rng[1,2],rng[2,2]), cex.axis = 1.2, axes=TRUE)
+
+## plot points
+points(data$x,data$y,col=as.vector(data$target),pch=19,cex=0.5)
+
+## plot density contour for both classes
+blue.class <- matrix(apply(pnts,1,blue.density),nrow=length(tx),ncol=length(ty))
+contour(tx, ty, blue.class, add = TRUE, col="blue",nlevels=8)
+
+red.class <- matrix(apply(pnts,1,red.density),nrow=length(tx),ncol=length(ty))
+contour(tx, ty, red.class, add = TRUE, col="red", nlevels=15)
+
+## plot optimal Bayes separation curve
+bayes.sep <- matrix((apply(pnts,1,blue.density)-apply(pnts,1,red.density)),nrow=length(tx),ncol=length(ty))
+contour(tx, ty, bayes.sep, add = TRUE, col="black", levels=0, 
+        lwd=5, drawlabels=TRUE, labels="Bayes optimal",labcex=1, method="edge")
+```
+
+***
+
+Now let's train a MLP of different sizes (2,4,8,16) and we'll plot the learned classifier against the truth to see what the network is really doing
+
+To do this, we embed the previous code into a function and add the MLP training part:
+
+```{r}
+library(nnet)
+
+train.plot <- function (N.hidden)
+{
+  ## set up coordinate system
+  plot(data$x, data$y, type = "n", asp=0, xlab = "", ylab = "", main = paste(N.hidden, "hidden neurons"),
+       xlim=c(rng[1,1],rng[2,1]), ylim=c(rng[1,2],rng[2,2]), cex.axis = 1.2, axes=TRUE)
+  
+  ## plot points
+  points(data$x,data$y, col=as.vector(data$target), pch=19, cex=1)
+  
+  ## plot density contour for both classes
+  blue.class <- matrix(apply(pnts,1,blue.density),nrow=length(tx),ncol=length(ty))
+  contour(tx, ty, blue.class, add = TRUE, col="blue",nlevels=8)
+  red.class <- matrix(apply(pnts,1,red.density),nrow=length(tx),ncol=length(ty))
+  contour(tx, ty, red.class, add = TRUE, col="red", nlevels=15)
+  
+  ## plot optimal Bayes separation curve
+  bayes.sep <- matrix((apply(pnts,1,blue.density)-apply(pnts,1,red.density)),nrow=length(tx),ncol=length(ty))
+  contour(tx, ty, bayes.sep, add = TRUE, col="black", levels=0, lwd=3, drawlabels=TRUE, method="edge")
+  
+  ## train the MLP and make it predict on our grid points
+  learned.nnet  <- nnet(target ~ x+y, data, size=N.hidden, maxit=1000, trace=F)
+  prediction.nnet  <- predict(learned.nnet, data.frame(x=pnts[,1],y=pnts[,2]))
+  z <- matrix(prediction.nnet,nrow=length(tx),ncol=length(ty))
+
+  ## plot neural network decision function
+  contour(tx,ty,z,add=T,levels=0.5,lwd=3,col="green", drawlabels=TRUE, method="edge")
+}
+```
+
+
+Now we generate plots for each resulting neural net (with different sizes) ... this can take a while but it's worth the wait!
+```{r}
+set.seed(1234)
+par(mfrow=c(2,2))
+
+train.plot (2)
+train.plot (4)
+train.plot (8)
+train.plot (16)
+```
+
+In the plots above, the green boundary is that computed by the corresponding neural network, and the black one is the optimal given by the Bayes optimal classifier.
+
+Notice that the solutions with 2 and 4 neurons **clearly underfit the data**, while that with 16 neurons
+**clearly overfits the data**. The one with 8 neurons seems a nice fit.
+
+Of course, to do this **properly** we should have used 10x10 CV error on training data (as we did in the first script), or even better set a large number of hidden neurons (e.g. 20) and cross-validate `decay`. This instead was intended to give you a visual understanding of the process. 
+

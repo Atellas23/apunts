@@ -1,0 +1,191 @@
+Exercise 2
+
+I will list the modifications done to hello_world2.cpp and their effect with respect to the plain execution, which left this output:
+```
+Hello world 0 vs 0 by 5
+Hello world 0 vs 0 by 6
+Hello world 0 vs 1 by 2
+Hello world 0 vs 1 by 0
+Hello world 0 vs 0 by 1
+Hello world 0 vs 0 by 4
+Hello world 0 vs 0 by 3
+Hello world 0 vs 0 by 8
+Hello world 0 vs 0 by 7
+Hello world 0 vs 0 by 9
+Hello world 1 vs 1 by 6
+Hello world 1 vs 2 by 5
+Hello world 1 vs 2 by 0
+Hello world 1 vs 2 by 2
+Hello world 1 vs 2 by 4
+Hello world 1 vs 2 by 1
+Hello world 1 vs 2 by 3
+Hello world 1 vs 2 by 8
+Hello world 1 vs 2 by 7
+Hello world 1 vs 2 by 9
+Hello world 2 vs 2 by 0
+Hello world 2 vs 3 by 2
+Hello world 2 vs 3 by 6
+Hello world 2 vs 3 by 5
+Hello world 2 vs 3 by 4
+Hello world 2 vs 3 by 1
+Hello world 2 vs 3 by 3
+Hello world 2 vs 3 by 8
+Hello world 2 vs 3 by 7
+Hello world 2 vs 3 by 9
+Hello world 3 vs 3 by 2
+Hello world 3 vs 3 by 4
+Hello world 3 vs 3 by 6
+Hello world 3 vs 4 by 3
+Hello world 3 vs 4 by 1
+Hello world 3 vs 4 by 5
+Hello world 3 vs 3 by 0
+Hello world 3 vs 4 by 8
+Hello world 3 vs 4 by 7
+Hello world 3 vs 4 by 9
+Hello world 4 vs 4 by 6
+Hello world 4 vs 5 by 4
+Hello world 4 vs 5 by 1
+Hello world 4 vs 5 by 3
+Hello world 4 vs 5 by 8
+Hello world 4 vs 5 by 0
+Hello world 4 vs 5 by 2
+Hello world 4 vs 5 by 5
+Hello world 4 vs 5 by 7
+Hello world 4 vs 5 by 9
+Hello world 5 vs 5 by 4
+Hello world 5 vs 5 by 5
+Hello world 5 vs 6 by 0
+Hello world 5 vs 6 by 3
+Hello world 5 vs 5 by 1
+Hello world 5 vs 5 by 6
+Hello world 5 vs 6 by 2
+Hello world 5 vs 5 by 8
+Hello world 5 vs 6 by 7
+Hello world 5 vs 6 by 9
+Hello world 6 vs 6 by 5
+Hello world 6 vs 6 by 3
+Hello world 6 vs 6 by 1
+Hello world 6 vs 7 by 0
+Hello world 6 vs 6 by 8
+Hello world 6 vs 7 by 9
+Hello world 6 vs 6 by 4
+Hello world 6 vs 7 by 2
+Hello world 6 vs 7 by 6
+Hello world 6 vs 7 by 7
+Hello world 7 vs 7 by 8
+Hello world 7 vs 7 by 1
+Hello world 7 vs 8 by 3
+Hello world 7 vs 8 by 9
+Hello world 7 vs 8 by 6
+Hello world 7 vs 8 by 2
+Hello world 7 vs 8 by 7
+Hello world 7 vs 8 by 4
+Hello world 7 vs 7 by 5
+Hello world 7 vs 8 by 0
+Hello world 8 vs 8 by 3
+Hello world 8 vs 8 by 8
+Hello world 8 vs 9 by 5
+Hello world 8 vs 9 by 2
+Hello world 8 vs 9 by 0
+Hello world 8 vs 9 by 4
+Hello world 8 vs 9 by 7
+Hello world 8 vs 9 by 9
+Hello world 8 vs 8 by 6
+Hello world 8 vs 8 by 1
+Hello world 9 vs 9 by 3
+Hello world 9 vs 9 by 5
+Hello world 9 vs 9 by 8
+Hello world 9 vs 9 by 2
+Hello world 9 vs 9 by 0
+Hello world 9 vs 9 by 4
+Hello world 9 vs 9 by 7
+Hello world 9 vs 9 by 9
+Hello world 9 vs 9 by 1
+Hello world 9 vs 9 by 6
+```
+I know this is a large output but I thought it would be of interest for comparing purposes.
+(a) add #pragma omp for directly above the for loop
+```
+Hello world 1 vs 9 by 1
+Hello world 3 vs 9 by 3
+Hello world 5 vs 9 by 5
+Hello world 2 vs 9 by 2
+Hello world 6 vs 9 by 6
+Hello world 7 vs 9 by 7
+Hello world 8 vs 9 by 8
+Hello world 9 vs 9 by 9
+Hello world 4 vs 9 by 4
+Hello world 0 vs 9 by 0
+```
+Now only one iteration goes to each thread, and so they do no longer repeat the work of other threads. Even with this modification, the printed value of a is always the value of the last thread that reached it, in this case thread number 9.
+(b) add private(a) clause in the original first parallel directive
+```
+Hello world 4 vs 4 by 4
+Hello world 0 vs 0 by 0
+Hello world 5 vs 5 by 5
+Hello world 1 vs 1 by 1
+Hello world 6 vs 6 by 6
+Hello world 3 vs 3 by 3
+Hello world 8 vs 8 by 8
+Hello world 7 vs 7 by 7
+Hello world 2 vs 2 by 2
+Hello world 9 vs 9 by 9
+```
+Now a is private to each thread, so there are no problems in terms of a having a different value than i.
+(c) change the private(a) clause to shared(a) clause in the original first parallel directive
+```
+Hello world 0 vs 9 by 0
+Hello world 8 vs 9 by 8
+Hello world 4 vs 9 by 4
+Hello world 2 vs 9 by 2
+Hello world 7 vs 9 by 7
+Hello world 1 vs 9 by 1
+Hello world 9 vs 9 by 9
+Hello world 6 vs 9 by 6
+Hello world 5 vs 9 by 5
+Hello world 3 vs 9 by 3
+```
+We have the same problems than in section (a). So, from here we can infer that the default state of variables inside the parallel regions is "shared".
+(d) add the #pragma omp critical directive inside the for loop to protect the critical section
+```
+Hello world 3 vs 3 by 3
+Hello world 2 vs 2 by 2
+Hello world 1 vs 1 by 1
+Hello world 4 vs 4 by 4
+Hello world 5 vs 5 by 5
+Hello world 0 vs 0 by 0
+Hello world 6 vs 6 by 6
+Hello world 7 vs 7 by 7
+Hello world 8 vs 8 by 8
+Hello world 9 vs 9 by 9
+```
+We can now see that even though a is a shared variable, as the critical section protects it we get the same result as if we privated it.
+----------
+
+Exercise 3
+
+With no barrier and a critical section, we can see that each thread prints their hello message and their final message one after the other. With a barrier, we can see that all the hello messages get printed first, and then, when all threads get to the barrier, the final messages are printed all at once.
+----------
+
+Exercise 4
+
+With the code included in the tar file, I collected the following times:
+- 1 thread:   2.615s
+- 2 threads:  1.986s
+- 4 threads:  1.647s
+- 8 threads:  1.393s
+- 16 threads: 1.593s
+- 32 threads: 1.719s
+We can see a decline in the elapsed time of the program from 1 to 8 threads, and afterwards it only increases. This may be due to the big overhead of creating threads for every iteration of the main while loop.
+----------
+
+Exercise 5
+
+Using the code included in the tar file and matrices of size 1000x1000, I gathered the following times:
+- 1 thread:   56.221s
+- 2 threads:  29.422s
+- 4 threads:  16.702s
+- 8 threads:  13.624s
+- 16 threads: 10.724s
+- 32 threads: 10.345s
+We can see a notable acceleration going from 1 to 4 threads, almost perfectly inversely proportional to the number of threads. Then, the decrease in running time is much lowered and from 16 to 32 we can see the time is almost the same.

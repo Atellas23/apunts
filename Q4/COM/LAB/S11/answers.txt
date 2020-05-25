@@ -1,0 +1,28 @@
+Exercise 1
+
+/usr/bin/time and time report different time measures, though quite similar. The times reported by the application, when summed up agree with the elapsed time approximately.
+If we now select the transpose ACCESS(i,j), the timings look less similar in usr and sys, but agree in real/elapsed. Again, when summing up the times reported by the application, they do somewhat agree with the elapsed/real time value.
+----------
+
+Exercise 2
+
+In initmat.cpp, I added the line #include "rusage.h" at the beggining and the following lines at the beggining and the end of the main function:
+```
+int main(int argc, char *argv[])
+{
+   struct rusage r;
+   int res_init = get_resource_usage(&r);
+   ...
+   int res_fini = get_resource_usage(&r);
+   return 0;
+}
+```
+The Makefile entry for initmat was subsequently modified to include rusage.cpp:
+```
+initmat: initmat.cpp
+	g++ -fopt-info -fopenmp -g -O3 -o initmat initmat.cpp rusage.cpp
+```
+----------
+
+Exercise 3
+

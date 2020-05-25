@@ -1170,7 +1170,226 @@ $$
 \boxed{l(\bbeta)=\sum_{n=1}^N\bracketh{t_n\bbeta^T\bx_n-\ln{\parenth{1+\exp{\parenth{\bbeta^T\bx_n}}}}}}
 $$
 
-When we set this equal to zero, we are not able to isolate the parameter vector $\bbeta$.
+When we set the derivative of this expression equal to zero, we are not able to isolate the parameter vector $\bbeta$. Hence, we need an iterative method, such as Newton-Raphson.
+
+###### Newton-Raphson
+
+As the Maximum Likelihood of the logistic regression does not have a closed-form solution, we iterate over $k$ to obtain a good enough approximation to the parameter vector $\bbeta$:
+$$
+\newcommand{\partder}[2]{\frac{\partial #1}{\partial #2}}
+\begin{split}
+\bbeta^{k+1}=\bbeta^k-\parenth{\partder{^2l}{\bbeta\partial\bbeta^T}}^{-T}\parenth{\partder{l}{\bbeta}}=\\
+
+\bbeta^k+\parenth{X^TWX}^{-1}X^T\parenth{\b t-\b p}=\\
+
+\parenth{X^TWX}^{-1}X^TWz,\\z=X\bbeta^T+W^{-1}\parenth{\b t-\b p}
+\end{split}
+$$
+
+All of this because
+$$
+\partder{l}{\bbeta}=X^T\parenth{\b t-\b p},\quad\partder{^2l}{\bbeta\partial\bbeta^T}=-X^TWX.
+$$
+Here, $X$ is the data matrix of the $\{\bx_n\}$, $W$ is a diagonal matrix such that $w_{ii}=p_i(1-p_i)$, for $i=1,\ldots,N$, and $\b t=\parenth{t_1,\ldots,t_N}^T,\b p=\parenth{p_1,\ldots,p_N}^T$. When all of this is put into place, we are left with the following algorithm, called **Iterated Reweighted Least Squares (IRLS)**:
+
+1. Initialize $\beta_0\leftarrow\ln{\parenth{\frac{P(\omega_1)}{1-P(\omega_1)}}}$ and $\beta_i\leftarrow0$, for $i=1,\ldots,d$. (This is the *null model*)
+2. Iterate the following until convergence:
+   1. Update $\b p\leftarrow\parenth{p_1,\ldots,p_N}$, where $p_n=g\parenth{\bbeta^T\bx_n}$.
+   2. Update $W^{-1}\leftarrow\text{diag}\parenth{\frac{1}{p_n(1-p_n)}}$, for $n=1,\ldots,N$.
+   3. Update $z\leftarrow X\bbeta^T+W^{-1}\parenth{\b t-\b p}$.
+   4. Update $\bbeta\leftarrow\parenth{X^TWX}^{-1}X^TWz$.
+3. Return $\hat\bbeta$.
+
+###### Deviance and AIC
+
+In the context of GLM,
+$$
+-2l(\hat\bbeta)=-2\ln{\mathcal L(\hat\bbeta)}\sim\chi^2_{v=N-d-1}
+$$
+is called the **deviance** (in ML, this is the **error**). The **null deviance** is the deviance of the null model, and the **residual deviance** is the deviance of the proposed model. We can also define, for linear models, the **Akaike Information Criterion**, which is the deviance with a complexity penalization, $-2l(\hat\bbeta)+2d$. Actually, this penalization $2d\approx2\|\hat\bbeta\|_0$ is a rudimentary form of **regularization**.
+
+###### Interpreting the coefficients
+
+$$
+\newcommand{\logodds}[1]{\text{LOGODDS}(#1)}
+\newcommand{\odds}[1]{\text{ODDS}(#1)}
+\logodds{\bx_0}=\ln{\parenth{\frac{P(\omega_1\vert\bx_0)}{P(\omega_2\vert\bx_0)}}}=\bbeta^T\bx_0+\beta_0,\\
+
+\odds{\bx_0}=\frac{P(\omega_1\vert\bx_0)}{P(\omega_2\vert\bx_0)}=\exp{\parenth{\bbeta^T\bx_0+\beta_0}}.
+$$
+
+Define $\b1_i=\parenth{0,\ldots,1^{i)},\ldots,0}^T$, so $\bx_0+\b1_i=\parenth{x_{01},\ldots,x_{0i}+1,\ldots,x_{0N}}^T$. Then, we can interpret the coefficient in position $i$ using the following relation between odds:
+$$
+\frac{\odds{\bx_0+\b1_i}}{\odds{\bx_0}}=\exp{\parenth{\bbeta^T\parenth{\bx_0+\b1_i-\bx_0}}}=\exp{(\beta_i)}.
+$$
+
+##### Poisson Regression
+
+In many statistical studies, one tries to relate a count to some scientific variables. When there is no upper natural bound to this count, the logistic regression is not appropiate, and hence, the **Poisson regression** appears as a good alternative. This model relies on the Poisson distribution, a discrete distribution $X\sim\text{Pois}(\lambda)$ with probability mass function
+$$
+P(X=k)=\exp{(-\lambda)}\frac{\lambda^k}{k!},\quad\lambda\in\mathbb R^+,k\in\mathbb N.
+$$
+We consider independent Poisson random variables $T_1,\ldots,T_N$ with $T_n\sim\text{Pois}(\lambda_n)$. We know that $\mathbb E[T_n]=\lambda_n$. We have an i.i.d. sample of $N$ observations $\bx_n\in\mathbb R^d$ and a corresponding sample $t_1,\ldots,t_N$, where each $t_n$ is drawn from $T_n$. Our idea heare is to model $\lambda_n$ as $\exp{\parenth{\bbeta^T\bx_0+\beta_0}}$, with link function $\ln$. Then, the Poisson regression model is $T_n\sim\text{Pois}\parenth{\exp{\parenth{\bbeta^T\bx_n+\beta_0}}}$, or $\ln{\lambda_n}=\bbeta^T\bx_n+\beta_0$.
+
+If we want to estimate the parameter vector using maximum likelihood, we proceed like the previous case for Logistic regression, and we arrive at
+$$
+l(\bbeta)=\sum_{n=1}^N\bracketh{-\exp{\parenth{\bbeta^T\bx_n}+t_n\bbeta^T\bx_n-\ln{(t_n!)}}}
+$$
+Again, this expression has no closed form solution for $\bbeta$ once we derive and set it equal to zero; however, we can still use Newton-Raphson, because $-l$ is a convex function.
 
 #### Maximum Likelihood framework (II)
+
+## 8. Artificial Neural Networks (I)
+
+### The Multilayer Perceptron (MLP)
+
+An (artificial) **neuron** is an abstract computing unit that gets an **input vector**, combines this vectors with a vector of local parameters (called **weights**) and sometimes with other local information, and then **outputs** a scalar quantity. It's usually represented like this:
+
+<center>
+    <figure>
+        <img src="ML1.assets/image-20200507181637854.png" style="zoom:80%;" />
+    </figure>
+</center>
+
+The output can be delivered as part of the input of another neuron or to the neuron itself (self connection).
+
+**Reminder:** a directed graph (DG) is a structure composed by a set of nodes and a set of labeled directed segments that connect the nodes.
+
+An **artificial neutal network (ANN)** is a parallel and distributed information-processing structure that takes the form of a DG, where the nodes are neurons and the labels correspond to the weights.
+
+A **layer** is a collection of neurons:
+
+- Sharing a common input vector (usually computing the same function).
+- Not connected with one another.
+
+The **output layer** in an ANN is the last in the direction of the arrows. All other layers are called **hidden**. A **hidden neuron** is a neuron in a hidden layer. An ANN is **recurrent** if its graph contains cycles; otherwise, it is a **feed-forward** network. A recurrent network represents a dynamical system; a feed-forward network represents a single function.
+
+The simplest choice of an ANN is a linear combination of the inputs:
+$$
+y(\bx)=\sum_{i=1}^d w_ix_i+w_0
+$$
+This represents just a **single neuron**. Recall that we previously defined (in Chapter 1) a linear model as a model that, up to an invertible map, is linear on its parameters. Then, this previously defined ANN is a linear model. It can be extended to multiple outputs:
+$$
+y_k(\bx)=\sum_{i=1}^d w_{ki}x_i+w_{k0},\quad k=1,\ldots,m
+$$
+Now, this represents a **layer** of neurons. Finally, if we add a non-linearity to the output:
+$$
+y_k(\bx)=g\parenth{\sum_{i=1}^dw_{ki}x_i+w_{k0}},\quad k=1,\ldots,m
+$$
+This still represents a single neuron layer and a linear model, all performing the linear combination and the computation of $g$. Now, we compact the notation.
+
+1. Define $\bx:=\parenth{1,x_1,\ldots,x_d}^T$ and $\b w_k:=\parenth{w_{k0},w_{k1},\ldots,w_{kd}}^T$. We now have:
+
+$$
+y_k(\bx)=g\parenth{\sum_{i=0}^d w_{ki}x_i}=g\parenth{\b w^T\bx},\quad1\leq k\leq m
+$$
+
+2. Let the weight matrix $W_{(d+1)\times m}$ gather all the weight vectors by columns. We introduce the notation $g\bracketh{\cdot}$ to mean that $g$ is applied component-wise. The network we now have computes, then,
+
+$$
+y(\bx)=g\bracketh{W^T\bx}
+$$
+
+The **activation function** $g$ is often a sigmoidal one: this is defined as a function that satisfies:
+
+- Being differentiable.
+- Having a non-negative (or non-positive) bell-shaped first derivative.
+- Having horizontal asymptotes in $\pm\infty$.
+
+The most commonly used sigmoidal functions are:
+
+- The <span style='color:blue'>logistic</span> family:
+
+$$
+g_{\beta}^\text{log}(z)=\frac{1}{1+\exp{(-\beta z)}}\in(0,1),\ \beta>0
+$$
+
+- The <span style='color:blue'>hyperbolic tangent</span> family:
+
+$$
+g_\beta^\text{tanh}(z)=\frac{\exp{(\beta z)}-\exp{(-\beta z)}}{\exp{(\beta z)}+\exp{(-\beta z)}}\in(-1,1),\ \beta>0
+$$
+
+#### How to train a single layer ANN: the Delta Rule
+
+We wish to fit $y(\bx)=g\parenth{\b w^T\bx}$ to a set of learning examples $\{(\bx_1,t_1),\ldots,(\bx_N,t_N)\}$, where $\bx_n\in\mathbb R^d,t_n\in\mathbb R$. In order to do this, we define the (empirical) **mean-square error** of the network as
+$$
+E(\b w)=\frac{1}{2}\sum_{n=1}^N(t_n-y(\bx_n))^2=\frac{1}{2}\sum_{n=1}^N\bracketh{t_n-g\parenth{\sum_{i=1}^d w_ix_{n,i}+w_0}}^2
+$$
+Let $f:\mathbb R^r\to\mathbb R$ be a differentiable function; we wish to minimize it by making changes in its variables. Then, the increment in each variable is proportional to the corresponding derivative: $x_i(t+1):=x_i(t)+\Delta x_i(t)$, with
+$$
+\Delta x_i(t)=-\alpha\left.\partder{f}{x_i}\right\vert_{\bx=\bx(t)},\alpha>0,i=1,\ldots,r
+$$
+In our case, the function to be minimized is the empirical error and the variables are the weights $\b w$ of the network:
+$$
+\Delta w_i(t)=-\alpha\left.\partder{E(\b w)}{w_j}\right\vert_{\b w=\b w(t)},\alpha>0,j=0,\ldots,d\\
+
+\partder{E(\b w)}{w_j}=-\sum_{n=1}^N(t_n-y(\bx_n))\cdot g'\parenth{\b w^T\bx_n}\cdot x_{n,j}
+$$
+This $t_n-y(\bx_n)$ is called the **delta**, and $\b w^T\bx_n$ is called the **net input**. Then, combining the two equations above,
+$$
+\Delta w_j(t)=\alpha\sum_{n=1}^N(t_n-y(\bx_n))\cdot g'\parenth{\b w(t)^T\bx_n}\cdot x_{n,j}
+$$
+When $g$ is the indentity, we get the **$\alpha-$LMS Learning Rule**:
+$$
+\Delta w_j(t)=\alpha\sum_{n=1}^N(t_n-y(\bx_n))\cdot x_{n,j}=\alpha\sum_{n=1}^N(t_n-\b w(t)^T\bx_n)\cdot x_{n,j}
+$$
+This technique represents a **linear regressor** where the regression coefficients are estimated iteratively. This is a form of learning, but it is **not incremental**: we need all the examples from the beggining. This is also usually called **batch learning**.
+
+We are so sure the iterations get to a minimum because the mean-square error function is convex in $\b w$: it defines a convex hyper-paraboloidal surface with a single **global minimum** $\b w^*$. The constant $\alpha$ controls the stability and speed of convergence. If chosen sufficiently small, the gradient descent procedure asymptotically converges towards $\b w^*$, regardless of the initial vector $\b w(0)$. A sufficient condition on $\alpha$ is $0<\alpha<\frac{2}{\lambda_\max}$, where $\lambda_\max$ is the largest eigenvalue of the input self-correlation matrix $\mathbb E\bracketh{\bx\bx^T}\approx XX^T$. In practice, one may use $\alpha<\frac{2}{\sum_{n=1}^N\|\bx_n\|^2}$, since $\lambda_\max<\tr\parenth{\mathbb E\bracketh{\bx\bx^T}}\approx\tr\parenth{XX^T}=\sum_{n=1}^N\|\bx_n\|^2$.
+
+In the **on-line version** of the delta rule, we also begin with $\b w(0)$ arbitrary and apply:
+$$
+\Delta w_j(t)=\alpha_t\parenth{t_{n(t)}-y\parenth{\bx_{n(t)}}}x_{n(t),j}
+$$
+At each step $t$, the example $n(t)$ is drawn at random from $\{1,\ldots,N\}$. It can be shown that if $\sum_{t\geq0}\alpha_t=\infty$ and $\sum_{t\geq0}\alpha^2_t<\infty$, then $\b w(t)$ converges to the **global minimum** $\b w^*$ in the mean square sense:
+$$
+\lim_{t\to\infty}\left\|\b w(t)-\b w^*\right\|^2=0
+$$
+One such procedure is to take $\alpha_t=\frac{\alpha}{t+1}$, with initial $\alpha>0$.
+
+#### Towards non-linear models
+
+How could we obtain a model that is non-linear in the parameters (a **non-linear** model)? We depart from the basic linear model:
+$$
+y_k(\bx)=g\parenth{\sum_{i=1}^dw_{ki}x_i+w_{k0}},\ k=1,\ldots,m
+$$
+where $g$ is a sigmoidal function. If we apply any non-linear function to the weights, we are just transforming them into another set of weights, and the model is still linear of the parameters. Then, suppose we apply non-linear functions to the input data:
+$$
+y_k(\bx)=g\parenth{\sum_{i=0}^h w_{ki}\phi_i(\bx)},\ k=1,\ldots,m
+$$
+This is a generalization of the previous case, which we can recover by setting $h=d$ and $\phi_i(\bx)=x_i$, with $\phi_0(\bx)=1$.
+
+**<span style='color:red'>Approach 1</span>.** Make $\Phi=(\phi_0,\ldots,\phi_h)$ a set of predefined functions. For example, $d=1$ and polynomial fitting. Consider the problem of fitting the function
+$$
+p(x)=w_0+w_1x+\cdots+w_hx^h=\sum_{i=0}^h w_ix^i
+$$
+to $x_1,\ldots,x_N\in\mathbb R$, which is a special case of linear regression, where the set of **regressors** is $1,x,x^2,\ldots,x^h$. Therefore $\phi_i(\bx)=x^i$. The weights here can be estimated by standard techniques (ordinary least squares).
+
+What if we have a multivariate input $\bx=(x_1,\ldots,x_d)^T$? The corresponding polynomial is:
+$$
+p(x)=w_0+\sum_{i_1=1}^dw_{i_1}x_{i_1}+\sum_{i_1=1}^d\sum_{i_2=i_1+1}^dw_{i_1i_2}x_{i_1}x_{i_2}+\cdots
+$$
+The number of possible regressors grows like $h\choose d+h$. So many regressors (while holding $N$ fixed) causes increasing troubles for estimating parameters: it is mandatory to have more observations than regressors ($h$ must be less than $N$). Also, the statistical significance of the weights decreases with $h$ and increases with $N$.
+
+**<span style='color:green'>Approach 2</span>.** Why not try to engineer **adaptive regressors**? By adapting the regressors to the problem, it is reasonable to expect that we shall need a much smaller number of them for a correct fit.
+
+The basic neural network idea is to **duplicate over and over the model**:
+$$
+y_k(\bx)=g\parenth{\sum_{i=0}^h w_{ki}\phi_i(\bx)},k=1,\ldots,m,
+$$
+where 
+$$
+\phi_i(\bx)=g\parenth{\sum_{j=0}^d v_{ij}x_j},
+$$
+with $\phi_0(\bx)=1,x_0=1$. With one duplication we have created **another layer of neurons**. It is clear, then, that we can play this game as many times as we want, further extending this to any number of **hidden layers** we want. So, to summarize this:
+
+- We have a new set of regressors $\Phi(\bx)=(\phi_0(\bx),\ldots,\phi_h(\bx))^T$, which are adaptive via the $\b v_i$ parameters (called the non-linear parameters).
+- Once the new regressors are fully specified (i.e., the $\b v_i$ parameters are estimated), the remaining task is linear (via the $\b w_k$ paremeters).
+- What kind of network gives rise to this function if we keep duplicating? The **Multilayer Perceptron** or **MLP**.
+- Under other choices for the regressors, other networks are obtained. For example, the standard **RBF network**:
+
+$$
+\phi_i(\bx)=\exp{\parenth{-\frac{\|\bx-\b\mu_i\|^2}{2\sigma_i^2}}}.
+$$
 

@@ -1,0 +1,127 @@
+Exercise 2
+
+The program creates and initializes a vector of floats, and then it loops (from 0 to 2) creating child processes. At this point, a bifurcation happens: if the process running the program is a child, it will write "child (<pid of the child>): Hello, World" to the screen, add 10.0 to all the vector elements and then output its last element. Else, if the process running the program is the parent, it will say "Hello, World" and write to the screen the value of the last element of the vector +5.0. It is worth noting that the children only see a local copy of the value vector, meaning they add 10.0 to whatever the value of the vector was in the iteration from where they were called. That is, the changes the children perform are not persistent, while the changes the parent perform are permanent through the program.
+----------
+
+Exercise 3
+
+The flat profile of `fork` obtained through `gprof -b -p fork gmon.out` is the following:
+```
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+100.98      0.02     0.02        3     6.73     6.73  add_to_vector
+  0.00      0.02     0.00        1     0.00     0.00  init_vector
+  0.00      0.02     0.00        1     0.00     0.00  zero_vector
+```
+The number of calls reported is the number we would expect if accounting only for the parent process, which is what is probably happening here. The first two calls to functions are zero_vector and init_vector, and only the parent process calls them, and then the 3 calls to add_to_vector account for the calls inside the for loop.
+----------
+
+Exercise 4
+
+The call graph as found by gprof is the following:
+```
+index % time    self  children    called     name
+                0.02    0.00       3/3           main [2]
+[1]    100.0    0.02    0.00       3         add_to_vector [1]
+-----------------------------------------------
+                                                 <spontaneous>
+[2]    100.0    0.00    0.02                 main [2]
+                0.02    0.00       3/3           add_to_vector [1]
+                0.00    0.00       1/1           zero_vector [4]
+                0.00    0.00       1/1           init_vector [3]
+-----------------------------------------------
+                0.00    0.00       1/1           main [2]
+[3]      0.0    0.00    0.00       1         init_vector [3]
+-----------------------------------------------
+                0.00    0.00       1/1           main [2]
+[4]      0.0    0.00    0.00       1         zero_vector [4]
+-----------------------------------------------
+
+
+Index by function name
+
+   [1] add_to_vector           [3] init_vector             [4] zero_vector
+```
+We can see that add_to_vector, init_vector and zero_vector are called by the main function, and that the <spontaneus> caller calls the main function.
+----------
+
+Exercise 5
+The output of `gprof -r fork gmon.out` is the following:
+```
+zero_vector
+init_vector
+add_to_vector
+_init
+_start
+__gmon_start__
+_dl_relocate_static_pie
+deregister_tm_clones
+register_tm_clones
+__do_global_dtors_aux
+frame_dummy
+main
+__libc_csu_init
+__libc_csu_fini
+atexit
+_fini
+etext
+data_start
+```
+The function reordering option makes gprof print a suggested function ordering in the binary. This is useful as we will see in the exercise 7.
+----------
+
+Exercise 6
+
+The flat profile for mysort is
+```
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+100.98      0.02     0.02        3     6.73     6.73  write_vector(std::vector<float, std::allocator<float> >&, int, int)
+  0.00      0.02     0.00        1     0.00     0.00  check_sorted(std::vector<float, std::allocator<float> >&)
+  0.00      0.02     0.00        1     0.00     0.00  _init
+```
+----------
+
+Exercise 7
+
+The flat profile of mysort without optimizations is the following:
+```
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+100.98      0.02     0.02        3     6.73     6.73  check_sorted(std::vector<float, std::allocator<float> >&)
+  0.00      0.02     0.00        1     0.00    20.20  check_equal(std::vector<float, std::allocator<float> >&)
+  0.00      0.02     0.00        1     0.00     0.00  _init
+```
+This flat profile is different from before in that check_sorted apparently now takes much more time and calls, write_vector has disappeared, and check_equal has appeared. If we now list the function reordering with gprof -r, the list is much more immense than before, and is omitted here for length issues. But, I think this may be caused by the absence of optimizations. For example, many of the functions that appear in the non-optimized ordering may be inlined by the compiler if the optimizations are turned on.
+----------
+
+Exercise 8
+
+When executing uftrace we can see different columns appear. One of them is called TID, standing for Thread ID. This is where we can distinguish between the four processes this program executes in total: we can see there are four different TIDs.
+----------
+
+Exercise 9
+
+In the uftrace output we can see a kind of staircase of mysort()'s, something like this:
+```
+            [ 23542] |     mysort() {
+            [ 23542] |       mysort() {
+            [ 23542] |         mysort() {
+            [ 23542] |           mysort() {
+            [ 23542] |             mysort() {
+            [ 23542] |               mysort() {
+   0.255 us [ 23542] |                 mysort();
+   0.231 us [ 23542] |                 mysort();
+   0.316 us [ 23542] |                 mymerge();
+   2.436 us [ 23542] |               } /* mysort */
+```
+If we encounter this, this is obviously a function calling itself and hence, a recursive one.
+----------
+
+Exercise 10
+
+When using the option "report", uftrace prints the program's functions, alongside with the total calls they have received, the total time spent on those functions and the time those functions spent on themselves and not on "children" functions.
+
+When using uftrace with "graph", we can see the call graph of the program, alongside the total time spent on each function call.
+
+With "tui", the manual says we get a "text user interface" for the graph and report options, even though the information with tui and with graph seems to be the same.

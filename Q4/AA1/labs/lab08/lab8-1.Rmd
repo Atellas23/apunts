@@ -1,0 +1,311 @@
+---
+title: 'LAB 8: Multilayer Perceptrons'
+subtitle: 'Example 1: Admission into graduate school'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "April 2020"
+output:
+  html_notebook: default
+  pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+Suppose we are interested to understand how the following variables affect admission into graduate school:
+
+- GRE (Graduate Record Exam scores)
+- GPA (Grade Point Average) and 
+- rank (prestige of the undergraduate institution),
+
+
+The target variable, admit/don't admit, is a binary variable, which we want to characterize, and, if possible, predict. Let's load the data and have a peak at the first rows:
+
+```{r}
+Admis <- read.csv("Admissions.csv")
+head(Admis)
+```
+
+The variable `admit` is our target; it is encoded as an integer taking values 0/1 and we'll convert it to a Yes/No factor:
+
+```{r}
+Admis$admit <- factor(Admis$admit, labels=c("No","Yes"))
+```
+
+Variable `gre` and `gpa` are continuous. Finally, `rank` takes values 1 to 4, we will treat it as a numerical value (in rigour, it should be an ordinal)
+
+Finally, the dataset looks as follows:
+```{r}
+summary(Admis)
+dim(Admis)
+```
+
+***
+
+### 1. Fit neural networks with default or arbitrary parameters
+
+As customary, we first split the available data into learning and test sets, selecting randomly 2/3 and 1/3 of the data. Remember that if we want an honest estimation of prediction performance, we need a separate test set.
+
+```{r}
+set.seed(1234)
+
+N <- nrow(Admis)
+learn <- sample(1:N, round(2*N/3))  # random indices for the learning set
+
+nlearn <- length(learn)
+ntest <- N - nlearn
+```
+
+
+We are going to be using the `nnet` library. 
+
+```{r}
+library(MASS)
+library(nnet)
+```
+
+This package includes the `nnet()` function, which is quite powerful and very reliable from the optimization point fo view. From the computational point of view, however, it has two limitations:
+
+1. it does not have a built-in mechanism for multiple runs or cross-validation
+2. it only admits networks of one hidden layer (of 'size' hidden neurons)
+
+Please have a quick look at `?nnet` before proceeding any further.
+
+The basic parameters are `size` and `decay` (the regularization constant, similar to $\lambda$).
+As usual, `R` detects it is a classification problem because the target `admit` is a factor.
+It buils a MLP with one output neuron (just two classes), with the logistic function as the activation function and uses the cross-entropy as the error function to minimize.
+
+Let's start by standardizing the inputs; this is important to avoid network stagnation (i.e. premature convergence)
+
+```{r}
+Admis$gpa <- scale(Admis$gpa)
+Admis$gre <- scale(Admis$gre)
+Admis$rank <- scale(Admis$rank)
+```
+
+
+To have a baseline reference and the first results, we fit a MLP with no hidden neurons (a linear logistic model)
+
+```{r}
+model.nnet0 <- multinom(admit ~., data = Admis, subset=learn, maxit=200)
+```
+
+In order to compute train and test performance metrics on a model, we create the following utility function:
+
+```{r}
+errors <- function (model)
+{
+  options(digits=4)
+  p1 <- as.factor(predict (model, type="class"))
+  t1 <- table(p1,Admis$admit[learn])
+  cat ("Train = ", 100*(1-sum(diag(t1))/nlearn),"%\n")
+  p2 <- as.factor(predict (model, newdata=Admis[-learn,], type="class"))
+  t2 <- table(p2,Admis$admit[-learn])
+  cat ("Test =  ", 100*(1-sum(diag(t2))/ntest),"%\n")
+}
+```
+
+
+Now let's compute the training error and test errors
+
+```{r}
+errors (model.nnet0)
+```
+
+
+As our first try with a non-linear neural net, let us fit an MLP with just 2 hidden neurons and no regularization:
+
+```{r}
+model.nnet <- nnet(admit ~., data = Admis, subset=learn, size=2, maxit=200, decay=0)
+```
+
+
+Take your time to understand the output
+```{r}
+model.nnet 
+```
+
+Try to think: 
+
+- why is the total number of weights 11?
+- what are 'initial  value' and 'final  value'?
+- what does 'converged' mean?
+
+This is the fitting criterion (aka error function):
+```{r}
+model.nnet$value
+```
+
+
+Fitted values for the training data  (well, the first 10..):
+```{r}
+model.nnet$fitted.values[1:10,]
+```
+
+
+And the residuals (well, the first 10..):
+```{r}
+model.nnet$residuals[1:10,]
+```
+
+
+Now look at the 11 weights:
+
+```{r}
+model.nnet$wts
+```
+
+
+...I think this way is clearer:
+
+```{r}
+summary(model.nnet)
+```
+
+
+- i1,i2,i3 are the 3 inputs, h1, h2 are the two hidden neurons, b is the bias (offset)
+
+As you can see, some weights are large (two orders of magnitude larger then others). This is no good, since it makes the model unstable (ie, small changes in some inputs may entail significant changes in the network, because of the large weights)
+
+One way to avoid this is by regularizing the learning process:
+
+```{r}
+model.nnet <- nnet(admit ~., data = Admis, subset=learn, size=2, maxit=200, decay=0.5)
+```
+
+
+Notice the big difference
+```{r}
+summary(model.nnet)
+```
+
+
+Now, let's compute the errors
+```{r}
+errors (model.nnet)
+```
+
+We get 26.32% test error, so it seems that the MLP helps a little bit; however, we need to work harder.
+
+We are going to do the modelling in a principled way now. Basically we are going to be performing 10x10 cross-validation to select the best combination of `size` and `decay`.
+
+*** 
+
+Just by curiosity, let me show how with a non-linear model we can fit almost any dataset (in the sense of reducing the training error):
+
+
+```{r}
+model.nnet <- nnet(admit ~., data = Admis, subset=learn, size=30, maxit=500)
+errors (model.nnet)
+```
+
+That's it: we got a training error around 1.5% (compare with 30% from previous one!), but this is 
+illusory ... the test error is larger than before: almost 40%.
+
+Actually, the relevant comparison is between 1% and 40%, this **large gap between training and test error is a clear indication of overfitting**
+
+***
+
+### 2. Fit neural networks optimizing parameters using cross-validation
+
+The package `caret` is an excellent package for training control, once you know what all these concepts are
+
+```{r}
+library(caret)
+```
+
+
+For a specific modelling technique, in our case the *neural network*, the function `train()` in `{caret}` uses a "grid" of model parameters and trains using a given resampling method (in our case we will be using 10x10 CV). All combinations are evaluated, and the best one (according to 10x10 CV) is chosen and used to construct a final model, which is refit using the whole training set. This is all done with a call to `train()`
+
+Thus `train()` returns the constructed model (exactly as a direct call to `nnet()` would).
+
+In order to find the best network architecture, we are going to explore two methods:
+
+a) Explore different numbers of hidden units in one hidden layer, with no regularization
+b) Fix a large number of hidden units in one hidden layer, and explore different regularization values (recommended)
+
+...doing both (explore different numbers of hidden units AND regularization values) is usually a waste of computing resources (but notice that `train()` would admit it)
+
+*** 
+
+Let's start with a)
+
+Set desired sizes:
+```{r}
+(sizes <- 2*seq(1,10,by=1))
+```
+
+
+Specify 10x10 CV:
+```{r}
+trc <- trainControl (method="repeatedcv", number=10, repeats=10)
+```
+
+Perform cross-validation and train final model with best parameters:
+```{r}
+model.10x10CV <- train (admit ~., data = Admis, subset=learn, 
+                        method='nnet', maxit = 500, trace = FALSE,
+                        tuneGrid = expand.grid(.size=sizes,.decay=0), trControl=trc)
+```
+
+
+We can inspect the full results
+```{r}
+model.10x10CV$results
+```
+
+And the best model found:
+```{r}
+model.10x10CV$bestTune
+```
+
+
+The results are quite disappointing ...
+
+***
+
+Now method b)
+
+```{r}
+(decays <- 10^seq(-2, 0, by=0.2))
+```
+
+
+Now optimize regularization parameter `decay` with size set to fixed 20 units (be patient.. this takes a while..):
+```{r}
+model.10x10CV <- train (admit ~., data = Admis, subset=learn, method='nnet', 
+                        maxit = 500, trace = FALSE,
+                        tuneGrid = expand.grid(.size=20,.decay=decays), trControl=trc)
+```
+
+
+We can inspect the full results
+```{r}
+model.10x10CV$results
+```
+
+
+and the best model found
+```{r}
+model.10x10CV$bestTune
+```
+
+The results are a bit better; we should choose the model with the lowest 10x10CV error overall,
+in this case it corresponds to 20 hidden neurons, with a decay of `r model.10x10CV$bestTune$decay`
+
+So what remains is to predict the test set with our final model
+
+```{r}
+p2 <- as.factor(predict (model.10x10CV, newdata=Admis[-learn,], type="raw"))
+t2 <- table(pred=p2,truth=Admis$admit[-learn])
+(error_rate.test <- 100*(1-sum(diag(t2))/ntest))
+```
+
+We get `r round(error_rate.test, digits=1)`% test error after all this work; it seems that the information in this dataset is not enough to accurately predict admittance. 
+
+Note that upon looking at the confusion matrix for the prediction:
+```{r}
+t2
+```
+ 
+
+it clearly suggests that quite a lot of people is getting accepted when they should not, given their gre, gpa and rank. It is very likely that other (subjective?) factors are being taken into account, that are not in the dataset.
+

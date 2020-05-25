@@ -1,0 +1,30 @@
+Exercise 1
+
+Inspecting the /proc/<PID>/status files, we can see that the child processes are in zombie state, while the parent process is still running. If we check the output of `ps`, we can see that in every line corresponding to the child processes there is the word <defunct> at the end of the line. We can also note that no matter how small we specify the value of the delay in `top`, the child processes do not seem to appear there. That might be because they are of very fast execution.
+----------
+
+Exercise 2
+
+When the parent process is killed and the children have finished their process, they are also killed, as there is no need for them to keep using system resources. Had they not finished, they would be orphaned and taken care by the system daemons. We can test this by creating a program that creates a child that waits indefinitely, and then returns. Then, if we check the PPID of this child process, we can see it's a PID corresponding to a system daemon.
+----------
+
+Exercise 3
+
+The consequences of this code behavior change are that the parent process `processes2` exits when all their children have finished, and the children no longer appear defunct, as they have been released by the parent.
+----------
+
+Exercise 5
+
+The minor changes done to processes3.cpp to obtain processes4.cpp are basically to include a line like the marked one below:
+```
+fork();
+if (getpid() != ppid) {
+	pids[i] = getpid();
+	char buf[128];
+	sprintf(buf, "%d", i);
+	execlp("./writer", "./writer", buf, NULL);
+	return(45);
+}
+else waitpid(pids[i], &status, 0); <-----
+```
+This line makes the parent process wait for every child created and then release them.

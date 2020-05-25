@@ -1,0 +1,123 @@
+---
+title: 'LAB 8: Multilayer Perceptrons'
+subtitle: 'Example 2: circular artificial 2D data'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "April 2020"
+output:
+  html_notebook: default
+  pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+This script will use artifically generated data. It consists of two concentric classes and it is therefore not separable by a linear classifier. Here is the data we generate.
+
+```{r}
+library(MASS)
+library(nnet)
+
+set.seed(3)
+par(mfrow=c(1,1))
+
+p <- 2
+N <- 200
+
+x <- matrix(rnorm(N*p),ncol=p)
+y <- as.numeric((x[,1]^2+x[,2]^2) > 1.4)
+mydata <- data.frame(x=x,y=y)
+plot(x, col=c('black','green')[y+1], pch=19, asp=1)
+```
+
+
+Let's start by using one hidden layer with 3 hidden units, no regularization and the error function "cross-entropy":
+
+Note: In this case it is not necessary to standardize because they variables already are (they have been generated from a distribution with mean 0 and standard deviation 1).
+
+```{r}
+set.seed(3)
+nn1 <- nnet(y~x.1+x.2, data=mydata, entropy=T, size=3, decay=0, maxit=2000, trace=F)
+
+yhat <- as.numeric(predict(nn1,type='class'))
+par(mfrow=c(1,2))
+plot(x,pch=19,col=c('black','green')[y+1],main='actual labels',asp=1)
+plot(x,col=c('black','green')[(yhat>0.5)+1],pch=19,main='predicted labels',asp=1)
+table(actual=y,predicted=predict(nn1,type='class'))
+```
+
+
+Excellent, indeed!
+
+Let's execute it again, this time wth a different random seed
+
+
+```{r}
+set.seed(9)
+
+nn1 <- nnet(y~x.1+x.2, data=mydata, entropy=T, size=3, decay=0, maxit=2000, trace=F)
+yhat <- as.numeric(predict(nn1,type='class'))
+par(mfrow=c(1,2))
+plot(x,pch=19,col=c('black','green')[y+1],main='actual labels',asp=1)
+plot(x,col=c('black','green')[(yhat>0.5)+1],pch=19,main='predicted labels',asp=1)
+table(actual=y,predicted=predict(nn1,type='class'))
+```
+
+
+We see that the optimizer does not always find a good solution
+
+***
+
+How many hidden units do we need?
+
+```{r}
+par(mfrow=c(2,2))
+for (i in 1:4)
+{
+  set.seed(3)
+  nn1 <- nnet(y~x.1+x.2, data=mydata, entropy=T, size=i, decay=0, maxit=2000, trace=F)
+  yhat <- as.numeric(predict(nn1,type='class'))
+  plot(x,pch=20,col=c('black','green')[yhat+1])
+  title(main=paste('nnet with',i,'hidden unit(s)'))
+}
+```
+
+***
+
+Let's find out which function has been learned exactly, with 3 units:
+
+```{r}
+set.seed(3)
+nn1 <- nnet(y~x.1+x.2, data=mydata, entropy=T, size=3, decay=0, maxit=2000, trace=F)
+
+# create a grid of values
+x1grid <- seq(-3,3,l=200)
+x2grid <- seq(-3,3,l=220)
+xg <- expand.grid(x1grid,x2grid)
+xg <- as.matrix(cbind(1,xg))
+
+## input them to the hidden units, and get their outputs
+h1 <- xg%*%matrix(coef(nn1)[1:3],ncol=1)
+h2 <- xg%*%matrix(coef(nn1)[4:6],ncol=1)
+h3 <- xg%*%matrix(coef(nn1)[7:9],ncol=1)
+
+## this is the logistic function, used by nnet() for the hidden neurons, and 
+## for the output neurons in two-class classification problems
+logistic <- function(x) {1/(1+exp(-x))}
+
+## the hidden units compute the logistic function, so we cut the output value at 0.5; we get a decision line
+
+par(mfrow=c(2,2))
+contour(x1grid, x2grid, matrix(h1, 200, 220), levels=0.5)
+contour(x1grid, x2grid, matrix(h2, 200, 220), levels=0.5, add=T)
+contour(x1grid, x2grid, matrix(h3, 200, 220), levels=0.5, add=T)
+title(main='net input = 0.5\n in the hidden units')
+
+z <- coef(nn1)[10] + coef(nn1)[11]*logistic(h1) + coef(nn1)[12]*logistic(h2) + coef(nn1)[13]*logistic(h3)
+
+contour(x1grid,x2grid,matrix(z,200,220))
+title('hidden outputs = logistic of the net inputs\n and their weighted sum')
+contour(x1grid,x2grid,matrix(logistic(z),200,220),levels=0.5)
+title('logistic of the previous sum')
+contour(x1grid,x2grid,matrix(logistic(z),200,220),levels=0.5)
+points(x,pch=20,col=c('black','green')[y+1])
+title('same with training data points')
+```
