@@ -84,5 +84,77 @@ In these conditions, we can see how voluntary context switches seem to be relate
 ----------
 
 Exercise 6
+When using WSL (Ubuntu 18.04 LTS on Windows 10 1903) the programs did compile but caused several segmentation faults when using exercise6.sh, and produced no output. I had everything planned but the execution did not succeed. As I had already written the following tables, I thought they would stay anyway in answers.txt:
+----------------|---------------------------------|---------------------------------|
+CPU USER TIME	|	  Indexing (i, j)	  |	    Indexing (j, i)	    |
+----------------|----------------|----------------|----------------|----------------|
+    Num CPUs	| Outer parallel | Inner parallel | Outer parallel | Inner parallel |
+----------------|----------------|----------------|----------------|----------------|
+	1	|		 |		  |		   |		    |
+----------------|----------------|----------------|----------------|----------------|
+	2	|		 |		  |		   |		    |
+----------------|----------------|----------------|----------------|----------------|
+	3	|		 |		  |		   |		    |
+----------------|----------------|----------------|----------------|----------------|
+	4	|		 |		  |		   |		    |
+----------------|----------------|----------------|----------------|----------------|
 
+----------------|---------------------------------|---------------------------------|
+Vol. ctxt. sw.	|	  Indexing (i, j)	  |	    Indexing (j, i)	    |
+----------------|----------------|----------------|----------------|----------------|
+    Num CPUs	| Outer parallel | Inner parallel | Outer parallel | Inner parallel |
+----------------|----------------|----------------|----------------|----------------|
+	1	|		 |		  |		   |		    |
+----------------|----------------|----------------|----------------|----------------|
+	2	|		 |		  |		   |		    |
+----------------|----------------|----------------|----------------|----------------|
+	3	|		 |		  |		   |		    |
+----------------|----------------|----------------|----------------|----------------|
+	4	|		 |		  |		   |		    |
+----------------|----------------|----------------|----------------|----------------|
 
+----------
+
+Exercise 7
+
+First of all, tim gets the time of day according to the time that has passed since the Unix Epoch (1 Jan 1970) using gettimeofday and clock_gettime(CLOCK_REALTIME, ...). Then it looks for the resolution of each system clock (REALTIME, MONOTONIC, REALTIME_COARSE, MONOTONIC_COARSE, MONOTONIC_RAW, BOOTTIME, PROCESS_CPUTIME_ID, THREAD_CPUTIME_ID).
+----------
+
+Exercise 8
+
+time_usleep1 computes the time it takes for the system to process HOWMANY usleep(1) syscalls. In the original case, HOWMANY=300000 and in my computer it takes between 5500 and 7300 ms.
+Modifying the program, we can make it calculate the average time of all usleep(1) calls. Our experiment yields around 20.9 us. When we modify the parameter in usleep and make it sleep for 5 microseconds, it takes around 5.87 times more for the program to end, and also the mean time of usleep(5) is 127.76 us, around 6.11 times the mean time of usleep(1). For 10, we see a similar behavior: there is a non-linear scaling of the time the call takes with respect to the parameter.
+----------
+
+Exercise 9
+
+It is clear from the results that getpid() is a far faster syscall than usleep(1): from time_getpid we get that it takes around 765.35 ms for the program to process 300000 getpid() calls, and that the average time it takes for one of these calls is around 1.633 us. So, quite faster than usleep(1).
+----------
+
+Exercise 10
+
+We can now see that a full cycle of open+close is around 780us, far greater than getpid() and usleep(1).
+----------
+
+Exercise 11
+
+This time, a full cycle of fork+exit+waitpid takes on average 4938.91 us. Slower than all of the previous ones. (measured using HOWMANY=30000)
+----------
+
+Exercise 12
+
+When repeating this command five times, I got an average bandwidth of 1.34 GB/s (from 1.3, 1.3, 1.4, 1.3, 1.4).
+dd if=/dev/zero of=/tmp/myfile.dat count=1024 bs=$((1024*1024))
+Also, an average of 0.79 s to write the 1 GB to /tmp.
+----------
+
+Exercise 13
+
+Repeating 5 times
+dd if=/tmp/myfile.dat of=/dev/null
+I got an average of 40.87 seconds and an average read bandwidth of 26.28 MB/s.
+----------
+
+Exercise 14
+
+We can see that matrix.sse2 with 1 thread revolves between 1.4 and 3.2 GFlops. This same set of instructions, when running without thread restrictions, achieves between 3.4 and 9.8 GFlops. In the case of avx2, the numbers are much lower: in the single-thread case, it orbits around 2.2 GFlops. The case with all threads achieves a maximum of 12.3 GFlops and a minimum of 3.6 GFlops. So, we can see that sse2 achieves lower operation rates per second in general than avx2.

@@ -1,0 +1,37 @@
+matrix constructor
+matrix constructor ends
+matrix constructor
+matrix constructor ends
+matrix constructor
+matrix constructor ends
+loop 1
+matmul: 460392.000000 us 3.843403 GFlops
+loop 2
+matmul: 445878.000000 us 3.968512 GFlops
+loop 3
+matmul: 490024.000000 us 3.610990 GFlops
+loop 4
+matmul: 464521.000000 us 3.809240 GFlops
+loop 5
+matmul: 524725.000000 us 3.372189 GFlops
+loop 1
+matmul: 496609.000000 us 3.563109 GFlops
+loop 2
+matmul: 515983.000000 us 3.429322 GFlops
+loop 3
+matmul: 455144.000000 us 3.887719 GFlops
+loop 4
+matmul: 489626.000000 us 3.613926 GFlops
+loop 5
+matmul: 517849.000000 us 3.416965 GFlops
+loop 1
+matmul: 185708.000000 us 9.528249 GFlops
+loop 2
+matmul: 184309.000000 us 9.600573 GFlops
+loop 3
+matmul: 202591.000000 us 8.734208 GFlops
+loop 4
+matmul: 235263.000000 us 7.521251 GFlops
+loop 5
+matmul: 179839.000000 us 9.839201 GFlops
+matrix size 960x960  block size 160x160

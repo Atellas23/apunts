@@ -1382,14 +1382,215 @@ where
 $$
 \phi_i(\bx)=g\parenth{\sum_{j=0}^d v_{ij}x_j},
 $$
-with $\phi_0(\bx)=1,x_0=1$. With one duplication we have created **another layer of neurons**. It is clear, then, that we can play this game as many times as we want, further extending this to any number of **hidden layers** we want. So, to summarize this:
+with $\phi_0(\bx)=1,x_0=1$. With one duplication we have created **another layer of neurons**. It is clear that we can play this game as many times as we want, further extending this to any number of **hidden layers** we want. So, to summarize this:
 
 - We have a new set of regressors $\Phi(\bx)=(\phi_0(\bx),\ldots,\phi_h(\bx))^T$, which are adaptive via the $\b v_i$ parameters (called the non-linear parameters).
 - Once the new regressors are fully specified (i.e., the $\b v_i$ parameters are estimated), the remaining task is linear (via the $\b w_k$ paremeters).
 - What kind of network gives rise to this function if we keep duplicating? The **Multilayer Perceptron** or **MLP**.
-- Under other choices for the regressors, other networks are obtained. For example, the standard **RBF network**:
+- Under other choices for the regressors, other networks are obtained. For example, the standard **RBF (Radial Basis Functions) network** with parameters $\b\mu_i$:
 
 $$
 \phi_i(\bx)=\exp{\parenth{-\frac{\|\bx-\b\mu_i\|^2}{2\sigma_i^2}}}.
 $$
 
+#### Error functions for classification
+
+In **classification** we model the posteriors $P(\omega_k\vert\bx)$. In two-class problems, we model by creating an ANN with one output neuron ($m=1$) to represent $y(\bx)=P(\omega_1\vert\bx)$ and thus $1-y(\bx)=P(\omega_2\vert\bx)$.
+
+Suppose we have a set of learning examples $S=\{(\bx_n,t_n)\}_{n=1,\ldots,N}$, where $\bx_n\in\mathbb R^d,t_n\in\{0,1\}$ (assume $S$ is i.i.d.). We take the convention that $t_n=1$ means $\bx_n\in\omega_1$ and $t_n=0$ means $\bx_n\in\omega_2$, to **model**:
+$$
+P(t\vert\bx)=\begin{cases}y(\bx)\ \ \ \qquad\text{if }\bx\in\omega_1\\ 1-y(\bx)\quad\text{if }\bx\in\omega_2\end{cases}
+$$
+which is conveniently expressed as $P(t\vert\bx)=y(\bx)^t(1-y(\bx))^{1-t}$. This is a **Bernoulli distribution**. Assuming an i.i.d. sample, the **likelihood function** is:
+$$
+\mathcal L=\prod_{n=1}^Ny(\bx_n)^{t_n}(1-y(\bx_n))^{1-t_n}
+$$
+So, which error should we use? Let us define and minimize (again) the negative log-likelihood as the **error**:
+$$
+E:=-\ln{\mathcal L}=-\sum_{n=1}^N\bracketh{t_n\ln{y(\bx_n)}+(1-t_n)\ln{\parenth{1-y(\bx_n)}}},
+$$
+popularly known as **cross-entropy**. This is the **error function we should use in binary clasiffication**.
+
+The case for more than two classes, $K>2$, is obtained analogously, though with a bit more work. The error function for the multiclass classification problem turns out to be:
+$$
+E:=-\sum_{n=1}^N\sum_{k=1}^Kt_{n,k}\ln{y_k(\bx_n)},
+$$
+known as the **Generalized Cross-Entropy**.
+
+#### Training MLPs: An introduction to the backpropagation algorithm for regression
+
+(adaptation to binary/multiclass classification)
+
+A <span style='color:blue'>regression MLP</span> of $c$ hidden layers is a function $F:\mathbb R^d\to\mathbb R^m$ made up of pieces $F_1,\ldots,F_m$ of the form:
+$$
+F_k(\bx)=g{\parenth{\sum_{j=0}^{H_c}w_{kj}^{(c+1)}\phi^{(c)}_j(\bx)}},\quad k=1,\ldots,m
+$$
+where, for every $l=1,\ldots,c$, $W^{(l)}=\bracketh{w_{ji}^{(l)}}$ is the matrix of weights connecting layers $l-1$ and $l$ ($w_{ji}^{(l)}$ is the weight of the $i-$th input of the $j-$th neuron in layer $l$), $H_l$ is the number of neurons in layer $l$ (its **size**) and $\phi_j^{(l)}$ is the $j-$th basis function in layer $l$,
+$$
+\phi_j^{(l)}(\bx)=g{\parenth{\sum_{i=0}^{H_{l-1}}w_{ji}^{(l)}\phi_i^{(l-1)}(\bx)}},\quad l=1,\ldots,c
+$$
+with $\phi_i^{(0)}(\bx)=x_i,\ \phi_0^{(l)}(\bx)=1,\ H_0=d$. In particular, $x_0=1$.
+
+The goal in **regression** is to minimize the empirical error of the network on the training data sample $S=\{(\bx_n,\b t_n)\}_{n=1,\ldots,N}$, where $\bx_n\in\mathbb R^d,\ \b t_n\in\mathbb R^m$. This empirical error is
+$$
+E_\text{emp}(\b\omega):=\frac{1}{2}\sum_{n=1}^N\sum_{k=1}^m\parenth{t_{nk}-F_k(\bx_n)}^2,
+$$
+where $\b\omega$ is the vector of all network weights. Some mathematical concernings about this function:
+
+- $E$ is a continuous function if $g$ is so.
+- $E$ is differentiable if $g$ is so.
+- $g$ is usually of class $\mathcal C^\infty$.
+
+If we want to apply, for example, **gradient descent**, we need to compute the partial derivative of the error w.r.t. every weight. This, as you may already know, is called the **gradient vector**,
+$$
+\nabla E_\text{emp}(\b\omega)=\parenth{\partder{E_\text{emp}(\b\omega)}{w_{ji}^{(l)}}}_{l,i,j}
+$$
+There exists a reasonably efficient algorithm for computing this gradient vector: the **backpropagation algorithm**. But, before we get to this, let us first define some redundant notation that will ease computations: 
+
+- First of all, we consider a MLP where, for notational simplicity, we define:
+
+$$
+z_j^{(l)}:=g{\parenth{a_j^{(l)}}}:=g{\parenth{\sum_iw_{ji}^{(l)}z_i{^{(l-1)}}}},\ z_j^{(0)}=x_j
+$$
+
+- Also, note that $E_\text{emp}$ is the sum of the (independent) errors for every I/O example $(\bx_n,\b t_n)$:
+
+$$
+E_\text{emp}(\b\omega)=\sum_{n=1}^N\frac{1}{2}\sum_{k=1}^m\parenth{t_{nk}-F_k(\bx_n)}^2:=\sum_{n=1}^NE_\text{emp}^{(n)}(\b\omega)
+$$
+
+Therefore,
+$$
+\partder{E_\text{emp}(\b\omega)}{w_{ji}^{(l)}}=\sum_{n=1}^N\partder{E_\text{emp}^{(n)}(\b\omega)}{w_{ji}^{(l)}}
+$$
+As we are using the gradient descent method, the updating formula for the weights is:
+$$
+w_{ji}^{(l)}(t+1):=w_{ji}^{(l)}(t)-\alpha\left.\partder{E_\text{emp}(\b\omega)}{w_{ji}^{(l)}}\right\vert_{\b\omega=\b\omega(t)}
+$$
+Please note that there are better methods than gradient descent, albeit this is a fair starting point.
+
+Now, suppose we present $\bx_n$ to the network and compute all the neuron's outputs $z_j^{(l)}$; this is known as **forward propagation**. Now,
+$$
+\Delta^nw_{ji}^{(l)}:=\partder{E_\text{emp}^{(n)}(\b\omega)}{w_{ji}^{(l)}}=\partder{E_\text{emp}^{(n)}(\b\omega)}{a_j^{(l)}}\cdot\partder{a_j^{(l)}}{w_{ji}^{(l)}}=\delta_j^{(l)}\cdot z_i^{(l-1)}
+$$
+where we have defined $\delta_j^{(l)}:=\partder{E_\text{emp}^{(n)}(\b\omega)}{a_j^{(l)}}$. Note that, for $l=c+1$, this $\delta$ is exactly the $\delta$ from the Delta Rule for single-layer ANN training. The algorithm to update the weights is the following:
+
+**BACKPROPAGATION ALGORITHM (BPA):**
+
+- set initial values for the weights $w_{ji}^{(l)}$.
+- **repeat:**
+  - **for** $n$ **in** $[N]:=\{1,\ldots,N\}$
+    - **Forward step:** present $\bx_n$ to the network and compute the outputs $z_i^{(l)}$ of all units.
+    - **Backward step:** compute the deltas $\delta_j^{(l)}$ of all units, from $l=c+1$ down to $l=1$:
+      - **if** $l=c+1$ **then** $\delta_j^{(l)}:=g'{\parenth{a_j^{(c+1)}}}\cdot\parenth{z_j^{(c+1)}-t_{nj}}$
+      - **if** $l<c+1$ **then** $\delta_j^{(l)}:=g'{\parenth{a_j^{(l)}}}\sum_q\delta_q^{(l+1)}w_{qj}^{(l+1)}$
+    - Set $\Delta^nw_{ji}^{(l)}:=\delta_j^{(l)}\cdot z_i^{(l-1)}$.
+  - **end**
+  - Update the weights as $w_{ji}^{(l)}(t+1):=w_{ji}^{(l)}(t)+\alpha\sum_{n=1}^N\Delta^nw_{ji}^{(l)}$.
+- **until** convergence **or** max. epochs
+
+We now set the activation functions to be the examples we have considered: if $g=g_{\beta}^\text{log}(z)$, then
+$$
+g'=\parenth{g_{\beta}^\text{log}(z)}'=\beta g_{\beta}^\text{log}(z)\bracketh{1-g_{\beta}^\text{log}(z)},
+$$
+and we obtain
+$$
+g'{\parenth{a_j^{(c+1)}}}=\beta g{\parenth{a_j^{(c+1)}}}\parenth{1-g{\parenth{a_j^{(c+1)}}}}=\beta z_j^{(c+1)}(1-z_j^{(c+1)}),\\
+g'{\parenth{a_j^{(l)}}}=\beta g{\parenth{a_j^{(l)}}}\parenth{1-g{\parenth{a_j^{(l)}}}}=\beta z_j^{(l)}\parenth{1-z_j^{(l)}}.
+$$
+Analogously for $g_\beta^\text{tanh}(z)$, where we have
+$$
+\parenth{g_\beta^\text{tanh}(z)}'=\beta^2\parenth{1-\parenth{g_\beta^\text{tanh}(z)}^2}.
+$$
+
+#### Relation between backpropagation and order methods
+
+Let $\b\omega(t)$ represent a vector with **all** network weights at time $t$. When training an MLP, the minimization of $E_\text{emp}$ using the BPA involves a sequence of weight iterates $\{\b\omega(t)\}_{t=0}^\infty$, where $t$ indicates iterations through $S$, the so-called **epochs**.
+
+A basic algorithm finds the next weights using the relation
+$$
+\b\omega(t+1):=\b\omega(t)-\alpha(t)\nabla E_\text{emp}(\b\omega(t)).
+$$
+The role of the BPA is to compute the elements of $\nabla E_\text{emp}(\b\omega(t))$ at each iteration, recursively and rather efficiently. But how do we choose this parameter $\alpha$? Let us present a theorem that shines little light onto this:
+
+**General convergence theorem.** Let $\lambda_k$ be the eigenvalues of the Hessian matrix of the empirical error, $\nabla^2E_\text{emp}(\b\omega(t))$ for a given $\b\omega(t)$, a matrix we assume to be positive definite. Then, if $\lvert1-\alpha\lambda_k\rvert<1$ for all $k$, $\b\omega(t)$ tends towards a local minimum of $E_\text{emp}(\b\omega(t))$ as $t\to\infty$.
+
+Observations on this theorem:
+
+- Recall that $\nabla^2E_\text{emp}(\b\omega)$ is the Hessian matrix, with elements $\partder{^2E_\text{emp}(\b\omega)}{\b\omega_i\part\b\omega_j}$.
+- It is straightforward to see that $\alpha<\frac{2}{\lambda_\max}$ is a sufficiently small $\alpha$ *(but it is not a necessary condition)*.
+- Too large values of $\alpha$ show fast convergence but a tendency to oscillate.
+- Too small values of $\alpha$ show slow convergence.
+
+A generic (iterative) **minimization algorithm** would be:
+
+- Choose an initial point $x_0$; set $t=0$.
+- Select a search direction $\b p_t$.
+- Select a step size $\alpha_t$, and set $\bx_{t+1}:=\bx_t-\alpha_t\b p_t$.
+- Return to 2, unless a convergence criterion has been met.
+
+Suppose that $f:\mathbb R^r\to\mathbb R$ we wish to minimize (we assume it is differentiable and analytic). A **first order** Taylor expansion around the current point $\bx_t$ is:
+$$
+f(\bx)\approx f(\bx_t)+\nabla f(\bx_t)^T\parenth{\bx-\bx_t}=\hat f(\bx)
+$$
+A simple minimization algorithm is to set $\bx_{t+1}:=\bx_t-\alpha_t\nabla f(\bx_t)$ for $\alpha_t>0$, since
+$$
+\begin{split}
+\hat f(\bx_{t+1})=\\
+f(\bx_t)+\nabla f(\bx_t)^T\parenth{\bx_{t+1}-\bx_t}=\\
+f(\bx_t)+\nabla f(\bx_t)^T\parenth{\bx_t-\alpha_t\nabla f(\bx_t)-\bx_t}=\\
+f(\bx_t)-\alpha_t\nabla f(\bx_t)^T\nabla f(\bx_t)=\\
+f(\bx_t)-\alpha_t\|\nabla f(\bx_t)\|^2<\\
+f(\bx_t)
+\end{split}
+$$
+provided that $\nabla f(\bx_t)\neq0$ and $\alpha_t>0$ is small enough. Therefore we derive a **learning rule**:
+$$
+\b\omega(t+1):=\b\omega(t)-\alpha_t\nabla E_\text{emp}(\b\omega(t)).
+$$
+We have recovered the **gradient descent** method. But, this Taylor expansion gives no clue on how to choose $\alpha_t>0$. In ANNs, there are two common strategies:
+
+- Use a **constant** small $\alpha>0$ or  a **variable** $\alpha_t=\frac{\alpha_0}{t+1},\ \alpha_0>0$.
+- Perform a costly **line search** to find $\alpha_t=\argmin_\alpha{f{\parenth{\bx_t-\alpha\nabla f(\bx_t)}}}$.
+
+A perhaps better strategy than all of this is to use a second-order Taylor expansion around the current point $\bx_t$:
+$$
+f(\bx)\approx f(\bx_t)+\nabla f(\bx_t)^T\parenth{\bx-\bx_t}+\frac{1}{2}\parenth{\bx-\bx_t}\nabla^2f(\bx_t)\parenth{\bx-\bx_t}=\hat f{(\bx)},
+$$
+where $\nabla^2f(\bx_t)$ is the Hessian matrix of $f$ evaluated at $\bx_t$. Provided $\nabla^2f(\bx_t)$ is positive definite, this time the minimum of $\hat f(\bx)$ occurs at the $\bx$ satisfying the zero-derivative condition:
+$$
+\nabla f(\bx_t)+\nabla^2f(\bx_t)\parenth{\bx-\bx_t}=0
+$$
+This leads to the minimization step $\bx_{t+1}:=\bx_t-\parenth{\nabla^2f(\bx_t)}^{-1}\nabla f(\bx_t)$. This **second-order** method is known as a **Newton method**. Note that there is no need for a learning rate $\alpha_t$ here, sinze the inverse of the Hessian determines both the step size and the search direction. However, this method has some practical drawbacks:
+
+- It requires the Hessian to be positive definite, otherwise there is no unique minimum.
+- It requires the exact computation of the Hessian at every iteration.
+- It requires a matrix inversion at every iteration.
+- The knowledge of the local curvature provided by the Hessian is only useful very close to $\bx_t$.
+
+To avoid this drawbacks, we will replace the Hessian matrix with an approximation: let's see **quasi-Newton** methods.
+
+In quasi-Newton methods, the inverse of the Hessian matrix is directly approximated, leading to
+$$
+\bx_{t+1}:=\bx_t-\alpha_tM_t\nabla f(\bx_t),\text{ where }M_t\approx\parenth{\nabla^2f(\bx_t)}^{-1}.
+$$
+The most common variant is the **BFGS method**, suggested independently by Broyden, Fletcher, Goldfarb and Shanno. In BFGS, the positive definite estimate of the inverse Hessian does not require matrix inversion and uses **only gradient information**, supplied by the BPA:
+
+- A positive definite matrix $M_0$ is chosen (usually, the identity matrix $I$).
+- The search direction is set to $M_t\nabla f(\bx_t)$.
+- A **line search** is performed along this direction to find $\alpha_t$.
+- $\bx_{t+1}:=\bx_t-\alpha_tM_t\nabla f(\bx_t)$.
+- $M_{t+1}$ is set, according to some conditions:
+
+We impose a quasi-Newton condition: $M_{t+1}$ has to satisfy the *secant equation*,
+$$
+M_{t+1}\parenth{\bx_{t+1}-\bx_t}=\nabla f(\bx_{t+1})-\nabla f(\bx_t)
+$$
+If we define $s_t:=\bx_{t+1}-\bx_t$ and $y_t:=\nabla f(\bx_{t+1})-\nabla f(\bx_t)$, the secant equation is $B_{t+1}s_t=y_t$. Then, the approximation of the Hessian is updated by summing two matrices, $U_t$ and $V_t$, of rank one. As we want to maintain the positive definiteness of $M_t$, we can choose $U_t=\beta uu^T,\ V_t=\gamma vv^T$. If we impose the secant equation and choose $u=y_t,v=M_ts_t$, we can obtain
+$$
+\beta=\frac{1}{y_t^Ts_t},\quad\gamma=\frac{1}{s_t^TM_ts_t}.
+$$
+Finally, substituting  in the formula for $M_{t+1}$, we can set it to be
+$$
+M_{t+1}=M_t+\beta uu^T+\gamma vv^T=M_t+\frac{1}{y_t^Ts_t}y_ty_t^T+\frac{1}{s_t^TM_tS_t}M_ts_ts_t^TM_t^T.
+$$
