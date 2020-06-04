@@ -1,0 +1,54 @@
+---
+title: 'LAB 10: Ensemble methods'
+author: "Marta Arias"
+date: "April 2020"
+output:
+  html_notebook: default
+pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+### Exercise 1
+
+This first exercise involves the use of the South African Coronary Heart Disease (CHD) data set (the one mentioned in the lecture slides).
+
+The task is to predict CHD using age at onset, current alcohol consumption, obesity levels, cumulative tobacco, type-A behavior, and low density lipoprotein cholesterol as predictors.
+
+```{r}
+SAheart <- read.csv("MDSAheart.data")
+```
+
+First some necessary pre-processing (this part should be lenghtier as you know but let's go to the point):
+```{r}
+SAheart <- subset(SAheart, select=-row.names)
+SAheart[,"famhist"] <- as.factor(SAheart[,"famhist"])
+SAheart[,"chd"] <- factor(SAheart[,"chd"], labels=c("No","Yes"))
+```
+
+
+There seem to be no missing values;
+'alcohol', 'ldl' and 'tobacco' have very skewed distributions! a log transform could be in order ... it seems that quite a bit of people have large values (not surprising)
+
+So this is your departing data set:
+
+```{r}
+summary(SAheart) 
+```
+
+
+Do the following (in separate sections):
+
+1. Perform a pairs() plot of the variables paired for a first exploration, with chd overlayed (in color)
+2. Perform various boxplots (notice that all but one of the predictors are continuous)
+3. Decide if you log-transform some of the continuous variables
+4. Create learning and test sets, selecting randomly 2/3 and 1/3 of the data
+5. Fit a random forest on the learn data with Coronary Heart Disease (chd) as the target (optimize parameters such as the nr of trees in the forest and the number of variables used at each split)
+6. Measure variable importance of the built forest with optimal parameters and compute test performance metrics of final forest
+7. Have you dealt with class imbalance? If not, think how you would do it. 
+
+```{r}
+# Your code starts here ...
+
+```
+

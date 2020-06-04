@@ -546,7 +546,7 @@ $$
 This is known as **Tikhonov** or $L^2$ **regularization** in ML. Perhaps it's best known as **ridge regression** in statistics, where it's usually explained as a "penalized log-likelihood". This can also be derived from Bayesian statistics arguments. Tikhonov regularization has some advantages:
 
 - Pushing the length of the parameter vector $\|\boldsymbol w\|$ to $0$ allows the fit to be under explicit control with the regularization parameter $\lambda$.
-- The matrix $\boldsymbol\varphi^t\boldsymbol\varphi$ is positive semi-definite; therefore $\boldsymbol\varphi^T\boldsymbol\varphi+\lambda I$ is guaranteed to be positive definite (hence non-singular), for all $\lambda>0$.
+- The matrix $\boldsymbol\varphi^T\boldsymbol\varphi$ is positive semi-definite; therefore $\boldsymbol\varphi^T\boldsymbol\varphi+\lambda I$ is guaranteed to be positive definite (hence non-singular), for all $\lambda>0$.
 
 $$
 \boxed{
@@ -1065,6 +1065,8 @@ $$
 \varepsilon_B\leq\varepsilon_\text{1NN}\leq2\varepsilon_B(1-\varepsilon_B).
 $$
 
+<div style="page-break-after: always;"></div>
+
 ## 7. Classification theory and linear classification models (III).
 
 ### Discriminative classifiers
@@ -1239,9 +1241,9 @@ Again, this expression has no closed form solution for $\bbeta$ once we derive a
 
 #### Maximum Likelihood framework (II)
 
-## 8. Artificial Neural Networks (I)
+<div style="page-break-after: always;"></div>
 
-### The Multilayer Perceptron (MLP)
+## 8. Artificial Neural Networks (I): The Multilayer Perceptron (MLP)
 
 An (artificial) **neuron** is an abstract computing unit that gets an **input vector**, combines this vectors with a vector of local parameters (called **weights**) and sometimes with other local information, and then **outputs** a scalar quantity. It's usually represented like this:
 
@@ -1310,7 +1312,7 @@ $$
 g_\beta^\text{tanh}(z)=\frac{\exp{(\beta z)}-\exp{(-\beta z)}}{\exp{(\beta z)}+\exp{(-\beta z)}}\in(-1,1),\ \beta>0
 $$
 
-#### How to train a single layer ANN: the Delta Rule
+### How to train a single layer ANN: the Delta Rule
 
 We wish to fit $y(\bx)=g\parenth{\b w^T\bx}$ to a set of learning examples $\{(\bx_1,t_1),\ldots,(\bx_N,t_N)\}$, where $\bx_n\in\mathbb R^d,t_n\in\mathbb R$. In order to do this, we define the (empirical) **mean-square error** of the network as
 $$
@@ -1348,7 +1350,7 @@ $$
 $$
 One such procedure is to take $\alpha_t=\frac{\alpha}{t+1}$, with initial $\alpha>0$.
 
-#### Towards non-linear models
+### Towards non-linear models
 
 How could we obtain a model that is non-linear in the parameters (a **non-linear** model)? We depart from the basic linear model:
 $$
@@ -1393,7 +1395,7 @@ $$
 \phi_i(\bx)=\exp{\parenth{-\frac{\|\bx-\b\mu_i\|^2}{2\sigma_i^2}}}.
 $$
 
-#### Error functions for classification
+### Error functions for classification
 
 In **classification** we model the posteriors $P(\omega_k\vert\bx)$. In two-class problems, we model by creating an ANN with one output neuron ($m=1$) to represent $y(\bx)=P(\omega_1\vert\bx)$ and thus $1-y(\bx)=P(\omega_2\vert\bx)$.
 
@@ -1417,7 +1419,7 @@ E:=-\sum_{n=1}^N\sum_{k=1}^Kt_{n,k}\ln{y_k(\bx_n)},
 $$
 known as the **Generalized Cross-Entropy**.
 
-#### Training MLPs: An introduction to the backpropagation algorithm for regression
+### Training MLPs: An introduction to the backpropagation algorithm for regression
 
 (adaptation to binary/multiclass classification)
 
@@ -1594,3 +1596,90 @@ Finally, substituting  in the formula for $M_{t+1}$, we can set it to be
 $$
 M_{t+1}=M_t+\beta uu^T+\gamma vv^T=M_t+\frac{1}{y_t^Ts_t}y_ty_t^T+\frac{1}{s_t^TM_tS_t}M_ts_ts_t^TM_t^T.
 $$
+
+### Tricks of the trade: sensible choices when implementing and training MLPs
+
+First of all, let us present the R function `nnet`:
+
+```R
+nnet(x, y, weights, size, Wts, mask,
+     linout = FALSE, entropy = FALSE, softmax = FALSE,
+     censored = FALSE, skip = FALSE, rang = 0.7, decay = 0,
+     maxit = 100, Hess = FALSE, trace = TRUE, MaxNWts = 1000,
+     abstol = 1.0e-4, reltol = 1.0e-8, ...)
+```
+
+This function fits **single-hidden-layer neural networks**, using the following parameters:
+
+- `x` as the inputs
+- `y` as the targets
+- `weights` as an optional weights vector for the inputs, in case we want to give more importance to some of them
+- `size` as the size of the hidden layer (i.e. the number of neurons)
+- `Wts` as an optional initialization for the network weights
+- `mask` is an optional bitmask to interpret which variables to take into account in the inputs
+- `linout`, `entropy` and `softmax` are three boolean parameters that can be set to true (only one at once) to train the network for the following purposes:
+
+|                            | softmax | entropy | linout |
+| -------------------------- | ------- | ------- | ------ |
+| **Classification $(K=2)$** | FALSE   | TRUE    | FALSE  |
+| **Classification $(K>2)$** | TRUE    | FALSE   | FALSE  |
+| **Regression**             | FALSE   | FALSE   | TRUE   |
+
+- `skip` lets us say if there are any connections from the input directly to the output layer
+- `decay` is a regularization parameter
+- The other parameters can be easily understood
+
+The output layer of a feed-forward neural network is schematized like this:
+
+|                            | number of neurons | activation function | $y_k,k=1,\ldots,m$    |
+| -------------------------- | ----------------- | ------------------- | --------------------- |
+| **Classification $(K=2)$** | 1                 | logistic            | $P(\omega_1\vert\bx)$ |
+| **Classification $(K>2)$** | $K$               | softmax             | $P(\omega_k\vert\bx)$ |
+| **Regression**             | $m$               | identity            | $f_k$                 |
+
+Given that $f_k$ is the $k-$th component of the function to learn.
+
+**On-line vs. Batch learning:**
+
+**On-line** training is much faster, but the notion of convergence is unexistent. Even though, it is much faster than batch, particularly in large redundant datasets, and often results in better solutions. It can also track changes in the data.
+
+**Batch** training, on the other hand, is much better understood as the notion of convergence does exist. It can be accelerated using second-order information, and it is not sensitive to the ordering of the training examples, which on-line learning is.
+
+As of today, we call **mini-batches** (different) subsets of training observations used in consecutive epochs.
+
+**Activation function:** It is known experimentally that an MLP trains much faster (as in, reaches an optimum in less iterations) if the activation function is anti-symmetric, $g(-z)=-g(z)$. This is the case for the $\tanh$.
+
+**Target values:** these should not be the asymptotic values of the activation function, but they should leave a margin. For example, in a two class problem, it is better to encode class 0 as 0.05 and class 1 as 0.95 than to encode them as 0 and 1.
+
+**Input values:** these should be preprocessed so that:
+
+- their mean value is zero and their standard deviation is 1 (**standardized**)
+- they are uncorrelated (perhaps using **PCA**)
+
+**Initial weights:** these should be small and zero-centered, to avoid initially driving the neurons into saturation.
+
+#### Number of hidden neurons
+
+While the number of inputs and outputs are dictated by the problem, the number of hidden neurons is not directly related to the application domain. This largely remains an unsolved problem.
+
+- A small number may not be sufficient and provoke **underfitting** of the model.
+- A large number may be too much and provoke **overfitting** of the model.
+
+There exist many methods to set this number: constructive (for example, **cascade correlation**), pruning or destructive (for example, **optimal brain damage**), golden searches, ...
+
+But, arguably a good and recommendable method, as it is more principled and arguably faster, is to use a large number (to **overfit** the model) and **regularize** the network. In `nnet`, we set the decay parameter and we can then perform cross-validation on it. There's more on ANN regularization in the `articles` directory of this repository.
+
+So, there are two simple and common ways to find the best single-hidden-layer network architecture:
+
+- Explore different number of hidden networks, without regularization.
+- Fix a large number of hidden units and explore different regularization values.
+
+What should not be done is both at once. It is usually a waste of computing resources.
+
+<div style="page-break-after: always;"></div>
+
+## 9. Artificial Neural Networks (II): RBF Networks
+
+### Introduction
+
+RBFs have their roots at exact function interpolation in mathematics. Its formulation as a neural network came later.

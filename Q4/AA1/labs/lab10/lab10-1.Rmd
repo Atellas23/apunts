@@ -1,0 +1,405 @@
+---
+title: 'LAB 8: Ensemble methods'
+subtitle: 'Example 1: Spam mail detection with Random Forests'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "April 2020"
+output:
+  html_notebook: default
+  pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+Load the dataset `spam` from the `kernlab` package:
+```{r}
+library(kernlab)  
+data(spam)
+```
+
+Every row of this data corresponds to an e-mail message, the last column named `type` is a factor denoting whether the email message was spam or nonspam. According to the information on the repository where this data was posted, the columns have the following meaning:
+
+- columns 1:48 correspond to the relative frequence (in percentage) of the word represented by that column
+- columns 49:54 correspond to the relative frequence (in percentage) of the character represented by the column
+- columns 55:57 correspond to different counts of capital letters (namely average length of capital words, length of longest capital word, and total number of capital letters in email)
+- last column 58 contains the type: spam/nonspam
+
+Being aware of this information, we do some preprocessing on this data.
+
+### 0. Preprocessing the spam data
+
+```{r}
+# log-transform count columns
+spam[,55:57] <- as.matrix(log10(spam[,55:57]+1))
+```
+
+The following columns are proxies of the type of email and therefore wil only keep those that have a value of 0. The variables are therefore removed and those rows with value non-zero eliminated. We store the resulting table in a new dataframe `spam2`.
+
+```{r}
+spam2 <- spam[spam$george==0,]
+spam2 <- spam2[spam2$num650==0,]
+spam2 <- spam2[spam2$hp==0,]
+spam2 <- spam2[spam2$hpl==0,]
+
+george.vars <- 25:28
+spam2 <- spam2[,-george.vars]
+```
+
+
+Next, we group several variables about money into a single one (corresponding to the words "free", "business", "credit" and "money"). We store the result into a third table `spam3`.
+```{r}
+moneys.vars <- c(16,17,20,24)
+spam3 <- data.frame( spam2[,-moneys.vars], spam2[,16]+spam2[,17]+spam2[,20]+spam2[,24])
+colnames(spam3)[51] <- "about.money"
+```
+
+The resulting dataset looks as follows:
+```{r}
+dim(spam3)
+summary(spam3)
+```
+
+
+***
+
+### 1. Using a single decision tree
+
+As it is customary, we start by splitting the available data into learning and test sets, selecting in this case randomly 2/3 and 1/3 of the data for final testing.
+
+
+```{r}
+set.seed(4321)
+
+N <- nrow(spam3)                                                                                              
+learn <- sample(1:N, round(2/3*N))
+nlearn <- length(learn)
+```
+
+
+First we try a standard classification tree (CART)
+
+```{r}
+library(tree)
+
+model.tree <- tree(type ~ ., data=spam3[learn,])
+summary(model.tree)
+```
+
+As we can observe, training error rate is around 9%
+
+We can also look at the actual tree built (in text format)
+```{r}
+model.tree
+```
+
+Or graphically:
+
+```{r}
+plot (model.tree)
+text (model.tree,pretty=0)
+```
+
+Let us use the test set to estimate its generalization error (here we use the holdout method):
+
+```{r}
+pred.tree <- predict (model.tree, spam3[-learn,], type="class")
+(ct <- table(Truth=spam3[-learn,]$type, Pred=pred.tree))
+```
+
+The classes are not totally balanced; if we look at the test set we see that 43.6% are nonspam and 56,4% are spam email messages. This is not a huge imbalance, but we still handle it using another performance metric (F1, see below).
+```{r}
+table(spam3[-learn,]$type)/sum(table(spam3[-learn,]$type))*100
+```
+
+
+Next, let us look at the error rates per class:
+
+```{r}
+# percent by class
+prop.table(ct, 1)
+```
+
+So, we see 11% error on nonspam emails and 7% error on spam emails.
+
+Global accuracy is over the whole test set is 91%:
+```{r}
+sum(diag(ct))/sum(ct)
+```
+
+
+And so test error is 9%
+
+```{r}
+100*(1-sum(diag(ct))/sum(ct))
+```
+
+
+The per class errors are quite well balanced, although someone could claim that we should make an effort to reduce the nonspam classified as spam. In cases where class imbalance is present, a different performance metric is prefered. One of the most common metrics used in practice is what is known as $F_1$ score, which corresponds to the harmonic mean of *precision* and *recall*. This metric can be computed directly from the contingency metric as follows:
+
+```{r}
+harm <- function (a,b) { 2/(1/a+1/b) }   # harmonic mean
+(F1 <- harm (prop.table(ct,1)[1,1], prop.table(ct,1)[2,2]))  # harmonic mean of precision and recall
+```
+
+So our tree achieves a **test F1 score** of 90%.
+
+***
+
+### 2. Using random forests
+
+```{r}
+library(randomForest)
+```
+
+
+First, we build the random forest with 100 trees from the training data.
+```{r}
+model.rf1 <- randomForest (type ~ ., data=spam3[learn,], ntree=100, proximity=FALSE)
+```
+
+To view the model summary:
+```{r}
+model.rf1
+```
+
+From this summary, we observe an estimation of the test error (OOB) of 6.7%, and both errors seem well balanced (9% for nonspam, 5% for spam). Note that this confusion matrix is based on the OOB predictions, so it is an ok estimate of future predictive performance (namely, this **is not training error**).
+
+Let us now compute the error on the test set:
+
+```{r}
+pred.rf1 <- predict (model.rf1, spam3[-learn,], type="class")   # predict using trained model
+(ct <- table(Truth=spam3[-learn,]$type, Pred=pred.rf1))         # confusion matrix
+(prop.table(ct, 1))                                             # error rate per class
+```
+
+And so the error on our independent test set is 5.2%:
+
+```{r}
+round(100*(1-sum(diag(ct))/sum(ct)),2)
+```
+
+Finally, we look at the F1 measure:
+```{r}
+(F1 <- harm (prop.table(ct,1)[1,1], prop.table(ct,1)[2,2]))
+```
+
+
+So, the prediction performance of this random forest is much better than that of a single tree (as expected)!!
+
+There is still the issue with the unbalance of the errors; if you look at the confusion matrix you can see that it is harder for the classifier to correctly classify spam than nonspam. 
+
+We should try to lower the probability of predicting spam when it is not; we can do this at the expense of increasing the converse probability.
+
+One way to deal with this is to stratify the sampling in the boostrap resamples: 'nonspam' is the less represented class, so we upsample it:
+
+```{r}
+(N.nonspam <- table(spam3[learn,]$type)["nonspam"])
+(N.spam <- table(spam3[learn,]$type)["spam"])
+```
+
+In our learning set, we find fewer nonspam mails than spam. During the sampling process implicit in bagging, we are going to tell `R` to select more nonspam in order to have more representation of this underrepresented class. In the following code, we build each individual tree out of a sample containing 800 nonspam and 500 spam emails (remember, selected uniformly at random from each class with replacement).
+
+```{r}
+model.rf2 <- randomForest(type ~ ., data=spam3[learn,], ntree=100, proximity=FALSE, 
+                          sampsize=c(nonspam=800, spam=500), strata=spam3[learn,]$type)
+model.rf2
+```
+
+This new random forest obtains a OOB test error of 6.4%, and now nonspam is better detected (with error rate within this class of 4% instead of 9% in the earlier version); let's compute the real test error:
+
+```{r}
+pred.rf2 <- predict (model.rf2, spam3[-learn,], type="class")
+(ct <- table(Truth=spam3[-learn,]$type, Pred=pred.rf2))         # confusion matrix on test set
+(prop.table(ct, 1))                                             # test error rates per class
+(round(100*(1-sum(diag(ct))/sum(ct)),2))                        # test error rate
+(F1 <- harm (prop.table(ct,1)[1,1], prop.table(ct,1)[2,2]))     # F1 measure on test set
+```
+
+
+The test error rate of this second random forest is slightly worse than the previous one, but one can argue that the error rate on nonspam is better (4% instead of 7%) and so fewer nonspam mails will be classified as spam an potentially lost!
+
+When one encounters a situation when both types of errors do not have the same *cost*, namely one is more harmful than the other -- this happens in medical domains often, for example -- then, it may be desirable to loose global performance in order to improve on a particular type of error. In this case, we can upsample the class in which those errors are made, and another way of doing it could be playing with probability thresholds. We saw this in a previous lab in the context of logistic regression. It is always at the expense of damaging the *other* type of error.
+
+***
+
+### 3. Optimize number of trees in random forest using OOB
+
+In our previous random forest models we used  `ntree = 100`. This is a hyper-parameter and as such should be tuned because for some datasets 100 may be a good choice but not for others. In this section we show how to tune this parameter using the OOB, which is an out-of-sample estimator and so it serves as an estimator of future performance (unlike training error which of course we know is a terrible estimator of future performance). Moreover, it comes "for free" when building the forests, so we don't have to do any extra work. In a sense, the OOB in bagging procedures can substitute popular resampling methods such as cross-validation or loocv.
+
+Let us build first the sequence of values that we are going to test. In our case, we have decided to test the following powers of 2:
+```{r}
+(ntrees <- round(2^seq(1,10)))
+```
+
+Some initial book-keeping has to be done. We are going to use the structure `rf.results` to store results for forests with varying number of trees:
+
+```{r}
+rf.results <- matrix (rep(0,2*length(ntrees)), nrow=length(ntrees))
+colnames (rf.results) <- c("ntrees", "OOB")
+rf.results[,"ntrees"] <- ntrees
+rf.results[,"OOB"] <- 0
+```
+
+Next, we build a different random forest using the training with the different values of `ntree` that we test:
+
+```{r}
+ii <- 1
+
+for (nt in ntrees)
+{ 
+  print(nt)
+  
+  # build forest
+  model.rf <- randomForest(type ~ ., data=spam3[learn,], ntree=nt, proximity=FALSE, 
+                           sampsize=c(nonspam=800, spam=500), strata=spam3[learn,]$type)
+  
+  # get the OOB and store it appropriately
+  rf.results[ii, "OOB"] <- model.rf$err.rate[nt,1]  
+  ii <- ii+1
+}
+```
+
+Show results:
+```{r}
+rf.results
+```
+
+Based on the OOB, we select best value for parameter 'ntree':
+
+```{r}
+lowest.OOB.error <- as.integer(which.min(rf.results[,"OOB"]))
+(ntrees.best <- rf.results[lowest.OOB.error,"ntrees"])
+```
+
+
+Now refit the RF with the best value of 'ntrees':
+
+```{r}
+model.rf3 <- randomForest(type ~ ., data=spam3[learn,], ntree=ntrees.best, proximity=FALSE, 
+                          sampsize=c(nonspam=800, spam=500), strata=spam3[learn,]$type)
+```
+
+Finally, we compute the performance of this third optimized forest based on our test set:
+
+```{r}
+pred.rf3 <- predict (model.rf3, spam3[-learn,], type="class")
+ct <- table(Truth=spam3[-learn,]$type, Pred=pred.rf3)
+(prop.table(ct, 1))                             # test set error by class
+(round(100*(1-sum(diag(ct))/sum(ct)),2))        # test set error
+(F1 <- harm (prop.table(ct,1)[1,1], prop.table(ct,1)[2,2]))  # F1 measure
+```
+
+
+Which gives us an even better spam filter (at least based on F1).
+
+
+
+*__Exercise:__ tune the other random forest principal hyper-parameter 'mtry'. By default, this is the square root of the number of input variables, but better values may exist. Explore this parameter and select the best option that you find based on the OOB. Re-fit the random forest using the best value that you found and compute its test set performance metrics.*
+
+***
+
+### 4. A closer look
+
+One very nice thing about random forests is that as a side-effect of building so many individual trees, we can extract very useful information on the resulting model. This information can be used to have a sense of what variables are important, or how "close" different data points are. In this section, we will show this following our analysis on the spam dataset.
+
+As we have already seen, printing the model is useful because it gives us performance based on the OOB:
+```{r}
+print(model.rf3)
+```
+
+The model structure stores several important information, which can be looked up via the following variables included in the structure:
+
+```{r}
+summary(model.rf3)
+```
+
+As an example, the following vector stores, for each example in the input training set, how many times the example has been used as a out-of-bag sample.
+
+```{r}
+model.rf3$oob.times
+```
+
+Or we can access the values of the confusion matrix based on OOB estimations:
+```{r}
+model.rf3$confusion
+```
+
+One **very useful** piece of information is the importance that each variable or input feature has for the model. Random forests give us two ways of assessing importance. 
+
+The first and simpler one is by *counting* how many times variables are being used as nodes in trees of the forest. This information can be accessed through the function `varUsed` as follows:
+
+```{r}
+varUsed(model.rf3)
+```
+
+So, in this case, the first variable has been used 509 times, the second one 447 times and so on. In a way, we may expect that a very relevant variable appears more times, so in this case variable 47 is used 2510 times (the most out of all variables) which corresponds to variable "`r colnames(spam3)[which.max(varUsed(model.rf3))]`" -- namely, the average of length of words in capital letters.
+
+This is a crude way of measuring the importance of variables as it only takes into account the number of times variables are used, but ignores, for example, the fact that variables placed in higher nodes within a tree may be more important that variables used near the leaves.
+
+A **better** variable importance measure is given by the `importance` function, which takes into account information-theoretic aspects of adding variables to each tree and performing permutation tests to see whether these metrics improve and in what measure. As one can read in the description of this function (running the `?importance` help command): 
+
+```
+The first measure is computed from permuting OOB data: For each tree, the prediction error on the out-of-bag portion of the data is recorded (error rate for classification, MSE for regression). Then the same is done after permuting each predictor variable. The difference between the two are then averaged over all trees, and normalized by the standard deviation of the differences.
+```
+
+So, let's run this on our rf3 model and see the importance of variables using this criterion:
+
+```{r}
+importance(model.rf3)
+```
+
+This information is nicely portrayed in the following graph:
+```{r}
+varImpPlot(model.rf3)
+```
+
+And so we may conclude that the most important input variable is in fact 'about.money' followed by 'charDollar', etc.
+
+
+Another useful visualization is what happens with the out-of-bag error, and per-class error rates as we add new trees to the ensemble. This is achieved by plotting the model as follows:
+
+```{r}
+plot(model.rf3)
+legend("topright", legend=c("OOB", "nonspam OOB", "spam OOB"), pch=c(1,1), col=c("black","red","green"))
+```
+
+***
+
+### 5. Data visualization
+
+Another very useful feature of random forests is that they can provide with a quantitative measure of similarity of input examples. The idea is that if two input examples are similar, then when running them down the trees they will tend to fall into the same "leaves". As [Leo Breiman himself explains](https://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm):
+
+```
+After a tree is grown, put all of the data, both training and oob, down the tree. If cases k and n are in the same terminal node increase their proximity by one. At the end, normalize the proximities by dividing by the number of trees.
+```
+
+We indicate that we want to compute *proximities* while building the forest using the `proximity=TRUE` flag. As we are going to use this for visualization, we are going to build a random forest on the whole dataset (training + test), and based on its proximity data we are going to produce a visualization of the emails on a 2D Euclidean plane using a technique known as *Multidimensional scaling* or MDS. Given an input matrix of pair-wise example distances (which are computed from their similarity or proximity), MDS produces an embedding into Euclidean space based on spectral analysis of the input distance matrix. Notice that this is a form of non-linear dimensionality reduction.
+
+In the following code, we build a random forest using 1000 trees based on the whole data, and then using MDS we plot emails in 2D.
+
+*Warning:* this may take a while.. in my laptop this takes a little less than 1 minute..
+
+```{r warning=FALSE}
+
+# 1. build forest on the whole spam3 data
+rf <- randomForest (type ~ ., data = spam3, ntree=1000, proximity=TRUE, importance=FALSE)
+
+# 2. compute MDS based on pair-wise proximities from random forest and plot
+rf.plot <- MDSplot(rf, spam3$type, pch=as.numeric(spam3$type))
+
+# 3. add nice stuff to plot
+library(RColorBrewer)
+title("Data visualization based on MDS projection of the Random Forest")
+legend("topright", legend=levels(spam3$type),
+       fill=brewer.pal(length(levels(spam3$type)), "Set1"))
+# 4. need to identify some points? here, we include labels for first 100 emails..
+text(rf.plot$points[1:100,], labels=attr(rf.plot$points,"dimnames")[[1]][1:10], cex=0.4)
+```
+
+
+
+### 6. Take-home lessons from this script
+
+- How to build individual trees and random forests for classification
+- How to deal with imbalance in class distribution (upsampling when learning and using F1 as metric for performance evaluation)
+- How to tune parameters based on OOB estimator of future performance (so you can save yourself costly cross-validations)
+- How to extract useful information out of learned forests (variable importance, proximities)

@@ -1,0 +1,311 @@
+---
+title: 'LAB 9: Radial Basis Function Network'
+subtitle: 'Example 1: Regression of a 1D function'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "May 2020"
+output:
+  html_notebook: default
+  pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r}
+library(MASS)
+library(cclust)
+
+set.seed(4)
+```
+
+
+In this example, we illustrate the use of RBFNN on a regression problem of a univariate real function. 
+We are going to do all the computations "by hand".
+
+
+Our departing function in the $(a,b)$ interval is:
+
+```{r}
+myf <- function (x) { (1 + x - 2*x^2) * exp(-x^2) }
+```
+
+
+We are going to model this function in the interval $(-5,5)$:
+
+```{r}
+a <- -5
+b <- 5
+sigma.2 <- 0.04
+domain <- c(a,b)
+
+myf.data <- function (N, a, b) 
+{
+  x <- runif(N, a, b)
+  t <- myf(x) + rnorm(N, sd=sqrt(sigma.2))
+  dd <- data.frame(x,t)
+  names(dd) <- c("x", "t")
+  dd
+}
+
+N <- 100
+d <- myf.data(N, a , b)
+
+summary(d)
+```
+
+
+The black points are the data, the blue line is the true underlying function
+
+```{r}
+plot(d)
+curve(myf, a, b, col='blue', add=TRUE)
+```
+
+
+Using the same generation mechanism, we create a large test data for future use:
+
+```{r}
+N.test <- 2000
+d.test <- myf.data(N.test, a , b)
+```
+
+
+Function to compute the design matrix $\Phi$ of size$(N x M)$ without the $\phi_0(x) = 1$ column;<br>
+`c[i]`, `sg[i]` are the centers and smoothing parameters or variances ($\sigma_i^2$) of the neurons, respectively
+
+```{r}
+PHI <- function (x, c, sg)
+{
+  N <- length(x)
+  M <- length(c)
+  phis <- matrix(rep(0,M*N), nrow=M)
+  for (i in 1:M)
+    phis[i,] <- exp(-(x - c[i])^2/(2*sg[i]))
+  
+  t(phis)
+}
+```
+
+
+We find the centers and variances for each neuron using k-means; since this clustering algorithm is non-deterministic (because the initial centers are random), we repeat this `NumKmeans` times
+
+```{r}
+NumKmeans <- 20
+```
+
+
+We set a rather large number of hidden units (= basis functions) $M$ as a function of data size (the `sqrt` is just a heuristic!) because we are going to try different regularizers
+
+```{r}
+(M <- floor(sqrt(N)))
+```
+
+  
+These data structures store the centers and variances
+```{r}
+c <- matrix(0, nrow=NumKmeans, ncol=M)
+sg <- matrix(0, nrow=NumKmeans, ncol=M)
+```
+
+
+The following code runs k-means `NumKMeans` times and stores the resulting centers and estimated variances in `c` and `sg`
+```{r}
+data.Kmeans <- cbind(d$x,rep(0,N))
+  
+for (j in 1:NumKmeans)
+{
+    # Find the centers c[i] with k-means
+    km.res <- cclust (x=data.Kmeans, centers=M, iter.max=200, method="kmeans", dist="euclidean")
+    c[j,] <- km.res$centers[,1]
+    
+    # Obtain the variances sg[i] as a function of the c[i]
+    sg[j,] <- rep(0,M)
+    for (i in 1:M)
+    {
+      indexes <- which(km.res$cluster == i)
+      sg[j,i] <- sum(abs(d$x[indexes] - c[j,i]))/length(indexes)
+      if (sg[j,i] == 0) sg[j,i] <- 1
+    }
+}
+```
+
+  
+
+Now for each k-means we get the hidden-to-output weights by solving a regularized least-squares problem (standard ridge regression), very much as we did in previous labs
+
+The difference is that now we perform ridge regression on the $\Phi$ matrix (that is, on the new regressors given by the basis functions), not on the original inputs ...
+... and find the best $\lambda$ with using GCV across all choices of basis functions (the `NumKmeans` clusterings)
+
+```{r}
+(lambda.list <- 10^seq(-3,1.5,by=0.1))
+
+errors <- rep(0, NumKmeans)
+bestLambdas <- rep(0, NumKmeans)
+
+# For each k-means' result
+for (num in 1:NumKmeans)
+{
+  myPHI <- PHI (d$x,c[num,],sg[num,])
+  aux1 <- lm.ridge(d$t ~ myPHI, d, lambda = lambda.list)
+  my.lambda <- as.numeric(names(which.min(aux1$GCV)))
+
+  aux2 <- lm.ridge(d$t ~ myPHI, d, lambda = my.lambda)
+  errors[num] <- sqrt(aux2$GCV)
+  bestLambdas[num] <- my.lambda
+}
+```
+
+
+
+Now we obtain the best model among the tested ones:
+
+```{r}
+(bestIndex <- which(errors == min(errors)))
+(bestLambda <- unique(bestLambdas[bestIndex]))
+best.c <- c[bestIndex,]
+best.sg <- sg[bestIndex,]
+```
+
+
+We see that this problem needs a lot of regularization! This makes sense if you take a look at how the data is generated (the previous plot): the noise level is very high relative to the signal
+
+```{r}
+bestLambda
+```
+
+
+We also see that the best lambda fluctuates (since the data changes due to the clustering), but the order of magnitude is quite stable)
+```{r}
+hist(bestLambdas, breaks=20)
+```
+
+
+We now create the final model:
+
+```{r}
+my.RBF <- lm.ridge (d$t ~ PHI(d$x, best.c, best.sg), d, lambda = bestLambda)
+```
+
+These are the final hidden-to-output weights: note how small they are (here is where we regularize)
+```{r}
+(w.i <- setNames(coef(my.RBF), paste0("w_", 0:M)))
+```
+
+It remains to compute the prediction on the test data
+
+```{r}
+test.PHI <- cbind(rep(1,length(d.test$x)),PHI(d.test$x,best.c,best.sg))
+y <- test.PHI %*% w.i
+```
+
+
+And now the normalized error of this prediction
+
+```{r}
+(errorsTest <- sqrt(sum((d.test$t - y)^2)/((N.test-1)*var(d.test$t))))
+```
+
+Much better if we plot everything!
+
+```{r}
+par(mfrow=c(1,1))
+
+## Test data in black
+plot(d.test$x,d.test$t,xlab="x",ylab="t",main=paste("Prediction (learning size: ",toString(N),"examples)"),ylim=c(-1.5,1.5))
+
+## Red data are the predictions
+points(d.test$x,y,col='red',lwd=1)
+
+## and the blue line is the underlying function
+curve (myf, a, b, col='blue', add=TRUE)
+```
+
+The classical (predictive) R^2 coefficient is:
+
+```{r}
+1-errorsTest^2
+```
+
+Since we know the data generating mechanism, we can compute how good our model is wrt to the best possible model: this model (the regression function), would have a true generalization error of $\sigma^2$.
+We can therefore compute the so-called [percentage error](https://en.wikipedia.org/wiki/Approximation_error):
+
+```{r}
+(perc.error <- ( sum((d.test$t - y)^2)/N.test - sigma.2 ) / sigma.2 * 100)
+```
+
+
+which means that our model is just `r round(perc.error, digits=1)`% away from the best possible model
+
+***
+
+The previous code is designed for 1D problems but you can easily adapt it to more input dimensions. To make our lives easier, there are existing packages that do the work for us.
+
+
+There is a general package for neural networks: `{RSNNS}`; it is actually the `R` interface to the (formerly widely) used and flexible *Stuttgart Neural Network Simulator* (SNNS)
+
+This library contains many standard implementations of neural networks. The package actually wraps the SNNS functionality to make it available from within `R`
+
+The RBF version within this package has a sophisticated method for initializing the network, which is also quite non-standard, so we avoid further explanation.
+
+Sadly this package does not provide with a way to control regularization or to allow for multi-class problems (a softmax option with the cross-entropy error), so I would not recommend it
+
+***
+
+A second package for neural networks in R is `{neural}`; this package trains a RBFNN with backpropagation, so is a rather different view
+
+```{r}
+library(neural)
+
+# For comparison, we use the same number of centers (M)
+data <- rbftrain (as.matrix(d$x), M, as.matrix(d$t), visual = FALSE)
+
+# And make it predict the same test data
+preds <- rbf (as.matrix(d.test$x),data$weight,data$dist,data$neurons,data$sigma)
+
+## And now the normalized error of this prediction
+(errorsTest <- sqrt(sum((d.test$t - preds)^2)/((N.test-1)*var(d.test$t))))
+```
+
+Much better if we plot everything
+
+```{r}
+par(mfrow=c(1,1))
+
+## Test data in black
+plot(d.test$x,d.test$t,xlab="x",ylab="t",main=paste("Prediction (learning size: ",toString(N),"examples)"),ylim=c(-1.5,1.5))
+
+## Red data are the predictions
+points(d.test$x,preds,col='red',lwd=1)
+
+## and the blue line is the underlying function
+curve (myf, a, b, col='blue', add=TRUE)
+```
+
+
+The results are poorer, with an advantage for the former method (using clustering)
+
+```{r}
+1-errorsTest^2
+```
+
+
+Finally for a visual comparison of predictions using both methods:
+
+```{r}
+par(mfrow=c(1,1))
+
+## Test data in black
+#plot(d.test$x,d.test$t,xlab="x",ylab="t",main=paste("Prediction (learning size: ",toString(N),"examples)"),ylim=c(-1.5,1.5))
+
+## Red data are the predictions of our method
+plot(d.test$x, y, col='red', lwd=1,
+     xlab="x",ylab="t",main=paste("Prediction (learning size: ",toString(N),"examples)"),ylim=c(-1.5,1.5))
+
+# Green points are predictions with the {neural} package
+points(d.test$x,preds,col='green',lwd=1)
+
+## and the blue line is the underlying function
+curve (myf, a, b, col='blue', lwd=3, add=TRUE)
+
+legend("topright",legend=c("our code", "neural package", "true function"),
+       col=c("red", "green", "blue"), lty=rep(1, 3), cex=1)
+```

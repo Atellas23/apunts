@@ -1,0 +1,31 @@
+---
+title: 'LAB 9: Multilayer Perceptrons'
+author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
+date: "May 2020"
+output:
+  html_notebook: default
+  pdf_document: default
+editor_options: 
+  chunk_output_type: inline
+---
+
+### Exercise 1
+
+We continue with our script example: regression of a 1D function
+
+We are interested in studying the influence of **sample size** on the fit.
+The idea is that you embed the code in the script into a couple of handy functions and leave
+the learning sample size $N$ as a parameter.
+
+These are the learning sample sizes you are going to study
+
+```{r}
+Ns <- c(25,50,100,200,500)
+```
+
+
+You are asked to report the chosen lambda and the final test error (on the same test set),
+plot the learned function against the data and the true generating function and see if the fit
+is better/worse/equal as a function of $N$ and in what sense it is better/worse/equal.
+
+Your code starts here ...
