@@ -1667,7 +1667,7 @@ While the number of inputs and outputs are dictated by the problem, the number o
 
 There exist many methods to set this number: constructive (for example, **cascade correlation**), pruning or destructive (for example, **optimal brain damage**), golden searches, ...
 
-But, arguably a good and recommendable method, as it is more principled and arguably faster, is to use a large number (to **overfit** the model) and **regularize** the network. In `nnet`, we set the decay parameter and we can then perform cross-validation on it. There's more on ANN regularization in the `articles` directory of this repository.
+But, arguably a good and recommendable method, as it is more principled and arguably faster, is to use a large number (to **overfit** the model) and **regularize** the network. In `nnet`, we set the decay parameter and we can then perform cross-validation on it. There's more on ANN regularization and neuron dropout in the `articles` directory of this repository.
 
 So, there are two simple and common ways to find the best single-hidden-layer network architecture:
 
@@ -1682,4 +1682,250 @@ What should not be done is both at once. It is usually a waste of computing reso
 
 ### Introduction
 
-RBFs have their roots at exact function interpolation in mathematics. Its formulation as a neural network came later.
+RBFs have their roots at exact function interpolation in mathematics. Its formulation as a single-hidden-layer neural network came later. In a RBF model, the output of a neuron is determined by the **distance** between the input and the neuron's parameter vector, called its **center** or **prototype**. This latter fact has two important consequences:
+
+1. It allows to give a precise interpretation to the network output: it will be a **linear combination of similarities**. This similarities will be calculated from the distances using the activation function.
+2. It allows to design training algorithms other than BPA, which will be **de-coupled**, meaning there will be different ways for establishing the parameters of the hidden layer (non-linear part) and the output layer (linear part).
+
+But what is **exact function interpolation**? The setting is the following: we have a set of data points $\bx_n$ who all live in $\mathbb R^d$, and a set of real numbers $t_n$. Given this, we want a function $h:\mathbb R^d\to\mathbb R$ such that
+$$
+h(\bx_n)=t_n,\quad\bx_n\in\mathbb R^d,t_n\in\mathbb R,n=1,\ldots,N
+$$
+In our case, we will express $h$ as a combination of **basis functions** like the following:
+$$
+\phi_n(\bx):=\phi{\parenth{\|\bx-\bx_n\|}}
+$$
+Each data point $\bx_n$ acts as a prototype. This combination will be linear with respect to the basis functions:
+$$
+h(\bx)=\sum_{n=1}^N w_n\phi_n(\bx)=\sum_{n=1}^N w_n\phi\parenth{\|\bx-\bx_n\|},
+$$
+which we will force to be exact for all the data points: $h(\bx_n)=t_n$. The function $\|\cdot\|$ is any norm in $\mathbb R^d$, and most often an **Euclidean norm** (a norm heir of a scalar product). Because of the norm, the $\phi_n$ are functions that exhibit **radial contours** of constant value **centered** at the data points $\bx_n$. In matrix notation,
+$$
+\begin{pmatrix}
+\phi_1(\bx_1) & \phi_2(\bx_1) & \cdots & \phi_N(\bx_1)\\
+\phi_1(\bx_2) & \phi_2(\bx_2) & \cdots & \phi_N(\bx_2)\\
+\vdots & \vdots & \ddots & \vdots\\
+\phi_1(\bx_N) & \phi_2(\bx_N) & \cdots & \phi_N(\bx_N)
+\end{pmatrix}
+\begin{pmatrix}w_1\\ w_2\\ \vdots\\ w_N\end{pmatrix}
+=
+\begin{pmatrix}t_1\\ t_2\\ \vdots\\ t_N\end{pmatrix}\\
+\ \\
+\b\Phi\b w=\b t
+$$
+Note that $\b\Phi$ is a symmetric matrix, as $\|\bx_i-\bx_j\|=\|\bx_j-\bx_i\|$. Assuming that this matrix is non-singular, $\b w$ can be found as $\b w=\b\Phi^{-1}\b t$. This can be done, for example, using $\b\Phi=LU$ decomposition. There exist some sufficient conditions on $\phi$ as to make sure that $\b\Phi$ is invertible, known as **Micchelli's theorem**. These sufficient conditions include:
+
+- $\phi(z)=\exp{\parenth{-\frac{z^2}{\sigma^2}}}$ (Gaussian RBF)
+- $\phi(z)=\parenth{z^2+\sigma^2}^\alpha,\alpha\in\mathbb R^*<1$
+- $\phi(z)=z^3$
+- $\phi(z)=z^2\ln{z}$
+
+If the interpolation problem has image in $\mathbb R^m$ (i.e., $t_n\in\mathbb R^m$), the generalization is straightforward:
+$$
+h_k(\bx)=\sum_{n=1}^N w_{kn}\phi_n(\bx)=\sum_{n=1}^N w_{kn}\phi\parenth{\|\bx-\bx_n\|},\quad 1\leq k\leq m
+$$
+that we will force to be exact for all the data points: $h_k(\bx_n)=t_{nk}$. This problem leads to
+$$
+\b\Phi W=T
+$$
+solved again by simple matrix inversion as $W=\b\Phi^{-1}T$.
+
+### Regularization
+
+Very often, in Machine Learning, the exact function interpolation setting is **not attractive** at all:
+
+- High number of interpolation points $N$ means **complex** and **unstable** solutions.
+- The outputs $t_n$ depend stochastically on the inputs $\bx_n$. So, if we have **exact** solutions, we will be victims of **overfitting**.
+- The interpolation matrix $\b\Phi$ can be singular or ill-conditioned.
+- The inversion of $\b\Phi$ grows as $O\parenth{N^3}$. For symmetric positive definite matrices, Cholesky decomposition takes some $\frac{N^3}{3}$ steps.
+
+We are in need of a tighter **control of complexity** of our solution. Enter **regularization**.
+
+From previous lectures we know that regularization penalizes the size of the weight matrix,
+$$
+E_\text{emp}(W)=\frac{1}{2}\sum_{n=1}^N\sum_{k=1}^m\parenth{t_{nk}-h_k(\bx_n)}^2+\frac{\lambda}{2}\sum_{k=1}^m\|\b w_k\|^2,
+$$
+which results in $W=\parenth{\b\Phi+\lambda I_N}^{-1}T$; the value of $\lambda>0$ is proportional to the amount of noise in the data. Another way of obtaining much simpler solutions is to use a **subset** of the data points to center the basis functions; more generally, they can be centered at a **very carefully selected** set of points in $\mathbb R^d$. With these two modifications (regularization and lowering the number of centers), we can get into **RBF networks**.
+
+### RBF networks
+
+The so-called **RBf network** is of the form:
+$$
+h_k(\bx)=\sum_{i=0}^H w_{ki}\phi_i(\bx)=\sum_{i=0}^H w_{ki}\phi\parenth{\|\bx-\b c_i\|},\quad 1\leq k\leq m,
+$$
+which is a **two-layer neural network**:
+
+- The first (hidden) layer of $H\ll N$ neurons computes the basis functions $\phi_i(\bx)$ centered at the vectors $\b c_i$.
+- A constant basis function $\phi_0(\bx)=1$ compensates for the difference between the mean values of the output and the targets.
+
+A very popular choice for the $\phi_i$ is a simple Gaussian:
+$$
+\phi_i(\bx)=\exp{\parenth{-\frac{\|\bx-\b c_i\|^2}{\sigma_i^2}}}.
+$$
+The new matrix $\Phi_{N\times(H+1)}$ is sometimes known as the **design matrix**; now the weight matrix is
+$$
+W=\parenth{\Phi^T\Phi}^{-1}\Phi^TT.
+$$
+If the original $\Phi_{N\times N}$ matrix was non-singular, then the matrix $\Phi^T_{N\times(H+1)}\Phi_{N\times(H+1)}$ is also non-singular (this is a very important result). Note that this solution is not regularized: if we do regularize it, we get that
+$$
+W=\parenth{\Phi^T\Phi+\lambda I_{H+1}}^{-1}\Phi^TT.
+$$
+**RBF network training** is typically performed in a decoupled way:
+
+1. The first stage finds $H,\{\b c_i\},\{\sigma_i^2\}$ using a **clustering** algorithm such as k-means.
+2. The second stage finds $W$ by any of the usual (linear) methods:
+   - Solution using the Moore-Penrose pseudo-inverse (via the SVD), for **regression**.
+   - Solution using IRLS (logistic regression), for **binary classification**.
+
+<div style="page-break-after: always;"></div>
+
+## 10. Ensemble methods: Random Forests
+
+**Ensemble methods** are learning methods that learn by training a number of **better-than-chance individual learners** and then combine their predictions. This methods have a number of advantages:
+
+- They provide **more accurate models** by combining the output of multiple local "experts".
+- A complex problem can be decomposed into multiple sub-problems that are easier to understand and solve (**divide-and-conquer**).
+- We often train many models and feel we can get more by **combining a number of them**. In this way, computational efforts are not wasted.
+
+We should use ensemble learning methods when we can design better-than-chance individual learners that are **independent from each other**. How do we combine the multiple individual outputs of each learner to get a unique answer?
+
+- For the **classification** task, we use **plurality voting**: the class that has the most votes is the answer.
+- For the **regression** task, we **average** all the answers (usually with the arithmetic mean).
+
+**Regression:** call $\mathcal E$ the ensemble, $\mathcal L_i$ the $i-$th individual learner, $1\le i\le L$; fix an input vector $\bx$ and let $\varepsilon_i:=\mathbb E\bracketh{\lvert f(\bx)-\mathcal L_i(\bx)\rvert}$, where $f$ is the function we want to learn:
+
+1. The **expected MSE for a randomly chosen individual learner** is:
+
+$$
+\frac{1}{L}\sum_{i=1}^L \varepsilon_i^2
+$$
+
+2. The **expected MSE for the ensemble** is:
+
+$$
+\parenth{\frac{1}{L}\sum_{i=1}^L\varepsilon_i}^2
+$$
+
+Using Cauchy-Schwarz inequality, we can prove that
+$$
+\parenth{\frac{1}{L}\sum_{i=1}^L\varepsilon_i}^2\le\frac{1}{L}\sum_{i=1}^L\varepsilon_i^2
+$$
+In particular, if the individual learners are independent, the reduction in expected error would be $\frac{1}{L}$. In practice this is not the case, because the individual learners are normally trained **out of the same data**. Thus, they will tend to have correlated errors, and then the improvement will be smaller.
+
+**Classification:** to ease the problem, let us assume the following:
+
+- The number of classifiers $L$ is odd and we have $K\ge2$  class labels.
+- Each classifier gives the correct class with probability $p$ for any $\bx$.
+- The classifier outputs are independent.
+
+Then, the majority vote will give an accurate class label if at least $\lfloor\frac{L}{2}\rfloor+1$ classifiers give correct answers. The majority ($50\%+1$) of votes is necessary and sufficient for a correct decision in the case of $K=2$, and is a sufficient condition (but not a necessary one) for $K>2$. Thus, the real accuracy of an ensemble using plurality when $K>2$ could be greater than the majority vote accuracy.
+
+Consider $K=2$. The **accuracy** of the ensemble is:
+$$
+a_\mathcal E:=\sum_{i=\left\lfloor\frac{L}{2}\right\rfloor+1}^L {L\choose i}p^i(1-p)^{L-i}
+$$
+The **Condorcet Jury Theorem** states that:
+
+1. If $p>\frac{1}{2}$, then $a_\mathcal E$ is monotonically increasing and $a_\mathcal E\to1$ as $L\to\infty$.
+2. If $p<\frac{1}{2}$, then $a_\mathcal E$ is monotonically decreasing and $a_\mathcal E\to0$ as $L\to\infty$.
+3. If $p=\frac{1}{2}$, then $a_\mathcal E=\frac{1}{2}$ for any $L$.
+
+**<u>CART algorithm</u>**
+
+The **CART** (Classification And Regression Tree) algorithm generates a classification tree using the **Gini score Gain**: how often a randomly chosen example would be incorrectly labeled if it were labeled according to the empirical probability distribution of the classes. Mathematically, the Gini score is:
+$$
+\text{Gini}(S):=\sum_{k=1}^K p_k(S)\parenth{1-p_k(S)}=1-\sum_{k=1}^K p_k^2(S)
+$$
+being $p_k(S)$ the fraction of examples in $S$ labeled with class $k$. Note that if a variable completely characterizes the class (perfectly separates $S$ into the labeled classes), then $\text{Gini}(S)=1-1^2=0$, which is a "pure" scenario. If the probability distribution is uniform, then the Gini score achieves its maximum value, $1-\frac{1}{K}$.
+
+The **Gini Gain of a discrete variable** $S$ is an impurity-based criterion that measures the divergence between probability distributions of the class labels. It is mathematically calculated as
+$$
+\text{GiniGain}(S):=\text{Gini}(S)-\sum_{v=1}^V\frac{\vert S_v\vert}{\vert S\vert}\text{Gini}(S_v),
+$$
+assuming $S_v$ are the elements of $S$ with value $v$. If $S$ is a continuous variable, we sort the data rows and bin-split: we calculate the Gini score for the binary question "do the elements have a value greater than $\mu_i$?", with $\mu_i=\frac{\text{value in row }i\ +\ \text{value in row }i+1}{2}$, for $i=1,\ldots,\vert S\vert-1$. In this way, we get a binary tree.
+
+CART can also build regression trees, albeit it does not use the Gini score for that matter, but tries to maximize the **RSS gain** (Residual Sum of Squares) at each step. In this sense, both classification and regression trees built by CART follow a greedy algorithm.
+
+### Methods for constructing ensembles
+
+We want to make the individual learners in the ensemble be the least correlated possible. There have been a lot of ways proposed to do this, such as:
+
+- **Subsampling the training examples**
+- Manipulating the features
+- Manipulating the targets: for example, make each individual learner be an expert of classificating observations in a particular class.
+- Changing the learning parameters
+- ...
+
+Or a combination of the above. We will delve into subsampling of the training examples. The most common way to do this is by **Bootstrap Resampling**.
+
+#### Bootstrap Resampling
+
+Assuming we have a data set $D=\{(\bx_1,t_1),\ldots,(\bx_N,t_N)\}$, we draw **bootstrap resamples** $D_1^*,\ldots,D_B^*$ of size $N$ by sampling $D$ with replacement and then fit a model to each of the $D_b^*$. A statistic $\hat\theta=\theta(D)$ can be estimated in the usual ways. For example,
+$$
+\bar\theta^*=\frac{1}{B}\sum_{b=1}^B\theta_b^*,\quad\var{(\theta^*)}=\frac{1}{B-1}\sum_{b=1}^B\parenth{\theta_b^*-\bar\theta^*}^2
+$$
+are the **mean** and **variance** of the bootstrap distribution of $\hat\theta$, and $\theta^*_b:=\theta(D_b^*)$. An estimation for the **bias** of $\hat\theta$ is $\bar\theta^*-\hat\theta$.
+
+If we want to **subsample the training set**, we might use a method created by Leo Breiman (1996) called **Bagging** (**B**ootstrap **agg**regat**ing**): this creates an ensemble by training individual classifiers on bootstrap resamples of the training set. The procedure is the following:
+
+1. Generate a bootstrap sample from a sample of size $N$ ($N$ independent draws with replacement).
+2. Train a predictor $y_b^*$ on every bootstrap resample $D_b^*$.
+3. Repeat the process until you have $B$ resamples and predictors.
+
+What is the expected size of a bootstrap resample? Well, in a data set with $N$ examples, each has a probability of not being chosen over all the $N$ choosings of
+$$
+\parenth{1-\frac{1}{N}}^N,
+$$
+so the probability of being chosen at least once is
+$$
+p(N):=1-\parenth{1-\frac{1}{N}}^N.
+$$
+If $N\to\infty$,
+$$
+\lim_{N\to\infty}p(N)=1-\exp{(-1)}\approx0.632.
+$$
+The perturbation in the training set due to bootstrap resampling causes different methods to be built, particularly if the classifier is unstable. A modelling method is **unstable** if a small change in the training data (e.g., order of presentation, addition or deletion of data) can lead to a radically different model. This is typical of **overfit** models: they have a **low bias** and a **high variance**. Examples of these include **decision trees** and **neural networks**. Using the bagging procedure, we can dramatically **reduce the variance** of unstable methods of the same type, leading to improved prediction capabilities, at the price of keeping or increasing the bias (although not much).
+
+Now, we can see that for bagging we do not need new data to estimate the prediction error of a model. We can do so by calculating what's called the **Out-of-bag error (OOB)**. To calculate this, we use data that is not in the bootstrap resamples: define
+
+- $\mathbb I(z)$ as the indicator function of boolean condition $z$.
+- $D^{-n}\subseteq\{1,\ldots,B\}$ as the set of indices of the resamples that do not contain observation $\bx_n$,
+
+$$
+D^{-n}=\{i\in\{1,\ldots,B\}:\bx_n\not\in D_i^*\}.
+$$
+
+- $y_b^*$ as the model fitted to $D_b^*$.
+
+Then, the OOB error (**validation error**) is calculated using
+$$
+\text{Err}^*:=\frac{1}{N}\sum_{n=1}^N\frac{1}{\lvert D^{-n}\rvert}\sum_{b\in D^{-n}}\mathbb I\bracketh{t_n\neq y_b^*(\bx_n)}.
+$$
+Similarly, the **resubstitution** (aka training) error is estimated as:
+$$
+\bar e^*:=\frac{1}{N}\sum_{n=1}^N\frac{1}{\lvert D^n\rvert}\sum_{b\in D^n}\mathbb I\bracketh{t_n\neq y_b^*(\bx_n)},
+$$
+where $D^n=\{1,\ldots,B\}\setminus D^{-n}$. The **0.632-bootstrap estimate** is defined by:
+$$
+\text{Err}^{(0.632)}:=0.368\bar e^*+0.632\text{Err}^*.
+$$
+Intuitively, this pulls the OOB bootstrap estimate down toward the training error, thereby reducing its likely upward bias.
+
+### Random Forests
+
+Random Forests (Breiman, 2001) are an ensemble method similar to bagging, where the individual learners are **decision trees**, with additional randomization:
+
+- We first generate bootstrap resamples an build a tree for each one. But, the trees are built in a more random fashion than normal decision trees:
+  - Their **diversity** is increased (they are *decorrelated*) by the following procedure: every time a split is considered in a tree (an *internal node*), a subset of $m\ll p$ predictors is randomly chosen from the whole predictor pool. Then, the split is only allowed to use one predictor of those $m$ (the best one in terms of Gini gain). The default values are $\sqrt p$ for classification and $\frac{p}{3}$ for regression; these are due to L. Breiman also. If we used $m=p$, we would be directly using **bagging**.
+
+So, we have two basic hyperparameters: $B$, the number of trees, and $m$, the number of local features chose at each split of every tree; both can be optimized via the out-of-bag error. Construction of the random forest is fast, since just a few features are explored per tree.
+
+Random Forests usually outperform both the individual predictors and direct bagging. They can be also used to **estimate variable relevance**:
+
+- For each tree, the OOB prediction error is computed.
+- Then again after permuting each predictor variable.
+- The difference between the two is averaged over all trees, and normalized by its standard deviation:
+  - $\text{raw}_b(j):=\text{OOB}(b,j)-\text{OOB}(b),1\le b\le B$.
+  - $\text{imp}_j:=\frac{1}{B}\sum_{b=1}^B\text{raw}_b(j)$
+
+If we have a probabilistic classifier, instead of bagging we could average the probabilities for each class in an ensemble, and then assign the class with the highest probability.
