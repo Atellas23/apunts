@@ -1,12 +1,14 @@
 ---
 title: 'LAB 8: Multilayer Perceptrons'
-subtitle: 'Example 1: Admission into graduate school'
 author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
 date: "April 2020"
 output:
+  html_document:
+    df_print: paged
   html_notebook: default
   pdf_document: default
-editor_options: 
+subtitle: 'Example 1: Admission into graduate school'
+editor_options:
   chunk_output_type: inline
 ---
 

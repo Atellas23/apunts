@@ -116,7 +116,6 @@ for (j in 1:NumKmeans)
     # Find the centers c[i] with k-means
     km.res <- cclust (x=data.Kmeans, centers=M, iter.max=200, method="kmeans", dist="euclidean")
     c[j,] <- km.res$centers[,1]
-    
     # Obtain the variances sg[i] as a function of the c[i]
     sg[j,] <- rep(0,M)
     for (i in 1:M)

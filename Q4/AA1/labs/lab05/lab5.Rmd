@@ -3,9 +3,11 @@ title: 'LAB 5: Resampling methods'
 author: "Lluís A. Belanche, translated to R Markdown by Marta Arias"
 date: "March 2020"
 output:
+  html_document:
+    df_print: paged
   html_notebook: default
 pdf_document: default
-editor_options: 
+editor_options:
   chunk_output_type: inline
 ---
 

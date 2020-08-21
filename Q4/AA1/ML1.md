@@ -1671,7 +1671,7 @@ But, arguably a good and recommendable method, as it is more principled and argu
 
 So, there are two simple and common ways to find the best single-hidden-layer network architecture:
 
-- Explore different number of hidden networks, without regularization.
+- Explore different number of hidden units, without regularization.
 - Fix a large number of hidden units and explore different regularization values.
 
 What should not be done is both at once. It is usually a waste of computing resources.
@@ -1918,7 +1918,7 @@ Random Forests (Breiman, 2001) are an ensemble method similar to bagging, where 
 - We first generate bootstrap resamples an build a tree for each one. But, the trees are built in a more random fashion than normal decision trees:
   - Their **diversity** is increased (they are *decorrelated*) by the following procedure: every time a split is considered in a tree (an *internal node*), a subset of $m\ll p$ predictors is randomly chosen from the whole predictor pool. Then, the split is only allowed to use one predictor of those $m$ (the best one in terms of Gini gain). The default values are $\sqrt p$ for classification and $\frac{p}{3}$ for regression; these are due to L. Breiman also. If we used $m=p$, we would be directly using **bagging**.
 
-So, we have two basic hyperparameters: $B$, the number of trees, and $m$, the number of local features chose at each split of every tree; both can be optimized via the out-of-bag error. Construction of the random forest is fast, since just a few features are explored per tree.
+So, we have two basic hyperparameters: $B$, the number of trees, and $m$, the number of local features chosen at each split of every tree; both can be optimized via the out-of-bag error. Construction of the random forest is fast, since just a few features are explored per tree.
 
 Random Forests usually outperform both the individual predictors and direct bagging. They can be also used to **estimate variable relevance**:
 
