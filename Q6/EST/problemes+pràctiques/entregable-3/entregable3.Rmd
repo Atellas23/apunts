@@ -1,0 +1,213 @@
+---
+title: 'Estadística: Entregable 3'
+author: "Àlex Batlle Casellas"
+date: "16/4/2021"
+output:
+  html_document:
+    css: style.css
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Considerem la v.a. $X$ amb funció de densitat:
+\[
+f(x;\lambda,\eta)=\frac{\eta^\lambda}{\Gamma(\lambda)}x^{-\lambda-1}e^{-\frac{\eta}{x}},
+\]
+per $x>0,\lambda>0,\eta>0$. Comproveu que és una família exponencial amb els estadístics $T(x)=(\log x,\frac{1}{x})$, trobeu-ne el paràmetre canònic $\theta=(\theta_1,\theta_2)$, i la constant $C(\theta)$. En algun apartat caldrà fer servir la funció digamma $\psi(x)$ que correspon a la derivada del logaritme de la funció $\Gamma(x)$.
+\[
+f(x;\theta)=\frac{h(x)e^{\sum_{i=1}^2\theta_iT_i(x)}}{C(\theta)},
+\]
+amb $\theta=(\theta_1,\theta_2)=(-\lambda-1,-\eta),h(x)=1,C(\theta)=\frac{\Gamma(-\theta_1-1)}{(-\theta_2)^{-\theta_1-1}}=\frac{\Gamma(\lambda)}{\eta^\lambda}$.
+
+## Apartat A
+En el cas que sabéssim que $\mathbb E[T(x)]=(1.66,0.23)$, contesteu les preguntes següents:
+
+1. Quin seria el valor de $\lambda$?
+2. Quin seria el valor de $\eta$?
+
+Farem servir que
+\[
+\mathbb E[T(X)]=\nabla_\theta\log C(\theta)=(\psi(-\theta_1-1)+\log(-\theta_2),\frac{\theta_1+1}{\theta_2}).
+\]
+```{r}
+equ <- function(t1) {
+  return(digamma(-t1-1)+log((-t1-1)/0.23)-1.66)
+}
+theta1 <- uniroot(equ, c(-10,-2))$root
+theta2 <- (theta1+1)/0.23
+(lambda <- -theta1-1)
+(eta <- -theta2)
+```
+
+3. Quin seria el valor de $V(\log X)$?
+4. Quin seria el valor de $V(\frac{1}{X})$?
+
+Farem servir que
+\[
+\mathbb V[T(X)]=(\partial^2_1\log C(\theta),\partial^2_2\log C(\theta))=(\partial_1\psi(\theta_1),\frac{\theta_1}{\theta_2^2}).
+\]
+```{r}
+(v.logx <- trigamma(-theta1-1))
+(v.1_x  <- -(theta1+1)/(theta2^2))
+```
+
+5. Quin seria el valor de $\text{Cov}(\log X,\frac{1}{X})$?
+
+Farem servir que
+\[
+\text{Cov}(T_1(X),T_2(X))=\frac{\partial^2}{\partial\theta_1\partial\theta_2}\log C(\theta)=\frac{\partial}{\partial\theta_1}\left(\frac{\partial}{\partial\theta_2}\log C(\theta)\right)=\frac{\partial}{\partial\theta_1}\left(\frac{\theta_1+1}{\theta_2}\right)=\frac{1}{\theta_2}.
+\]
+```{r}
+(cov.logx.1_x <- 1/theta2)
+```
+
+## Apartat B
+En la situació habitual no coneixem el valor dels paràmetres, però tenim una mostra: suposeu que la grandària és 343, i la mitjana dels logaritmes de les $X$ ha donat 1.66119 i la de les inverses $\frac{1}{X}$ ha donat 0.22554. Estimeu per màxima versemblança els paràmetres de la distribució $\lambda$ i $\eta$. Calculeu la matriu d'informació en els paràmetres canònics, avalueu la matriu en el màxim versemblant, i contesteu:
+
+<font size="3">Nota: Feu servir la Suficiència, no obstant, les dades són a dades.csv d'Atenea amb el vostre nom.</font>
+
+6. L'estimador m.v. de $\lambda$ ha donat:
+7. L'estimador m.v. de $\eta$ ha donat:
+
+Ens aprofitarem de la consistència dels estimadors màxim versemblants:
+\[
+\begin{split}
+\overline{T(X)}=(\overline{T_1(X)}, \overline{T_2(X)})=(1.66119, 0.22554);\\
+\overline{T(X)}=\mathbb E[T(X)]=\nabla\log C(\theta)=\left(\psi(-\theta_1-1)+\log(-\theta_2),\frac{\theta_1+1}{\theta_2}\right).
+\end{split}
+\]
+Aleshores,
+```{r}
+equ <- function(t1) {
+  return(digamma(-t1-1)+log(-(t1+1)/0.22554)-1.66119)
+}
+
+theta1.mv <- uniroot(equ, c(-10,-2))$root
+theta2.mv <- (theta1.mv+1)/0.22554
+(lambda.mv <- -theta1.mv-1)
+(eta.mv <- -theta2.mv)
+```
+
+8. El terme [1,1] de la matriu d'informació obtinguda és:
+
+La matriu d'informació és:
+\[
+I_X(\theta)=[\text{Cov}(T_i(X),T_j(X))]_{i,\ j}=\begin{bmatrix}
+\frac{d^2}{d\lambda^2}\log\Gamma(\lambda) & \frac{-1}{\eta}\\
+\frac{-1}{\eta} & \frac{\lambda}{\eta^2}
+\end{bmatrix}
+\]
+```{r}
+(i11 <- trigamma(-theta1.mv-1))
+```
+
+9. El terme [2,2] de la matriu d'informació obtinguda és:
+```{r}
+(i22 <- -(theta1.mv+1)/(theta2.mv^2))
+```
+
+10. El terme [1,2] de la matriu d'informació obtinguda és:
+```{r}
+(i12 <- 1/theta2.mv)
+```
+
+## Apartat C
+En la mateixa situació de l'apartat B), calculeu la fita de Cramer-Rao de l'estimador màxim versemblant de $T(X)=(\mathbb E[\log X],\mathbb E[\frac{1}{X}])$. Utilitzant el teorema central del límit, calculeu l'interval de confiança asimptòtic (95% dues cues) del paràmetre $\lambda$, i també el de $\eta$. Contesteu:
+
+La matriu d'informació de Fisher de la mostra és:
+\[
+\frac{1}{343}
+\begin{bmatrix}
+\frac{d^2}{d\theta_1^2}\log\Gamma(-\theta_1-1) & \frac{1}{\theta_2}\\
+\frac{1}{\theta_2} & \frac{-(\theta_1+1)}{\theta_2^2}
+\end{bmatrix}
+\]
+Per tant, les fites de Cramer-Rao corresponents a cada estimador $(\hat\mu_1,\hat\mu_2)$ de les mitjanes de cada estadístic són els elements de la diagonal d'aquesta matriu, és a dir,
+\[
+\left\{
+\begin{matrix}
+CR(\hat\mu_1) = & \frac{1}{343}\frac{d^2}{d\theta_1^2}\log\Gamma(-\theta_1-1)\\
+CR(\hat\mu_2) = & \frac{-(\theta_1+1)}{343\cdot\theta_2^2}
+\end{matrix}\right.
+\]
+
+11. La fita de Cramer-Rao de l'estimador m.v. d'$\mathbb E[\log X]$ és:
+```{r}
+(cr.mu1.mv <- trigamma(-theta1.mv-1)/343)
+```
+
+12. La fita de Cramer-Rao de l'estimador m.v. d'$\mathbb E[\frac{1}{X}]$ és:
+```{r}
+(cr.mu2.mv <- -(theta1.mv+1)/(343*theta2.mv^2))
+```
+
+13. L'interval de confiança de $\lambda$ és:
+14. L'interval de confiança d'$\eta$ és:
+
+Per contestar aquestes preguntes, farem servir les fites de Cramer-Rao dels paràmetres canònics $\theta_1,\theta_2$. Aquestes són els elements de la diagonal de la matriu:
+\[
+\frac{1}{n\det I_X(\theta)}\begin{bmatrix}
+\frac{-(\theta_1+1)}{\theta_2^2} & \frac{-1}{\theta_2}\\
+\frac{-1}{\theta_2} & \frac{d^2}{d\theta_1^2}\log\Gamma(-\theta_1-1)
+\end{bmatrix}_{\huge{|}(\hat\theta_1,\hat\theta_2)}.
+\]
+Per tant, tenim que
+\[
+\theta_1\sim\mathcal N\left(\hat\theta_1,\frac{-n(\hat\theta_1+1)}{\hat\theta_2^2}\det I_X(\theta)\right)\implies
+\lambda\sim\mathcal N\left(\hat\lambda_{MV},\frac{-n(\hat\theta_1+1)}{\hat\theta_2^2}\det I_X(\theta)\right).
+\]
+El determinant que apareix a l'expressió és:
+\[
+\det I_X(\theta)=-\left(\frac{d^2}{d\theta_1^2}\log\Gamma(-\theta_1-1)\right)\frac{\theta_1+1}{\theta_2^2}-\frac{1}{\theta_2^2}.
+\]
+Aleshores, escriurem
+\[
+\sigma_\lambda^2(\theta):=\frac{-n(\theta_1+1)}{\theta_2^2}\det I_X(\theta)=\frac{n(\theta_1+1)}{\theta_2^2}\left(\left(\frac{d^2}{d\theta_1^2}\log\Gamma(-\theta_1-1)\right)\frac{\theta_1+1}{\theta_2^2}-\frac{1}{\theta_2^2}\right).
+\]
+En definitiva, tindrem que $\hat\lambda$ segueix (tendeix en llei a) una distribució normal, de mitjana $\lambda$ i de variància $\sigma^2_\lambda(\theta)$. Per tant, aproximant $\theta\sim\hat\theta$, tindrem:
+\[
+\frac{\lambda-\hat\lambda}{\sqrt{\sigma^2_\lambda(\hat\theta)}}\sim\mathcal N(0,1),
+\]
+és a dir, que
+\[
+\Pr\left(-\mathcal Z_{0.975}\leq\frac{\lambda-\hat\lambda}{\sigma_\lambda(\hat\theta)}\leq\mathcal Z_{0.975}\right)=0.95,
+\]
+i fent canvis algebraics a les desigualtats, arribem a que
+\[
+\lambda_{0.95}\in\left(\hat\lambda_{MV}\pm\sigma_\lambda(\hat\theta)\mathcal Z_{0.975}\right)
+\]
+Similarment, definim
+\[
+\sigma_\eta^2(\theta):=n\left(\frac{d^2}{d\theta_1^2}\log\Gamma(-\theta_1-1)\right)\det I_X(\theta)=-n\left(\frac{d^2}{d\theta_1^2}\log\Gamma(-\theta_1-1)\right)\left(\left(\frac{d^2}{d\theta_1^2}\log\Gamma(-\theta_1-1)\right)+\frac{1}{\theta_2^2}\right).
+\]
+Aleshores, $\eta$ segueix una distribució aproximada de
+\[
+\eta\sim\mathcal N\left(\hat\eta_{MV}, \sigma_\eta^2(\hat\theta)\right)\implies\eta_{0.95}\in\left(\hat\eta_{MV}\pm\sigma_\eta(\hat\theta)\mathcal Z_{0.975}\right)
+\]
+Si ho escrivim en `R`,
+```{r}
+n <- 343
+
+sigma.sq.lambda <- function(t1, t2) {
+  return(n*(t1+1)/(t2^2)*(trigamma(-t1-1)*(t1+1)/(t2^2)+1/(t2^2)))
+}
+sigma.lambda <- function(t1, t2) {
+  return(sqrt(sigma.sq.lambda(t1,t2)))
+}
+
+sigma.sq.eta <- function(t1,t2) {
+  return(-n*trigamma(-t1-1)*(trigamma(-t1-1)*(t1+1)/(t2^2)+1/(t2^2)))
+}
+sigma.eta <- function(t1,t2) {
+  return(sqrt(sigma.sq.eta(t1,t2)))
+}
+
+(lower.lambda <- lambda.mv-sigma.lambda(theta1.mv,theta2.mv)*qnorm(0.975))
+(upper.lambda <- lambda.mv+sigma.lambda(theta1.mv,theta2.mv)*qnorm(0.975))
+
+(lower.eta <- eta.mv-sigma.eta(theta1.mv,theta2.mv)*qnorm(0.975))
+(upper.eta <- eta.mv+sigma.eta(theta1.mv,theta2.mv)*qnorm(0.975))
+```

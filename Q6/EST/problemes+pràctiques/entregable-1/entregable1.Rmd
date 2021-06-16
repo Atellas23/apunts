@@ -1,0 +1,101 @@
+---
+title: "Entregable 1"
+author: "Àlex Batlle Casellas"
+date: "22/2/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("C:/Users/alexb/apunts/Q6/EST/problemes+pràctiques/entregable-1")
+```
+
+#### READ DATA:
+
+```{r}
+dd <- read.csv2("dades.csv")
+head(dd)
+#dim(dd)
+```
+
+#### DATA REFACTORING
+```{r}
+dd$MO <- factor(dd$MO, labels = c("No","Sí"))
+# barplot(summary(dd$MO), main = "Reciclen vs. No reciclen (orgànica)")
+dd$PC <- factor(dd$PC, labels = c("No","Sí"))
+# barplot(summary(dd$PC), main = "Reciclen vs. No reciclen (paper i cartró)")
+dd$Envas <- factor(dd$Envas, labels = c("No","Sí"))
+# barplot(summary(dd$Envas), main = "Reciclen vs. No reciclen (envasos)")
+dd$Vidre <- factor(dd$Vidre, labels = c("No","Sí"))
+# barplot(summary(dd$Vidre), main = "Reciclen vs. No reciclen (vidre)")
+# dd$Sexe <- factor(dd$Sexe, labels = c("F","M"))
+# barplot(summary(dd$Sexe), main = "Presència de cada sexe en l'enquesta")
+# dd$Aspecte <- factor(dd$Aspecte, labels = c("E","F","M","T"))
+# barplot(summary(dd$Aspecte), main = "Excusa donada per no reciclar")
+dd$IM <- dd$D2/dd$D4
+# plot(x=1:500,y=sort(dd$IM))
+
+dd$BMI <- dd$Pes/(dd$H/100)^2
+# dd$CBMI <- cut(dd$BMI, c(0,19,27,100), labels = c("1-baix","2-mitjà","3-alt"))
+m <- max(dd$Edat)
+dd$CEdat <- cut(dd$Edat, c(0,25,m), labels = c("Jove","Gran"))
+dd[dd$Edat == 25,]
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r}
+dd$Grouping <- paste(dd$Sexe, dd$CEdat, sep = "-")
+dd$Grouping <- as.factor(dd$Grouping)
+print("MEANS")
+(means_by_group <- by(dd$IM, dd$Grouping, mean))
+print("VARS")
+(vars_by_group <- by(dd$IM, dd$Grouping, var))
+```
+
+```{r}
+pes_means <- by(dd$Pes, dd$Grouping, mean)
+pes_vars <- by(dd$Pes, dd$Grouping, var)
+(FG_mean <- pes_means[1])
+(FG_var <- pes_vars[1])
+hist(dd$Pes[dd$Grouping == "F-Gran"], freq = F)
+curve(dnorm(x, mean = FG_mean, sd = sqrt(FG_var)), type = 'l', col = "red", add = T)
+
+(n <- length(dd$Pes[dd$Grouping == "F-Gran"]))
+
+# mean = FG_mean, sd = sqrt(FG_var/length(dd$Pes[dd$Grouping == "F-Gran"])))
+
+(se <- sqrt(FG_var/n))
+
+(lims <- se*qt(c(0.025, 0.925), df = n-1) + 69.5)
+
+
+2*pt((FG_mean-69.5)/se, df = n - 1)
+```
+
+```{r}
+
+# ara, (n-1)S^2/sigma^2 segueix una chi quadrat de (n-1) graus de llibertat
+# volem saber els resultats normals d'aquest estadístic mostral:
+qchisq(c(0.025, 0.975), df = n - 1)*179.7/(n-1)
+2*pchisq((n-1)*FG_var/179.7, df = n - 1)
+
+```
+
+
+```{r}
+library(tables)
+(t <- table(dd$Aspecte, dd$Vidre))
+t[4,2]/sum(t[4,])
+
+prop <- function(vec) {
+  p <- vec[1]/sum(vec) #(a+b)
+  return(p)
+}
+
+apply(t, 1, prop)
+
+length(dd[dd$Vidre == "No",]$Vidre)/300
+```

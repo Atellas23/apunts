@@ -1,0 +1,101 @@
+---
+title: "Entregable 4"
+author: "Àlex Batlle Casellas"
+date: "22/2/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("C:/Users/alexb/apunts/Q6/EST/problemes+pràctiques/entregable-4")
+```
+
+#### READ DATA:
+
+```{r}
+dd <- read.csv2("dades.csv")
+head(dd)
+answers <- NULL
+alpha <- 0.05
+#dim(dd)
+```
+
+#### Pregunta 1
+```{r}
+control.group <- dd[dd$Grupo == "GC",]
+test.group <- dd[dd$Grupo == "GE",]
+age.vt <- var.test(control.group$Edad, test.group$Edad)
+(temp.test <- t.test(control.group$Edad, test.group$Edad, var.equal = ifelse(age.vt$p.value < alpha, F, T)))
+answers <- c(answers, temp.test$statistic)
+answers <- c(answers, temp.test$p.value)
+```
+
+```{r}
+(civil.status <- table(control.group$EstCiv, test.group$EstCiv))
+(temp.test <- chisq.test(civil.status, correct = F))
+answers <- c(answers, temp.test$statistic)
+answers <- c(answers, temp.test$p.value)
+```
+
+#### Pregunta 2
+```{r}
+base.working.memory.vt <- var.test(control.group$MemorTrab_B, test.group$MemorTrab_B)
+(temp.test <- t.test(control.group$MemorTrab_B, test.group$MemorTrab_B, var.equal = ifelse(base.working.memory.vt$p.value < alpha, F, T)))
+answers <- c(answers, temp.test$statistic)
+answers <- c(answers, temp.test$p.value)
+```
+
+```{r}
+post.working.memory.vt <- var.test(control.group$MemorTrab_P, test.group$MemorTrab_P)
+(temp.test <- t.test(control.group$MemorTrab_P, test.group$MemorTrab_P, var.equal = ifelse(post.working.memory.vt$p.value < alpha, F, T)))
+answers <- c(answers, temp.test$statistic)
+answers <- c(answers, temp.test$p.value)
+```
+
+#### Pregunta 3
+```{r}
+test.wm.diff <- test.group$MemorTrab_P - test.group$MemorTrab_B
+control.wm.diff <- control.group$MemorTrab_P - control.group$MemorTrab_B
+n.test <- length(test.wm.diff)
+n.control <- length(control.wm.diff)
+test.t0.975 <- qt(1-alpha/2, df = n.test - 1)
+control.t0.975 <- qt(1-alpha/2, df = n.control - 1)
+mu.test <- mean(test.wm.diff)
+mu.control <- mean(control.wm.diff)
+sd.test <- sd(test.wm.diff)
+sd.control <- sd(control.wm.diff)
+IC95.test <- c(mu.test - (sd.test/sqrt(n.test))*test.t0.975, mu.test + (sd.test/sqrt(n.test))*test.t0.975)
+IC95.control <- c(mu.control - (sd.control/sqrt(n.control))*control.t0.975, mu.control + (sd.control/sqrt(n.control))*control.t0.975)
+answers <- c(answers, IC95.control[1], IC95.control[2])
+answers <- c(answers, IC95.test[1], IC95.test[2])
+```
+
+#### Pregunta 4
+```{r}
+# test goes first
+test.working.memory.vt <- var.test(test.group$MemorTrab_B, test.group$MemorTrab_P)
+(temp.test <- t.test(test.group$MemorTrab_B, test.group$MemorTrab_P, var.equal = ifelse(test.working.memory.vt$p.value < alpha, F, T), paired = T))
+answers <- c(answers, temp.test$statistic)
+answers <- c(answers, temp.test$p.value)
+
+# and after test goes control group
+control.working.memory.vt <- var.test(control.group$MemorTrab_B, control.group$MemorTrab_P)
+(temp.test <- t.test(control.group$MemorTrab_B, control.group$MemorTrab_P, var.equal = ifelse(control.working.memory.vt$p.value < alpha, F, T)))
+answers <- c(answers, temp.test$statistic)
+answers <- c(answers, temp.test$p.value)
+```
+
+#### Pregunta 5
+```{r}
+working.memory.vt <- var.test(test.wm.diff, control.wm.diff)
+(temp.test <- t.test(test.wm.diff, control.wm.diff, var.equal = ifelse(working.memory.vt$p.value < alpha, F, T)))
+answers <- c(answers, temp.test$statistic)
+answers <- c(answers, temp.test$p.value)
+```
+
+#### Finish the setup for the hand-in
+```{r}
+names(answers) <- NULL
+dump("answers", file = "respostes.txt")
+```
+

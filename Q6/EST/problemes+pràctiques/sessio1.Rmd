@@ -1,0 +1,90 @@
+---
+title: "Practica 1"
+author: "Alex Batlle Casellas"
+date: "11/2/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+IDENTIFICACIO +SEXE:
+```{r}
+n = 100
+# identificacio
+nid = sample(100:999, n, replace=F)
+# sexe
+sexe = sample(c("H","D"), n, replace=T, prob=c(38,62))
+ts = table(sexe)
+ts
+barplot(ts)
+```
+
+EDAT:
+```{r}
+edat_weights = c(5,4,2,2,1,1)
+edat_values  = 19:24
+edat = sample(edat_values, n, replace=T, prob=edat_weights)
+te = table(edat)
+te
+te_th = edat_weights*100/sum(edat_weights)
+rbind(te, te_th)
+plot(te, ty="h", ylim=c(0,50))
+points(19:24+0.1, te_th, ty="h", col="red")
+```
+
+PES:
+```{r}
+gamma_shape = 300
+gamma_scale = 0.2
+weight = rgamma(n, shape=gamma_shape, scale=gamma_scale)
+mean(weight)
+mean_th = gamma_shape*gamma_scale
+mean_th
+hist(weight, freq=F, ylim = c(0, 0.18))
+curve(dgamma(x, shape = gamma_shape, scale = gamma_scale), add=T, col="red")
+plot(sort(weight), (1:n)/n, ty="s")
+curve(pgamma(x, shape=gamma_shape, scale=gamma_scale), add=T, col="red")
+```
+
+ALCADA:
+```{r}
+height = rnorm(n, 170, 8)
+hist(height, freq=F)
+curve(dnorm(x, 170, 8), add=T, col="red")
+plot(sort(height), (1:n)/n, ty="s")
+curve(pnorm(x, 170, 8), add=T, col="red")
+```
+
+CONEIXEMENT ANGLES:
+```{r}
+eng_kn.values = c("None","Low","Average","High","Very High")
+eng_kn.probs = c(2,7,40,30,21)
+eng_kn = sample(eng_kn.values, n, replace=T, prob=eng_kn.probs)
+tk = table(factor(eng_kn,levels=unique(eng_kn.values)))
+barplot(tk)
+
+tk_th = eng_kn.probs*100/sum(eng_kn.probs)
+rbind(tk, tk_th)
+points(c(0.71,1.91,3.1,4.3,5.5), tk_th, ty="h", col="red")
+
+
+```
+
+NOMBRE DE GERMANS:
+```{r}
+nbinom.prob = 0.3
+nbinom.size = .5
+siblings = rnbinom(n, nbinom.size, nbinom.prob)
+ts = table(siblings)
+plot(ts, ylim=c(0,85))
+points(0:max(siblings)+0.1, 100*dnbinom(0:max(siblings), nbinom.prob, nbinom.size), ty="h", col="red")
+```
+
+RECULL DE LES DADES:
+```{r}
+# == DATA FRAME ==
+dd = data.frame(nid, sexe, edat, weight, height, eng_kn, siblings)
+head(dd)
+write.csv2(dd, 'practica1.csv')
+```

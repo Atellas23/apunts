@@ -1,0 +1,127 @@
+---
+title: "entregable2"
+author: "Àlex Batlle Casellas"
+date: "10/3/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+dd <- c(rep(0, 0), rep(2, 2), rep(3, 8), rep(4, 18), rep(5, 34), rep(6, 59), rep(7, 80), rep(8, 122), rep(9, 157), rep(10, 170), rep(11, 209), rep(12, 181), rep(13, 171), rep(14, 171), rep(15, 147), rep(16, 115), rep(17, 120), rep(18, 70), rep(19, 61), rep(20, 41), rep(21, 28), rep(22, 15), rep(23, 11), rep(24, 5), rep(26, 4), rep(29, 1))
+f_emp <- table(dd)
+f_emp <- f_emp/length(dd)
+plot(f_emp, ylab = "distribució empírica", xlab = "x")
+
+f_emp <- append(f_emp, 0, after = 0)
+f_emp <- append(f_emp, 0, after = 1)
+f_emp <- append(f_emp, 0, after = 25)
+f_emp <- append(f_emp, 0, after = 27)
+f_emp <- append(f_emp, 0, after = 28)
+
+e <- mean(dd)
+v <- mean(dd^2)-e^2
+
+p.mm <- e/v
+r.mm <- e^2/(v-e)
+f_mm <- dnbinom(0:max(dd), size = r.mm, prob = p.mm)
+points(0:max(dd)+0.1, f_mm, ty="h", col="red")
+
+absdiff.mm <- max(abs(f_mm - f_emp))
+
+estimate.expect <- function(r, p) {
+  return(r*(1-p)/p)
+}
+
+estimate.var <- function(r, p) {
+  return(r*(1-p)/(p^2))
+}
+
+expect.mm <- estimate.expect(r.mm, p.mm)
+var.mm <- estimate.var(r.mm, p.mm)
+```
+
+```{r}
+sum.dd <- sum(dd)
+n <- length(dd)
+```
+
+Plantegem el problema a mà: la log-versemblança és
+$$
+\ell_X(r,p)=nr\log{p}+\left(\sum_{x\in X}x\right)\log{(1-p)}+\sum_{x\in X}\log\Gamma(x+r)-\sum_{x\in X}\Gamma(x)-n\log{\Gamma(r)}
+$$
+Per tant, el seu gradient serà:
+$$
+\nabla\ell_X(r,p)=
+\begin{pmatrix}
+\nabla_r\ell_X(r,p)\\
+\nabla_p\ell_X(r,p)
+\end{pmatrix}
+=
+\begin{pmatrix}
+n\log{p}+\sum_{x\in X}\psi(x+r)-n\psi(r)\\
+\dfrac{rn}{p}-\dfrac{\sum_{x\in X}x}{1-p}
+\end{pmatrix},
+$$
+
+on $\psi(x)=\frac{\partial}{\partial x}\left(\log\Gamma(x)\right),n=\vert X\vert$. Aleshores, si l'igualem a zero, tenim que
+$$
+\hat p_{ML} = \frac{r}{r+\overline x},\\
+n\log(\hat p_{ML})+\sum_{x\in X}\psi(x+r)-n\psi(r)=0
+$$
+
+Substituïm a l'equació per $r$ i tenim una equació que solucionarem amb `uniroot`:
+$$
+n\log\left(\frac{r}{r+\overline x}\right)+\sum_{x\in X}\psi(x+r)-n\psi(r)=0.
+$$
+
+```{r}
+compute.p.ml <- function(r) {
+  return(r/(r+sum.dd/n))
+}
+
+equation.r <- function(r) {
+  return(n*log(compute.p.ml(r))+sum(digamma(dd+r))-n*digamma(r))
+}
+
+result <- uniroot(equation.r, c(0.01,100))
+r.ml <- result$root
+p.ml <- compute.p.ml(r.ml)
+# ML.parameters <- nlm(loglikelihood, c(r.mm, p.mm), steptol = 1e-15)
+# r.ml <- ML.parameters$estimate[1]
+# p.ml <- ML.parameters$estimate[2]
+
+f_ml <- dnbinom(0:max(dd), size = r.ml, prob = p.ml)
+plot(f_emp, ylab = "distribució empírica", xlab = "x", ty = "h")
+
+points(0:max(dd)+0.1, f_ml, ty="h", col="red")
+absdiff.ml <- max(abs(f_ml-f_emp))
+
+expect.ml <- estimate.expect(r.ml, p.ml)
+var.ml <- estimate.var(r.ml, p.ml)
+
+a <- qnbinom(0.05, size = r.ml, prob = p.ml)
+b <- qnbinom(0.95, size = r.ml, prob = p.ml)
+
+pr <- pnbinom(b, size = r.ml, prob = p.ml) - pnbinom(a, size = r.ml, prob = p.ml)
+
+```
+
+```{r}
+a.bayes <- -0.6
+b.bayes <- -0.7
+r.bayes <- 39
+alpha <- a.bayes+r.bayes*n+1
+beta <- b.bayes+sum.dd+1
+
+expect.posterior <- alpha/(alpha+beta)
+var.posterior <- alpha*beta/((alpha+beta)^2*(alpha+beta+1))
+
+x.expect.posterior <- r.bayes*beta/(alpha - 1)
+x.var.posterior <- r.bayes*beta*(alpha+beta-1)/((alpha-1)*(alpha-2)) + r.bayes^2*(beta+1)*beta/((alpha-1)*(alpha-2))-x.expect.posterior^2
+```
+
+
+

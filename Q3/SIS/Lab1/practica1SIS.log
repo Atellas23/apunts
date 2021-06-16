@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7140 64-bit) (preloaded format=pdflatex 2019.9.30)  10 OCT 2019 14:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7140 64-bit) (preloaded format=pdflatex 2019.9.30)  7 DEC 2020 20:14
 entering extended mode
 **./practica1SIS.tex
 (practica1SIS.tex
@@ -1018,8 +1018,7 @@ Package: mathrsfs 1996/01/01 Math RSFS package v1.0 (jk)
 \Wrappedvisiblespacebox=\box62
 Package hyperref Info: Option `breaklinks' set `true' on input line 359.
 Package hyperref Info: Option `colorlinks' set `true' on input line 359.
-
-No file practica1SIS.aux.
+ (practica1SIS.aux)
 \openout1 = `practica1SIS.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 366.
@@ -1147,6 +1146,7 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 366.
 LaTeX Info: Redefining \pageref on input line 366.
 LaTeX Info: Redefining \nameref on input line 366.
+ (practica1SIS.out) (practica1SIS.out)
 \@outlinefile=\write7
 \openout7 = `practica1SIS.out'.
 
@@ -1236,7 +1236,7 @@ File: ts1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 ) [1
 
 {C:/Users/alexb/scoop/apps/latex/current/texmfs/data/pdftex/config/pdftex.map}]
-<practica1SIS_files/practica1SIS_9_0.png, id=20, 373.395pt x 249.93375pt>
+<practica1SIS_files/practica1SIS_9_0.png, id=34, 373.395pt x 249.93375pt>
 File: practica1SIS_files/practica1SIS_9_0.png Graphic file (type png)
 <use practica1SIS_files/practica1SIS_9_0.png>
 Package pdftex.def Info: practica1SIS_files/practica1SIS_9_0.png  used on input
@@ -1247,7 +1247,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 465--466
 
  []
 
-<practica1SIS_files/practica1SIS_10_0.png, id=22, 373.395pt x 249.93375pt>
+<practica1SIS_files/practica1SIS_10_0.png, id=36, 373.395pt x 249.93375pt>
 File: practica1SIS_files/practica1SIS_10_0.png Graphic file (type png)
 <use practica1SIS_files/practica1SIS_10_0.png>
 Package pdftex.def Info: practica1SIS_files/practica1SIS_10_0.png  used on inpu
@@ -1258,7 +1258,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 477--478
 
  []
 
-<practica1SIS_files/practica1SIS_11_0.png, id=30, 373.395pt x 249.93375pt>
+<practica1SIS_files/practica1SIS_11_0.png, id=43, 373.395pt x 249.93375pt>
 File: practica1SIS_files/practica1SIS_11_0.png Graphic file (type png)
 <use practica1SIS_files/practica1SIS_11_0.png>
 Package pdftex.def Info: practica1SIS_files/practica1SIS_11_0.png  used on inpu
@@ -1269,7 +1269,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 489--490
 
  []
 
-<practica1SIS_files/practica1SIS_12_0.png, id=31, 373.395pt x 249.93375pt>
+<practica1SIS_files/practica1SIS_12_0.png, id=44, 373.395pt x 249.93375pt>
 File: practica1SIS_files/practica1SIS_12_0.png Graphic file (type png)
 <use practica1SIS_files/practica1SIS_12_0.png>
 Package pdftex.def Info: practica1SIS_files/practica1SIS_12_0.png  used on inpu
@@ -1281,7 +1281,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 501--502
 
  []
 
-<practica1SIS_files/practica1SIS_13_1.png, id=38, 363.3575pt x 248.93pt>
+<practica1SIS_files/practica1SIS_13_1.png, id=51, 363.3575pt x 248.93pt>
 File: practica1SIS_files/practica1SIS_13_1.png Graphic file (type png)
 <use practica1SIS_files/practica1SIS_13_1.png>
 Package pdftex.def Info: practica1SIS_files/practica1SIS_13_1.png  used on inpu
@@ -1293,7 +1293,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 525--526
  []
 
 [5 <./practica1SIS_files/practica1SIS_13_1.png>]
-<practica1SIS_files/practica1SIS_16_1.png, id=52, 388.45125pt x 248.93pt>
+<practica1SIS_files/practica1SIS_16_1.png, id=64, 388.45125pt x 248.93pt>
 File: practica1SIS_files/practica1SIS_16_1.png Graphic file (type png)
 <use practica1SIS_files/practica1SIS_16_1.png>
 Package pdftex.def Info: practica1SIS_files/practica1SIS_16_1.png  used on inpu
@@ -1304,7 +1304,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 577--578
 
  []
 
-<practica1SIS_files/practica1SIS_17_1.png, id=53, 396.48125pt x 248.93pt>
+<practica1SIS_files/practica1SIS_17_1.png, id=65, 396.48125pt x 248.93pt>
 File: practica1SIS_files/practica1SIS_17_1.png Graphic file (type png)
 <use practica1SIS_files/practica1SIS_17_1.png>
 Package pdftex.def Info: practica1SIS_files/practica1SIS_17_1.png  used on inpu
@@ -1315,7 +1315,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 603--604
 
  []
 
-<practica1SIS_files/practica1SIS_21_1.png, id=59, 378.41376pt x 248.93pt>
+<practica1SIS_files/practica1SIS_21_1.png, id=71, 378.41376pt x 248.93pt>
 File: practica1SIS_files/practica1SIS_21_1.png Graphic file (type png)
 <use practica1SIS_files/practica1SIS_21_1.png>
 Package pdftex.def Info: practica1SIS_files/practica1SIS_21_1.png  used on inpu
@@ -1332,24 +1332,14 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 673.
  (practica1SIS.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 673.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 673.
-
-
-Package rerunfilecheck Warning: File `practica1SIS.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `practica1SIS.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  03F889B31992DB1A98DE5D1C42392B12;306.
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
+Package rerunfilecheck Info: File `practica1SIS.out' has not changed.
+(rerunfilecheck)             Checksum: 03F889B31992DB1A98DE5D1C42392B12;306.
  ) 
 Here is how much of TeX's memory you used:
- 21075 strings out of 492895
- 392190 string characters out of 3120947
- 484271 words of memory out of 3000000
- 24554 multiletter control sequences out of 15000+200000
+ 21086 strings out of 492895
+ 392353 string characters out of 3120947
+ 484604 words of memory out of 3000000
+ 24559 multiletter control sequences out of 15000+200000
  28247 words of font info for 74 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  54i,7n,73p,893b,539s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1362,9 +1352,9 @@ ctt1095.pk>{C:/Users/alexb/scoop/apps/latex/current/texmfs/install/fonts/enc/dv
 ips/base/8r.enc}<C:/Users/alexb/scoop/apps/latex/current/texmfs/install/fonts/t
 ype1/urw/palatino/uplb8a.pfb><C:/Users/alexb/scoop/apps/latex/current/texmfs/in
 stall/fonts/type1/urw/palatino/uplr8a.pfb>
-Output written on practica1SIS.pdf (8 pages, 159773 bytes).
+Output written on practica1SIS.pdf (8 pages, 161166 bytes).
 PDF statistics:
- 193 PDF objects out of 1000 (max. 8388607)
+ 206 PDF objects out of 1000 (max. 8388607)
  17 named destinations out of 1000 (max. 500000)
- 53 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 85 words of extra memory for PDF output out of 10000 (max. 10000000)
 
