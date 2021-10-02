@@ -1,0 +1,7 @@
+[https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen]
+- How many variables (and which) are displayed in the following charts:
+    - The one shown at 02:26: ANSWER There are 6 variables shown in the chart here: year (background), country (labels), cultural unit (continent, in color), population density (ball size), fertility rate (X axis) and life expectancy at birth (Y axis). REAL ANSWER There are 5 variables, "country" is just a mark, or a row name.
+    - The one shown at 13:07: ANSWER There are 6 variables shown in the chart here: year (background), country (labels), cultural unit (continent, in color), population density (ball size), GDP per capita (X logarithmic scale axis) and child survival percentage (Y axis). REAL ANSWER There are 5 variables, "country" is not really a variable but a row name.
+- Find an example of visual representation that does not effectively communicate the message (minute and second, and reason why). ANSWER At 09:03, the chart does not effectively represent the percentage of child survival because the bubbles that represent regions overlap and their value is not clear. ALTERNATIVE At 6:05, the histogram is a little strange to understand.
+- What happens in terms of variables when the speaker splits south Africa? ANSWER The speaker drills down a variable into its constituent parts, hence adding a new variable that represents the country name.
+- Bonus: Who is the "ghost"? ANSWER The ghost is China.
