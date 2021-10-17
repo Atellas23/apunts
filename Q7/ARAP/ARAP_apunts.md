@@ -251,7 +251,7 @@ A **Markov decision process** is a Markov reward process with decisions. Under t
 
 - $\mathcal R$ is a reward function $\mathcal S\times\mathcal A\to\R$, mapping an action $a\in\mathcal A$ and a state $s\in\mathcal S$ to
   $$
-  R_s^a:=R(s,a)=\mathbb E\left[R_{t+1}\vert S_t=s,A_t=a\right].
+  R_s^a\equiv R(s,a):=\mathbb E\left[R_{t+1}\vert S_t=s,A_t=a\right].
   $$
 
 We define the **history** of a Markov decision process as the sequence of $S,R,A$ (state, reward, action) that tracks what has happened in the process up until time $t$, $H_t=S_1R_1A_1\cdots A_{t-1}S_tR_t$. It is worth noting that the Markov property of Markov decision processes works with both variables (actions $\mathcal A$ and states $\mathcal S$), meaning that
@@ -271,14 +271,24 @@ $$
 \pi^*(a\vert s)=\arg\max_\pi{\mathbb E_\pi[G_t]}.
 $$
 
+A policy is a distribution of possible actions given the states. It fully defines the behaviour of an agent, and can be deterministic or random.
+
 ### Maximisation of reward
 
 We now define a the **value of state** $s$ as the expected cumulative reward depending on the policy, that is,
 $$
-v_\pi(s)=\mathbb E_\pi[G_t\vert S_t=s]=\mathbb E[R_t+\gamma R_{t+1}+\gamma^2R_{t+2}+\cdots\vert S_t=s].
+v_\pi(s)=\mathbb E_\pi[G_t\vert S_t=s]=\mathbb E_\pi[R_t+\gamma R_{t+1}+\gamma^2R_{t+2}+\cdots\vert S_t=s].
 $$
 Our goal is to maximise this value, by choosing the most suitable actions associated to each state. With this value function in mind, it may be better to sacrifice immediate reward to gain long-term one over several time steps.
 
+We also define the **action-value function**,
+$$
+q_\pi(s,a)=\mathbb E_\pi\left[G_t\vert S_t=s,A_t=a\right]=R^a_s+\gamma\sum_{s'\in\mathcal S}p(s'\vert s,a)v_\pi(s').
+$$
+Given an MDP and a policy $\pi$, the state sequence is a Markov sequence. Also, the state-reward sequence $S_1R_1S_2R_2\ldots$ is an MRP, where the transition probabilities and the rewards are:
+$$
+P^\pi_{s\to s'}:=\sum_{a\in\mathcal A}\pi(a\vert s)p(s'\vert s,a),\qquad R^\pi_s:=\sum_{a\in\mathcal A}\pi(a\vert s)R_s^a.
+$$
 [exemple 3.2 és important]
 
 

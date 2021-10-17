@@ -31,9 +31,11 @@ __author__ = 'bejar'
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--index', default=None, required=True, help='Index to search')
+    parser.add_argument('--index', default=None,
+                        required=True, help='Index to search')
     parser.add_argument('--text', default=None, help='text to search')
-    parser.add_argument('--query', default=None, nargs=argparse.REMAINDER, help='Lucene query')
+    parser.add_argument('--query', default=None,
+                        nargs=argparse.REMAINDER, help='Lucene query')
 
     args = parser.parse_args()
 
@@ -46,28 +48,26 @@ if __name__ == '__main__':
         client = Elasticsearch()
         s = Search(using=client, index=index)
 
-
         if text is not None:
             q = Q('multi_match', query=text, fields=['text'])
             s = s.query(q)
             s = s.highlight('text', fragment_size=10)
             response = s.execute()
 
-            for r in s.scan(): # scan allows to retrieve all matches
+            for r in s.scan():  # scan allows to retrieve all matches
                 print(f'ID= {r.meta.id} PATH={r.path}')
                 for j, fragment in enumerate(r.meta.highlight.text):
                     print(f' ->  TXT={fragment}')
         elif query is not None:
-            q = Q('query_string',query=query)
+            q = Q('query_string', query=query)
             s = s.query(q)
             response = s.execute()
 
-            for r in s.scan(): # scan allows to retrieve all matches
-               print(f'ID={r.meta.id} TXT={r.text[0:10]} PATH={r.path}')
+            for r in s.scan():  # scan allows to retrieve all matches
+                print(f'ID={r.meta.id} TXT={r.text[0:10]} PATH={r.path}')
         else:
             print('No query parameters passed')
 
-        print (f"{response.hits.total['value']} Documents")
+        print(f"{response.hits.total['value']} Documents")
     except NotFoundError:
         print(f'Index {index} does not exists')
-

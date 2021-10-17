@@ -32,9 +32,10 @@ import codecs
 
 __author__ = 'bejar'
 
+
 def generate_files_list(path):
     """
-    Generates a list of all the files inside a path (recursivelly)
+    Generates a list of all the files inside a path (recursively)
     :param path:
     :return:
     """
@@ -49,10 +50,13 @@ def generate_files_list(path):
                 lfiles.append(lf[0] + '/' + f)
     return lfiles
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--path', required=True, default=None, help='Path to the files')
-    parser.add_argument('--index', required=True, default=None, help='Index for the files')
+    parser.add_argument('--path', required=True,
+                        default=None, help='Path to the files')
+    parser.add_argument('--index', required=True,
+                        default=None, help='Index for the files')
 
     args = parser.parse_args()
 
@@ -60,7 +64,7 @@ if __name__ == '__main__':
     index = args.index
 
     lfiles = generate_files_list(path)
-    print('Indexing %d files'%len(lfiles))
+    print('Indexing %d files' % len(lfiles))
     print('Reading files ...')
     # Reads all the documents in a directory tree and generates an index operation for each
     ldocs = []
@@ -71,7 +75,8 @@ if __name__ == '__main__':
         for line in ftxt:
             text += line
         # Insert operation for a document with fields' path' and 'text'
-        ldocs.append({'_op_type': 'index', '_index': index, 'path': f, 'text': text})
+        ldocs.append({'_op_type': 'index', '_index': index,
+                      'path': f, 'text': text})
 
     # Working with ElasticSearch
     client = Elasticsearch()

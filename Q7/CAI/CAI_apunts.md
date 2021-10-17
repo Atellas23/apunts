@@ -274,3 +274,167 @@ This query improvement procedure that we have seen is a form of **query expansio
 The pseudo-relevance feedback tries not to ask anything from the user, and instead assumes it has done well on its top $k$ answers. Then, performs the same loop that we defined previously, and stops, if it does not have an iteration limit, when the top $k$ results do not change over an iteration.
 
 We can use alternative sources of feedback and query refinement, such as link value (number of clicks), time spent looking/reading an item, a user's previous history, or other user preferences. We can even use information about how related are words in the query with other words within our knowledge to link and refine our query using those.
+
+# **Chapter 3.** Implementation of Information Retrieval Systems
+
+To answer queries received by our IR system, we could use the following **bad** algorithm:
+
+```pseudocode
+input query q;
+for every document d in database:
+	if d matches q:
+		add id(d) to list L;
+output list L (perhaps sorted);
+```
+
+This algorithm scales badly with the database size, and we want a code that is ideally independent of this quantity. Enter **inverted files**.
+
+## Inverted files
+
+Usually, a **vocabulary**, **lexicon** or **dictionary**, usually kept in main memory, maintains all the indexed terms as a set or map containing a correspondence from a document $d\in \mathcal D$ to a list of words that are contained in the document, $\mathcal D\to\{\text{words}\}$. Inverted files are the inverse correspondence, of sorts, mapping a word to the documents that contain it, that is, $\{\text{words}\}\to\mathcal D$. These files are built at pre-processing time, not at query time, so we can afford to spend time and computational effort in their construction.
+
+In practice, inverted files are often implemented with **incidence** or **posting lists**. We assign a document identifier (*docid*) to each document, and for each term that we are indexing, we save a posting list, which is a list of docid's pointing to documents where the term appears, potentially with additional information. For a medium-sized application and large collections of documents, posting lists are compressed and stored in disk sorted by docid, while the vocabulary may fit in RAM.
+
+## Implementing the Boolean model
+
+Given an implementation of the storage (e.g. inverted files), the way to process an atomic query for the boolean model is quite trivial: just look for the posting list of the term, and done. We are interested in how to process compound queries.
+
+### Conjunctive query
+
+We are given a query of the form `a AND b`. Hence, in layman's terms, we want to get the posting lists of both `a` and `b`, and intersect them. This operation takes time in $\mathcal O(\abs{L(a)}+\abs{L(b)})$, where $L(t)$ is the posting list of term $t$, and of course, it can be improved if both lists are sorted, by performing a merge-sort like intersection. In python, this would be something like:
+
+```python
+def merge_intersect(L1, L2):
+    # Suppose both L1 and L2 are sorted
+    i = 0
+    j = 0
+    result = []
+    while i < len(L1) and j < len(L2):
+        if L1[i].docid < L2[j].docid:
+            i += 1
+        elif L1[i].docid > L2[j].docid:
+            j += 1
+        else: # L1[i].docid == L1[j].docid
+            result.append(L1[i])
+            i += 1
+            j += 1
+	return result
+```
+
+### Disjunctive query
+
+We are given a query of the form `a OR b`. Hence, in layman's terms, we want to get the posting lists of both `a` and `b`, and perform their union. This operation takes time in $\mathcal O(\abs{L(a)}+\abs{L(b)})$, where $L(t)$ is the posting list of term $t$, and of course, it can be improved if both lists are sorted, by performing a merge-sort like union. In python, this would be something like:
+
+```python
+def merge_union(L1, L2):
+    i = 0
+    j = 0
+    result = []
+    while i < len(L1) and j < len(L2):
+        if L1[i].docid < L2[j].docid:
+            result.append(L1[i])
+            i += 1
+        elif L2[j].docid < L1[i].docid:
+            result.append(L2[j])
+            j += 1
+        else: # equal document identifiers
+            result.append(L1[i])
+            i += 1
+            j += 1
+    return result
+```
+
+### Exclusive query
+
+We are given a query of the form `a BUTNOT b`. Hence, in layman's terms, we want to get the posting lists of both `a` and `b`, and compute $L(a)\setminus L(b)$, that is, their set difference. This operation takes time at most in $\mathcal O(\abs{L(a)}+\abs{L(b)})$, where $L(t)$ is the posting list of term $t$, and of course, it can be improved if both lists are sorted. In python, this would be something like:
+
+```python
+def merge_set_difference(L1, L2):
+    i = 0
+    j = 0
+    result = []
+    while i < len(L1):
+        if L1[i].docid < L2[j].docid:
+            result.append(L1[i])
+            i += 1
+        elif L1[i].docid > L2[j].docid:
+            if j < len(L2)-1:
+	            j += 1
+            else:
+                result.append(L1[i])
+                i += 1
+        else: # equal docid's, which is what we don't want
+            i += 1
+            if j < len(L2)-1:
+                j += 1
+    return result
+```
+
+## Query optimization
+
+We now want to deal with queries in the boolean model and their speed. Specifically, we want to address how to optimize queries to run in the least time possible. To do this, we have, among others, the following options:
+
+- We could **rewrite** the query using boolean algebra.
+- We could choose **other algorithms** for intersection and union.
+- We could use more **sophisticated data structures** (computed offline).
+
+### Query rewriting
+
+What is the most efficient way to compute the result of a conjunctive query like `a AND b AND c`? We have three equivalent ways of expressing the query that could be useful, namely `(a AND b) AND c` and its variants. And a disjunctive query like `(a AND b) OR (a AND c)`? We also have an equivalent form which maybe is more efficient, `a AND (b OR c)`. This equivalent forms are called **execution plans** in the IR context, and their cost depends on the sizes of the atomic results as well as the sizes of intermediate lists. The worst case scenario sizes for intersection and union are the following:
+$$
+\abs{L_1\cap L_2}\leq\min{(\abs{L_1},\abs{L_2})},\qquad\abs{L_1\cup L_2}\leq\abs{L_1}+\abs{L_2}-\abs{L_1\cap L_2}\leq\abs{L_1}+\abs{L_2}
+$$
+For example, let's compute the cost of `a AND b AND c` using two different execution plans, for sizes $\abs{L_a}=1000,\abs{L_b}=2000,\abs{L_c}=300$. The minimum number of comparisons that we have to compute if using sequential scanning is, naturally, $\abs{L_a}+\abs{L_b}+\abs{L_c}=3300$.
+
+- Execution plan: `(a AND b) AND c`. So, the instructions are:
+
+| INSTRUCTION                                         | cOMPARISONS        | rESULT $\leq$ |
+| --------------------------------------------------- | ------------------ | ------------- |
+| 1. $L_{a\cap b}=\text{intersect}(L_a,L_b)$          | 1000+2000=3000     | 1000          |
+| 2. $L_\text{res}=\text{intersect}(L_{a\cap b},L_c)$ | 1000+300=1300      | 300           |
+| Total comparisons                                   | 3000+1300=**4300** | $-$           |
+
+- Execution plan: `(a AND c) AND b`. The instructions are:
+
+| INSTRUCTION                                         | cOMPARISONS             | rESULT $\leq$ |
+| --------------------------------------------------- | ----------------------- | ------------- |
+| 1. $L_{a\cap c}=\text{intersect}(L_a,L_c)$          | 1000+300=1300           | 300           |
+| 2. $L_\text{res}=\text{intersect}(L_{a\cap c},L_b)$ | 300+2000=2300           | 300           |
+| Total comparisons                                   | 1300+2300=**3600**<4300 | $-$           |
+
+From these, we derive the following **heuristic for `AND`-only queries**: intersections must happen **from shortest list of results to longest list of results**, in order to minimize the number of comparisons.
+
+Let's compute another example, this time with the query `a AND (b OR c)`, with sizes $\abs{L_a}=300,\abs{L_b}=4000,\abs{L_c}=5000$. The minimum number of comparisons if we perform a sequential scan is, again, the sum of the sizes of the lists, that is, 9300. This first execution plan has instructions:
+
+| INSTRUCTION                                         | cOMPARISONS         | rESULT $\leq$ |
+| --------------------------------------------------- | ------------------- | ------------- |
+| 1. $L_{b\cup c}=\text{union}(L_b,L_c)$              | 4000+5000=9000      | 9000          |
+| 2. $L_\text{res}=\text{intersect}(L_a,L_{b\cup c})$ | 9000+300=9300       | 300           |
+| Total comparisons                                   | 9000+9300=**18300** | $-$           |
+
+We could try with a different execution plan for the same query, namely `(a AND b) OR (a AND c)`. The instructions would be:
+
+| INSTRUCTION                                             | cOMPARISONS                  | rESULT $\leq$ |
+| ------------------------------------------------------- | ---------------------------- | ------------- |
+| 1. $L_{a\cap b}=\text{intersect}(L_a,L_b)$              | 300+4000=4300                | 300           |
+| 2. $L_{a\cap c}=\text{intersect}(L_a,L_c)$              | 300+5000=5300                | 300           |
+| 3. $L_\text{res}=\text{union}(L_{a\cap b},L_{a\cap c})$ | 300+300=600                  | 600           |
+| Total comparisons                                       | 4300+5300+600=**9900**<18300 | $-$           |
+
+As we can observe, the combinatorics may get very complicated with more convoluted queries. One can find more information on general boolean query optimization and boolean retrieval in [Stanford's NLP group book on IR, chapter 1](https://nlp.stanford.edu/IR-book/pdf/01bool.pdf), in [this PhD thesis on Boolean query optimization](https://madoc.bib.uni-mannheim.de/44275/1/thesis.pdf), and also in [this article reviewing boolean query optimization using both normal as well as fuzzy logic](https://www.researchgate.net/publication/220608848_Optimization_of_Boolean_Queries_in_Information_Retrieval_Systems_Using_Genetic_Algorithms_-_Genetic_Programming_and_Fuzzy_Logic). For tangential (but interesting!) information on other types of query optimization, see [this article on genetic algorithms to optimize general query systems](https://hal.archives-ouvertes.fr/hal-00359563/document).
+
+### Using other algorithms
+
+To optimize the processing of a query, we could implement other algorithms. For example, to achieve intersection in sub-linear time, we could exploit the binary search algorithm in a sorted list, which we know is logarithmic in the input list size. To do this, given two lists, we take the shortest one, and while we linearly scan this one, we search every docid in the longest list to find coincidences. Using this algorithm, the time would be $\mathcal O(\abs{L_\min}\cdot\log\abs{L_\max})$. When $\abs{L_\min}\ll\abs{L_\max}$, it holds that $\abs{L_\min}\cdot\log{\abs{L_\max}}<\abs{L_\min}+\abs{L_\max}$.
+
+### Using sophisticated data structures
+
+We could add to some elements in the posting list a pointer to a subsequent element in the list. Using this, we could check if inequality comparisons between two elements are going to hold for a lot of elements, and skip some segments, hence avoiding some comparisons and reducing the general algorithm cost. The optimal number and length of pointers, for example when working with posting lists in RAM, is $\sqrt{\abs{L}}$ pointers, pointing to $\sqrt{\abs{L}}$ elements after.
+
+## Implementing the Vector model
+
+## Index compression
+
+## Getting fast the top $r$ results
+
+## Creating the index
